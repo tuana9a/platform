@@ -1,0 +1,7 @@
+*tmp*
+.vagrant
+id_rsa*
+*.log
+logs
+.ssh
+*.ovpn

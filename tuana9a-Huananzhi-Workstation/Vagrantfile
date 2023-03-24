@@ -1,0 +1,29 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  instance_name = "tuana9a-Huananzhi-Workstation"
+  public_key_file = "#{Dir.home}/.ssh/id_rsa.pub"
+  public_key_content = File.readlines(public_key_file).first.strip
+
+  config.vm.define instance_name do |ins|
+    ins.vm.box = "generic/ubuntu1804"
+    ins.ssh.private_key_path = "#{Dir.home}/.ssh/id_rsa"
+    ins.vm.synced_folder "D:\\Users\\tuana9a\\Projects", "/home/vagrant/Projects", disabled: true
+    ins.vm.hostname = instance_name
+    ins.vm.network "private_network", ip: "192.168.56.2"
+    ins.vm.provider "virtualbox" do |vb|
+      vb.name = instance_name
+      vb.memory = 12288
+      vb.cpus = 6
+    end
+  end
+
+  config.vm.provision "shell" do |s|
+    s.inline = <<-SHELL
+      echo #{public_key_content} >> /home/vagrant/.ssh/authorized_keys
+    SHELL
+  end
+
+  config.vm.provision "docker"
+end

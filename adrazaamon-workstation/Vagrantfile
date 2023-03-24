@@ -1,0 +1,27 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  instance_name = "adrazaamon-workstation"
+  public_key_file = "#{Dir.home}/.ssh/id_rsa.pub"
+  public_key_content = File.readlines(public_key_file).first.strip
+
+  config.vm.define instance_name do |ins|
+    ins.vm.box = "generic/ubuntu1804"
+    ins.vm.hostname = instance_name
+    ins.vm.network "private_network", ip: "192.168.56.5"
+    ins.vm.provider "virtualbox" do |vb|
+      vb.name = instance_name
+      vb.memory = 4096
+      vb.cpus = 4
+    end
+  end
+
+  config.vm.provision "shell" do |s|
+    s.inline = <<-SHELL
+      echo #{public_key_content} >> /home/vagrant/.ssh/authorized_keys
+    SHELL
+  end
+
+  config.vm.provision "docker"
+end
