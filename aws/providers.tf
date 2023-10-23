@@ -8,8 +8,11 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "3.17.0"
     }
+    tls = {
+      source  = "hashicorp/tls"
+      version = "4.0.4"
+    }
   }
-
   required_version = ">= 1.2.0"
 }
 
@@ -22,4 +25,8 @@ provider "aws" {
 provider "cloudflare" {
   email     = var.cloudflare_email
   api_token = var.cloudflare_api_token
+}
+
+provider "tls" {
+  # Configuration options
 }
