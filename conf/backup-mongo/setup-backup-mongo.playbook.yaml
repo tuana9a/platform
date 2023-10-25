@@ -1,0 +1,85 @@
+---
+- name: Setup backup mongo
+  hosts: all
+  vars:
+    MONGODB_TOOLS_VERSION: "100.5.0"
+    MONGODB_TOOLS_URL: "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2004-x86_64-{{ MONGODB_TOOLS_VERSION }}.tgz"
+  tasks:
+    - name: Create temp directory
+      ansible.builtin.file:
+        path: "/tmp/mongodb-tools"
+        state: directory
+
+    - name: Download MongoDB Tools
+      ansible.builtin.get_url:
+        url: "{{ MONGODB_TOOLS_URL }}"
+        dest: "/tmp/mongodb-tools.tar.gz"
+
+    - name: Extract MongoDB Tools
+      ansible.builtin.unarchive:
+        src: /tmp/mongodb-tools.tar.gz
+        dest: /tmp
+        remote_src: true
+
+    - name: Copy MongoDB Tools to /usr/local/bin/
+      become: true
+      ansible.builtin.copy:
+        src: /tmp/mongodb-database-tools-ubuntu2004-x86_64-{{ MONGODB_TOOLS_VERSION }}/bin/
+        dest: /usr/local/bin/
+        remote_src: yes
+      with_fileglob: "*"
+
+    - name: Clean up temporary files
+      ansible.builtin.file:
+        path: "/tmp/mongodb-database-tools-ubuntu2004-x86_64-{{ MONGODB_TOOLS_VERSION }}"
+        state: absent
+
+    - name: Clean up downloaded tarball
+      ansible.builtin.file:
+        path: "/tmp/mongodb-tools.tar.gz"
+        state: absent
+
+    - name: Install unzip
+      apt:
+        name: unzip
+        state: present
+
+    - name: Download awscliv2.zip
+      get_url:
+        url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+        dest: /tmp/awscliv2.zip
+
+    - name: Unzip awscliv2.zip
+      unarchive:
+        src: /tmp/awscliv2.zip
+        dest: /tmp
+        remote_src: true
+
+    - name: Install
+      become: yes
+      # add -u flag to update if there are already installed aws clis
+      shell: /tmp/aws/install -u > /tmp/install.log
+
+    - name: Clean up extracted
+      ansible.builtin.file:
+        path: "/tmp/aws"
+        state: absent
+
+    - name: Clean up downloaded zip file
+      ansible.builtin.file:
+        path: "/tmp/awscliv2.zip"
+        state: absent
+
+    - name: Copy script to remote
+      become: true
+      ansible.builtin.template:
+        src: backup-mongo.sh
+        dest: /opt/backup-mongo.sh
+        mode: "0755"
+
+    - name: Create a cronjob for that
+      ansible.builtin.cron:
+        name: "backup-mongo.sh"
+        minute: "0"
+        hour: "0"
+        job: "/opt/backup-mongo.sh > /tmp/backup-mongo.log 2>&1"

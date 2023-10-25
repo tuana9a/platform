@@ -1,0 +1,22 @@
+all:
+  hosts:
+    192.168.56.8:
+      ansible_user: vagrant
+      HOST_NAME: db
+      MONGO_CONNECTION_STRING: "mongodb://localhost"
+      CLOUDFLARE_ACCOUNT_ID: "1234123412341234"
+      S3_ENDPOINT: "https://$CLOUDFLARE_ACCOUNT_ID.r2.cloudflarestorage.com"
+      PROFILE_NAME: r2
+      BUCKET_NAME: backup
+      TELEGRAM_BOT_TOKEN: "12341234"
+      TELEGRAM_CHAT_ID: "12341234"
+    192.168.56.5:
+      ansible_user: vagrant
+      HOST_NAME: db
+      MONGO_CONNECTION_STRING: ""
+      CLOUDFLARE_ACCOUNT_ID: ""
+      S3_ENDPOINT: "https://$CLOUDFLARE_ACCOUNT_ID.r2.cloudflarestorage.com"
+      PROFILE_NAME: r2
+      BUCKET_NAME: backup
+      TELEGRAM_BOT_TOKEN: ""
+      TELEGRAM_CHAT_ID: ""
