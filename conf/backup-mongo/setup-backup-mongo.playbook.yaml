@@ -77,6 +77,18 @@
         dest: /opt/backup-mongo.sh
         mode: "0755"
 
+    - name: Create .aws directory
+      ansible.builtin.file:
+        path: "/home/{{ ansible_user }}/.aws"
+        state: directory
+        mode: "700"
+
+    - name: Copy aws credentials to remote
+      ansible.builtin.copy:
+        src: "{{ aws_credential_file }}"
+        dest: "/home/{{ ansible_user }}/.aws/credentials"
+        mode: "600"
+
     - name: Create a cronjob for that
       ansible.builtin.cron:
         name: "backup-mongo.sh"
