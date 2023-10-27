@@ -1,6 +1,6 @@
 ---
-- name: Setup backup mongo
-  hosts: all
+- name: Setup mongo backup
+  hosts: mongo_backup
   vars:
     MONGODB_TOOLS_VERSION: "100.5.0"
     MONGODB_TOOLS_URL: "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2004-x86_64-{{ MONGODB_TOOLS_VERSION }}.tgz"
@@ -39,55 +39,12 @@
         path: "/tmp/mongodb-tools.tar.gz"
         state: absent
 
-    - name: Install unzip
-      apt:
-        name: unzip
-        state: present
-
-    - name: Download awscliv2.zip
-      get_url:
-        url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
-        dest: /tmp/awscliv2.zip
-
-    - name: Unzip awscliv2.zip
-      unarchive:
-        src: /tmp/awscliv2.zip
-        dest: /tmp
-        remote_src: true
-
-    - name: Install
-      become: yes
-      # add -u flag to update if there are already installed aws clis
-      shell: /tmp/aws/install -u > /tmp/install.log
-
-    - name: Clean up extracted
-      ansible.builtin.file:
-        path: "/tmp/aws"
-        state: absent
-
-    - name: Clean up downloaded zip file
-      ansible.builtin.file:
-        path: "/tmp/awscliv2.zip"
-        state: absent
-
     - name: Copy script to remote
       become: true
       ansible.builtin.template:
         src: backup-mongo.sh
         dest: /opt/backup-mongo.sh
         mode: "0755"
-
-    - name: Create .aws directory
-      ansible.builtin.file:
-        path: "/home/{{ ansible_user }}/.aws"
-        state: directory
-        mode: "700"
-
-    - name: Copy aws credentials to remote
-      ansible.builtin.copy:
-        src: "{{ aws_credential_file }}"
-        dest: "/home/{{ ansible_user }}/.aws/credentials"
-        mode: "600"
 
     - name: Create a cronjob for that
       ansible.builtin.cron:
