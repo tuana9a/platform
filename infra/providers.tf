@@ -6,7 +6,7 @@ terraform {
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "3.17.0"
+      version = "4.17.0"
     }
     tls = {
       source  = "hashicorp/tls"
@@ -17,14 +17,13 @@ terraform {
 }
 
 provider "aws" {
-  region                   = var.aws_region
-  shared_credentials_files = var.aws_credential_files
-  profile                  = var.aws_profile_name
+  region                   = local.aws_region
+  shared_credentials_files = local.aws_credential_files
+  profile                  = local.aws_profile_name
 }
 
 provider "cloudflare" {
-  email     = var.cloudflare_email
-  api_token = var.cloudflare_api_token
+  api_token = local.cloudflare_api_token
 }
 
 provider "tls" {

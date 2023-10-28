@@ -5,7 +5,7 @@ resource "aws_vpc" "main" {
 resource "aws_subnet" "main" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.0.0/24"
-  availability_zone = "${var.aws_region}a"
+  availability_zone = data.aws_availability_zones.available.names[0]
 
   map_public_ip_on_launch = true # auto assign public ip to newly created instances, default is false
 }

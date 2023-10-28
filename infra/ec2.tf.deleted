@@ -18,6 +18,11 @@ data "aws_ami" "amazonlinux2023" {
   }
 }
 
+resource "aws_key_pair" "dev" {
+  key_name   = local.aws_key_pair_name
+  public_key = file(local.aws_key_pair_public_key_file)
+}
+
 resource "aws_instance" "zion" {
   instance_type = "t2.micro"
   ami           = data.aws_ami.amazonlinux2023.id
@@ -45,18 +50,10 @@ resource "aws_eip" "zion" {
 }
 
 resource "cloudflare_record" "zion" {
-  zone_id = var.cloudflare_zone_id
+  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
   name    = "zion"
   value   = aws_eip.zion.public_ip
   type    = "A"
   ttl     = 86400
   proxied = false
-}
-
-output "ec2_zion_private_ip" {
-  value = aws_instance.zion.private_ip
-}
-
-output "eip_zion_public_ip" {
-  value = aws_eip.zion.public_ip
 }
