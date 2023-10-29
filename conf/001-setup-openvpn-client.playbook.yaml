@@ -1,0 +1,23 @@
+---
+- name: Install and configure OpenVPN
+  hosts: openvpn
+  tasks:
+    - name: Install OpenVPN package
+      apt:
+        name: openvpn
+        state: present
+      become: true
+
+    - name: Upload .ovpn file
+      copy:
+        src: "{{ client_file }}"
+        dest: "/etc/openvpn/client/{{ client_name }}.conf"
+        mode: 0644
+      become: true
+
+    - name: Start + Enable OpenVPN service
+      service:
+        name: "openvpn-client@{{ client_name }}"
+        state: restarted
+        enabled: yes
+      become: true
