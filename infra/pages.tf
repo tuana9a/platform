@@ -1,5 +1,5 @@
 resource "cloudflare_pages_project" "web" {
-  account_id        = local.cloudflare_account_id
+  account_id        = local.cloudlfare_accounts.tuana9a.id
   name              = "web"
   production_branch = "main"
 
@@ -23,13 +23,13 @@ resource "cloudflare_pages_project" "web" {
 }
 
 resource "cloudflare_pages_domain" "web" {
-  account_id   = local.cloudflare_account_id
+  account_id   = local.cloudlfare_accounts.tuana9a.id
   project_name = cloudflare_pages_project.web.name
   domain       = "tuana9a.com"
 }
 
 resource "cloudflare_pages_project" "dkhptd_web" {
-  account_id        = local.cloudflare_account_id
+  account_id        = local.cloudlfare_accounts.tuana9a.id
   name              = "dkhptd-web"
   production_branch = "main"
 
@@ -53,13 +53,13 @@ resource "cloudflare_pages_project" "dkhptd_web" {
 }
 
 resource "cloudflare_pages_domain" "dkhptd_web" {
-  account_id   = local.cloudflare_account_id
+  account_id   = local.cloudlfare_accounts.tuana9a.id
   project_name = cloudflare_pages_project.dkhptd_web.name
   domain       = "dkhptd.tuana9a.com"
 }
 
 resource "cloudflare_pages_project" "mom" {
-  account_id        = local.cloudflare_account_id
+  account_id        = local.cloudlfare_accounts.tuana9a.id
   name              = "mom"
   production_branch = "main"
 
@@ -77,7 +77,7 @@ resource "cloudflare_pages_project" "mom" {
 }
 
 resource "cloudflare_pages_domain" "mom" {
-  account_id   = local.cloudflare_account_id
+  account_id   = local.cloudlfare_accounts.tuana9a.id
   project_name = cloudflare_pages_project.mom.name
   domain       = "mom.tuana9a.com"
 }
