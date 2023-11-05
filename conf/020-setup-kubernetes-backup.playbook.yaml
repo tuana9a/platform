@@ -1,0 +1,17 @@
+---
+- name: Setup kubernetes backup
+  hosts: kubernetes_backup
+  tasks:
+    - name: Copy script to remote
+      become: true
+      ansible.builtin.template:
+        src: backup-kubernetes.sh
+        dest: /opt/backup-kubernetes.sh
+        mode: "0755"
+
+    - name: Create a cronjob for that
+      ansible.builtin.cron:
+        name: "backup-kubernetes.sh"
+        minute: "0"
+        hour: "0"
+        job: "/opt/backup-kubernetes.sh > /tmp/backup-kubernetes.log 2>&1"

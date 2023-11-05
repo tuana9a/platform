@@ -1,0 +1,49 @@
+---
+- name: Setup etcdctl
+  hosts: setup_etcdctl
+  vars:
+    ETCD_VER: v3.4.27
+    # choose either URL
+    GOOGLE_URL: https://storage.googleapis.com/etcd
+    GITHUB_URL: https://github.com/etcd-io/etcd/releases/download
+    DOWNLOAD_URL: "{{ GOOGLE_URL }}"
+  tasks:
+    # - name: Install tar
+    #   apt:
+    #     name: tar
+    #     state: present
+
+    - name: Download tar ball
+      get_url:
+        url: "{{ DOWNLOAD_URL }}/{{ ETCD_VER }}/etcd-{{ ETCD_VER }}-linux-amd64.tar.gz"
+        dest: /tmp/etcd-{{ ETCD_VER }}-linux-amd64.tar.gz
+
+    - name: Extract tar ball
+      unarchive:
+        src: /tmp/etcd-{{ ETCD_VER }}-linux-amd64.tar.gz
+        dest: /tmp
+        remote_src: true
+
+    - name: Copy binaries to /usr/local/bin
+      become: true
+      ansible.builtin.copy:
+        src: /tmp/etcd-{{ ETCD_VER }}-linux-amd64/etcdctl
+        dest: "/usr/local/bin/etcdctl"
+        mode: "755"
+        remote_src: true
+
+    # - name: Clean up extracted
+    #   ansible.builtin.file:
+    #     path: "/tmp/aws"
+    #     state: absent
+
+    # - name: Clean up downloaded zip file
+    #   ansible.builtin.file:
+    #     path: "/tmp/awscliv2.zip"
+    #     state: absent
+
+    # - name: Create .aws directory
+    #   ansible.builtin.file:
+    #     path: "/home/{{ ansible_user }}/.aws"
+    #     state: directory
+    #     mode: "700"

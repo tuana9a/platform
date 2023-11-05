@@ -6,21 +6,18 @@ CLOUDFLARE_ACCOUNT_ID="{{ CLOUDFLARE_ACCOUNT_ID }}"
 S3_ENDPOINT="https://$CLOUDFLARE_ACCOUNT_ID.r2.cloudflarestorage.com"
 BUCKET_NAME="{{ BUCKET_NAME }}"
 
-TELEGRAM_BOT_TOKEN="{{ TELEGRAM_BOT_TOKEN }}"
-TELEGRAM_CHAT_ID="{{ TELEGRAM_CHAT_ID }}"
+TELEGRAM_BOT_TOKEN="{{ TELEGRAM_BOT_TOKEN | default('') }}"
+TELEGRAM_CHAT_ID="{{ TELEGRAM_CHAT_ID | default('') }}"
 
-MONGO_CONNECTION_STRING="{{ MONGO_CONNECTION_STRING }}"
-SECONDS=0 # for calc duration
-DUMP_FILE="mongo-dump-$(date +'%Y.%m.%d').tar.gz"
+ETCD_SNAPSHOT=/tmp/snapshot.db
+DUMP_FILE="kubernetes-dump-$(date +'%Y.%m.%d').tar.gz"
 WORKDIR=/tmp
+SECONDS=0 # for calc duration
 
 if [ -z "$HOST_NAME" ]; then echo HOST_NAME is not set, default is "unknown".; HOST_NAME=unknown; fi
-if [ -z "$MONGO_CONNECTION_STRING" ]; then echo MONGO_CONNECTION_STRING is not set, exiting.; exit 0; fi
 if [ -z "$AWS_PROFILE_NAME" ]; then echo AWS_PROFILE_NAME is not set, default is "default".; AWS_PROFILE_NAME=default; fi
 if [ -z "$S3_ENDPOINT" ]; then echo S3_ENDPOINT is not set, exiting.; exit 0; fi
 if [ -z "$BUCKET_NAME" ]; then echo BUCKET_NAME is not set, exiting.; exit 0; fi
-if [ -z "$TELEGRAM_BOT_TOKEN" ]; then echo TELEGRAM_BOT_TOKEN is not set, exiting.; exit 0; fi
-if [ -z "$TELEGRAM_CHAT_ID" ]; then echo TELEGRAM_CHAT_ID is not set, exiting.; exit 0; fi
 
 notify() {
   echo Send msg: "$1"
@@ -37,22 +34,22 @@ notify() {
 mkdir -p $WORKDIR
 cd $WORKDIR || exit 1
 
-echo Dumping
-/usr/local/bin/mongodump "$MONGO_CONNECTION_STRING"
-if [ ! $? ]; then
-  echo Something bad happened, exiting.
-  DURATION=$SECONDS
-  MSG="FAILED - host: $HOST_NAME, job: backup-mongo, stage: dump, duration: $(($DURATION / 60))m$(($DURATION % 60))s"
-  notify "$MSG"
-  exit 1
-fi
+ETCDCTL_CACERT=/etc/kubernetes/pki/etcd/ca.crt
+ETCDCTL_CERT=/etc/kubernetes/pki/apiserver-etcd-client.crt
+ETCDCTL_KEY=/etc/kubernetes/pki/apiserver-etcd-client.key
+ETCDCTL_OPTS="--cacert=$ETCDCTL_CACERT --cert=$ETCDCTL_CERT --key=$ETCDCTL_KEY"
 
-echo Zipping
-tar -czvf "$DUMP_FILE" dump
+ETCDCTL_API=3 sudo etcdctl member list $ETCDCTL_OPTS
+ETCDCTL_API=3 sudo etcdctl snapshot save $ETCD_SNAPSHOT $ETCDCTL_OPTS
+ETCDCTL_API=3 sudo etcdctl --write-out=table snapshot status $ETCD_SNAPSHOT $ETCDCTL_OPTS
+
+echo Dumping
+sudo tar -czvf $DUMP_FILE /tmp/snapshot.db /etc/kubernetes/pki /etc/kubernetes/manifests
+
 if [ ! $? ]; then
   echo Something bad happened, exiting.
   DURATION=$SECONDS
-  MSG="FAILED - host: $HOST_NAME, job: backup-mongo, stage: zip, duration: $(($DURATION / 60))m$(($DURATION % 60))s"
+  MSG="FAILED - host: $HOST_NAME, job: backup-kubernetes, stage: zip, duration: $(($DURATION / 60))m$(($DURATION % 60))s"
   notify "$MSG"
   exit 1
 fi
@@ -68,7 +65,3 @@ if [ ! $? ]; then
   notify "$MSG"
   exit 1
 fi
-
-DURATION=$SECONDS
-MSG="SUCCESS - host: $HOST_NAME, job: backup-mongo, duration: $(($DURATION / 60))m$(($DURATION % 60))s"
-notify "$MSG"
