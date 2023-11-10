@@ -1,4 +1,11 @@
 terraform {
+  backend "s3" {
+    bucket         = "tuana9a-platform"
+    key            = "infra/terraform.tfstate"
+    region         = "ap-southeast-1"
+    dynamodb_table = "tuana9a-platform"
+    encrypt        = true
+  }
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -13,7 +20,7 @@ terraform {
       version = "4.0.4"
     }
     local = {
-      source = "hashicorp/local"
+      source  = "hashicorp/local"
       version = "2.4.0"
     }
   }
