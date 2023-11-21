@@ -71,7 +71,7 @@ spec:
     spec:
       containers:
         - name: dkhptd-taskmanager
-          image: tuana9a/dkhptd-taskmanager:2023.10.11.143206
+          image: tuana9a/dkhptd-taskmanager:2023.11.21.143919
           envFrom:
             - configMapRef:
                 name: dkhptd-taskmanager
