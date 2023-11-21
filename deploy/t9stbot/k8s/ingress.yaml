@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: t9stbot
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: t9stbot.tuana9a.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: t9stbot
+                port:
+                  number: 8080
