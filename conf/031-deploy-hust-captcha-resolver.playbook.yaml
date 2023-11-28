@@ -1,0 +1,17 @@
+---
+- name: Deploy hust-captcha-resolver
+  hosts: hust_captcha_resolver
+  tasks:
+    - name: rsync docker-compose
+      become: true
+      ansible.posix.synchronize:
+        src: "{{ docker_compose_dir }}"
+        recursive: true
+        delete: true
+        dest: /opt/hust-captcha-resolver/
+
+    - name: docker-compose up
+      become: yes
+      shell:
+        cmd: docker-compose up -d
+        chdir: /opt/hust-captcha-resolver

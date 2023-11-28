@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  hust-captcha-resolver:
+    image: tuana9a/hust-captcha-resolver
+    container_name: hust-captcha-resolver
+    env_file: .env
+    restart: unless-stopped
+    networks:
+      net1:
+        ipv4_address: 172.202.104.2
+networks:
+  net1:
+    ipam:
+      config:
+        - subnet: 172.202.104.0/24
