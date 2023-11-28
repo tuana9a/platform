@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: api-server
-          image: tuana9a/api-server:2023.11.21.140930
+          image: tuana9a/api-server:2023.11.28.035352
           envFrom:
             - configMapRef:
                 name: api-server
