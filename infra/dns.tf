@@ -177,3 +177,57 @@ resource "cloudflare_record" "zephyrus" {
   ttl     = 1
   proxied = false
 }
+
+resource "cloudflare_record" "zephyrus_db" {
+  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
+  name    = "${local.db.name}.zephyrus"
+  value   = local.db.ip_zephyrus
+  type    = "A"
+  ttl     = 1
+  proxied = false
+}
+
+resource "cloudflare_record" "zephyrus_jenkins" {
+  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
+  name    = "${local.jenkins.name}.zephyrus"
+  value   = local.jenkins.ip_zephyrus
+  type    = "A"
+  ttl     = 1
+  proxied = false
+}
+
+resource "cloudflare_record" "zephyrus_k8s_load_balancer" {
+  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
+  name    = "${local.k8s_load_balancer.name}.zephyrus"
+  value   = local.k8s_load_balancer.ip_zephyrus
+  type    = "A"
+  ttl     = 1
+  proxied = false
+}
+
+resource "cloudflare_record" "zephyrus_pve_cobi" {
+  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
+  name    = "${local.pve_cobi.name}.zephyrus"
+  value   = local.pve_cobi.ip_zephyrus
+  type    = "A"
+  ttl     = 1
+  proxied = false
+}
+
+resource "cloudflare_record" "zephyrus_registry" {
+  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
+  name    = "${local.registry.name}.zephyrus"
+  value   = local.registry.ip_zephyrus
+  type    = "A"
+  ttl     = 1
+  proxied = false
+}
+
+resource "cloudflare_record" "zephyrus_tuana9a_dev" {
+  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
+  name    = "${local.tuana9a_dev.name}.zephyrus"
+  value   = local.tuana9a_dev.ip_zephyrus
+  type    = "A"
+  ttl     = 1
+  proxied = false
+}
