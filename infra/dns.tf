@@ -231,3 +231,12 @@ resource "cloudflare_record" "zephyrus_tuana9a_dev" {
   ttl     = 1
   proxied = false
 }
+
+resource "cloudflare_record" "zephyrus_tuana9a_techpro_desktop" {
+  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
+  name    = "${local.tuana9a_techpro_desktop.name}.zephyrus"
+  value   = local.tuana9a_techpro_desktop.ip_zephyrus
+  type    = "A"
+  ttl     = 1
+  proxied = false
+}
