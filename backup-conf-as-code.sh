@@ -15,5 +15,6 @@ function upload() {
   r2 $BUCKET_NAME put $key $filepath
 }
 
-upload platform/infra/locals.secret.tf locals.secret.tf
-upload platform/infra/terraform.tfstate terraform.tfstate
+tar -czf files.secret.tar.gz files
+upload platform/files.secret.tar.gz files.secret.tar.gz
+upload platform/inventory.secret.yaml inventory.secret.yaml
