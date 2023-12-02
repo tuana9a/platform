@@ -180,8 +180,8 @@ resource "cloudflare_record" "zephyrus" {
 
 resource "cloudflare_record" "zephyrus_db" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
-  name    = "${local.db.name}.zephyrus"
-  value   = local.db.ip_zephyrus
+  name    = "db.zephyrus"
+  value   = local.db_zephyrus_ip
   type    = "A"
   ttl     = 1
   proxied = false
@@ -189,8 +189,8 @@ resource "cloudflare_record" "zephyrus_db" {
 
 resource "cloudflare_record" "zephyrus_jenkins" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
-  name    = "${local.jenkins.name}.zephyrus"
-  value   = local.jenkins.ip_zephyrus
+  name    = "jenkins.zephyrus"
+  value   = local.jenkins_zephyrus_ip
   type    = "A"
   ttl     = 1
   proxied = false
@@ -198,8 +198,8 @@ resource "cloudflare_record" "zephyrus_jenkins" {
 
 resource "cloudflare_record" "zephyrus_k8s_load_balancer" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
-  name    = "${local.k8s_load_balancer.name}.zephyrus"
-  value   = local.k8s_load_balancer.ip_zephyrus
+  name    = "k8s-load-balancer.zephyrus"
+  value   = local.k8s_load_balancer_zephyrus_ip
   type    = "A"
   ttl     = 1
   proxied = false
@@ -207,8 +207,8 @@ resource "cloudflare_record" "zephyrus_k8s_load_balancer" {
 
 resource "cloudflare_record" "zephyrus_pve_cobi" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
-  name    = "${local.pve_cobi.name}.zephyrus"
-  value   = local.pve_cobi.ip_zephyrus
+  name    = "pve-cobi.zephyrus"
+  value   = local.pve_cobi_zephyrus_ip
   type    = "A"
   ttl     = 1
   proxied = false
@@ -216,8 +216,8 @@ resource "cloudflare_record" "zephyrus_pve_cobi" {
 
 resource "cloudflare_record" "zephyrus_registry" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
-  name    = "${local.registry.name}.zephyrus"
-  value   = local.registry.ip_zephyrus
+  name    = "registry.zephyrus"
+  value   = local.registry_zephyrus_ip
   type    = "A"
   ttl     = 1
   proxied = false
@@ -225,8 +225,8 @@ resource "cloudflare_record" "zephyrus_registry" {
 
 resource "cloudflare_record" "zephyrus_tuana9a_dev" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
-  name    = "${local.tuana9a_dev.name}.zephyrus"
-  value   = local.tuana9a_dev.ip_zephyrus
+  name    = "tuana9a-dev.zephyrus"
+  value   = local.tuana9a_dev_zephyrus_ip
   type    = "A"
   ttl     = 1
   proxied = false
@@ -234,8 +234,17 @@ resource "cloudflare_record" "zephyrus_tuana9a_dev" {
 
 resource "cloudflare_record" "zephyrus_tuana9a_techpro_desktop" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
-  name    = "${local.tuana9a_techpro_desktop.name}.zephyrus"
-  value   = local.tuana9a_techpro_desktop.ip_zephyrus
+  name    = "techpro-desktop.zephyrus"
+  value   = local.tuana9a_techpro_desktop_zephyrus_ip
+  type    = "A"
+  ttl     = 1
+  proxied = false
+}
+
+resource "cloudflare_record" "zephyrus_tuana9a_dev_short" {
+  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
+  name    = "d.z"
+  value   = local.tuana9a_dev_zephyrus_ip
   type    = "A"
   ttl     = 1
   proxied = false
