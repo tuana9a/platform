@@ -15,6 +15,4 @@ function upload() {
   r2 $BUCKET_NAME put $key $filepath
 }
 
-tar -czf files.secret.tar.gz files
-upload platform/conf/files.secret.tar.gz files.secret.tar.gz
-upload platform/conf/inventory.secret.yaml inventory.secret.yaml
+upload platform/locals.secret.tf locals.secret.tf
