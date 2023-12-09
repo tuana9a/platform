@@ -39,9 +39,9 @@ ETCDCTL_CERT=/etc/kubernetes/pki/apiserver-etcd-client.crt
 ETCDCTL_KEY=/etc/kubernetes/pki/apiserver-etcd-client.key
 ETCDCTL_OPTS="--cacert=$ETCDCTL_CACERT --cert=$ETCDCTL_CERT --key=$ETCDCTL_KEY"
 
-ETCDCTL_API=3 sudo etcdctl member list $ETCDCTL_OPTS
-ETCDCTL_API=3 sudo etcdctl snapshot save $ETCD_SNAPSHOT $ETCDCTL_OPTS
-ETCDCTL_API=3 sudo etcdctl --write-out=table snapshot status $ETCD_SNAPSHOT $ETCDCTL_OPTS
+ETCDCTL_API=3 sudo /usr/local/bin/etcdctl member list $ETCDCTL_OPTS
+ETCDCTL_API=3 sudo /usr/local/bin/etcdctl snapshot save $ETCD_SNAPSHOT $ETCDCTL_OPTS
+ETCDCTL_API=3 sudo /usr/local/bin/etcdctl --write-out=table snapshot status $ETCD_SNAPSHOT $ETCDCTL_OPTS
 
 echo Dumping
 sudo tar -czvf $DUMP_FILE /tmp/snapshot.db /etc/kubernetes/pki /etc/kubernetes/manifests

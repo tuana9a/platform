@@ -1,0 +1,11 @@
+ansible_user: tuana9a
+
+aws_credentials_file: orisis/.aws/credentials.secret
+
+install_docker_compose: true
+add_current_user_to_docker_group: true
+
+nginx_conf_d: orisis/nginx/conf.d/ # the tail '/' is very important for rsync to work properly
+nginx_stream_conf_d: orisis/nginx/stream.conf.d/
+
+swap_size: 1G

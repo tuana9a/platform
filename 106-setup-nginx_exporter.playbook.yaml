@@ -1,0 +1,38 @@
+---
+- name: Install and configure nginx_exporter
+  hosts: nginx_exporter
+  vars:
+    nginx_exporter_version: 0.11.0
+  tasks:
+    - name: Download nginx_exporter tarball
+      get_url:
+        url: https://github.com/nginxinc/nginx-prometheus-exporter/releases/download/v{{ nginx_exporter_version }}/nginx-prometheus-exporter_{{ nginx_exporter_version }}_linux_amd64.tar.gz
+        dest: /tmp/nginx_exporter.tar.gz
+
+    - name: Extract nginx_exporter tarball
+      become: yes
+      ansible.builtin.unarchive:
+        src: /tmp/nginx_exporter.tar.gz
+        dest: /opt
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        remote_src: yes
+
+    - name: Create nginx_exporter systemd service
+      become: true
+      ansible.builtin.template:
+        src: nginx_exporter.service
+        dest: /etc/systemd/system/nginx_exporter.service
+        mode: "0644"
+
+    - name: Run systemctl daemon-reload
+      become: true
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+    - name: Start nginx_exporter service
+      become: true
+      ansible.builtin.service:
+        name: nginx_exporter
+        state: restarted
+        enabled: yes

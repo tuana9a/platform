@@ -124,6 +124,15 @@ resource "cloudflare_record" "orisis" {
   proxied = false
 }
 
+resource "cloudflare_record" "orisis_shortcut" {
+  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
+  name    = "o"
+  value   = local.orisis_ip
+  type    = "A"
+  ttl     = 1
+  proxied = false
+}
+
 resource "cloudflare_record" "registry2" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
   name    = "registry2"
@@ -172,6 +181,15 @@ resource "cloudflare_record" "test" {
 resource "cloudflare_record" "zephyrus" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
   name    = "zephyrus"
+  value   = local.zephyrus_ip
+  type    = "A"
+  ttl     = 1
+  proxied = false
+}
+
+resource "cloudflare_record" "zephyrus_shortcut" {
+  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
+  name    = "z"
   value   = local.zephyrus_ip
   type    = "A"
   ttl     = 1
@@ -241,10 +259,37 @@ resource "cloudflare_record" "zephyrus_tuana9a_techpro_desktop" {
   proxied = false
 }
 
-resource "cloudflare_record" "zephyrus_tuana9a_dev_short" {
+resource "cloudflare_record" "zephyrus_adrazaamon_workstation" {
+  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
+  name    = "adrazaamon-workstation.zephyrus"
+  value   = local.adrazaamon_workstation_zephyrus_ip
+  type    = "A"
+  ttl     = 1
+  proxied = false
+}
+
+resource "cloudflare_record" "zephyrus_tuana9a_dev_shortcut" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
   name    = "d.z"
   value   = local.tuana9a_dev_zephyrus_ip
+  type    = "A"
+  ttl     = 1
+  proxied = false
+}
+
+resource "cloudflare_record" "zephyrus_jenkins_shortcut" {
+  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
+  name    = "j.z"
+  value   = local.jenkins_zephyrus_ip
+  type    = "A"
+  ttl     = 1
+  proxied = false
+}
+
+resource "cloudflare_record" "zephyrus_adrazaamon_workstation_shortcut" {
+  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
+  name    = "amon.z"
+  value   = local.adrazaamon_workstation_zephyrus_ip
   type    = "A"
   ttl     = 1
   proxied = false
