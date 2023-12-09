@@ -8,10 +8,10 @@
     GITHUB_URL: https://github.com/etcd-io/etcd/releases/download
     DOWNLOAD_URL: "{{ GOOGLE_URL }}"
   tasks:
-    # - name: Install tar
-    #   apt:
-    #     name: tar
-    #     state: present
+    - name: Install tar
+      apt:
+        name: tar
+        state: present
 
     - name: Download tar ball
       get_url:
@@ -31,19 +31,3 @@
         dest: "/usr/local/bin/etcdctl"
         mode: "755"
         remote_src: true
-
-    # - name: Clean up extracted
-    #   ansible.builtin.file:
-    #     path: "/tmp/aws"
-    #     state: absent
-
-    # - name: Clean up downloaded zip file
-    #   ansible.builtin.file:
-    #     path: "/tmp/awscliv2.zip"
-    #     state: absent
-
-    # - name: Create .aws directory
-    #   ansible.builtin.file:
-    #     path: "/home/{{ ansible_user }}/.aws"
-    #     state: directory
-    #     mode: "700"

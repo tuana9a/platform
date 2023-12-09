@@ -38,20 +38,20 @@
     - name: rsync conf.d dir to remote
       become: true
       ansible.posix.synchronize:
-        src: "{{ conf_d }}"
+        src: "{{ nginx_conf_d }}"
         recursive: true
         delete: true
         dest: /etc/nginx/conf.d/
 
     - name: Default empty stream.conf.d folder
-      when: stream_conf_d is not defined
+      when: nginx_stream_conf_d is not defined
       set_fact:
-        stream_conf_d: empty/
+        nginx_stream_conf_d: empty/
 
     - name: rsync stream.conf.d dir to remote
       become: true
       ansible.posix.synchronize:
-        src: "{{ stream_conf_d }}"
+        src: "{{ nginx_stream_conf_d }}"
         recursive: true
         delete: true
         dest: /etc/nginx/stream.conf.d/

@@ -1,0 +1,11 @@
+ansible_user: tuana9a
+
+install_docker_compose: true
+add_current_user_to_docker_group: true
+
+aws_credentials_file: zephyrus/.aws/credentials.secret
+
+nginx_conf_d: zephyrus/nginx/conf.d/ # the tail '/' is very important for rsync to work properly
+nginx_stream_conf_d: zephyrus/nginx/stream.conf.d/
+
+swap_size: 1G
