@@ -1,0 +1,28 @@
+version: "3.1"
+
+services:
+  jenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tuana9a/jenkins
+    restart: unless-stopped
+    volumes:
+      - ./data/jenkins_home:/var/jenkins_home
+      - ./certs:/certs:ro
+    ports:
+      - 8080:8080
+    environment:
+      - DOCKER_HOST=tcp://dockerd:2376
+      - DOCKER_CERT_PATH=/certs/client
+      - DOCKER_TLS_VERIFY=1
+  dockerd:
+    image: docker:20.10-dind
+    privileged: true # required
+    hostname: dockerd # required
+    restart: unless-stopped
+    environment:
+      - DOCKER_TLS_CERTDIR=/certs
+    volumes:
+      - ./data/jenkins_home:/var/jenkins_home # needed for container to access jenkins data
+      - ./certs:/certs
