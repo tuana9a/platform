@@ -1,0 +1,16 @@
+---
+- name: Deploy /opt/infra
+  hosts: opt_infra
+  tasks:
+    - name: Default empty opt_infra_d folder
+      when: opt_infra_d is not defined
+      set_fact:
+        opt_infra_d: empty/
+
+    - name: rsync infra dir to remote
+      become: true
+      ansible.posix.synchronize:
+        src: "{{ opt_infra_d }}"
+        recursive: true
+        # delete: true
+        dest: /opt/infra/

@@ -1,0 +1,16 @@
+version: "3.1"
+
+services:
+  mongo:
+    container_name: mongo-5.0
+    image: mongo:5.0
+    command:
+      - --config
+      - /etc/mongod.conf
+    volumes:
+      - ./data/db:/data/db
+      - ./mongod.conf:/etc/mongod.conf
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - 27017:27017
