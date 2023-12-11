@@ -7,11 +7,3 @@ provider "aws" {
 provider "cloudflare" {
   api_token = local.cloudflare_api_token
 }
-
-provider "tls" {
-  # Configuration options
-}
-
-provider "local" {
-  # Configuration options
-}

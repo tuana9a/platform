@@ -1,21 +1,3 @@
-resource "cloudflare_record" "api_dev" {
-  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
-  name    = "api-dev"
-  value   = local.zephyrus_ip
-  type    = "A"
-  ttl     = 1
-  proxied = false
-}
-
-resource "cloudflare_record" "api" {
-  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
-  name    = "api"
-  value   = local.zephyrus_ip
-  type    = "A"
-  ttl     = 1
-  proxied = false
-}
-
 resource "cloudflare_record" "backend_facebook_clone" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
   name    = "backend-facebook-clone"
