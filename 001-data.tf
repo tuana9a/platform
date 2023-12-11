@@ -14,7 +14,7 @@ data "aws_ami" "ubuntu22" {
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20231021"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
   }
 }
 
@@ -24,6 +24,6 @@ data "aws_ami" "amazonlinux2023" {
 
   filter {
     name   = "name"
-    values = ["al2023-ami-2023.1.20230912.0-kernel-6.1-x86_64"]
+    values = ["al2023-ami-2023.*-x86_64"]
   }
 }

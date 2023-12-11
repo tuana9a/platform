@@ -1,33 +1,3 @@
-resource "cloudflare_pages_project" "web" {
-  account_id        = local.cloudlfare_accounts.tuana9a.id
-  name              = "web"
-  production_branch = "main"
-
-  source {
-    type = "gitlab"
-    config {
-      owner                         = "tuana9a"
-      repo_name                     = "web"
-      production_branch             = "main"
-      pr_comments_enabled           = true
-      deployments_enabled           = true
-      production_deployment_enabled = true
-    }
-  }
-
-  build_config {
-    build_command   = "npm run build"
-    destination_dir = "dist"
-    root_dir        = ""
-  }
-}
-
-resource "cloudflare_pages_domain" "web" {
-  account_id   = local.cloudlfare_accounts.tuana9a.id
-  project_name = cloudflare_pages_project.web.name
-  domain       = "tuana9a.com"
-}
-
 resource "cloudflare_pages_project" "dkhptd_web" {
   account_id        = local.cloudlfare_accounts.tuana9a.id
   name              = "dkhptd-web"
