@@ -24,7 +24,7 @@ S3_OBJECT_KEY=$HOST_NAME/$DUMP_FILE
 echo Uploading $S3_OBJECT_KEY $WORKDIR/$DUMP_FILE
 /usr/local/bin/aws --profile $AWS_PROFILE_NAME s3api --endpoint-url $S3_ENDPOINT put-object --key $S3_OBJECT_KEY --bucket $BUCKET_NAME --body $WORKDIR/$DUMP_FILE
 
-if [ ! $? ]; then
+if [ $? != 0 ]; then
   echo Something bad happened, exiting
   DURATION=$SECONDS
   MSG="FAILED - host: $HOST_NAME, job: backup-nginx, stage: upload, duration: $(($DURATION / 60))m$(($DURATION % 60))s"
