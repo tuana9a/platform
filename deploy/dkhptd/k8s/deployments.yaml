@@ -43,7 +43,7 @@ spec:
     spec:
       containers:
         - name: dkhptd-scheduler
-          image: tuana9a/dkhptd-scheduler:2023.11.21.143731
+          image: tuana9a/dkhptd-scheduler:2023.12.24.030436
           envFrom:
             - configMapRef:
                 name: dkhptd-scheduler
