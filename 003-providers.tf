@@ -1,7 +1,7 @@
 provider "aws" {
-  region                   = local.aws_region
-  shared_credentials_files = local.aws_credential_files
-  profile                  = local.aws_profile_name
+  region                   = "ap-southeast-1"
+  shared_credentials_files = ["~/.aws/credentials"]
+  profile                  = "default"
 }
 
 provider "cloudflare" {
