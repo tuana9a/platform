@@ -1,29 +1,5 @@
-data "aws_availability_zones" "available" {
-  state = "available"
-}
-
 data "cloudflare_zones" "tuana9a_com" {
   filter {
     name = "tuana9a.com"
-  }
-}
-
-data "aws_ami" "ubuntu22" {
-  most_recent = true
-  owners      = ["amazon"]
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
-  }
-}
-
-data "aws_ami" "amazonlinux2023" {
-  most_recent = true
-  owners      = ["amazon"]
-
-  filter {
-    name   = "name"
-    values = ["al2023-ami-2023.*-x86_64"]
   }
 }
