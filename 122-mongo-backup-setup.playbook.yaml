@@ -39,16 +39,23 @@
         path: "/tmp/mongodb-tools.tar.gz"
         state: absent
 
+    - name: Remove old backup script
+      become: true
+      ansible.builtin.file:
+        state: absent
+        path: /opt/backup-mongo.sh
+
     - name: Copy script to remote
       become: true
       ansible.builtin.template:
         src: backup-mongo.sh
-        dest: /opt/backup-mongo.sh
-        mode: "0755"
+        dest: /usr/local/bin/backup-mongo.sh
+        mode: "0700"
+        owner: "{{ ansible_user }}"
 
     - name: Create a cronjob for that
       ansible.builtin.cron:
         name: "backup-mongo.sh"
         minute: "0"
         hour: "0"
-        job: "/opt/backup-mongo.sh > /tmp/backup-mongo.log 2>&1"
+        job: "/usr/local/bin/backup-mongo.sh > /tmp/backup-mongo.log 2>&1"

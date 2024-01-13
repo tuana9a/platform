@@ -1,2 +1,0 @@
-ansible_user: vagrant
-aws_credentials_file: adrazaamon-workstation/.aws/credentials.secret

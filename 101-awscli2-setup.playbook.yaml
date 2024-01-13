@@ -1,6 +1,6 @@
 ---
 - name: Setup awscli2
-  hosts: setup_awscli2
+  hosts: awscli2
   tasks:
     - name: Install unzip
       apt:
@@ -32,16 +32,3 @@
       ansible.builtin.file:
         path: "/tmp/awscliv2.zip"
         state: absent
-
-    - name: Create .aws directory
-      ansible.builtin.file:
-        path: "/home/{{ ansible_user }}/.aws"
-        state: directory
-        mode: "700"
-
-    - name: Copy aws credentials to remote
-      when: aws_credentials_file is defined
-      ansible.builtin.copy:
-        src: "{{ aws_credentials_file }}"
-        dest: "/home/{{ ansible_user }}/.aws/credentials"
-        mode: "600"

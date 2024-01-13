@@ -1,10 +1,13 @@
 #!/bin/bash
 
 HOST_NAME="{{ HOST_NAME }}"
-AWS_PROFILE_NAME="{{ AWS_PROFILE_NAME }}"
 CLOUDFLARE_ACCOUNT_ID="{{ CLOUDFLARE_ACCOUNT_ID }}"
 S3_ENDPOINT="https://$CLOUDFLARE_ACCOUNT_ID.r2.cloudflarestorage.com"
 BUCKET_NAME="{{ BUCKET_NAME }}"
+
+export AWS_ACCESS_KEY_ID="{{ AWS_ACCESS_KEY_ID }}"
+export AWS_SECRET_ACCESS_KEY="{{ AWS_SECRET_ACCESS_KEY }}"
+export AWS_DEFAULT_REGION="{{ AWS_DEFAULT_REGION | default('auto') }}"
 
 TELEGRAM_BOT_TOKEN="{{ TELEGRAM_BOT_TOKEN | default('') }}"
 TELEGRAM_CHAT_ID="{{ TELEGRAM_CHAT_ID | default('') }}"
@@ -15,20 +18,30 @@ WORKDIR=/tmp
 SECONDS=0 # for calc duration
 
 if [ -z "$HOST_NAME" ]; then echo HOST_NAME is not set, default is "unknown".; HOST_NAME=unknown; fi
-if [ -z "$AWS_PROFILE_NAME" ]; then echo AWS_PROFILE_NAME is not set, default is "default".; AWS_PROFILE_NAME=default; fi
 if [ -z "$S3_ENDPOINT" ]; then echo S3_ENDPOINT is not set, exiting.; exit 0; fi
 if [ -z "$BUCKET_NAME" ]; then echo BUCKET_NAME is not set, exiting.; exit 0; fi
 
+if [[ -n $TELEGRAM_BOT_TOKEN || -n $TELEGRAM_CHAT_ID ]]; then
 notify() {
-  echo Send msg: "$1"
-  if [[ -n $TELEGRAM_BOT_TOKEN ]]; then
-    curl -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
-      -H "Content-Type: application/json" \
-      -d "{\"chat_id\":$TELEGRAM_CHAT_ID,\"disable_notification\":true,\"text\":\"$1\"}"
-    echo
-    exit 0
-  fi
-  echo TELEGRAM_BOT_TOKEN is not set, sending message ignored
+  msg=$1
+  echo Send msg: "$msg"
+  curl -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
+    -H "Content-Type: application/json" \
+    -d "{\"chat_id\":$TELEGRAM_CHAT_ID,\"disable_notification\":true,\"text\":\"$msg\"}"
+  echo
+}
+else
+notify() {
+  msg=$1
+  echo WARN: TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID is not set
+  echo $msg
+}
+fi
+
+upload() {
+  KEY=$1
+  FILEPATH=$2
+  /usr/local/bin/aws s3api --endpoint-url $S3_ENDPOINT put-object --bucket $BUCKET_NAME --key $KEY --body $FILEPATH
 }
 
 mkdir -p $WORKDIR
@@ -56,7 +69,7 @@ fi
 
 S3_OBJECT_KEY=$HOST_NAME/$DUMP_FILE
 echo Uploading "$S3_OBJECT_KEY" "$WORKDIR/$DUMP_FILE"
-/usr/local/bin/aws --profile $AWS_PROFILE_NAME s3api --endpoint-url "$S3_ENDPOINT" put-object --key "$S3_OBJECT_KEY" --bucket "$BUCKET_NAME" --body "$DUMP_FILE"
+upload "$S3_OBJECT_KEY" "$DUMP_FILE"
 
 if [ $? != 0 ]; then
   echo Something bad happened, exiting.
