@@ -1,2 +1,0 @@
-ansible_user: vagrant
-aws_credentials_file: k8s-load-balancer/.aws/credentials.secret

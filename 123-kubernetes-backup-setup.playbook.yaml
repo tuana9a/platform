@@ -1,0 +1,24 @@
+---
+- name: Setup kubernetes backup
+  hosts: kubernetes_backup
+  tasks:
+    - name: Remove old backup script
+      become: true
+      ansible.builtin.file:
+        state: absent
+        path: /opt/backup-kubernetes.sh
+
+    - name: Copy script to remote
+      become: true
+      ansible.builtin.template:
+        src: backup-kubernetes.sh
+        dest: /usr/local/bin/backup-kubernetes.sh
+        mode: "0700"
+        owner: "{{ ansible_user }}"
+
+    - name: Create a cronjob for that
+      ansible.builtin.cron:
+        name: "backup-kubernetes.sh"
+        minute: "0"
+        hour: "0"
+        job: "/usr/local/bin/backup-kubernetes.sh > /tmp/backup-kubernetes.log 2>&1"

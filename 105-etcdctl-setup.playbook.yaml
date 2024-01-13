@@ -1,6 +1,6 @@
 ---
 - name: Setup etcdctl
-  hosts: setup_etcdctl
+  hosts: etcdctl
   vars:
     ETCD_VER: v3.4.27
     # choose either URL

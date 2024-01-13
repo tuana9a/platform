@@ -1,3 +1,0 @@
-ansible_user: vagrant
-
-aws_credentials_file: tuana9a-dev/.aws/credentials.secret

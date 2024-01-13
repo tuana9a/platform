@@ -1,6 +1,6 @@
 ---
 - name: Setup Docker
-  hosts: setup_docker
+  hosts: docker
   tasks:
     - name: Install packages to allow apt to use a repository over HTTPS
       become: true

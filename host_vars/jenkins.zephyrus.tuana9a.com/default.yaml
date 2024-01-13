@@ -1,4 +1,0 @@
-ansible_user: vagrant
-
-install_docker_compose: true
-add_current_user_to_docker_group: true

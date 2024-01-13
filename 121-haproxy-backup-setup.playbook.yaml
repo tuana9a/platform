@@ -2,16 +2,23 @@
 - name: Setup haproxy backup
   hosts: haproxy_backup
   tasks:
+    - name: Remove old backup script
+      become: true
+      ansible.builtin.file:
+        state: absent
+        path: /opt/backup-haproxy.sh
+
     - name: Copy script to remote
       become: true
       ansible.builtin.template:
         src: backup-haproxy.sh
-        dest: /opt/backup-haproxy.sh
+        dest: /usr/local/bin/backup-haproxy.sh
         mode: "0755"
+        owner: "{{ ansible_user }}"
 
     - name: Create a cronjob for that
       ansible.builtin.cron:
         name: "backup-haproxy.sh"
         minute: "0"
         hour: "0"
-        job: "/opt/backup-haproxy.sh > /tmp/backup-haproxy.log 2>&1"
+        job: "/usr/local/bin/backup-haproxy.sh > /tmp/backup-haproxy.log 2>&1"
