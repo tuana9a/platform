@@ -18,3 +18,4 @@ function upload() {
 }
 
 upload platform/locals.secret.tf locals.secret.tf
+upload platform/terraform.tfstate terraform.tfstate

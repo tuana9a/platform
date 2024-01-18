@@ -13,6 +13,6 @@
     - name: Create a cronjob for that
       loop: "{{ items }}"
       ansible.builtin.cron:
-        name: "update-cloudflare-dns.sh"
+        name: "update-cloudflare-dns.sh:{{ item.record_name }}"
         minute: "*/1"
         job: "/usr/local/bin/update-cloudflare-dns.sh {{ item.record_name }} {{ item.extract_ip }} >> /tmp/update-cloudflare-dns.log 2>&1"
