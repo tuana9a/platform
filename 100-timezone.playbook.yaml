@@ -1,0 +1,8 @@
+---
+- name: Set timezone
+  hosts: tz
+  tasks:
+    - name: Set timezone
+      become: true
+      community.general.timezone:
+        name: "{{ TZ | default('TZ') }}"
