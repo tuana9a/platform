@@ -54,11 +54,11 @@ upload $S3_OBJECT_KEY $WORKDIR/$DUMP_FILE
 if [ $? != 0 ]; then
   echo Something bad happened, exiting
   DURATION=$SECONDS
-  MSG="FAILED - host: $HOST_NAME, job: backup-nginx, stage: upload, duration: $(($DURATION / 60))m$(($DURATION % 60))s"
+  MSG="FAILED $HOST_NAME backup-nginx $(($DURATION / 60))m$(($DURATION % 60))s"
   notify "$MSG"
   exit 1
 fi
 
 DURATION=$SECONDS
-MSG="SUCCESS - host: $HOST_NAME, job: backup-nginx, duration: $(($DURATION / 60))m$(($DURATION % 60))s"
+MSG="SUCCESS $HOST_NAME backup-nginx $(($DURATION / 60))m$(($DURATION % 60))s"
 notify "$MSG"

@@ -14,8 +14,9 @@ function upload() {
   if [ -z $filepath ]; then
     filepath=$key;
   fi
+  echo upload $key $filepath
   aws s3api --endpoint-url $S3_ENDPOINT_URL put-object --bucket $BUCKET_NAME --key $key --body $filepath
 }
 
-upload platform/locals.secret.tf locals.secret.tf
 upload platform/terraform.tfstate terraform.tfstate
+upload platform/locals.secret.tf *locals.secret.tf
