@@ -62,7 +62,7 @@ sudo tar -czvf $DUMP_FILE /tmp/snapshot.db /etc/kubernetes/pki /etc/kubernetes/m
 if [ $? != 0 ]; then
   echo Something bad happened, exiting.
   DURATION=$SECONDS
-  MSG="FAILED - host: $HOST_NAME, job: backup-kubernetes, stage: zip, duration: $(($DURATION / 60))m$(($DURATION % 60))s"
+  MSG="FAILED $HOST_NAME backup-kubernetes $(($DURATION / 60))m$(($DURATION % 60))s"
   notify "$MSG"
   exit 1
 fi
@@ -74,7 +74,7 @@ upload "$S3_OBJECT_KEY" "$DUMP_FILE"
 if [ $? != 0 ]; then
   echo Something bad happened, exiting.
   DURATION=$SECONDS
-  MSG="FAILED - host: $HOST_NAME, job: backup-mongo, stage: upload, duration: $(($DURATION / 60))m$(($DURATION % 60))s"
+  MSG="FAILED $HOST_NAME backup-mongo $(($DURATION / 60))m$(($DURATION % 60))s"
   notify "$MSG"
   exit 1
 fi

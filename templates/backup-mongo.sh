@@ -55,7 +55,7 @@ echo Dumping
 if [ $? != 0 ]; then
   echo Something bad happened, exiting.
   DURATION=$SECONDS
-  MSG="FAILED - host: $HOST_NAME, job: backup-mongo, stage: dump, duration: $(($DURATION / 60))m$(($DURATION % 60))s"
+  MSG="FAILED $HOST_NAME backup-mongo $(($DURATION / 60))m$(($DURATION % 60))s"
   notify "$MSG"
   exit 1
 fi
@@ -65,7 +65,7 @@ tar -czvf "$DUMP_FILE" dump
 if [ $? != 0 ]; then
   echo Something bad happened, exiting.
   DURATION=$SECONDS
-  MSG="FAILED - host: $HOST_NAME, job: backup-mongo, stage: zip, duration: $(($DURATION / 60))m$(($DURATION % 60))s"
+  MSG="FAILED $HOST_NAME backup-mongo $(($DURATION / 60))m$(($DURATION % 60))s"
   notify "$MSG"
   exit 1
 fi
@@ -77,11 +77,11 @@ upload $S3_OBJECT_KEY $DUMP_FILE
 if [ $? != 0 ]; then
   echo Something bad happened, exiting.
   DURATION=$SECONDS
-  MSG="FAILED - host: $HOST_NAME, job: backup-mongo, stage: upload, duration: $(($DURATION / 60))m$(($DURATION % 60))s"
+  MSG="FAILED $HOST_NAME backup-mongo $(($DURATION / 60))m$(($DURATION % 60))s"
   notify "$MSG"
   exit 1
 fi
 
 DURATION=$SECONDS
-MSG="SUCCESS - host: $HOST_NAME, job: backup-mongo, duration: $(($DURATION / 60))m$(($DURATION % 60))s"
+MSG="SUCCESS $HOST_NAME backup-mongo $(($DURATION / 60))m$(($DURATION % 60))s"
 notify "$MSG"
