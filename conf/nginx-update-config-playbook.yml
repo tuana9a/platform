@@ -1,0 +1,3 @@
+- hosts: nginx_update_config
+  roles:
+    - role: nginx_update_config

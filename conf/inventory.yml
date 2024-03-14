@@ -1,0 +1,106 @@
+openvpn:
+  hosts:
+    192.168.56.8:
+      ansible_user: vagrant
+      openvpn_client_file: ovpns/dev-zephyrus.ovpn
+      openvpn_client_name: dev-zephyrus
+    192.168.56.5:
+      ansible_user: vagrant
+      openvpn_client_file: ovpns/adrazaamon-workstation-zephyrus.ovpn
+      openvpn_client_name: adrazaamon-workstation-zephyrus
+    192.168.56.10:
+      ansible_user: vagrant
+      openvpn_client_file: ovpns/jenkins-zephyrus.ovpn
+      openvpn_client_name: jenkins-zephyrus
+    192.168.56.11:
+      ansible_user: vagrant
+      openvpn_client_file: ovpns/db-zephyrus.ovpn
+      openvpn_client_name: db-zephyrus
+
+authorized_keys:
+  hosts:
+    192.168.56.8:
+      ansible_user: vagrant
+      authorized_keys: https://github.com/tuana9a.keys
+    192.168.56.5:
+      ansible_user: vagrant
+      authorized_keys: https://github.com/tuana9a.keys
+    192.168.56.10:
+      ansible_user: vagrant
+      authorized_keys: https://github.com/tuana9a.keys
+    192.168.56.11:
+      ansible_user: vagrant
+      authorized_keys: https://github.com/tuana9a.keys
+
+update_dns:
+  hosts:
+    zephyrus.tuana9a.com:
+      ansible_user: tuana9a
+      update_dns_items:
+        - record_name: z.z.tuana9a.com
+          extract_ip: $(/sbin/ifconfig tun0 | grep 'inet ' | awk '{print $2}')
+    192.168.56.1:
+      ansible_user: root
+      update_dns_items:
+        - record_name: pve.z.tuana9a.com
+          extract_ip: $(/usr/sbin/ip addr show tun0 | grep 'inet ' | awk '{print $2}' | cut -d/ -f1)
+        - record_name: pve.h.tuana9a.com
+          extract_ip: $(/usr/sbin/ip addr show vmbr0 | grep 'inet ' | awk '{print $2}' | cut -d/ -f1)
+    192.168.56.8:
+      ansible_user: vagrant
+      update_dns_items:
+        - record_name: d.z.tuana9a.com
+          extract_ip: $(/sbin/ifconfig tun0 | grep 'inet ' | awk '{print $2}')
+    192.168.56.10:
+      ansible_user: vagrant
+      update_dns_items:
+        - record_name: j.z.tuana9a.com
+          extract_ip: $(/sbin/ifconfig tun0 | grep 'inet ' | awk '{print $2}')
+    192.168.56.11:
+      ansible_user: vagrant
+      update_dns_items:
+        - record_name: db.z.tuana9a.com
+          extract_ip: $(/sbin/ifconfig tun0 | grep 'inet ' | awk '{print $2}')
+    192.168.56.5:
+      ansible_user: vagrant
+      update_dns_items:
+        # there are two tun device don't know the order so have to grep the ip
+        - record_name: amon.z.tuana9a.com
+          extract_ip: $(/sbin/ifconfig | grep 10.14.16 | awk '{print $2}')
+
+aws_credentials:
+  hosts:
+    zephyrus.tuana9a.com:
+      cleanup: true
+    orisis.tuana9a.com:
+      cleanup: true
+    db.z.tuana9a.com:
+      cleanup: true
+    j.z.tuana9a.com:
+      cleanup: true
+    d.z.tuana9a.com:
+
+zephyrus:
+  hosts:
+    zephyrus.tuana9a.com:
+
+orisis:
+  hosts:
+    orisis.tuana9a.com:
+
+db:
+  hosts:
+    db.z.tuana9a.com:
+
+amon:
+  hosts:
+    amon.z.tuana9a.com:
+
+jenkins:
+  hosts:
+    j.z.tuana9a.com:
+
+nginx_update_config:
+  hosts:
+    zephyrus.tuana9a.com:
+    orisis.tuana9a.com:

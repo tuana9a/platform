@@ -1,0 +1,2 @@
+MONGODB_TOOLS_VERSION: "100.5.0"
+MONGODB_TOOLS_URL: "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2004-x86_64-{{ MONGODB_TOOLS_VERSION }}.tgz"

@@ -1,0 +1,10 @@
+[Unit]
+Description=Nginx Exporter
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/opt/nginx-prometheus-exporter -nginx.scrape-uri={{ nginx_scrape_uri }}
+
+[Install]
+WantedBy=multi-user.target

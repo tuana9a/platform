@@ -1,0 +1,37 @@
+- name: Install nginx package
+  become: true
+  apt:
+    name:
+      - nginx
+    state: present
+    update_cache: yes
+
+- name: Prepare conf.d
+  become: true
+  ansible.builtin.file:
+    path: /etc/nginx/conf.d
+    owner: root
+    group: root
+    mode: "755"
+    state: directory
+
+- name: Prepare stream.conf.d
+  become: true
+  ansible.builtin.file:
+    path: /etc/nginx/stream.conf.d
+    owner: root
+    group: root
+    mode: "755"
+    state: directory
+
+- name: Copy base nginx.conf
+  copy:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+    force: true
+
+- name: Reload nginx service
+  become: true
+  ansible.builtin.service:
+    name: nginx
+    state: reloaded
