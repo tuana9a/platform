@@ -1,0 +1,9 @@
+- hosts: orisis
+  roles:
+    - role: "tz"
+    - role: "docker"
+    - role: "awscli2"
+    - role: "node_exporter"
+    - role: "rsync-opt-infra"
+    - role: "nginx"
+    - role: "nginx_backup"

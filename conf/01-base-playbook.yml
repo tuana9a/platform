@@ -1,0 +1,15 @@
+- hosts: openvpn
+  roles:
+    - role: "openvpn-client"
+
+- hosts: authorized_keys
+  roles:
+    - role: "authorized_keys"
+
+- hosts: update_dns
+  roles:
+    - role: "update_dns"
+
+- hosts: aws_credentials
+  roles:
+    - role: "aws_credentials"

@@ -1,0 +1,15 @@
+- name: Ensure infra exists
+  become: true
+  ansible.builtin.file:
+    group: "{{ ansible_user }}"
+    owner: "{{ ansible_user }}"
+    path: "/opt/infra"
+    recurse: true
+    state: directory
+
+- name: Rsync infra
+  become: true
+  ansible.posix.synchronize:
+    src: "{{ HOST_NAME }}/infra/"
+    recursive: true
+    dest: /opt/infra/

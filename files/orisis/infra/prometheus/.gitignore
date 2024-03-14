@@ -1,8 +1,0 @@
-prometheus.yml
-prometheus.yaml
-rules.yml
-rules.yaml
-alertmanager.yml
-alertmanager.yaml
-grafana-data/
-prometheus-data/

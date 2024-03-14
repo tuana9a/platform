@@ -1,0 +1,25 @@
+- name: rsync conf.d dir to remote
+  become: true
+  ansible.posix.synchronize:
+    src: "{{ HOST_NAME }}/nginx/conf.d"
+    recursive: true
+    delete: true
+    dest: /etc/nginx/conf.d/
+    rsync_opts:
+      - "--exclude=*.j2"
+
+- name: rsync stream.conf.d dir to remote
+  become: true
+  ansible.posix.synchronize:
+    src: "{{ HOST_NAME }}/nginx/stream.conf.d"
+    recursive: true
+    delete: true
+    dest: /etc/nginx/stream.conf.d/
+    rsync_opts:
+      - "--exclude=*.j2"
+
+- name: Reload nginx service
+  become: true
+  ansible.builtin.service:
+    name: nginx
+    state: reloaded

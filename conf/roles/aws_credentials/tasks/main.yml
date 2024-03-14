@@ -1,0 +1,22 @@
+- name: Ensure folder .aws exists
+  become: true
+  ansible.builtin.file:
+    group: "{{ ansible_user }}"
+    owner: "{{ ansible_user }}"
+    mode: 0700
+    path: "/home/{{ ansible_user }}/.aws/"
+    recurse: true
+    state: directory
+
+- name: Copy aws credentials file
+  when: cleanup is undefined or not cleanup
+  copy:
+    src: "{{ HOST_NAME }}/aws/credentials"
+    dest: "/home/{{ ansible_user }}/.aws/credentials"
+    force: true
+
+- name: Delete aws credentials file
+  when: cleanup is defined and cleanup
+  ansible.builtin.file:
+    path: "/home/{{ ansible_user }}/.aws/credentials"
+    state: absent
