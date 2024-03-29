@@ -1,3 +1,21 @@
+set_hostname:
+  hosts:
+    db.z.tuana9a.com:
+      ansible_user: vagrant
+      HOST_NAME: db
+    d.z.tuana9a.com:
+      ansible_user: vagrant
+      HOST_NAME: tuana9a-dev
+    j.z.tuana9a.com:
+      ansible_user: vagrant
+      HOST_NAME: jenkins
+    zephyrus.tuana9a.com:
+      ansible_user: tuana9a
+      HOST_NAME: zephyrus
+    orisis.tuana9a.com:
+      ansible_user: tuana9a
+      HOST_NAME: orisis
+
 openvpn:
   hosts:
     192.168.56.8:
@@ -71,36 +89,54 @@ update_dns:
 aws_credentials:
   hosts:
     zephyrus.tuana9a.com:
+      ansible_user: tuana9a
+      HOST_NAME: zephyrus
       cleanup: true
     orisis.tuana9a.com:
+      ansible_user: tuana9a
+      HOST_NAME: orisis
       cleanup: true
     db.z.tuana9a.com:
+      ansible_user: vagrant
+      HOST_NAME: db
       cleanup: true
     j.z.tuana9a.com:
+      ansible_user: vagrant
+      HOST_NAME: jenkins
       cleanup: true
     d.z.tuana9a.com:
+      ansible_user: vagrant
+      HOST_NAME: tuana9a-dev
 
 zephyrus:
   hosts:
     zephyrus.tuana9a.com:
+      ansible_user: tuana9a
+      HOST_NAME: zephyrus
 
 orisis:
   hosts:
     orisis.tuana9a.com:
+      ansible_user: tuana9a
+      HOST_NAME: orisis
 
 db:
   hosts:
     db.z.tuana9a.com:
+      ansible_user: vagrant
+      HOST_NAME: db
+      nfs_server_exports:
+        - path: /exports/nfs-client/
+          config: /exports/nfs-client/ 192.168.56.0/24(rw,sync,no_root_squash,no_subtree_check)
 
 amon:
   hosts:
     amon.z.tuana9a.com:
+      ansible_user: vagrant
+      HOST_NAME: amon
 
 jenkins:
   hosts:
     j.z.tuana9a.com:
-
-nginx_update_config:
-  hosts:
-    zephyrus.tuana9a.com:
-    orisis.tuana9a.com:
+      ansible_user: vagrant
+      HOST_NAME: jenkins

@@ -14,6 +14,6 @@ resource "helm_release" "nfs_provisioner" {
 
   set {
     name  = "nfs.path"
-    value = "/exports/dynamic-pv"
+    value = "/exports/nfs-client"
   }
 }
