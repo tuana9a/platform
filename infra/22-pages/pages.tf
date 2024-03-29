@@ -55,3 +55,29 @@ resource "cloudflare_pages_domain" "mom" {
   project_name = cloudflare_pages_project.mom.name
   domain       = "mom.tuana9a.com"
 }
+
+resource "cloudflare_pages_project" "paste_ui" {
+  account_id        = local.cloudlfare_account_id
+  name              = "paste-ui"
+  production_branch = "master"
+
+  source {
+    type = "gitlab"
+    config {
+      owner                         = "tuana9a"
+      repo_name                     = "paste-ui"
+      production_branch             = "master"
+      pr_comments_enabled           = true
+      deployments_enabled           = true
+      production_deployment_enabled = true
+      preview_deployment_setting    = "custom"
+      preview_branch_includes       = ["dev"]
+    }
+  }
+}
+
+resource "cloudflare_pages_domain" "paste_ui" {
+  account_id   = local.cloudlfare_account_id
+  project_name = cloudflare_pages_project.paste_ui.name
+  domain       = "paste-ui.tuana9a.com"
+}

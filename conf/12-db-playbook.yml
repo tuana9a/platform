@@ -6,3 +6,4 @@
     - role: "node_exporter"
     - role: "rsync-opt-infra"
     - role: "mongo_backup"
+    - role: "nfs_server"
