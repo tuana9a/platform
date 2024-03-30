@@ -1,0 +1,40 @@
+- hosts: k8s-lb
+  roles:
+    - role: "tz"
+    - role: "node_exporter"
+  tasks:
+    - name: Copy kubeconfig to remote
+      become: true
+      copy:
+        src: ~/.kube/config # TODO: put into variable
+        dest: "/opt/kubeconfig"
+
+    - name: Copy script to remote
+      become: true
+      vars:
+        kubeconfig: /opt/kubeconfig
+      template:
+        src: port-forward-ingress-nginx.sh
+        dest: /usr/local/bin/port-forward-ingress-nginx.sh
+        mode: 0700  # Adjust permissions as needed
+
+    - name: Create systemd service file
+      become: true
+      vars:
+        script: /usr/local/bin/port-forward-ingress-nginx.sh
+        restart_on: on-failure
+      template:
+        src: port-forward-ingress.service
+        dest: /etc/systemd/system/port-forward-ingress.service
+
+    - name: Reload systemd
+      become: true
+      systemd:
+        daemon_reload: yes
+
+    - name: Start service
+      become: true
+      service:
+        name: port-forward-ingress
+        state: restarted
+        enabled: yes

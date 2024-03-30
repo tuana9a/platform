@@ -1,0 +1,11 @@
+[Unit]
+Description=kubectl port-forward svc ingress
+After=network.target
+
+[Service]
+Type=simple
+ExecStart={{ script }}
+Restart={{ restart_on | default('on-failure') }}
+
+[Install]
+WantedBy=multi-user.target

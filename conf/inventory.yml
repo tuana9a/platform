@@ -20,20 +20,24 @@ openvpn:
   hosts:
     192.168.56.8:
       ansible_user: vagrant
-      openvpn_client_file: ovpns/dev-zephyrus.ovpn
+      openvpn_client_file: tuana9a-dev/dev-zephyrus.ovpn
       openvpn_client_name: dev-zephyrus
     192.168.56.5:
       ansible_user: vagrant
-      openvpn_client_file: ovpns/adrazaamon-workstation-zephyrus.ovpn
+      openvpn_client_file: amon/adrazaamon-workstation-zephyrus.ovpn
       openvpn_client_name: adrazaamon-workstation-zephyrus
     192.168.56.10:
       ansible_user: vagrant
-      openvpn_client_file: ovpns/jenkins-zephyrus.ovpn
+      openvpn_client_file: jenkins/jenkins-zephyrus.ovpn
       openvpn_client_name: jenkins-zephyrus
     192.168.56.11:
       ansible_user: vagrant
-      openvpn_client_file: ovpns/db-zephyrus.ovpn
+      openvpn_client_file: db/db-zephyrus.ovpn
       openvpn_client_name: db-zephyrus
+    192.168.56.21:
+      ansible_user: u
+      openvpn_client_file: k8s-lb/k8s-lb-zephyrus.ovpn
+      openvpn_client_name: k8s-lb-zephyrus
 
 authorized_keys:
   hosts:
@@ -85,6 +89,11 @@ update_dns:
         # there are two tun device don't know the order so have to grep the ip
         - record_name: amon.z.tuana9a.com
           extract_ip: $(/sbin/ifconfig | grep 10.14.16 | awk '{print $2}')
+    192.168.56.21:
+      ansible_user: u
+      update_dns_items:
+        - record_name: k8s-lb.z.tuana9a.com
+          extract_ip: $(/sbin/ifconfig tun0 | grep 'inet ' | awk '{print $2}')
 
 aws_credentials:
   hosts:
@@ -140,3 +149,8 @@ jenkins:
     j.z.tuana9a.com:
       ansible_user: vagrant
       HOST_NAME: jenkins
+
+k8s-lb:
+  hosts:
+    k8s-lb.z.tuana9a.com:
+      ansible_user: u
