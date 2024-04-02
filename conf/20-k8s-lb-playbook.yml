@@ -1,4 +1,4 @@
-- hosts: k8s-lb
+- hosts: k8s_lb
   roles:
     - role: "tz"
     - role: "node_exporter"

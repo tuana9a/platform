@@ -150,7 +150,7 @@ jenkins:
       ansible_user: vagrant
       HOST_NAME: jenkins
 
-k8s-lb:
+k8s_lb:
   hosts:
     k8s-lb.z.tuana9a.com:
       ansible_user: u
