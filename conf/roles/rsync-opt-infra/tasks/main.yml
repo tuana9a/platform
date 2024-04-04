@@ -4,7 +4,6 @@
     group: "{{ ansible_user }}"
     owner: "{{ ansible_user }}"
     path: "/opt/infra"
-    recurse: true
     state: directory
 
 - name: Rsync infra
