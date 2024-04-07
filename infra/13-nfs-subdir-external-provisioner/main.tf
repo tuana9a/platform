@@ -9,7 +9,7 @@ resource "helm_release" "nfs_provisioner" {
 
   set {
     name  = "nfs.server"
-    value = "192.168.56.11"
+    value = "192.168.56.7"
   }
 
   set {
