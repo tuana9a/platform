@@ -8,8 +8,7 @@
     recurse: true
     state: directory
 
-- name: Copy aws credentials file
-  copy:
-    src: "{{ HOST_NAME }}/aws/credentials"
-    dest: "/home/{{ ansible_user }}/.aws/credentials"
-    force: true
+- name: Delete aws credentials file
+  ansible.builtin.file:
+    path: "/home/{{ ansible_user }}/.aws/credentials"
+    state: absent

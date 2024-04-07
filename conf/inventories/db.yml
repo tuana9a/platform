@@ -5,6 +5,11 @@ db:
       HOST_NAME: db
       dev_path: /dev/vdb
       mount_point: /data/
+      openvpn_client_file: db/db-zephyrus.ovpn
+      openvpn_client_name: db-zephyrus
+      update_dns_items:
+        - record_name: db.z.tuana9a.com
+          extract_ip: $(/sbin/ifconfig tun0 | grep 'inet ' | awk '{print $2}')
       rsync_items:
         - src: db/mongodb/
           dest: /opt/mongodb/

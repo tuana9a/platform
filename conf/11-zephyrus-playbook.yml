@@ -1,9 +1,13 @@
 - hosts: zephyrus
   roles:
     - role: "tz"
+    - role: "tmux"
+    - role: "set_hostname"
+    - role: "update_dns"
     - role: "docker"
     - role: "awscli2"
+    - role: "aws_credentials_cleanup"
     - role: "node_exporter"
-    - role: "rsync-opt-infra"
+    - role: "rsync"
     - role: "nginx"
     - role: "nginx_backup"

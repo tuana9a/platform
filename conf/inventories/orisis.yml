@@ -1,0 +1,8 @@
+orisis:
+  hosts:
+    orisis.tuana9a.com:
+      ansible_user: tuana9a
+      HOST_NAME: orisis
+      rsync_items:
+        - src: orisis/prometheus/
+          dest: /opt/prometheus/

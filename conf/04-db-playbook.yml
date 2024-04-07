@@ -6,4 +6,6 @@
     - role: "docker"
     - role: "awscli2"
     - role: "node_exporter"
+    - role: "update_dns"
+    - role: "openvpn-client"
     - role: "rsync"

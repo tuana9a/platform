@@ -1,7 +1,10 @@
 - hosts: k8s_lb
   roles:
     - role: "tz"
+    - role: "tmux"
     - role: "node_exporter"
+    - role: "openvpn-client"
+    - role: "update_dns"
   tasks:
     - name: Copy kubeconfig to remote
       become: true
@@ -16,7 +19,7 @@
       template:
         src: port-forward-ingress-nginx.sh
         dest: /usr/local/bin/port-forward-ingress-nginx.sh
-        mode: 0700  # Adjust permissions as needed
+        mode: 0700
 
     - name: Create systemd service file
       become: true

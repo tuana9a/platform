@@ -22,7 +22,6 @@
   become: true
   file:
     mode: 777
-    recurse: true
     state: directory
     path: "{{ mount_point }}"
 
