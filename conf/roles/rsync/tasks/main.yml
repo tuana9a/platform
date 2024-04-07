@@ -1,0 +1,7 @@
+- name: Rsync
+  become: true
+  loop: "{{ rsync_items }}"
+  ansible.posix.synchronize:
+    src: "{{ item.src }}"
+    recursive: "{{ item.recursive | default('true') }}"
+    dest: "{{ item.dest }}"

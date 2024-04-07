@@ -1,9 +1,9 @@
 - hosts: db
   roles:
     - role: "tz"
+    - role: "set_hostname"
+    - role: "parted"
     - role: "docker"
     - role: "awscli2"
     - role: "node_exporter"
-    - role: "rsync-opt-infra"
-    - role: "mongo_backup"
-    - role: "nfs_server"
+    - role: "rsync"

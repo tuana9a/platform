@@ -3,13 +3,13 @@ version: '3.9'
 
 services:
   postgres:
+    container_name: postgres-16
     image: postgres:16
     restart: unless-stopped
     env_file: .env
     shm_size: 128mb
-    ports:
-      - 5432:5432
+    network_mode: host
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - ./data/:/var/lib/postgresql/data/
+      - /data/postgres/data/:/var/lib/postgresql/data/

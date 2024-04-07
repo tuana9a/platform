@@ -1,0 +1,16 @@
+db:
+  hosts:
+    192.168.56.4:
+      ansible_user: u
+      HOST_NAME: db
+      dev_path: /dev/vdb
+      mount_point: /data/
+      rsync_items:
+        - src: db/mongodb/
+          dest: /opt/mongodb/
+        - src: db/nexus/
+          dest: /opt/nexus/
+        - src: db/postgres/
+          dest: /opt/postgres/
+        - src: db/rabbitmq/
+          dest: /opt/rabbitmq/

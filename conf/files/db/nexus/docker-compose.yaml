@@ -6,7 +6,7 @@ services:
     container_name: nexus3
     image: sonatype/nexus3
     volumes:
-      - ./data:/nexus-data
+      - /data/nexus/data/:/nexus-data/
     network_mode: host
     env_file: .env
     restart: unless-stopped

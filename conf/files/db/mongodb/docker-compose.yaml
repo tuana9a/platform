@@ -8,9 +8,8 @@ services:
       - --config
       - /etc/mongod.conf
     volumes:
-      - ./data/db:/data/db
+      - /data/mongodb/data/db:/data/db
       - ./mongod.conf:/etc/mongod.conf
     restart: unless-stopped
     env_file: .env
-    ports:
-      - 27017:27017
+    network_mode: host
