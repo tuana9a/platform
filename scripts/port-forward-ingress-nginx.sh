@@ -1,14 +1,14 @@
 #!/bin/bash
 
-opts=""
-port=8080
-
-if [ ! -z $PORT ]; then
-  port=$PORT
+address=$1
+if [ -z $address ]; then
+  echo "usage: port-forward-ingress-nginx.sh <bind_address> [port]"
+  exit 1
 fi
 
-if [ ! -z $BIND_ADDRESS ]; then
-  opts="--address $BIND_ADDRESS"
+port=$2
+if [ -z $port ]; then
+  port=8443
 fi
 
-kubectl -n ingress-nginx port-forward svc/ingress-nginx-controller $port:80 $opts
+kubectl -n ingress-nginx port-forward svc/ingress-nginx-controller --address $address $port:80

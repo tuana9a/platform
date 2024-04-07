@@ -1,14 +1,14 @@
 #!/bin/bash
 
-opts=""
-port=8443
-
-if [ ! -z $PORT ]; then
-  port=$PORT
+address=$1
+if [ -z $address ]; then
+  echo "usage: port-forward-argocd.sh <bind_address> [port]"
+  exit 1
 fi
 
-if [ ! -z $BIND_ADDRESS ]; then
-  opts="--address $BIND_ADDRESS"
+port=$2
+if [ -z $port ]; then
+  port=8443
 fi
 
-kubectl -n argocd port-forward svc/argocd-server $port:443 $opts
+kubectl -n argocd port-forward svc/argocd-server --address $address $port:443
