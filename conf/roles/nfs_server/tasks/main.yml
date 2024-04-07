@@ -12,6 +12,7 @@
   ansible.builtin.file:
     owner: nobody
     group: nogroup
+    mode: "777"
     path: "{{ item.path }}"
     recurse: true
     state: directory
