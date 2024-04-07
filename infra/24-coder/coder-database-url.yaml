@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: Secret
-metadata:
-  name: coder-db-url
-  namespace: coder
-data:
-  url: cG9zdGdyZXM6Ly9jb2RlcjoxMjM0MTIzNEAxOTIuMTY4LjU2LjExL2NvZGVyP3NzbG1vZGU9ZGlzYWJsZQ==
