@@ -1,0 +1,8 @@
+- hosts: nfs
+  roles:
+    - role: "tz"
+    - role: "set_hostname"
+    - role: "awscli2"
+    - role: "node_exporter"
+    - role: "parted"
+    - role: "nfs_server"
