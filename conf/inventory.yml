@@ -3,9 +3,6 @@ set_hostname:
     d.z.tuana9a.com:
       ansible_user: vagrant
       HOST_NAME: tuana9a-dev
-    j.z.tuana9a.com:
-      ansible_user: vagrant
-      HOST_NAME: jenkins
 
 openvpn:
   hosts:
@@ -17,10 +14,6 @@ openvpn:
       ansible_user: vagrant
       openvpn_client_file: amon/adrazaamon-workstation-zephyrus.ovpn
       openvpn_client_name: adrazaamon-workstation-zephyrus
-    192.168.56.10:
-      ansible_user: vagrant
-      openvpn_client_file: jenkins/jenkins-zephyrus.ovpn
-      openvpn_client_name: jenkins-zephyrus
 
 authorized_keys:
   hosts:
@@ -28,12 +21,6 @@ authorized_keys:
       ansible_user: vagrant
       authorized_keys: https://github.com/tuana9a.keys
     192.168.56.5:
-      ansible_user: vagrant
-      authorized_keys: https://github.com/tuana9a.keys
-    192.168.56.10:
-      ansible_user: vagrant
-      authorized_keys: https://github.com/tuana9a.keys
-    192.168.56.11:
       ansible_user: vagrant
       authorized_keys: https://github.com/tuana9a.keys
 
@@ -51,11 +38,6 @@ update_dns:
       update_dns_items:
         - record_name: d.z.tuana9a.com
           extract_ip: $(/sbin/ifconfig tun0 | grep 'inet ' | awk '{print $2}')
-    192.168.56.10:
-      ansible_user: vagrant
-      update_dns_items:
-        - record_name: j.z.tuana9a.com
-          extract_ip: $(/sbin/ifconfig tun0 | grep 'inet ' | awk '{print $2}')
     192.168.56.5:
       ansible_user: vagrant
       update_dns_items:
@@ -69,14 +51,6 @@ aws_credentials:
       ansible_user: tuana9a
       HOST_NAME: zephyrus
       cleanup: true
-    db.z.tuana9a.com:
-      ansible_user: vagrant
-      HOST_NAME: db
-      cleanup: true
-    j.z.tuana9a.com:
-      ansible_user: vagrant
-      HOST_NAME: jenkins
-      cleanup: true
     d.z.tuana9a.com:
       ansible_user: vagrant
       HOST_NAME: tuana9a-dev
@@ -86,9 +60,3 @@ amon:
     amon.z.tuana9a.com:
       ansible_user: vagrant
       HOST_NAME: amon
-
-jenkins:
-  hosts:
-    j.z.tuana9a.com:
-      ansible_user: vagrant
-      HOST_NAME: jenkins

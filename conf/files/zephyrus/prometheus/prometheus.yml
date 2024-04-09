@@ -28,7 +28,6 @@ scrape_configs:
           - z.z.tuana9a.com:9100
           - pve.z.tuana9a.com:9100
           - d.z.tuana9a.com:9100
-          - j.z.tuana9a.com:9100
           - db.z.tuana9a.com:9100
 
   - job_name: "nginx-exporter"

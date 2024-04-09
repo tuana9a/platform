@@ -11,3 +11,5 @@ zephyrus:
       update_dns_items:
         - record_name: z.z.tuana9a.com
           extract_ip: $(/sbin/ifconfig tun0 | grep 'inet ' | awk '{print $2}')
+      compose_items:
+        - dir: /opt/prometheus/
