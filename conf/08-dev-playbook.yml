@@ -1,11 +1,10 @@
-- hosts: amon
+- hosts: dev
   roles:
     - role: "tz"
     - role: "set_hostname"
     - role: "docker"
     - role: "awscli2"
-    - role: "aws_credentials_cleanup"
     - role: "node_exporter"
     - role: "openvpn-client"
     - role: "update_dns"
-    - role: "rsync"
+    - role: "aws_credentials"

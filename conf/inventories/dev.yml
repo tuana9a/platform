@@ -1,0 +1,10 @@
+dev:
+  hosts:
+    192.168.56.8:
+      ansible_user: vagrant
+      HOST_NAME: tuana9a-dev
+      openvpn_client_file: tuana9a-dev/dev-zephyrus.ovpn
+      openvpn_client_name: dev-zephyrus
+      update_dns_items:
+        - record_name: d.z.tuana9a.com
+          extract_ip: $(/sbin/ifconfig tun0 | grep 'inet ' | awk '{print $2}')

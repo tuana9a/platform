@@ -1,0 +1,6 @@
+- hosts: pve_cobi
+  roles:
+    - role: "tz"
+    - role: "node_exporter"
+    - role: "openvpn-client"
+    - role: "update_dns"

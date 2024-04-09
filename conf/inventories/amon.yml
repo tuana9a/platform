@@ -1,0 +1,14 @@
+amon:
+  hosts:
+    192.168.56.5:
+      ansible_user: vagrant
+      HOST_NAME: amon
+      openvpn_client_file: amon/adrazaamon-workstation-zephyrus.ovpn
+      openvpn_client_name: adrazaamon-workstation-zephyrus
+      rsync_items:
+        - src: amon/mongodb/
+          dest: /opt/mongodb/
+      update_dns_items:
+        # there are two tun device don't know the order so have to grep the ip
+        - record_name: amon.z.tuana9a.com
+          extract_ip: $(/sbin/ifconfig | grep 10.14.16 | awk '{print $2}')
