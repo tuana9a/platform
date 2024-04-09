@@ -14,3 +14,11 @@ for f in $filepaths; do
   echo PUT: $key $f
   /usr/local/bin/r2.sh put-object $key $f;
 done
+
+filepaths=$(find $dir -name '*.secret.tf');
+
+for f in $filepaths; do
+  key=platform/$f;
+  echo PUT: $key $f
+  /usr/local/bin/r2.sh put-object $key $f;
+done

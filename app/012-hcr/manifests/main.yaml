@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hcr
+spec:
+  # replicas: 1 # auto-scaling
+  selector:
+    matchLabels:
+      app: hcr
+  template:
+    metadata:
+      labels:
+        app: hcr
+    spec:
+      containers:
+        - name: hcr
+          image: tuana9a/hcr
+          env:
+            - name: PORT
+              value: "8080"
+            - name: BIND
+              value: "0.0.0.0"
+            - name: DEVICE
+              value: "cpu"
+            - name: UPLOAD_RATE_LIMIT
+              value: "5/5second"
+          resources:
+            requests:
+              memory: "1000Mi"
+              cpu: "500m"
+            limits:
+              memory: "1000Mi"
+              cpu: "500m"
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hcr
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: hcr
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hcr
+spec:
+  selector:
+    app: hcr
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hcr
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: hcr.tuana9a.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: hcr
+                port:
+                  number: 8080
+    - host: hust-captcha-resolver.tuana9a.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: hcr
+                port:
+                  number: 8080
