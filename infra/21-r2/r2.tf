@@ -8,10 +8,10 @@ resource "aws_s3_bucket_lifecycle_configuration" "backup" {
   bucket = cloudflare_r2_bucket.backup.id
 
   rule {
-    id     = "one-month-expired"
+    id     = "expired-in"
     status = "Enabled"
     expiration {
-      days = 30
+      days = 90
     }
   }
 }
