@@ -29,6 +29,7 @@ scrape_configs:
           - pve.z.tuana9a.com:9100
           - d.z.tuana9a.com:9100
           - db.z.tuana9a.com:9100
+          - k8s-lb.z.tuana9a.com:9100
 
   - job_name: "nginx-exporter"
     # metrics_path defaults to '/metrics'
