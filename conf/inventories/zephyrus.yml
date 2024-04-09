@@ -2,6 +2,7 @@ zephyrus:
   hosts:
     zephyrus.tuana9a.com:
       ansible_user: tuana9a
+      authorized_keys_url: https://public.tuana9a.com/.ssh/authorized_keys
       HOST_NAME: zephyrus
       rsync_items:
         - src: zephyrus/prometheus/

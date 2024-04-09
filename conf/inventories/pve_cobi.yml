@@ -2,6 +2,7 @@ pve_cobi:
   hosts:
     192.168.56.1:
       ansible_user: root
+      authorized_keys_url: https://public.tuana9a.com/.ssh/authorized_keys
       openvpn_client_file: pve/pve-cobi-zephyrus.ovpn
       openvpn_client_name: pve-cobi-zephyrus
       update_dns_items:

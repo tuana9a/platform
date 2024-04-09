@@ -1,5 +1,19 @@
-- name: Set authorized keys taken from url
-  ansible.posix.authorized_key:
-    user: "{{ ansible_user }}"
-    state: present
-    key: "{{ authorized_keys }}"
+- name: Ensure .ssh dir
+  ansible.builtin.file:
+    path: /home/{{ ansible_user }}/.ssh
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "700"
+    state: directory
+
+- name: Set url when not defined
+  when: authorized_keys_url is undefined
+  set_fact:
+    authorized_keys_url: https://github.com/tuana9a.keys
+
+- name: Sync authorized_keys cronjob
+  ansible.builtin.cron:
+    name: "authorized_keys"
+    minute: "0"
+    hour: "0"
+    job: "curl {{ authorized_keys_url }} -o /home/{{ ansible_user }}/.ssh/authorized_keys"

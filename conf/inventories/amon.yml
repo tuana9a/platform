@@ -2,6 +2,7 @@ amon:
   hosts:
     192.168.56.5:
       ansible_user: vagrant
+      authorized_keys_url: https://public.tuana9a.com/.ssh/authorized_keys
       HOST_NAME: amon
       openvpn_client_file: amon/adrazaamon-workstation-zephyrus.ovpn
       openvpn_client_name: adrazaamon-workstation-zephyrus

@@ -1,5 +1,6 @@
 - hosts: orisis
   roles:
+    - role: "authorized_keys"
     - role: "tz"
     - role: "tmux"
     - role: "set_hostname"
