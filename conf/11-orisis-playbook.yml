@@ -10,4 +10,5 @@
     - role: "node_exporter"
     - role: "rsync"
     - role: "nginx"
+    - role: "nginx_exporter"
     - role: "nginx_backup"

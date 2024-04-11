@@ -4,7 +4,9 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/opt/nginx-prometheus-exporter -nginx.scrape-uri={{ nginx_scrape_uri }}
+ExecStart=/opt/nginx-prometheus-exporter -nginx.scrape-uri={{ nginx_scrape_uri | default("http://localhost:8081/stub_status") }}
+Restart=on-failure
+RestartSec=5s
 
 [Install]
 WantedBy=multi-user.target
