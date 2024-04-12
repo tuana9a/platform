@@ -6,6 +6,7 @@ After=network.target
 Type=simple
 ExecStart={{ script }}
 Restart={{ restart_on | default('on-failure') }}
+RestartSec=5s
 
 [Install]
 WantedBy=multi-user.target
