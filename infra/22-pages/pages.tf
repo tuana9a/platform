@@ -61,6 +61,11 @@ resource "cloudflare_pages_project" "paste_ui" {
   name              = "paste-ui"
   production_branch = "master"
 
+  build_config {
+    build_command   = "npm run build"
+    destination_dir = "dist"
+  }
+
   source {
     type = "gitlab"
     config {
