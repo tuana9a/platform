@@ -2,6 +2,7 @@ k8s_lb:
   hosts:
     192.168.56.21:
       ansible_user: u
+      HOST_NAME: k8s-lb
       authorized_keys_url: https://public.tuana9a.com/.ssh/authorized_keys
       openvpn_client_file: k8s-lb/k8s-lb-zephyrus.ovpn
       openvpn_client_name: k8s-lb-zephyrus

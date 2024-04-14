@@ -10,3 +10,4 @@
     - role: "openvpn-client"
     - role: "update_dns"
     - role: "rsync"
+    - role: "mongo_backup"

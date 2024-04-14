@@ -6,6 +6,8 @@
     - role: "node_exporter"
     - role: "openvpn-client"
     - role: "update_dns"
+    - role: "awscli2"
+    - role: "haproxy_backup"
   tasks:
     - name: Copy kubeconfig to remote
       become: true

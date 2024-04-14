@@ -14,8 +14,6 @@ db:
       rsync_items:
         - src: db/mongodb/
           dest: /opt/mongodb/
-        - src: db/nexus/
-          dest: /opt/nexus/
         - src: db/postgres/
           dest: /opt/postgres/
         - src: db/rabbitmq/
