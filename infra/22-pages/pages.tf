@@ -2,26 +2,6 @@ resource "cloudflare_pages_project" "dkhptd_web" {
   account_id        = local.cloudlfare_account_id
   name              = "dkhptd-web"
   production_branch = "main"
-
-  source {
-    type = "github"
-    config {
-      owner                         = "tuana9a"
-      repo_name                     = "dkhptd-web"
-      production_branch             = "main"
-      pr_comments_enabled           = true
-      deployments_enabled           = true
-      production_deployment_enabled = true
-      preview_deployment_setting    = "custom"
-      preview_branch_includes       = ["dev"]
-    }
-  }
-
-  build_config {
-    build_command   = "npm run build"
-    destination_dir = "dist/dkhptd-web"
-    root_dir        = ""
-  }
 }
 
 resource "cloudflare_pages_domain" "dkhptd_web" {
