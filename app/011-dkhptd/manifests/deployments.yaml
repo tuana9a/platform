@@ -99,7 +99,7 @@ spec:
     spec:
       containers:
         - name: dkhptd-worker
-          image: tuana9a/dkhptd-worker:2023.12.24.065448
+          image: tuana9a/dkhptd-worker:2024.04.15.115816
           envFrom:
             - configMapRef:
                 name: dkhptd-worker
