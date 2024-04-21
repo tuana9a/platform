@@ -1,7 +1,6 @@
 resource "proxmox_virtual_environment_vm" "db" {
-  name        = "db"
-  description = "Managed by Terraform"
-  tags        = ["terraform", "ubuntu", "db"]
+  name = "db"
+  tags = ["terraform", "ubuntu", "db"]
 
   node_name = local.node_name
   vm_id     = 104
@@ -24,7 +23,7 @@ resource "proxmox_virtual_environment_vm" "db" {
   }
 
   disk {
-    datastore_id = local.storage_name
+    datastore_id = local.storage.local
     file_id      = "local:iso/jammy-server-cloudimg-amd64.img"
     interface    = "virtio0"
     size         = 8
@@ -33,7 +32,7 @@ resource "proxmox_virtual_environment_vm" "db" {
   }
 
   disk {
-    datastore_id = local.storage_name
+    datastore_id = local.storage.local
     interface    = "virtio1"
     size         = 20
     file_format  = "raw"
@@ -44,7 +43,7 @@ resource "proxmox_virtual_environment_vm" "db" {
   boot_order = ["virtio0"]
 
   initialization {
-    datastore_id = local.storage_name
+    datastore_id = local.storage.local
 
     ip_config {
       ipv4 {

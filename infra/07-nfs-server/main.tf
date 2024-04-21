@@ -24,7 +24,7 @@ resource "proxmox_virtual_environment_vm" "nfs" {
   }
 
   disk {
-    datastore_id = local.storage_name
+    datastore_id = local.storage.ssda
     file_id      = "local:iso/jammy-server-cloudimg-amd64.img"
     interface    = "virtio0"
     size         = 8
@@ -33,9 +33,9 @@ resource "proxmox_virtual_environment_vm" "nfs" {
   }
 
   disk {
-    datastore_id = local.storage_name
+    datastore_id = local.storage.ssda
     interface    = "virtio1"
-    size         = 300
+    size         = 100
     file_format  = "raw"
     backup       = false
     replicate    = false
@@ -44,7 +44,7 @@ resource "proxmox_virtual_environment_vm" "nfs" {
   boot_order = ["virtio0"]
 
   initialization {
-    datastore_id = local.storage_name
+    datastore_id = local.storage.ssda
 
     ip_config {
       ipv4 {

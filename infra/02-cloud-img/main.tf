@@ -1,6 +1,6 @@
 resource "proxmox_virtual_environment_file" "ubuntu_22_jammy_qcow2_img" {
   content_type = "iso"
-  datastore_id = local.storage_name
+  datastore_id = local.storage.local
   node_name    = local.node_name
 
   source_file {
