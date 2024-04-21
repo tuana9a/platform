@@ -187,42 +187,8 @@ resource "coder_app" "code-server" {
   }
 }
 
-resource "kubernetes_persistent_volume_claim" "home" {
-  metadata {
-    name      = "coder-${lower(data.coder_workspace.me.owner)}-${lower(data.coder_workspace.me.name)}-home"
-    namespace = var.namespace
-    labels = {
-      "app.kubernetes.io/name"     = "coder-pvc"
-      "app.kubernetes.io/instance" = "coder-pvc-${lower(data.coder_workspace.me.owner)}-${lower(data.coder_workspace.me.name)}"
-      "app.kubernetes.io/part-of"  = "coder"
-      //Coder-specific labels.
-      "com.coder.resource"       = "true"
-      "com.coder.workspace.id"   = data.coder_workspace.me.id
-      "com.coder.workspace.name" = data.coder_workspace.me.name
-      "com.coder.user.id"        = data.coder_workspace.me.owner_id
-      "com.coder.user.username"  = data.coder_workspace.me.owner
-    }
-    annotations = {
-      "com.coder.user.email" = data.coder_workspace.me.owner_email
-    }
-  }
-  wait_until_bound = false
-  spec {
-    access_modes       = ["ReadWriteOnce"]
-    storage_class_name = "nfs-client" # @tuana9a add this
-    resources {
-      requests = {
-        storage = "${data.coder_parameter.home_disk_size.value}Gi"
-      }
-    }
-  }
-}
-
-resource "kubernetes_deployment" "main" {
-  count = data.coder_workspace.me.start_count
-  depends_on = [
-    kubernetes_persistent_volume_claim.home
-  ]
+resource "kubernetes_stateful_set" "main" {
+  count            = data.coder_workspace.me.start_count
   wait_for_rollout = false
   metadata {
     name      = "coder-${lower(data.coder_workspace.me.owner)}-${lower(data.coder_workspace.me.name)}"
@@ -244,13 +210,14 @@ resource "kubernetes_deployment" "main" {
 
   spec {
     replicas = 1
+
+    # @tuana9a
+    service_name = data.coder_workspace.me.name
+
     selector {
       match_labels = {
         "app.kubernetes.io/name" = "coder-workspace"
       }
-    }
-    strategy {
-      type = "Recreate"
     }
 
     template {
@@ -294,14 +261,6 @@ resource "kubernetes_deployment" "main" {
           }
         }
 
-        volume {
-          name = "home"
-          persistent_volume_claim {
-            claim_name = kubernetes_persistent_volume_claim.home.metadata.0.name
-            read_only  = false
-          }
-        }
-
         affinity {
           // This affinity attempts to spread out all workspace pods evenly across
           // nodes.
@@ -319,6 +278,37 @@ resource "kubernetes_deployment" "main" {
                 }
               }
             }
+          }
+        }
+      }
+    }
+
+    # @tuana9a
+    volume_claim_template {
+      metadata {
+        name      = "home"
+        namespace = var.namespace
+        labels = {
+          "app.kubernetes.io/name"     = "coder-pvc"
+          "app.kubernetes.io/instance" = "coder-pvc-${lower(data.coder_workspace.me.owner)}-${lower(data.coder_workspace.me.name)}"
+          "app.kubernetes.io/part-of"  = "coder"
+          //Coder-specific labels.
+          "com.coder.resource"       = "true"
+          "com.coder.workspace.id"   = data.coder_workspace.me.id
+          "com.coder.workspace.name" = data.coder_workspace.me.name
+          "com.coder.user.id"        = data.coder_workspace.me.owner_id
+          "com.coder.user.username"  = data.coder_workspace.me.owner
+        }
+        annotations = {
+          "com.coder.user.email" = data.coder_workspace.me.owner_email
+        }
+      }
+      spec {
+        access_modes       = ["ReadWriteOnce"]
+        storage_class_name = "nfs-client"
+        resources {
+          requests = {
+            storage = "${data.coder_parameter.home_disk_size.value}Gi"
           }
         }
       }

@@ -16,7 +16,7 @@ resource "helm_release" "coder" {
 
   repository = "https://helm.coder.com/v2"
   chart      = "coder"
-  version    = "2.9.2"
+  version    = "2.10.1"
 
   values = [
     "${file("./values.yaml")}"
