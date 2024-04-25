@@ -1,0 +1,34 @@
+- set_fact:
+    ETCD_VER: v3.4.27
+  when: ETCD_VER is undefined
+
+- set_fact:
+    ETCD_DOWNLOAD_URL: https://github.com/etcd-io/etcd/releases/download
+  when: ETCD_DOWNLOAD_URL is undefined
+
+- name: Install tar
+  become: true
+  apt:
+    name: tar
+    state: present
+
+- name: Download tar ball
+  become: true
+  get_url:
+    url: "{{ ETCD_DOWNLOAD_URL }}/{{ ETCD_VER }}/etcd-{{ ETCD_VER }}-linux-amd64.tar.gz"
+    dest: /opt/etcd-{{ ETCD_VER }}-linux-amd64.tar.gz
+
+- name: Extract tar ball
+  become: true
+  unarchive:
+    src: /opt/etcd-{{ ETCD_VER }}-linux-amd64.tar.gz
+    dest: /opt
+    remote_src: true
+
+- name: Copy binaries to /usr/local/bin
+  become: true
+  ansible.builtin.copy:
+    src: /opt/etcd-{{ ETCD_VER }}-linux-amd64/etcdctl
+    dest: "/usr/local/bin/etcdctl"
+    mode: "755"
+    remote_src: true

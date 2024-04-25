@@ -1,0 +1,26 @@
+- hosts: k8s_lb
+  vars_files:
+    - ./var_files/k8s-lb.yml
+    - ./var_files/update_dns.yml
+    - ./var_files/backup_haproxy.yml
+    - ./var_files/tuana9a-device-authorized-keys.yml
+  tasks:
+    - import_tasks: ./tasks/cronjob_authorized_keys.yml
+    - import_tasks: ./tasks/set_timezone.yml
+    - import_tasks: ./tasks/install_tmux.yml
+    - import_tasks: ./tasks/install_nginx.yml
+    - import_tasks: ./tasks/install_node_exporter.yml
+    - import_tasks: ./tasks/openvpn_client.yml
+    - import_tasks: ./tasks/cronjob_update_cloudflare_dns.yml
+    - import_tasks: ./tasks/install_awscli.yml
+    - import_tasks: ./tasks/cronjob_backup_haproxy.yml
+
+    - name: Copy kubeconfig to remote
+      become: true
+      copy:
+        src: ~/.kube/config # TODO: configurable
+        dest: "/opt/kubeconfig"
+
+    - import_tasks: ./tasks/cronjob_update_ingress_nginx_load_balancer_ip.yml
+      vars:
+        kubeconfig: "/opt/kubeconfig" # TODO: configurable

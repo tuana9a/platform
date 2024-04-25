@@ -1,6 +1,6 @@
 resource "helm_release" "metrics_server" {
   name             = "metrics-server"
-  namespace        = "metrics-server"
+  namespace        = var.namespace
   create_namespace = true
 
   repository = "https://kubernetes-sigs.github.io/metrics-server"

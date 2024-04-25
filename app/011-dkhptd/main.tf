@@ -1,6 +1,6 @@
 resource "argocd_application" "dkhptd" {
   metadata {
-    name      = "dkhptd"
+    name = "dkhptd"
   }
 
   cascade = false # disable cascading deletion

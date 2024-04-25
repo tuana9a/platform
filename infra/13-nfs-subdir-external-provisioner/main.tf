@@ -1,6 +1,6 @@
 resource "helm_release" "nfs_provisioner" {
   name             = "nfs-subdir-external-provisioner"
-  namespace        = "nfs-provisioner"
+  namespace        = var.namespace
   create_namespace = true
 
   repository = "https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner"

@@ -1,0 +1,22 @@
+- name: Ensure folder .ssh exists
+  become: true
+  ansible.builtin.file:
+    group: "{{ ansible_user }}"
+    owner: "{{ ansible_user }}"
+    mode: "700"
+    path: "/home/{{ ansible_user }}/.ssh/"
+    state: directory
+
+- name: Copy ssh id_rsa
+  copy:
+    mode: "600"
+    src: "{{ HOST_NAME }}/ssh/id_rsa"
+    dest: "/home/{{ ansible_user }}/.ssh/id_rsa"
+    force: true
+
+- name: Copy ssh id_rsa.pub
+  copy:
+    mode: "644"
+    src: "{{ HOST_NAME }}/ssh/id_rsa.pub"
+    dest: "/home/{{ ansible_user }}/.ssh/id_rsa.pub"
+    force: true

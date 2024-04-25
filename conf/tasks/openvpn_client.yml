@@ -1,0 +1,21 @@
+- name: Install OpenVPN package
+  apt:
+    name: openvpn
+    state: present
+  become: true
+
+- name: Upload .ovpn file
+  loop: "{{ openvpn_client_items }}"
+  become: true
+  copy:
+    src: "{{ item.file }}"
+    dest: "/etc/openvpn/client/{{ item.name }}.conf"
+    mode: "0644"
+
+- name: Start + Enable OpenVPN service
+  loop: "{{ openvpn_client_items }}"
+  become: true
+  service:
+    name: "openvpn-client@{{ item.name }}"
+    state: "{{ item.state | default('restarted') }}"
+    enabled: "{{ item.enabled | default('true') }}"

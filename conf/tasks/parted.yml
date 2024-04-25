@@ -1,0 +1,34 @@
+- name: install parted package
+  become: true
+  apt:
+    name: parted
+    state: present
+
+- name: parted
+  become: true
+  # NOTE: currently only support create one partition
+  community.general.parted:
+    device: "{{ parted.dev_path }}"
+    number: 1
+    state: present
+
+- name: mkfs.ext4
+  become: true
+  filesystem:
+    fstype: ext4
+    dev: "{{ parted.dev_path }}1"
+
+- name: ensure mount_point
+  become: true
+  file:
+    mode: "0777"
+    state: directory
+    path: "{{ parted.mount_path }}"
+
+- name: mount
+  become: true
+  mount:
+    fstype: ext4
+    src: "{{ parted.dev_path }}1"
+    path: "{{ parted.mount_path }}"
+    state: mounted

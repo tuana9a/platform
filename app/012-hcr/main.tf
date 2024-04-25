@@ -1,6 +1,6 @@
 resource "argocd_application" "hcr" {
   metadata {
-    name      = "hcr"
+    name = "hcr"
   }
 
   cascade = false # disable cascading deletion

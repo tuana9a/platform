@@ -1,0 +1,14 @@
+- hosts: nfs
+  vars_files:
+    - ./var_files/nfs.yml
+    - ./var_files/tuana9a-device-authorized-keys.yml
+    - ./var_files/backup_nfs.yml
+  tasks:
+    - import_tasks: ./tasks/cronjob_authorized_keys.yml
+    - import_tasks: ./tasks/set_timezone.yml
+    - import_tasks: ./tasks/set_hostname.yml
+    - import_tasks: ./tasks/install_awscli.yml
+    - import_tasks: ./tasks/install_node_exporter.yml
+    - import_tasks: ./tasks/parted.yml
+    - import_tasks: ./tasks/nfs_server.yml
+    - import_tasks: ./tasks/cronjob_backup_nfs.yml

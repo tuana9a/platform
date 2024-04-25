@@ -1,0 +1,35 @@
+- name: Install unzip
+  become: true
+  apt:
+    name: unzip
+    state: present
+
+- name: Download awscliv2.zip
+  become: true
+  get_url:
+    url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+    dest: /opt/awscliv2.zip
+
+- name: Unzip awscliv2.zip
+  become: true
+  unarchive:
+    src: /opt/awscliv2.zip
+    dest: /opt
+    remote_src: true
+
+- name: Install
+  become: true
+  # add -u flag to update if there are already installed aws cli
+  shell: /opt/aws/install -u > /opt/install-awscli.log
+
+- name: Clean up extracted
+  become: true
+  ansible.builtin.file:
+    path: "/opt/aws"
+    state: absent
+
+- name: Clean up downloaded zip file
+  become: true
+  ansible.builtin.file:
+    path: "/opt/awscliv2.zip"
+    state: absent

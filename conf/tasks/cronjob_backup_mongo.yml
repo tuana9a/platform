@@ -1,0 +1,58 @@
+- set_fact: MONGODB_TOOLS_VERSION="100.5.0"
+  when: MONGODB_TOOLS_URL is undefined
+
+- set_fact: MONGODB_TOOLS_URL="https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2004-x86_64-{{ MONGODB_TOOLS_VERSION }}.tgz"
+  when: MONGODB_TOOLS_URL is undefined
+
+- name: Download MongoDB Tools
+  become: true
+  ansible.builtin.get_url:
+    url: "{{ MONGODB_TOOLS_URL }}"
+    dest: "/opt/mongodb-tools.tar.gz"
+
+- name: Extract MongoDB Tools
+  become: true
+  ansible.builtin.unarchive:
+    src: /opt/mongodb-tools.tar.gz
+    dest: /opt
+    remote_src: true
+
+- name: Copy MongoDB Tools to /usr/local/bin/
+  become: true
+  ansible.builtin.copy:
+    src: /opt/mongodb-database-tools-ubuntu2004-x86_64-{{ MONGODB_TOOLS_VERSION }}/bin/
+    dest: /usr/local/bin/
+    remote_src: yes
+
+- name: Clean up temporary files
+  become: true
+  ansible.builtin.file:
+    path: "/opt/mongodb-database-tools-ubuntu2004-x86_64-{{ MONGODB_TOOLS_VERSION }}"
+    state: absent
+
+- name: Clean up downloaded tarball
+  become: true
+  ansible.builtin.file:
+    path: "/opt/mongodb-tools.tar.gz"
+    state: absent
+
+- name: Remove old backup script
+  become: true
+  ansible.builtin.file:
+    state: absent
+    path: /opt/backup-mongo.sh
+
+- name: Copy script to remote
+  become: true
+  ansible.builtin.template:
+    src: backup-mongo.sh
+    dest: /usr/local/bin/backup-mongo.sh
+    mode: "0700"
+    owner: "{{ ansible_user }}"
+
+- name: Create a cronjob for that
+  ansible.builtin.cron:
+    name: "backup-mongo.sh"
+    minute: "0"
+    hour: "0"
+    job: "/usr/local/bin/backup-mongo.sh >> /tmp/backup-mongo.log 2>&1"

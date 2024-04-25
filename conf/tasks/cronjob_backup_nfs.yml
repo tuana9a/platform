@@ -1,0 +1,14 @@
+- name: Copy script to remote
+  become: true
+  ansible.builtin.template:
+    src: backup-nfs.sh
+    dest: /usr/local/bin/backup-nfs.sh
+    mode: "0700"
+    owner: "{{ ansible_user }}"
+
+- name: Create a cronjob for that
+  ansible.builtin.cron:
+    name: "backup-nfs.sh"
+    minute: "0"
+    hour: "0"
+    job: "/usr/local/bin/backup-nfs.sh >> /tmp/backup-nfs.log 2>&1"

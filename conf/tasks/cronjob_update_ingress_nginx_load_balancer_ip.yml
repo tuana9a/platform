@@ -1,0 +1,13 @@
+- name: Copy script to remote
+  become: true
+  ansible.builtin.template:
+    src: update-ingress-nginx-load-balancer-ip.sh
+    dest: /usr/local/bin/update-ingress-nginx-load-balancer-ip.sh
+    mode: "0700"
+    owner: "{{ ansible_user }}"
+
+- name: Create a cronjob for that
+  ansible.builtin.cron:
+    name: "update-ingress-nginx-load-balancer-ip.sh"
+    minute: "*/1"
+    job: "/usr/local/bin/update-ingress-nginx-load-balancer-ip.sh >> /tmp/update-ingress-nginx-load-balancer-ip.log 2>&1"

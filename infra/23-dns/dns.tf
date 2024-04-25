@@ -70,42 +70,6 @@ resource "cloudflare_record" "hust_captcha_resolver" {
   proxied = false
 }
 
-resource "cloudflare_record" "jenkins" {
-  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
-  name    = "jenkins"
-  value   = cloudflare_record.zephyrus.hostname
-  type    = "CNAME"
-  ttl     = 60
-  proxied = false
-}
-
-resource "cloudflare_record" "nexus" {
-  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
-  name    = "nexus"
-  value   = cloudflare_record.zephyrus.hostname
-  type    = "CNAME"
-  ttl     = 60
-  proxied = false
-}
-
-resource "cloudflare_record" "registry2" {
-  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
-  name    = "registry2"
-  value   = cloudflare_record.zephyrus.hostname
-  type    = "CNAME"
-  ttl     = 60
-  proxied = false
-}
-
-resource "cloudflare_record" "registry" {
-  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
-  name    = "registry"
-  value   = cloudflare_record.zephyrus.hostname
-  type    = "CNAME"
-  ttl     = 60
-  proxied = false
-}
-
 resource "cloudflare_record" "t9stbot_dev" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
   name    = "t9stbot-dev"

@@ -1,0 +1,7 @@
+- name: Set version when not defined
+  when: NVM_VERSION is undefined
+  set_fact:
+    NVM_VERSION: v0.39.7
+
+- name: Install nvm
+  ansible.builtin.shell: "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/{{ NVM_VERSION }}/install.sh | bash"

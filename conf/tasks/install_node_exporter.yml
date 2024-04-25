@@ -1,0 +1,36 @@
+- set_fact: node_exporter_version="1.5.0"
+  when: node_exporter_version is undefined
+
+- name: Download node_exporter tarball
+  become: true
+  get_url:
+    url: https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz
+    dest: /opt/node_exporter.tar.gz
+
+- name: Extract node_exporter tarball
+  become: true
+  ansible.builtin.unarchive:
+    src: /opt/node_exporter.tar.gz
+    dest: /opt
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    remote_src: yes
+
+- name: Create node_exporter systemd service
+  become: true
+  ansible.builtin.template:
+    src: node_exporter.service
+    dest: /etc/systemd/system/node_exporter.service
+    mode: "0644"
+
+- name: Run systemctl daemon-reload
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Start node_exporter service
+  become: true
+  ansible.builtin.service:
+    name: node_exporter
+    state: restarted
+    enabled: yes

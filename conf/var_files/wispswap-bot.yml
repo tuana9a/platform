@@ -1,0 +1,16 @@
+HOST_NAME: wispswap-bot
+parted:
+  dev_path: /dev/vdb
+  mount_path: /data/
+openvpn_client_items:
+  - file: wispswap-bot/wispswap-bot-orisis.ovpn
+    name: wispswap-bot-orisis
+rsync_items:
+  - src: wispswap-bot/mongodb/
+    dest: /opt/mongodb/
+git_clone_items:
+  - repo: "git@github.com:wispswap-labs/wispswap-bot.git"
+    key_file: ~/.ssh/id_rsa
+    dest: /data/github.com/wispswap-labs/wispswap-bot
+compose_items:
+  - dir: /opt/mongodb/

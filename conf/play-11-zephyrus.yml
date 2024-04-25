@@ -1,0 +1,20 @@
+- hosts: zephyrus
+  vars_files:
+    - ./var_files/zephyrus.yml
+    - ./var_files/update_dns.yml
+    - ./var_files/backup_nginx.yml
+    - ./var_files/tuana9a-device-authorized-keys.yml
+  tasks:
+    - import_tasks: ./tasks/cronjob_authorized_keys.yml
+    - import_tasks: ./tasks/set_timezone.yml
+    - import_tasks: ./tasks/install_tmux.yml
+    - import_tasks: ./tasks/set_hostname.yml
+    - import_tasks: ./tasks/cronjob_update_cloudflare_dns.yml
+    - import_tasks: ./tasks/install_docker.yml
+    - import_tasks: ./tasks/install_awscli.yml
+    - import_tasks: ./tasks/remove_aws_credentials.yml
+    - import_tasks: ./tasks/install_node_exporter.yml
+    - import_tasks: ./tasks/rsync.yml
+    - import_tasks: ./tasks/install_nginx.yml
+    - import_tasks: ./tasks/install_nginx_exporter.yml
+    - import_tasks: ./tasks/cronjob_backup_nginx.yml

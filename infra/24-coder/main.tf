@@ -1,17 +1,17 @@
 resource "kubernetes_secret_v1" "coder_db_url" {
   metadata {
     name      = "coder-db-url"
-    namespace = local.namespace
+    namespace = var.namespace
   }
 
   data = {
-    url = local.db_url
+    url = var.coder_db_url
   }
 }
 
 resource "helm_release" "coder" {
   name             = "coder"
-  namespace        = local.namespace
+  namespace        = var.namespace
   create_namespace = true
 
   repository = "https://helm.coder.com/v2"

@@ -1,0 +1,7 @@
+HOST_NAME: dev
+openvpn_client_items:
+  - file: dev/dev-zephyrus.ovpn
+    name: dev-zephyrus
+update_dns_items:
+  - record_name: d.z.tuana9a.com
+    extract_ip: $(/sbin/ifconfig tun0 | grep 'inet ' | awk '{print $2}')

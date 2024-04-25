@@ -1,0 +1,12 @@
+authorized_keys_items:
+  - name: tuana9a-Huananzhi-Workstation
+    url: https://public.tuana9a.com/tuana9a-Huananzhi-Workstation/id_rsa.pub
+
+  - name: tuana9a-dev
+    url: https://public.tuana9a.com/tuana9a-dev/id_rsa.pub
+
+  - name: tuana9a-XPS-13-9370
+    url: https://public.tuana9a.com/tuana9a-XPS-13-9370/id_rsa.pub
+
+  - name: tuana9a-PRIME-X570-P
+    url: https://public.tuana9a.com/PRIME-X570-P/id_rsa.pub

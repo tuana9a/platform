@@ -1,0 +1,16 @@
+HOST_NAME: amon
+openvpn_client_items:
+  - file: amon/adrazaamon-workstation-zephyrus.ovpn
+    name: adrazaamon-workstation-zephyrus
+  - file: amon/amon.ovpn
+    name: amon
+rsync_items:
+  - src: amon/mongodb/
+    dest: /opt/mongodb/
+update_dns_items:
+  # there are two tun device don't know the order so have to grep the ip
+  - record_name: amon.z.tuana9a.com
+    extract_ip: $(/sbin/ifconfig | grep 10.14.16 | awk '{print $2}')
+    state: absent
+compose_items:
+  - dir: /opt/mongodb/

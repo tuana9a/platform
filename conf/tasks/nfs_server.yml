@@ -1,0 +1,34 @@
+- name: Install nfs-kernel-server package
+  become: true
+  apt:
+    name:
+      - nfs-kernel-server
+    state: present
+    update_cache: yes
+
+- name: Ensure exports dir exists
+  become: true
+  loop: "{{ nfs_server_exports }}"
+  ansible.builtin.file:
+    owner: nobody
+    group: nogroup
+    mode: "0777"
+    path: "{{ item.path }}"
+    state: directory
+
+- name: Ensure config exists
+  become: true
+  loop: "{{ nfs_server_exports }}"
+  ansible.builtin.lineinfile:
+    create: true
+    owner: root
+    group: root
+    path: /etc/exports
+    line: "{{ item.config }}"
+
+- name: Restart nfs-kernel-server service
+  become: true
+  ansible.builtin.service:
+    name: nfs-kernel-server
+    state: restarted
+    enabled: true

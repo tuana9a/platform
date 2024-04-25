@@ -1,9 +1,0 @@
-orisis:
-  hosts:
-    orisis.tuana9a.com:
-      authorized_keys_url: https://public.tuana9a.com/.ssh/authorized_keys
-      ansible_user: tuana9a
-      HOST_NAME: orisis
-      rsync_items:
-        - src: orisis/prometheus/
-          dest: /opt/prometheus/

@@ -1,0 +1,13 @@
+- name: Remove old script
+  become: true
+  ansible.builtin.file:
+    state: absent
+    path: /opt/backup-nginx.sh
+
+- name: Remove old cronjob
+  ansible.builtin.cron:
+    name: "backup-nginx.sh"
+    minute: "0"
+    hour: "0"
+    job: "/opt/backup-nginx.sh > /tmp/backup-nginx.log 2>&1"
+    state: absent

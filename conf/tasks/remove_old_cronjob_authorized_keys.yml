@@ -1,0 +1,6 @@
+- name: Remove old Sync authorized_keys cronjob
+  ansible.builtin.cron:
+    name: "authorized_keys"
+    minute: "0"
+    job: "curl google.com"
+    state: absent

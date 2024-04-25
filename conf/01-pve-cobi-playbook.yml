@@ -1,7 +1,0 @@
-- hosts: pve_cobi
-  roles:
-    - role: "authorized_keys"
-    - role: "tz"
-    - role: "node_exporter"
-    - role: "openvpn-client"
-    - role: "update_dns"
