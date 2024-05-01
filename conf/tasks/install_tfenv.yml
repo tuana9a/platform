@@ -1,0 +1,4 @@
+- name: Install tfenv
+  shell: |
+    git clone --depth=1 https://github.com/tfutils/tfenv.git ~/.tfenv
+    sudo ln -sf ~/.tfenv/bin/* /usr/local/bin

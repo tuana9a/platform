@@ -1,0 +1,6 @@
+- name: Install k9s
+  ansible.builtin.shell: |
+    cd /tmp
+    wget https://github.com/derailed/k9s/releases/download/v0.32.4/k9s_Linux_amd64.tar.gz -O k9s.tar.gz
+    tar xzf k9s.tar.gz
+    sudo install -o root -g root -m 0755 k9s /usr/local/bin/k9s
