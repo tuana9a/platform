@@ -15,6 +15,7 @@
     - import_tasks: ./tasks/openvpn_client.yml
     - import_tasks: ./tasks/cronjob_update_cloudflare_dns.yml
     - import_tasks: ./tasks/copy_aws_credentials.yml
+    - import_tasks: ./tasks/copy_gitconfig.yml
     - import_tasks: ./tasks/install_python.yml
     - import_tasks: ./tasks/install_nvm.yml
     - import_tasks: ./tasks/install_tmux.yml
