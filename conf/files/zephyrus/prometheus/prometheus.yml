@@ -27,7 +27,7 @@ scrape_configs:
       - targets:
           - z.z.tuana9a.com:9100
           - pve.z.tuana9a.com:9100
-          - d.z.tuana9a.com:9100
+          - tuana9a-dev.z.tuana9a.com:9100
           - db.z.tuana9a.com:9100
           - k8s-lb.z.tuana9a.com:9100
 

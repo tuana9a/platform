@@ -9,7 +9,7 @@ if [ -z $url ]; then
     exit 1
 fi
 
-authorized_keys_file="/home/{{ ansible_user }}/.ssh/authorized_keys"
+authorized_keys_file=~/.ssh/authorized_keys
 
 if [ ! -f "$authorized_keys_file" ]; then
     echo "Error: \"$authorized_keys_file\" do not exist."
