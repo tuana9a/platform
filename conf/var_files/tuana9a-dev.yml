@@ -1,7 +1,12 @@
 HOST_NAME: tuana9a-dev
+parted:
+  dev_path: /dev/vdb
+  mount_path: /data/
 openvpn_client_items:
   - file: tuana9a-dev/tuana9a-dev-zephyrus.ovpn
     name: tuana9a-dev-zephyrus
 update_dns_items:
   - record_name: tuana9a-dev.z.tuana9a.com
     extract_ip: $(/usr/sbin/ip addr show tun0 | grep 'inet ' | awk '{print $2}' | cut -d/ -f1)
+install_python_items:
+  - PYTHON_VERSION: "3.8.16"

@@ -1,0 +1,11 @@
+- name: Set version
+  when: ARGOCD_VERSION is undefined
+  set_fact:
+    ARGOCD_VERSION: v2.7.10
+
+- name: Install argocd
+  shell: |
+    cd /tmp
+    VERSION="{{ ARGOCD_VERSION }}" # Select desired TAG from https://github.com/argoproj/argo-cd/releases
+    curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/download/$VERSION/argocd-linux-amd64
+    sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd

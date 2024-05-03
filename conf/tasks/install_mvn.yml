@@ -1,0 +1,8 @@
+- name: Install mvn
+  become: true
+  ansible.builtin.shell: |
+    cd /opt
+    wget https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz -O maven-3.tar.gz
+    tar xzf maven-3.tar.gz
+    mv $(ls -d apache-maven-3*) maven-3
+    sudo ln -sf /opt/maven-3/bin/* /usr/local/bin

@@ -1,0 +1,8 @@
+- name: Install corretto 8
+  become: true
+  ansible.builtin.shell: |
+    cd /opt
+    wget https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.tar.gz -O corretto-8.tar.gz
+    tar xzf corretto-8.tar.gz
+    mv $(ls -d amazon-corretto-8*) corretto-8
+    sudo ln -sf /opt/corretto-8/bin/* /usr/local/bin

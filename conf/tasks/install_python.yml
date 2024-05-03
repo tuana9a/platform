@@ -1,0 +1,34 @@
+- name: Install required build tools
+  become: true
+  ansible.builtin.apt:
+    name:
+      - make
+      - tar
+      - wget
+      - curl
+      - llvm
+      - build-essential
+      - libssl-dev
+      - zlib1g-dev
+      - libbz2-dev
+      - libreadline-dev
+      - libsqlite3-dev
+      - libncursesw5-dev
+      - xz-utils
+      - tk-dev
+      - libxml2-dev
+      - libxmlsec1-dev
+      - libffi-dev
+      - liblzma-dev
+
+- name: Install python
+  loop: "{{ install_python_items }}"
+  shell: |
+    cd /tmp/
+    PYTHON_VERSION={{ item.PYTHON_VERSION }}
+    wget https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tgz
+    tar xzf Python-$PYTHON_VERSION.tgz
+    cd Python-$PYTHON_VERSION/
+    ./configure --prefix=/opt/python-$PYTHON_VERSION --enable-shared LDFLAGS=-Wl,-rpath=/opt/python-$PYTHON_VERSION/lib
+    sudo make
+    sudo make install
