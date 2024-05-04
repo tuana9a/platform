@@ -16,6 +16,6 @@ mkdir -p /opt/ansible
 cd /opt/ansible
 python3 -m venv .venv
 source .venv/bin/activate
-pip install ansible ansible-core
+pip install ansible ansible-core ansible-lint
 ln -sf /opt/ansible/.venv/bin/ansible* /usr/local/bin
 ```

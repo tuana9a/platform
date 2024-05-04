@@ -154,5 +154,3 @@ override.tf.json
 # @tuana9a
 *tmp*
 *secret*
-.vagrant
-.vscode

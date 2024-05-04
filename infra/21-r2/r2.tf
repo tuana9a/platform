@@ -22,8 +22,14 @@ resource "cloudflare_r2_bucket" "public" {
   location   = "APAC"
 }
 
-resource "cloudflare_r2_bucket" "stuffs" {
+resource "cloudflare_r2_bucket" "secrets" {
   account_id = var.cloudflare_account_id
-  name       = "stuffs"
+  name       = "secrets"
+  location   = "APAC"
+}
+
+resource "cloudflare_r2_bucket" "terraform" {
+  account_id = var.cloudflare_account_id
+  name       = "terraform"
   location   = "APAC"
 }
