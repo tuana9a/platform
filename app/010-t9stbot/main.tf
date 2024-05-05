@@ -11,7 +11,7 @@ resource "argocd_application" "t9stbot" {
 
     destination {
       server    = "https://kubernetes.default.svc"
-      namespace = "default"
+      namespace = "tuana9a"
     }
 
     source {

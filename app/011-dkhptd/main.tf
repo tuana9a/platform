@@ -11,7 +11,7 @@ resource "argocd_application" "dkhptd" {
 
     destination {
       server    = "https://kubernetes.default.svc"
-      namespace = "default"
+      namespace = "dkhptd"
     }
 
     source {
