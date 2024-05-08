@@ -1,0 +1,6 @@
+server:
+  persistentVolume:
+    storageClass: nfs-client
+alertmanager:
+  persistentVolume:
+    storageClass: nfs-client
