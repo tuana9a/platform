@@ -5,4 +5,6 @@ parted:
 nfs_server_exports:
   - path: /exports/nfs-client/
     config: /exports/nfs-client/ 192.168.56.0/24(rw,sync,no_root_squash,no_subtree_check)
-NFS_BACKUP_DIR: /exports/nfs-client/
+backup_nfs_items:
+  - name: coder
+    path: "/exports/nfs-client/coder-*"
