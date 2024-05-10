@@ -14,15 +14,19 @@ export AWS_DEFAULT_REGION="{{ NFS_BACKUP_AWS_DEFAULT_REGION | default('auto') }}
 TELEGRAM_BOT_TOKEN="{{ NFS_BACKUP_TELEGRAM_BOT_TOKEN | default('') }}"
 TELEGRAM_CHAT_ID="{{ NFS_BACKUP_TELEGRAM_CHAT_ID | default('') }}"
 
-BACKUP_DIR="{{ NFS_BACKUP_DIR }}"
+BACKUP_DIR=$1
+DUMP_PREFIX=$2
 
-DUMP_FILE="nfs-dump-$(date +'%Y.%m.%d').tar.gz"
+if [ -z $DUMP_PREFIX ]; then echo DUMP_PREFIX is not set, default is "nfs".; DUMP_PREFIX=nfs; fi
+
+DUMP_FILE="$DUMP_PREFIX-dump-$(date +'%Y.%m.%d').tar.gz"
 WORKDIR=/tmp
 SECONDS=0 # for calc duration
 
 if [ -z "$HOST_NAME" ]; then echo HOST_NAME is not set, default is "unknown".; HOST_NAME=unknown; fi
-if [ -z "$S3_ENDPOINT" ]; then echo S3_ENDPOINT is not set, exiting.; exit 0; fi
-if [ -z "$BUCKET_NAME" ]; then echo BUCKET_NAME is not set, exiting.; exit 0; fi
+if [ -z "$BACKUP_DIR" ]; then echo BACKUP_DIR is not set, exiting.; exit 1; fi
+if [ -z "$S3_ENDPOINT" ]; then echo S3_ENDPOINT is not set, exiting.; exit 1; fi
+if [ -z "$BUCKET_NAME" ]; then echo BUCKET_NAME is not set, exiting.; exit 1; fi
 
 if [[ -n $TELEGRAM_BOT_TOKEN || -n $TELEGRAM_CHAT_ID ]]; then
 notify() {
@@ -65,6 +69,7 @@ tar \
   --exclude 'amazon-corretto-*' \
   --exclude '.nvm' \
   --exclude '.npm' \
+  --exclude '*.lock' \
   -cvzf $DUMP_FILE $BACKUP_DIR
 
 if [ $? != 0 ]; then
@@ -91,4 +96,4 @@ DURATION=$SECONDS
 MSG="SUCCESS $HOST_NAME backup-nfs $BACKUP_DIR $(($DURATION / 60))m$(($DURATION % 60))s"
 notify "$MSG"
 
-rm nfs-dump-*.tar.gz
+rm $DUMP_PREFIX-dump-*.tar.gz
