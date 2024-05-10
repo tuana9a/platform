@@ -5,3 +5,9 @@
       - zsh
     state: present
     update_cache: yes
+
+- name: Ensure zsh is the default shell
+  become: true
+  user:
+    name: "{{ ansible_user }}"
+    shell: "/usr/bin/zsh"

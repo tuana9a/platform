@@ -27,3 +27,7 @@
     - import_tasks: ./tasks/install_k9s.yml
     - import_tasks: ./tasks/install_corretto8.yml
     - import_tasks: ./tasks/install_mvn.yml
+    - import_tasks: ./tasks/install_zsh.yml
+    - import_tasks: ./tasks/install_oh_my_zsh.yml
+    - import_tasks: ./tasks/install_zoxide.yml
+    - import_tasks: ./tasks/install_zsh_plugins.yml

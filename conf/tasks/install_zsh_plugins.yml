@@ -1,0 +1,12 @@
+- name: Install zsh-autosuggestions
+  shell: |
+    OUTDIR=${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+    if [ -z $OUTDIR ]; then
+      git clone https://github.com/zsh-users/zsh-autosuggestions $OUTDIR
+    fi
+
+- name: Update plugins
+  ansible.builtin.replace:
+    path: "~/.zshrc"
+    regexp: 'plugins=\(.+\).*'
+    replace: "plugins=(git zsh-autosuggestions)"
