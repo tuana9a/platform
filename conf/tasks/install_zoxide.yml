@@ -1,12 +1,2 @@
 - name: Install zxodie
   ansible.builtin.shell: "curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh"
-
-- name: Ensure .local/bin in $PATH
-  ansible.builtin.lineinfile:
-    path: "~/.zshrc"
-    line: "export PATH=$PATH:~/.local/bin"
-
-- name: Setup zxodie in zsh
-  ansible.builtin.lineinfile:
-    path: "~/.zshrc"
-    line: 'eval "$(zoxide init zsh)"'

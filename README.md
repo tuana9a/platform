@@ -54,3 +54,13 @@ port forward for argocd access from dev machine
 ```bash
 kubectl -n argocd port-forward svc/argocd-server --address ${address:-0.0.0.0} ${port:-8443}:443
 ```
+
+# logging (EFK)
+
+- elasticsearch
+- fluentd
+- kibana
+
+```bash
+kubectl -n efk port-forward svc/kibana --address ${address:-0.0.0.0} ${port:-5601}:5601
+```

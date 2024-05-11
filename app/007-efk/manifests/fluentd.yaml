@@ -111,8 +111,8 @@ spec:
               cpu: 500m
               memory: 500Mi
             requests:
-              cpu: 300m
-              memory: 400Mi
+              cpu: 200m
+              memory: 200Mi
           volumeMounts:
             # @tuana9a
             - name: fluentd-config-override
