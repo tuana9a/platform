@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: t9stbot
-          image: tuana9a/t9stbot:2023.11.21.142135
+          image: tuana9a/t9stbot:2024.05.11.003112
           envFrom:
             - configMapRef:
                 name: t9stbot
