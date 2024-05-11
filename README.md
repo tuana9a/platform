@@ -31,3 +31,26 @@ verify ansible installation
 ```bash
 ansible --version
 ```
+
+config ansible (optional)
+
+```bash
+ln -sf $PWD/ansible.cfg ~/.ansible.cfg
+ln -sf $PWD/secrets/ansible-vault-password.txt ~/.ansible-vault-password.txt
+```
+
+# deploy apps (argocd)
+
+get argocd admin password
+
+```bash
+argocd admin initial-password -n argocd
+```
+
+port forward for argocd access from dev machine
+- terraform apply
+- web ui access
+
+```bash
+kubectl -n argocd port-forward svc/argocd-server --address ${address:-0.0.0.0} ${port:-8443}:443
+```
