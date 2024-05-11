@@ -30,4 +30,8 @@
     - import_tasks: ./tasks/install_zsh.yml
     - import_tasks: ./tasks/install_oh_my_zsh.yml
     - import_tasks: ./tasks/install_zoxide.yml
-    - import_tasks: ./tasks/install_zsh_plugins.yml
+    - import_tasks: ./tasks/install_zsh_autosuggestions.yml
+    - name: copy .zshrc
+      copy:
+        src: tuana9a-dev/.zshrc
+        dest: ~/.zshrc
