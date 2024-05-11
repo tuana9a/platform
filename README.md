@@ -16,8 +16,8 @@ tuana9a's platform
 NOTE: using python of the os, change the 3.10 if necessary
 
 ```bash
-apt install python3.10-venv
 sudo -i
+apt install -y python3.10-venv
 mkdir -p /opt/ansible
 cd /opt/ansible
 python3 -m venv .venv
