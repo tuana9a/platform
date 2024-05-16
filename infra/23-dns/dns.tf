@@ -1,28 +1,37 @@
 resource "cloudflare_record" "zephyrus" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
   name    = "zephyrus"
-  value   = local.zephyrus_ip
+  value   = "1.1.1.1" # placeholder value only
   type    = "A"
   ttl     = 60
   proxied = false
+  lifecycle {
+    ignore_changes = [value]
+  }
 }
 
 resource "cloudflare_record" "orisis" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
   name    = "orisis"
-  value   = local.orisis_ip
+  value   = "1.1.1.1" # placeholder value only
   type    = "A"
   ttl     = 60
   proxied = false
+  lifecycle {
+    ignore_changes = [value]
+  }
 }
 
 resource "cloudflare_record" "imperial_ally_285602" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
   name    = "imperial-ally-285602"
-  value   = local.imperial_ally_285602_ip
+  value   = "1.1.1.1" # placeholder value only
   type    = "A"
   ttl     = 60
   proxied = false
+  lifecycle {
+    ignore_changes = [value]
+  }
 }
 
 resource "cloudflare_record" "dkhptd_api" {
@@ -91,10 +100,13 @@ resource "cloudflare_record" "t9stbot" {
 resource "cloudflare_record" "test" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
   name    = "test"
-  value   = local.test_ip
+  value   = "1.1.1.1"
   type    = "A"
   ttl     = 1
   proxied = false
+  lifecycle {
+    ignore_changes = [value]
+  }
 }
 
 resource "cloudflare_record" "backend_facebook_clone" {
@@ -106,9 +118,9 @@ resource "cloudflare_record" "backend_facebook_clone" {
   proxied = false
 }
 
-resource "cloudflare_record" "wg" {
+resource "cloudflare_record" "wg_zpr" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
-  name    = "wg"
+  name    = "wg-zpr"
   value   = cloudflare_record.zephyrus.hostname
   type    = "CNAME"
   ttl     = 60

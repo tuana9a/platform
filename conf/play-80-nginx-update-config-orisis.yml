@@ -1,0 +1,5 @@
+- hosts: orisis
+  vars_files:
+    - ./var_files/orisis.yml
+  tasks:
+    - import_tasks: ./tasks/update_nginx_config.yml

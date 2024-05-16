@@ -2,6 +2,8 @@ HOST_NAME: zephyrus
 rsync_items:
   - src: zephyrus/prometheus/
     dest: /opt/prometheus/
+  - src: zephyrus/wg-easy/
+    dest: /opt/wg-easy/
 update_dns_items:
   - record_name: z.z.tuana9a.com
     extract_ip: $(/sbin/ifconfig tun0 | grep 'inet ' | awk '{print $2}')
