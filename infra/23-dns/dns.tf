@@ -10,6 +10,15 @@ resource "cloudflare_record" "zephyrus" {
   }
 }
 
+resource "cloudflare_record" "zpr" {
+  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
+  name    = "zpr"
+  value   = cloudflare_record.zephyrus.hostname
+  type    = "CNAME"
+  ttl     = 60
+  proxied = false
+}
+
 resource "cloudflare_record" "orisis" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
   name    = "orisis"
@@ -20,6 +29,15 @@ resource "cloudflare_record" "orisis" {
   lifecycle {
     ignore_changes = [value]
   }
+}
+
+resource "cloudflare_record" "ors" {
+  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
+  name    = "ors"
+  value   = cloudflare_record.orisis.hostname
+  type    = "CNAME"
+  ttl     = 60
+  proxied = false
 }
 
 resource "cloudflare_record" "imperial_ally_285602" {
@@ -121,6 +139,15 @@ resource "cloudflare_record" "backend_facebook_clone" {
 resource "cloudflare_record" "wg_zpr" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
   name    = "wg-zpr"
+  value   = cloudflare_record.zephyrus.hostname
+  type    = "CNAME"
+  ttl     = 60
+  proxied = false
+}
+
+resource "cloudflare_record" "coder" {
+  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
+  name    = "coder"
   value   = cloudflare_record.zephyrus.hostname
   type    = "CNAME"
   ttl     = 60
