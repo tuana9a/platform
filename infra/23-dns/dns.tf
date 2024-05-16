@@ -3,7 +3,7 @@ resource "cloudflare_record" "zephyrus" {
   name    = "zephyrus"
   value   = local.zephyrus_ip
   type    = "A"
-  ttl     = 1
+  ttl     = 60
   proxied = false
 }
 
@@ -12,7 +12,7 @@ resource "cloudflare_record" "orisis" {
   name    = "orisis"
   value   = local.orisis_ip
   type    = "A"
-  ttl     = 1
+  ttl     = 60
   proxied = false
 }
 
@@ -100,6 +100,15 @@ resource "cloudflare_record" "test" {
 resource "cloudflare_record" "backend_facebook_clone" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
   name    = "backend-facebook-clone"
+  value   = cloudflare_record.zephyrus.hostname
+  type    = "CNAME"
+  ttl     = 60
+  proxied = false
+}
+
+resource "cloudflare_record" "wg" {
+  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
+  name    = "wg"
   value   = cloudflare_record.zephyrus.hostname
   type    = "CNAME"
   ttl     = 60
