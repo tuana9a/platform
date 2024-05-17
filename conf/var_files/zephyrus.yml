@@ -9,3 +9,6 @@ update_dns_items:
     extract_ip: $(/sbin/ifconfig tun0 | grep 'inet ' | awk '{print $2}')
 compose_items:
   - dir: /opt/prometheus/
+wireguard_client_items:
+  - file: zephyrus/wg/zephyrus-zpr.conf
+    name: wg0
