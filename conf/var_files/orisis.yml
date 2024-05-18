@@ -1,6 +1,0 @@
-HOST_NAME: orisis
-rsync_items:
-  - src: orisis/prometheus/
-    dest: /opt/prometheus/
-compose_items:
-  - dir: /opt/prometheus/

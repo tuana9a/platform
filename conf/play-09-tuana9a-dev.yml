@@ -1,8 +1,4 @@
 - hosts: tuana9a_dev
-  vars_files:
-    - ./var_files/tuana9a-dev.yml
-    - ./var_files/update_dns.yml
-    - ./var_files/tuana9a-device-authorized-keys.yml
   tasks:
     - import_tasks: ./tasks/parted.yml
     - import_tasks: ./tasks/cronjob_authorized_keys.yml
@@ -31,6 +27,7 @@
     - import_tasks: ./tasks/install_oh_my_zsh.yml
     - import_tasks: ./tasks/install_zoxide.yml
     - import_tasks: ./tasks/install_zsh_autosuggestions.yml
+    - import_tasks: ./tasks/install_direnv.yml
     - name: copy .zshrc
       copy:
         src: tuana9a-dev/.zshrc

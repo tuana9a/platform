@@ -1,8 +1,4 @@
 - hosts: k8s_control_plane
-  vars_files:
-    - ./var_files/k8s-control-plane.yml
-    - ./var_files/tuana9a-device-authorized-keys.yml
-    - ./var_files/backup_kubernetes.yml
   tasks:
     - import_tasks: ./tasks/cronjob_authorized_keys.yml
     - import_tasks: ./tasks/install_awscli.yml
