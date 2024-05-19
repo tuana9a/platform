@@ -1,8 +1,4 @@
 - hosts: pve_cobi
-  vars_files:
-    - ./var_files/pve-cobi.yml
-    - ./var_files/tuana9a-device-authorized-keys.yml
-    - ./var_files/update_dns.yml
   tasks:
     - import_tasks: ./tasks/cronjob_authorized_keys.yml
     - import_tasks: ./tasks/set_timezone.yml

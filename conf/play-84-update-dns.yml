@@ -1,0 +1,3 @@
+- hosts: update_dns
+  tasks:
+    - import_tasks: ./tasks/cronjob_update_cloudflare_dns.yml

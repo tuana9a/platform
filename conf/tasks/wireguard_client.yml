@@ -1,0 +1,23 @@
+- name: Install wireguard package
+  apt:
+    name:
+      - wireguard
+      - resolvconf # /usr/bin/wg-quick: line 32: resolvconf: command not found
+    state: present
+  become: true
+
+- name: Upload .conf file
+  loop: "{{ wireguard_client_items }}"
+  become: true
+  copy:
+    src: "{{ item.file }}"
+    dest: "/etc/wireguard/{{ item.name }}.conf"
+    mode: "0644"
+
+- name: Start + Enable wireguard service
+  loop: "{{ wireguard_client_items }}"
+  become: true
+  service:
+    name: "wg-quick@{{ item.name }}"
+    state: "{{ item.state | default('restarted') }}"
+    enabled: "{{ item.enabled | default('true') }}"

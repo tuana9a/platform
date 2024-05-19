@@ -1,0 +1,7 @@
+- name: Install direnv package
+  become: true
+  apt:
+    name:
+      - direnv
+    state: present
+    update_cache: yes

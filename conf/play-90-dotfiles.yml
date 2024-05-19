@@ -1,0 +1,11 @@
+- hosts: dotfiles
+  tasks:
+    - name: copy .zshrc
+      copy:
+        src: "{{ HOST_NAME }}/.zshrc"
+        dest: ~/.zshrc
+
+    - name: copy .gitconfig
+      copy:
+        src: "{{ HOST_NAME }}/.gitconfig"
+        dest: ~/.gitconfig

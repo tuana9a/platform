@@ -1,9 +1,4 @@
 - hosts: k8s_lb
-  vars_files:
-    - ./var_files/k8s-lb.yml
-    - ./var_files/update_dns.yml
-    - ./var_files/backup_haproxy.yml
-    - ./var_files/tuana9a-device-authorized-keys.yml
   tasks:
     - import_tasks: ./tasks/cronjob_authorized_keys.yml
     - import_tasks: ./tasks/set_timezone.yml
