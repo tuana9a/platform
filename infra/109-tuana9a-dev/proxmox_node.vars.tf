@@ -1,0 +1,1 @@
+../common/proxmox_node.vars.tf

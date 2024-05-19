@@ -5,7 +5,7 @@ resource "random_password" "vm_password" {
 }
 
 resource "proxmox_virtual_environment_vm" "tuana9a_dev" {
-  node_name = local.node_name
+  node_name = var.proxmox_node.name
   vm_id     = 109
   name      = "tuana9a-dev"
   tags      = ["terraform", "ubuntu"]
@@ -28,7 +28,7 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev" {
   }
 
   disk {
-    datastore_id = local.storage.ssda
+    datastore_id = var.proxmox_node.storage_names[1].name
     file_id      = "local:iso/jammy-server-cloudimg-amd64.img"
     interface    = "virtio0"
     size         = 20
@@ -37,18 +37,18 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev" {
   }
 
   disk {
-    datastore_id = local.storage.ssda
+    datastore_id = var.proxmox_node.storage_names[1].name
     interface    = "virtio1"
-    size         = 10
+    size         = 20
     file_format  = "raw"
-    backup       = false
+    backup       = true
     replicate    = false
   }
 
   boot_order = ["virtio0"]
 
   initialization {
-    datastore_id = local.storage.ssda
+    datastore_id = var.proxmox_node.storage_names[1].name
 
     ip_config {
       ipv4 {

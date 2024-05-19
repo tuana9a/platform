@@ -5,7 +5,7 @@ resource "random_password" "vm_password" {
 }
 
 resource "proxmox_virtual_environment_vm" "db" {
-  node_name = local.node_name
+  node_name = var.proxmox_node.name
   vm_id     = 104
   name      = "db"
   tags      = ["terraform", "ubuntu"]
@@ -29,7 +29,7 @@ resource "proxmox_virtual_environment_vm" "db" {
   }
 
   disk {
-    datastore_id = local.storage.local
+    datastore_id = var.proxmox_node.storage_names[0].name
     file_id      = "local:iso/jammy-server-cloudimg-amd64.img"
     interface    = "virtio0"
     size         = 20
@@ -38,7 +38,7 @@ resource "proxmox_virtual_environment_vm" "db" {
   }
 
   disk {
-    datastore_id = local.storage.local
+    datastore_id = var.proxmox_node.storage_names[0].name
     interface    = "virtio1"
     size         = 20
     file_format  = "raw"
@@ -49,7 +49,7 @@ resource "proxmox_virtual_environment_vm" "db" {
   boot_order = ["virtio0"]
 
   initialization {
-    datastore_id = local.storage.local
+    datastore_id = var.proxmox_node.storage_names[0].name
 
     ip_config {
       ipv4 {
