@@ -72,3 +72,17 @@ resource "bizflycloud_firewall" "wireguard" {
     protocol   = ""
   }
 }
+
+resource "bizflycloud_firewall" "proxmox" {
+  name = "proxmox"
+  ingress {
+    cidr       = "0.0.0.0/0"
+    port_range = "8006"
+    protocol   = "tcp"
+  }
+  egress {
+    cidr       = ""
+    port_range = ""
+    protocol   = ""
+  }
+}
