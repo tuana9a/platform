@@ -8,9 +8,5 @@ openvpn_client_items:
 rsync_items:
   - src: wispswap-bot/mongodb/
     dest: /opt/mongodb/
-git_clone_items:
-  - repo: "git@github.com:wispswap-labs/wispswap-bot.git"
-    key_file: ~/.ssh/id_rsa
-    dest: /data/github.com/wispswap-labs/wispswap-bot
 compose_items:
   - dir: /opt/mongodb/
