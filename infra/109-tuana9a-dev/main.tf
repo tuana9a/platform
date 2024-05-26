@@ -32,7 +32,7 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev" {
     file_id      = "local:iso/jammy-server-cloudimg-amd64.img"
     interface    = "virtio0"
     size         = 20
-    backup       = false
+    backup       = true
     replicate    = false
   }
 

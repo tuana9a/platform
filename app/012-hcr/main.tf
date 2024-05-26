@@ -3,7 +3,6 @@ resource "argocd_application" "hcr" {
     name = "hcr"
   }
 
-  cascade = false # disable cascading deletion
   wait    = true
 
   spec {

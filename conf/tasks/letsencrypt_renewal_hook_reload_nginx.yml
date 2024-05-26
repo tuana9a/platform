@@ -1,0 +1,7 @@
+- name: Copy reload-nginx.sh
+  become: true
+  copy:
+    mode: "755"
+    src: "reload-nginx.sh"
+    dest: "/etc/letsencrypt/renewal-hooks/post/reload-nginx.sh"
+    force: true

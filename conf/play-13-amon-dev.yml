@@ -8,6 +8,7 @@
     - import_tasks: ./tasks/install_docker.yml
     - import_tasks: ./tasks/install_awscli.yml
     - import_tasks: ./tasks/install_node_exporter.yml
+    - import_tasks: ./tasks/install_openvpn.yml
     - import_tasks: ./tasks/openvpn_client.yml
     - import_tasks: ./tasks/copy_gitconfig.yml
     - import_tasks: ./tasks/install_nvm.yml

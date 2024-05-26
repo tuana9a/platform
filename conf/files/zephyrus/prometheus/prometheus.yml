@@ -25,15 +25,14 @@ scrape_configs:
     # scheme defaults to 'http'.
     static_configs:
       - targets:
-          - z.z.tuana9a.com:9100
-          - pve.z.tuana9a.com:9100
-          - tuana9a-dev.z.tuana9a.com:9100
-          - db.z.tuana9a.com:9100
-          - k8s-lb.z.tuana9a.com:9100
+          - 10.14.16.1:9100 # zephyrus
+          - 10.14.16.2:9100 # pve-cobi
+          - 10.14.16.6:9100 # tuana9a-dev
+          - 10.14.16.7:9100 # k8s-lb
 
   - job_name: "nginx-exporter"
     # metrics_path defaults to '/metrics'
     # scheme defaults to 'http'.
     static_configs:
       - targets:
-          - z.z.tuana9a.com:9113
+          - 10.14.16.1:9113

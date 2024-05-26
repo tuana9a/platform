@@ -32,7 +32,7 @@ resource "proxmox_virtual_environment_vm" "amon_dev" {
     file_id      = "local:iso/jammy-server-cloudimg-amd64.img"
     interface    = "virtio0"
     size         = 20
-    backup       = false
+    backup       = true
     replicate    = false
   }
 
@@ -41,7 +41,7 @@ resource "proxmox_virtual_environment_vm" "amon_dev" {
     interface    = "virtio1"
     size         = 20
     file_format  = "raw"
-    backup       = false
+    backup       = true
     replicate    = false
   }
 

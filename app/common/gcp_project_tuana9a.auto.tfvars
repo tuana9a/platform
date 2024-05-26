@@ -1,0 +1,1 @@
+../../infra/common/gcp_project_tuana9a.auto.tfvars

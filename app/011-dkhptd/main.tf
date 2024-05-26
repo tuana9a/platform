@@ -3,7 +3,6 @@ resource "argocd_application" "dkhptd" {
     name = "dkhptd"
   }
 
-  cascade = false # disable cascading deletion
   wait    = true
 
   spec {
