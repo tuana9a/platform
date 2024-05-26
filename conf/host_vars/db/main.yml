@@ -8,6 +8,7 @@ openvpn_client_items:
 update_dns_items:
   - record_name: db.z.tuana9a.com
     extract_ip: $(/usr/sbin/ip addr show tun0 | grep 'inet ' | awk '{print $2}' | cut -d/ -f1)
+    state: absent
 rsync_items:
   - src: db/mongodb/
     dest: /opt/mongodb/

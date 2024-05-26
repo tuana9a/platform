@@ -1,0 +1,45 @@
+coder:
+  # You can specify any environment variables you'd like to pass to Coder
+  # here. Coder consumes environment variables listed in
+  # `coder server --help`, and these environment variables are also passed
+  # to the workspace provisioner (so you can consume them in your Terraform
+  # templates for auth keys etc.).
+  #
+  # Please keep in mind that you should not set `CODER_HTTP_ADDRESS`,
+  # `CODER_TLS_ENABLE`, `CODER_TLS_CERT_FILE` or `CODER_TLS_KEY_FILE` as
+  # they are already set by the Helm chart and will cause conflicts.
+  serviceAccount:
+    extraRules:
+      - apiGroups: ["apps"]
+        resources: ["statefulsets"]
+        verbs:
+          - create
+          - delete
+          - deletecollection
+          - get
+          - list
+          - patch
+          - update
+          - watch
+  env:
+    - name: CODER_ACCESS_URL
+      value: "https://coder.tuana9a.com"
+    - name: CODER_PG_CONNECTION_URL
+      valueFrom:
+        configMapKeyRef:
+          name: coder-db-url
+          key: url
+    - name: "CODER_TELEMETRY_ENABLE"
+      value: "false"
+    # NOTE: Offline deployment https://coder.com/docs/v2/latest/install/offline
+    - name: "CODER_DERP_SERVER_STUN_ADDRESSES" # Only use relayed connections
+      value: "disable"
+    - name: "CODER_BLOCK_DIRECT" # force SSH traffic through control plane's DERP proxy
+      value: "true"
+  service:
+    enable: true
+    type: ClusterIP
+  ingress:
+    enable: true
+    className: nginx
+    host: coder.tuana9a.com

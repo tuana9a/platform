@@ -1,0 +1,5 @@
+- name: Install OpenVPN package
+  apt:
+    name: openvpn
+    state: present
+  become: true

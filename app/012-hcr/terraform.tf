@@ -1,5 +1,13 @@
 terraform {
+  backend "gcs" {
+    bucket = "terraform-tuana9a"
+    prefix = "app/012-hcr"
+  }
   required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "5.29.1"
+    }
     argocd = {
       source  = "oboukili/argocd"
       version = "6.0.3"

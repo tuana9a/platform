@@ -3,7 +3,6 @@ resource "argocd_application" "t9stbot" {
     name = "t9stbot"
   }
 
-  cascade = false # disable cascading deletion
   wait    = true
 
   spec {

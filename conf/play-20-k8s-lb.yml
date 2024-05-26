@@ -5,6 +5,7 @@
     - import_tasks: ./tasks/install_tmux.yml
     - import_tasks: ./tasks/install_nginx.yml
     - import_tasks: ./tasks/install_node_exporter.yml
+    - import_tasks: ./tasks/install_openvpn.yml
     - import_tasks: ./tasks/openvpn_client.yml
     - import_tasks: ./tasks/cronjob_update_cloudflare_dns.yml
     - import_tasks: ./tasks/install_awscli.yml

@@ -29,7 +29,6 @@ scrape_configs:
       - targets:
           - 10.24.30.1:9100
           - 10.24.30.3:9100 # wispswap-prod
-          - 10.24.30.10:9100 # wispswap-bot
 
   - job_name: "nginx-exporter"
     # metrics_path defaults to '/metrics'
