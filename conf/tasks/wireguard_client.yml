@@ -1,11 +1,3 @@
-- name: Install wireguard package
-  apt:
-    name:
-      - wireguard
-      - resolvconf # /usr/bin/wg-quick: line 32: resolvconf: command not found
-    state: present
-  become: true
-
 - name: Upload .conf file
   loop: "{{ wireguard_client_items }}"
   become: true

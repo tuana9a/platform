@@ -8,6 +8,8 @@ openvpn_client_items:
 wireguard_client_items:
   - file: tuana9a-dev/wg/tuana9a-dev-zpr.conf
     name: wg0
+    state: stopped
+    enabled: false
 update_dns_items:
   - record_name: tuana9a-dev.z.tuana9a.com
     extract_ip: $(/usr/sbin/ip addr show tun0 | grep 'inet ' | awk '{print $2}' | cut -d/ -f1)
