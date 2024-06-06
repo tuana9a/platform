@@ -1,4 +1,4 @@
 - name: Set timezone
   become: true
   community.general.timezone:
-    name: "{{ TZ | default('Asia/Ho_Chi_Minh') }}"
+    name: "{{ TZ | default('UTC') }}"

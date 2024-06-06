@@ -11,7 +11,7 @@
   ansible.builtin.cron:
     name: "backup-nfs.sh:{{ item.name }}"
     minute: "0"
-    hour: "0"
+    hour: "17"
     # quote item.path to support glob like /exports/nfs-client/coder-*
     job: "/usr/local/bin/backup-nfs.sh \"{{ item.path }}\" {{ item.name }} >> /tmp/backup-nfs-{{ item.name }}.log 2>&1"
     state: "{{ item.state | default('present') }}"

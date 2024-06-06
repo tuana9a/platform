@@ -16,6 +16,6 @@
   ansible.builtin.cron:
     name: "backup-haproxy.sh"
     minute: "0"
-    hour: "0"
+    hour: "17"
     job: "/usr/local/bin/backup-haproxy.sh >> /tmp/backup-haproxy.log 2>&1"
     state: absent
