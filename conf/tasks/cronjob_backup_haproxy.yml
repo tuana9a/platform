@@ -15,6 +15,7 @@
 - name: Create a cronjob for that
   ansible.builtin.cron:
     name: "backup-haproxy.sh"
-    minute: "0" # TODO: config
-    hour: "0" # TODO: config
+    minute: "0"
+    hour: "0"
     job: "/usr/local/bin/backup-haproxy.sh >> /tmp/backup-haproxy.log 2>&1"
+    state: absent
