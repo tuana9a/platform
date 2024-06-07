@@ -10,5 +10,6 @@
   ansible.builtin.cron:
     name: "backup-nginx.v2.sh"
     minute: "0"
-    hour: "0"
+    hour: "17"
     job: "/usr/local/bin/backup-nginx.v2.sh >> /tmp/backup-nginx.v2.log 2>&1"
+    state: absent

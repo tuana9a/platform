@@ -39,8 +39,8 @@ ansible --version
 config ansible (optional)
 
 ```bash
-ln -sf $PWD/ansible.cfg ~/.ansible.cfg
-ln -sf $PWD/secrets/ansible-vault-password.txt ~/.ansible-vault-password.txt
+ln -sf $PWD/conf/ansible.cfg ~/.ansible.cfg
+ln -sf $PWD/conf/secrets/ansible-vault-password.txt ~/.ansible-vault-password.txt
 ```
 
 # deploy apps (argocd)

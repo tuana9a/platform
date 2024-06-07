@@ -10,5 +10,5 @@
   ansible.builtin.cron:
     name: "backup-kubernetes.sh"
     minute: "0"
-    hour: "0"
+    hour: "17"
     job: "/usr/local/bin/backup-kubernetes.sh >> /tmp/backup-kubernetes.log 2>&1"

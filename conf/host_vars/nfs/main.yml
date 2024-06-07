@@ -7,4 +7,4 @@ nfs_server_exports:
     config: /exports/nfs-client/ 192.168.56.0/24(rw,sync,no_root_squash,no_subtree_check)
 backup_nfs_items:
   - name: coder
-    path: "/exports/nfs-client/coder-*"
+    path: "/exports/nfs-client/coder-home-*"

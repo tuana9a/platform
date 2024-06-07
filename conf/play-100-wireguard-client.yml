@@ -1,0 +1,4 @@
+- hosts: wireguard_client
+  tasks:
+    - import_tasks: ./tasks/install_wireguard.yml
+    - import_tasks: ./tasks/wireguard_client.yml

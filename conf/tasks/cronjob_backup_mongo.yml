@@ -16,5 +16,5 @@
   ansible.builtin.cron:
     name: "backup-mongo.sh"
     minute: "0"
-    hour: "0"
+    hour: "17"
     job: "/usr/local/bin/backup-mongo.sh >> /tmp/backup-mongo.log 2>&1"
