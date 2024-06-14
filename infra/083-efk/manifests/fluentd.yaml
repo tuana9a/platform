@@ -90,9 +90,10 @@ spec:
               value: "9200"
             - name: FLUENT_ELASTICSEARCH_SCHEME
               value: "http"
+            # ignore efk namespace's logs
+            - name: FLUENT_CONTAINER_TAIL_EXCLUDE_PATH
+              value: /var/log/pods/efk*
             # https://github.com/fluent/fluentd-kubernetes-daemonset/issues/412
-            # - name: FLUENT_CONTAINER_TAIL_EXCLUDE_PATH
-            #   value: /var/log/containers/fluentd*
             - name: FLUENT_CONTAINER_TAIL_PARSER_TYPE
               value: cri
             - name: FLUENTD_SYSTEMD_CONF
@@ -101,8 +102,6 @@ spec:
             - name: FLUENT_ELASTICSEARCH_REQUEST_TIMEOUT
               value: "60"
             - name: FLUENT_ELASTICSEARCH_LOG_ES_400_REASON
-              value: "true"
-            - name: FLUENT_KUBERNETES_METADATA_SKIP_LABELS
               value: "true"
           resources:
             limits:
