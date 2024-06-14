@@ -59,7 +59,7 @@ port forward for argocd access from dev machine
 kubectl -n argocd port-forward svc/argocd-server --address ${address:-0.0.0.0} ${port:-8443}:443
 ```
 
-# logging (EFK)
+# logging EFK (deleted)
 
 - elasticsearch
 - fluentd
@@ -69,6 +69,10 @@ kubectl -n argocd port-forward svc/argocd-server --address ${address:-0.0.0.0} $
 kubectl -n efk port-forward svc/kibana --address ${address:-0.0.0.0} ${port:-5601}:5601
 ```
 
+```bash
+kubectl -n efk port-forward svc/elasticsearch --address ${address:-0.0.0.0} ${port:-9200}:9200
+```
+
 # monitoring
 
 - prometheus
@@ -76,4 +80,8 @@ kubectl -n efk port-forward svc/kibana --address ${address:-0.0.0.0} ${port:-560
 
 ```bash
 kubectl -n prometheus port-forward svc/grafana --address ${address:-0.0.0.0} ${port:-3000}:80
+```
+
+```bash
+kubectl -n prometheus port-forward svc/prometheus-server --address ${address:-0.0.0.0} ${port:-9090}:80
 ```
