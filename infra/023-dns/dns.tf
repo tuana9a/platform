@@ -61,9 +61,9 @@ resource "cloudflare_record" "dkhptd_api" {
   proxied = false
 }
 
-resource "cloudflare_record" "dkhptd_dev_api" {
+resource "cloudflare_record" "dkhptd_api_dev" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
-  name    = "dkhptd-dev-api"
+  name    = "dkhptd-api-dev"
   value   = cloudflare_record.zephyrus.hostname
   type    = "CNAME"
   ttl     = 60
@@ -154,9 +154,9 @@ resource "cloudflare_record" "coder" {
   proxied = false
 }
 
-resource "cloudflare_record" "tuana9a_dev" {
+resource "cloudflare_record" "dev" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
-  name    = "tuana9a-dev"
+  name    = "dev"
   value   = cloudflare_record.zephyrus.hostname
   type    = "CNAME"
   ttl     = 60

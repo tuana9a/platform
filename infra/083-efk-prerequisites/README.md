@@ -1,6 +1,4 @@
-# efk
-
-Just cd into manifests then kubectl apply
+# efk-prerequisites
 
 ```bash
 kubectl apply -f manifests
