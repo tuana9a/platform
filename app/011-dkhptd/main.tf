@@ -3,7 +3,7 @@ resource "argocd_application" "dkhptd" {
     name = "dkhptd"
   }
 
-  wait    = true
+  wait = true
 
   spec {
     project = "default"

@@ -3,7 +3,7 @@ resource "argocd_application" "hcr" {
     name = "hcr"
   }
 
-  wait    = true
+  wait = true
 
   spec {
     project = "default"
