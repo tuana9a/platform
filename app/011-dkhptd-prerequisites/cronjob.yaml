@@ -2,8 +2,9 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: mongo-backup
+  namespace: dkhptd
 spec:
-  schedule: "* * * * *"
+  schedule: "0 0 * * *"
   jobTemplate:
     spec:
       template:
@@ -56,7 +57,7 @@ spec:
                 - sh
                 - -c
                 - |
-                  MSG="dkhptd backup mongo success"
+                  MSG="dkhptd mongo backup: success"
                   curl -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
                     -H "Content-Type: application/json" \
                     -d "{\"chat_id\":${TELEGRAM_CHAT_ID},\"disable_notification\":true,\"text\":\"${MSG}\"}"
