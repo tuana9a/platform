@@ -1,0 +1,80 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: postgres-backup
+  namespace: coder
+spec:
+  schedule: "0 0 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          initContainers:
+            - name: postgres-dump
+              image: postgres:16
+              command:
+                - "sh"
+                - "-c"
+                - |
+                  export PGPASSWORD=$PG_PASS
+                  pg_dump -h $PG_HOST -p ${PG_PORT:-5432} -U $PG_USER > /data/dump.sql
+              volumeMounts:
+                - name: workdir
+                  mountPath: /data
+              envFrom:
+                - configMapRef:
+                    name: coder-postgres-backup
+
+            - name: tarball
+              image: busybox:latest
+              command:
+                - "sh"
+                - "-c"
+                - |
+                  cd /data
+                  tar -czvf dump.tar.gz dump.sql
+              volumeMounts:
+                - name: workdir
+                  mountPath: /data
+
+            - name: aws-upload
+              image: amazon/aws-cli:latest
+              command:
+                - "sh"
+                - "-c"
+                - |
+                  OBJECT_KEY=coder/postgres-dump-$(date +'%Y.%m.%d').tar.gz
+                  aws s3api --endpoint-url ${S3_ENDPOINT} put-object --bucket ${BUCKET_NAME} --key $OBJECT_KEY --body /data/dump.tar.gz
+              envFrom:
+                - configMapRef:
+                    name: coder-postgres-backup
+              volumeMounts:
+                - name: workdir
+                  mountPath: /data
+
+            - name: telegram-notify
+              image: curlimages/curl:latest
+              command:
+                - sh
+                - -c
+                - |
+                  MSG="coder postgress backup: success"
+                  curl -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+                    -H "Content-Type: application/json" \
+                    -d "{\"chat_id\":${TELEGRAM_CHAT_ID},\"disable_notification\":true,\"text\":\"${MSG}\"}"
+              envFrom:
+                - configMapRef:
+                    name: coder-postgres-backup
+              volumeMounts:
+                - name: workdir
+                  mountPath: /data
+
+          containers:
+            - name: postgres-backup
+              image: busybox:latest
+              command: ["sh", "-c", "echo backup complete"]
+
+          restartPolicy: Never
+          volumes:
+            - name: workdir
+              emptyDir: {}
