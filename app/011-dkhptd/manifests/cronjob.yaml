@@ -1,0 +1,78 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mongo-backup
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          initContainers:
+            - name: mongo-dump
+              image: mongo:5.0
+              command:
+                - "sh"
+                - "-c"
+                - |
+                  mongodump --uri=${MONGO_CONNECTION_STRING} --out=/data/dump
+              volumeMounts:
+                - name: workdir
+                  mountPath: /data
+              envFrom:
+                - configMapRef:
+                    name: dkhptd-mongo-backup
+
+            - name: tarball
+              image: busybox:latest
+              command:
+                - "sh"
+                - "-c"
+                - |
+                  cd /data
+                  tar -czvf dump.tar.gz dump
+              volumeMounts:
+                - name: workdir
+                  mountPath: /data
+
+            - name: aws-upload
+              image: amazon/aws-cli:latest
+              command:
+                - "sh"
+                - "-c"
+                - |
+                  OBJECT_KEY=dkhptd/mongo-dump-$(date +'%Y.%m.%d').tar.gz
+                  aws s3api --endpoint-url ${S3_ENDPOINT} put-object --bucket ${BUCKET_NAME} --key $OBJECT_KEY --body /data/dump.tar.gz
+              envFrom:
+                - configMapRef:
+                    name: dkhptd-mongo-backup
+              volumeMounts:
+                - name: workdir
+                  mountPath: /data
+
+            - name: telegram-notify
+              image: curlimages/curl:latest
+              command:
+                - sh
+                - -c
+                - |
+                  MSG="dkhptd backup mongo success"
+                  curl -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+                    -H "Content-Type: application/json" \
+                    -d "{\"chat_id\":${TELEGRAM_CHAT_ID},\"disable_notification\":true,\"text\":\"${MSG}\"}"
+              envFrom:
+                - configMapRef:
+                    name: dkhptd-mongo-backup
+              volumeMounts:
+                - name: workdir
+                  mountPath: /data
+
+          containers:
+            - name: mongo-backup
+              image: busybox:latest
+              command: ["sh", "-c", "echo backup complete"]
+
+          restartPolicy: Never
+          volumes:
+            - name: workdir
+              emptyDir: {}
