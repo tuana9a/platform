@@ -1,0 +1,23 @@
+- hosts: tuana9a_dev
+  tasks:
+    - import_tasks: ./tasks/copy_gitconfig.yml
+    - import_tasks: ./tasks/install_python.yml
+    - import_tasks: ./tasks/install_nvm.yml
+    - import_tasks: ./tasks/install_tmux.yml
+    - import_tasks: ./tasks/install_tfenv.yml
+    - import_tasks: ./tasks/install_kubectl.yml
+    - import_tasks: ./tasks/install_argocd.yml
+    - import_tasks: ./tasks/install_gh.yml
+    - import_tasks: ./tasks/install_glab.yml
+    - import_tasks: ./tasks/install_k9s.yml
+    - import_tasks: ./tasks/install_corretto8.yml
+    - import_tasks: ./tasks/install_mvn.yml
+    - import_tasks: ./tasks/install_zsh.yml
+    - import_tasks: ./tasks/install_oh_my_zsh.yml
+    - import_tasks: ./tasks/install_zoxide.yml
+    - import_tasks: ./tasks/install_zsh_autosuggestions.yml
+    - import_tasks: ./tasks/install_direnv.yml
+    - name: copy .zshrc
+      copy:
+        src: tuana9a-dev/.zshrc
+        dest: ~/.zshrc
