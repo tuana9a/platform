@@ -1,0 +1,3 @@
+- hosts: docker
+  tasks:
+    - import_tasks: ./tasks/add_current_user_to_docker_group.yml
