@@ -3,7 +3,7 @@ resource "argocd_application" "t9stbot" {
     name = "t9stbot"
   }
 
-  wait    = true
+  wait = true
 
   spec {
     project = "default"
