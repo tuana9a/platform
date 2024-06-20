@@ -1,6 +1,5 @@
 - hosts: tuana9a_dev
   tasks:
-    - import_tasks: ./tasks/copy_gitconfig.yml
     - import_tasks: ./tasks/install_python.yml
     - import_tasks: ./tasks/install_nvm.yml
     - import_tasks: ./tasks/install_tmux.yml
@@ -17,7 +16,4 @@
     - import_tasks: ./tasks/install_zoxide.yml
     - import_tasks: ./tasks/install_zsh_autosuggestions.yml
     - import_tasks: ./tasks/install_direnv.yml
-    - name: copy .zshrc
-      copy:
-        src: tuana9a-dev/.zshrc
-        dest: ~/.zshrc
+    - import_tasks: ./tasks/install_go.yml
