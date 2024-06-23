@@ -1,6 +1,5 @@
 - hosts: amon_dev
   tasks:
-    - import_tasks: ./tasks/copy_gitconfig.yml
     - import_tasks: ./tasks/install_nvm.yml
     - import_tasks: ./tasks/install_tmux.yml
     - import_tasks: ./tasks/install_tfenv.yml
@@ -16,7 +15,5 @@
     - import_tasks: ./tasks/install_zoxide.yml
     - import_tasks: ./tasks/install_zsh_autosuggestions.yml
     - import_tasks: ./tasks/install_direnv.yml
-    - name: copy .zshrc
-      copy:
-        src: amon-dev/.zshrc
-        dest: ~/.zshrc
+    - import_tasks: ./tasks/install_gcloud.yml
+    - import_tasks: ./tasks/install_awscli.yml

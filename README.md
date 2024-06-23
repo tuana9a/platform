@@ -11,6 +11,12 @@ tuana9a's platform
 
 # infra
 
+Install `gcloud` cli, then
+
+```
+gcloud auth application-default login
+```
+
 Proxmox: [Set up OpenID Connect for Google Login](https://forum.proxmox.com/threads/mobile-web-and-android-app-how-to-log-in-with-google-oauth2-openid.116234/post-563563)
 
 # configuration as code

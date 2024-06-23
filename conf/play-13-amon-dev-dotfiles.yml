@@ -1,0 +1,7 @@
+- hosts: amon_dev
+  tasks:
+    - import_tasks: ./tasks/copy_gitconfig.yml
+    - name: copy .zshrc
+      copy:
+        src: amon-dev/.zshrc
+        dest: ~/.zshrc

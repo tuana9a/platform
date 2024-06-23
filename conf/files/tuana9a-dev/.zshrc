@@ -5,6 +5,7 @@ HISTSIZE=9999
 
 # zsh
 export PATH=$PATH:~/.local/bin
+export PATH=$PATH:/usr/local/go/bin
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="random"
 ZSH_THEME_RANDOM_CANDIDATES=( "gentoo" )

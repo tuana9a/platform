@@ -4,7 +4,7 @@ metadata:
   name: postgres-backup
   namespace: coder
 spec:
-  schedule: "0 0 * * *"
+  schedule: "0 17 * * *"
   jobTemplate:
     spec:
       template:

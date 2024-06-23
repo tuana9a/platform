@@ -1,6 +1,10 @@
+locals {
+  namespace = "prometheus"
+}
+
 resource "helm_release" "prometheus" {
   name             = "prometheus"
-  namespace        = var.namespace
+  namespace        = local.namespace
   create_namespace = true
 
   repository = "https://prometheus-community.github.io/helm-charts"
@@ -14,7 +18,7 @@ resource "helm_release" "prometheus" {
 
 resource "helm_release" "grafana" {
   name             = "grafana"
-  namespace        = var.namespace
+  namespace        = local.namespace
   create_namespace = true
 
   repository = "https://grafana.github.io/helm-charts"
