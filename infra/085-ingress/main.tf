@@ -1,7 +1,7 @@
+# https://kubernetes.github.io/ingress-nginx/deploy/
 resource "helm_release" "ingress_nginx" {
-  # https://kubernetes.github.io/ingress-nginx/deploy/
   name             = "ingress-nginx"
-  namespace        = var.namespace
+  namespace        = "ingress-nginx"
   create_namespace = true
 
   repository = "https://kubernetes.github.io/ingress-nginx"

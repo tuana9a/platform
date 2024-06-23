@@ -1,6 +1,10 @@
+locals {
+  namespace = "metallb-system"
+}
+
 resource "helm_release" "ingress_nginx" {
   name             = "metallb"
-  namespace        = var.namespace
+  namespace        = local.namespace
   create_namespace = true
 
   repository = "https://metallb.github.io/metallb"
@@ -14,7 +18,7 @@ resource "kubernetes_manifest" "vmbr56_ipaddresspool" {
     "kind"       = "IPAddressPool"
     "metadata" = {
       "name"      = "vmbr56"
-      "namespace" = "${var.namespace}"
+      "namespace" = "${local.namespace}"
     }
     "spec" = {
       "addresses" = [
@@ -30,7 +34,7 @@ resource "kubernetes_manifest" "vmbr56_l2advertisement" {
     "kind"       = "L2Advertisement"
     "metadata" = {
       "name"      = "vmbr56"
-      "namespace" = "${var.namespace}"
+      "namespace" = "${local.namespace}"
     }
     "spec" = {
       "ipAddressPools" = [

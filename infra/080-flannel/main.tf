@@ -1,6 +1,6 @@
 resource "helm_release" "flannel" {
   name             = "flannel"
-  namespace        = var.namespace
+  namespace        = "kube-flannel"
   create_namespace = true
 
   repository = "https://flannel-io.github.io/flannel"

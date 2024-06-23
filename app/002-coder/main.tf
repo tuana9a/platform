@@ -1,6 +1,6 @@
 resource "helm_release" "coder" {
   name             = "coder"
-  namespace        = var.namespace
+  namespace        = "coder"
   create_namespace = true
 
   repository = "https://helm.coder.com/v2"
