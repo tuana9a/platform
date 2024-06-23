@@ -17,3 +17,5 @@
     - import_tasks: ./tasks/install_zsh_autosuggestions.yml
     - import_tasks: ./tasks/install_direnv.yml
     - import_tasks: ./tasks/install_go.yml
+    - import_tasks: ./tasks/install_gcloud.yml
+    - import_tasks: ./tasks/install_awscli.yml
