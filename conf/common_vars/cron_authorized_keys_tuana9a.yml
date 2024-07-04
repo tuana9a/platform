@@ -11,3 +11,4 @@ authorized_keys_items:
 
   - name: tuana9a-PRIME-X570-P
     url: https://public.tuana9a.com/PRIME-X570-P/id_rsa.pub
+    state: absent

@@ -8,3 +8,4 @@
     - import_tasks: ./tasks/cronjob_update_cloudflare_dns.yml
     - import_tasks: ./tasks/cronjob.yml
     - import_tasks: ./tasks/install_awscli.yml
+    - import_tasks: ./tasks/install_htop.yml
