@@ -5,7 +5,7 @@ resource "random_password" "vm_password" {
 }
 
 resource "proxmox_virtual_environment_vm" "tuana9a_dev" {
-  node_name = var.proxmox_node.name
+  node_name = local.proxmox_node.pve_cobi.node_name
   vm_id     = 109
   name      = "tuana9a-dev"
   tags      = ["terraform", "ubuntu"]
@@ -28,7 +28,7 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev" {
   }
 
   disk {
-    datastore_id = var.proxmox_node.storage_names[1].name
+    datastore_id = local.proxmox_node.pve_cobi.storage.sda
     file_id      = "local:iso/jammy-server-cloudimg-amd64.img"
     interface    = "virtio0"
     size         = 20
@@ -37,7 +37,7 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev" {
   }
 
   disk {
-    datastore_id = var.proxmox_node.storage_names[1].name
+    datastore_id = local.proxmox_node.pve_cobi.storage.sda
     interface    = "virtio1"
     size         = 20
     file_format  = "raw"
@@ -48,7 +48,7 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev" {
   boot_order = ["virtio0"]
 
   initialization {
-    datastore_id = var.proxmox_node.storage_names[1].name
+    datastore_id = local.proxmox_node.pve_cobi.storage.sda
 
     ip_config {
       ipv4 {
@@ -79,4 +79,8 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev" {
   }
 
   on_boot = true
+
+  lifecycle {
+    ignore_changes = [initialization]
+  }
 }

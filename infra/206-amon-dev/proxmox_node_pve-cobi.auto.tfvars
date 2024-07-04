@@ -1,1 +1,0 @@
-../common/proxmox_node_pve-cobi.auto.tfvars
