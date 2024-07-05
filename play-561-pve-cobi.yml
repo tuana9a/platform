@@ -1,0 +1,11 @@
+- hosts: pve_cobi
+  tasks:
+    - import_tasks: ./tasks/cronjob_authorized_keys.yml
+    - import_tasks: ./tasks/set_timezone.yml
+    - import_tasks: ./tasks/install_node_exporter.yml
+    - import_tasks: ./tasks/install_openvpn.yml
+    - import_tasks: ./tasks/openvpn_client.yml
+    - import_tasks: ./tasks/cronjob_update_cloudflare_dns.yml
+    - import_tasks: ./tasks/cronjob.yml
+    - import_tasks: ./tasks/install_awscli.yml
+    - import_tasks: ./tasks/install_htop.yml
