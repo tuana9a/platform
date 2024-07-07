@@ -1,3 +1,5 @@
+LANG=C.UTF-8
+
 # prompt
 export PS1='%(!.%B%F{red}.%B%F{green}%n@)%m %F{blue}%(!.%1~.%~) %(!.#.$)%k%b%f '
 

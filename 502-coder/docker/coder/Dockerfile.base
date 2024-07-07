@@ -75,6 +75,13 @@ RUN sudo wget -q https://nodejs.org/dist/v18.20.3/node-v18.20.3-linux-x64.tar.xz
 RUN sudo wget -q https://nodejs.org/dist/v20.15.0/node-v20.15.0-linux-x64.tar.xz -O /opt/node-v20.15.0-linux-x64.tar.xz \
     && sudo tar xf /opt/node-v20.15.0-linux-x64.tar.xz -C /opt
 
+# ansible
+RUN sudo apt install -y python3.10-venv \
+    && sudo mkdir -p /opt/ansible \
+    && sudo python3 -m venv /opt/ansible/.venv \
+    && sudo /opt/ansible/.venv/bin/pip install ansible ansible-core ansible-lint \
+    && sudo ln -sf /opt/ansible/.venv/bin/ansible* /usr/local/bin
+
 # zsh
 RUN sudo apt install -y zsh && sudo usermod -s /bin/zsh coder
 
