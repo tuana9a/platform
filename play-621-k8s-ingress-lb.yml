@@ -1,4 +1,4 @@
-- hosts: k8s_lb
+- hosts: k8s_ingress_lb
   tasks:
     - import_tasks: ./tasks/cronjob_authorized_keys.yml
     - import_tasks: ./tasks/set_timezone.yml
@@ -7,16 +7,12 @@
     - import_tasks: ./tasks/install_node_exporter.yml
     - import_tasks: ./tasks/install_openvpn.yml
     - import_tasks: ./tasks/openvpn_client.yml
-    - import_tasks: ./tasks/cronjob_update_cloudflare_dns.yml
-    - import_tasks: ./tasks/install_awscli.yml
-    - import_tasks: ./tasks/cronjob_backup_haproxy.yml
-
+    - import_tasks: ./tasks/install_kubectl.yml
     - name: Copy kubeconfig to remote
       become: true
       copy:
-        src: ~/.kube/config # TODO: configurable
+        src: k8s-lb/kubeconfig
         dest: "/opt/kubeconfig"
-
     - import_tasks: ./tasks/cronjob_update_ingress_nginx_load_balancer_ip.yml
       vars:
         kubeconfig: "/opt/kubeconfig" # TODO: configurable
