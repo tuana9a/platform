@@ -15,7 +15,7 @@ resource "argocd_application" "hcr" {
 
     source {
       repo_url        = "https://github.com/tuana9a/platform.git"
-      path            = "app/012-hcr/manifests"
+      path            = "512-hcr/manifests"
       target_revision = "main"
     }
 
