@@ -19,5 +19,5 @@ compose_items:
 wireguard_client_items:
   - file: zephyrus/wg/zephyrus-zpr.conf
     name: wg0
-    state: stopped
+    state: absent
     enabled: false
