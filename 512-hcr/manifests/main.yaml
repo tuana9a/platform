@@ -68,8 +68,18 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: hcr
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - hcr.tuana9a.com
+      secretName: hcr-tuana9a-com-tls
+    - hosts:
+        - hust-captcha-resolver.tuana9a.com
+      secretName: hust-captcha-resolver-tuana9a-com-tls
   rules:
     - host: hcr.tuana9a.com
       http:

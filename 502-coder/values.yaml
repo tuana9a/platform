@@ -43,3 +43,9 @@ coder:
     enable: true
     className: nginx
     host: coder.tuana9a.com
+    tls:
+      enable: true
+      secretName: coder-tuana9a-com-tls
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-production"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"

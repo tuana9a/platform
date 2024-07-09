@@ -1,0 +1,27 @@
+global:
+  domain: argocd.tuana9a.com
+
+configs:
+  params:
+    server.insecure: true
+
+server:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-production"
+    extraTls:
+      - hosts:
+          - argocd.tuana9a.com
+        secretName: argocd-tuana9a-com-tls
+
+  ingressGrpc:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-production"
+    extraTls:
+      - hosts:
+          - grpc.argocd.tuana9a.com
+        secretName: grpc-argocd-tuana9a-com-tls

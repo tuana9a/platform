@@ -2,8 +2,15 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: t9stbot
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - t9stbot.tuana9a.com
+      secretName: t9stbot-tuana9a-com-tls
   rules:
     - host: t9stbot.tuana9a.com
       http:
