@@ -4,6 +4,7 @@
     - import_tasks: ./tasks/set_timezone.yml
     - import_tasks: ./tasks/install_tmux.yml
     - import_tasks: ./tasks/install_nginx.yml
+    - import_tasks: ./tasks/disable_nginx_site_default.yml
     - import_tasks: ./tasks/install_node_exporter.yml
     - import_tasks: ./tasks/install_openvpn.yml
     - import_tasks: ./tasks/openvpn_client.yml

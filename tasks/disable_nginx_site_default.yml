@@ -1,0 +1,5 @@
+- name: Disable nginx default
+  become: true
+  ansible.builtin.file:
+    path: "/etc/nginx/sites-enabled/default"
+    state: absent

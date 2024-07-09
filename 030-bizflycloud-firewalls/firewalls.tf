@@ -59,6 +59,25 @@ resource "bizflycloud_firewall" "web_access" {
   }
 }
 
+resource "bizflycloud_firewall" "web_access_alternative" {
+  name = "web_access_alternative"
+  ingress {
+    cidr       = "0.0.0.0/0"
+    port_range = "8080"
+    protocol   = "tcp"
+  }
+  ingress {
+    cidr       = "0.0.0.0/0"
+    port_range = "8443"
+    protocol   = "tcp"
+  }
+  egress {
+    cidr       = ""
+    port_range = ""
+    protocol   = ""
+  }
+}
+
 resource "bizflycloud_firewall" "wireguard" {
   name = "wireguard"
   ingress {

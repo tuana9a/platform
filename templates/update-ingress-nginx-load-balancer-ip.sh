@@ -27,9 +27,15 @@ fi
 echo "\"$previous_ip\" -> \"$ip\", diff detected, updating nginx config..."
 echo $ip > $ip_file
 
-echo "server {
+echo "# DO NOT EDIT, this file is generated
+server {
   listen 8080;
   proxy_pass ${ip}:80;
-}" | sudo tee /etc/nginx/stream.conf.d/ingress_nginx_load_balancer.conf
+}
+server {
+  listen 8443;
+  proxy_pass ${ip}:443;
+}
+" | sudo tee /etc/nginx/stream.conf.d/ingress_nginx_load_balancer.conf
 
 sudo systemctl reload nginx
