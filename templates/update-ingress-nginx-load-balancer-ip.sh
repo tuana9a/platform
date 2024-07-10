@@ -29,11 +29,11 @@ echo $ip > $ip_file
 
 echo "# DO NOT EDIT, this file is generated
 server {
-  listen 8080;
+  listen 80;
   proxy_pass ${ip}:80;
 }
 server {
-  listen 8443;
+  listen 443;
   proxy_pass ${ip}:443;
 }
 " | sudo tee /etc/nginx/stream.conf.d/ingress_nginx_load_balancer.conf
