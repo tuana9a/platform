@@ -1,0 +1,26 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hcr
+  namespace: knative-serving
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - hcr.dkhptd.knative.tuana9a.com
+      secretName: hcr-dkhptd-knative-tuana9a-com-tls
+  rules:
+    - host: hcr.dkhptd.knative.tuana9a.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: kourier
+                port:
+                  number: 80
