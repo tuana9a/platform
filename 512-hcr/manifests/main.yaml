@@ -10,10 +10,6 @@ spec:
         - image: tuana9a/hcr
           imagePullPolicy: Always
           env:
-            - name: PORT
-              value: "8080"
-            - name: BIND
-              value: "0.0.0.0"
             - name: DEVICE
               value: "cpu"
           resources:
