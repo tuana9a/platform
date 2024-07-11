@@ -24,18 +24,19 @@ if [ $previous_ip == $ip ]; then
   exit 0
 fi
 
-echo "\"$previous_ip\" -> \"$ip\", diff detected, updating nginx config..."
-echo $ip > $ip_file
+echo "\"$previous_ip\" -> \"$ip\", diff detected, updating nginx config "
+echo -n $ip > $ip_file
 
-echo "# DO NOT EDIT, this file is generated
+echo "# This file is generated and will be overwrited
+# /etc/nginx/stream.conf.d/ingress_nginx_load_balancer.conf
+# $(date)
 server {
-  listen 8080;
+  listen 80;
   proxy_pass ${ip}:80;
 }
 server {
-  listen 8443;
+  listen 443;
   proxy_pass ${ip}:443;
-}
-" | sudo tee /etc/nginx/stream.conf.d/ingress_nginx_load_balancer.conf
+}" | sudo tee /etc/nginx/stream.conf.d/ingress_nginx_load_balancer.conf
 
 sudo systemctl reload nginx

@@ -11,3 +11,13 @@
     name: "update-ingress-nginx-load-balancer-ip.sh"
     minute: "*/1"
     job: "/usr/local/bin/update-ingress-nginx-load-balancer-ip.sh >> /tmp/update-ingress-nginx-load-balancer-ip.log 2>&1"
+
+- name: Clear current log
+  copy:
+    content: ""
+    dest: /tmp/update-ingress-nginx-load-balancer-ip.log
+
+- name: Clear current state load balancer ip
+  copy:
+    content: "9.9.9.9" # some random ip
+    dest: /tmp/current-ingress-nginx-load-balancer-ip.txt
