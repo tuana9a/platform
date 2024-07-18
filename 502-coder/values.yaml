@@ -24,18 +24,9 @@ coder:
   env:
     - name: CODER_ACCESS_URL
       value: "https://coder.tuana9a.com"
-    - name: CODER_PG_CONNECTION_URL
-      valueFrom:
-        configMapKeyRef:
-          name: coder-db-url
-          key: url
-    - name: "CODER_TELEMETRY_ENABLE"
-      value: "false"
-    # NOTE: Offline deployment https://coder.com/docs/v2/latest/install/offline
-    - name: "CODER_DERP_SERVER_STUN_ADDRESSES" # Only use relayed connections
-      value: "disable"
-    - name: "CODER_BLOCK_DIRECT" # force SSH traffic through control plane's DERP proxy
-      value: "true"
+  envFrom:
+    - configMapRef:
+        name: coder-env
   service:
     enable: true
     type: ClusterIP
