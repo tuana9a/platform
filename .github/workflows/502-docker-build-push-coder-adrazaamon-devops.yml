@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: build-push-coder-adrazaamon-devops
 
 on:
   pull_request:
