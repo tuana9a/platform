@@ -7,81 +7,6 @@ RUN sudo apt update -y
 # tmux
 RUN sudo apt install -y tmux
 
-# kubectl
-RUN sudo curl -sL "https://dl.k8s.io/release/v1.28.11/bin/linux/amd64/kubectl" -o /usr/local/bin/kubectl \
-    && sudo chmod 0755 /usr/local/bin/kubectl
-
-# argocd
-RUN sudo curl -sL "https://github.com/argoproj/argo-cd/releases/download/v2.7.10/argocd-linux-amd64" -o /usr/local/bin/argocd \
-    && sudo chmod 0755 /usr/local/bin/argocd
-
-# gh
-RUN (type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
-    && sudo mkdir -p -m 755 /etc/apt/keyrings \
-    && wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
-    && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-    && sudo apt update \
-    && sudo apt install gh -y
-
-# glab
-RUN sudo wget -q https://gitlab.com/gitlab-org/cli/-/releases/v1.39.0/downloads/glab_1.39.0_Linux_x86_64.tar.gz -O /opt/glab.tar.gz \
-    && sudo mkdir -p /opt/glab && sudo tar xzf /opt/glab.tar.gz -C /opt/glab \
-    && sudo install -o root -g root -m 0755 /opt/glab/bin/glab /usr/local/bin/glab
-
-# k9s
-RUN sudo wget -q https://github.com/derailed/k9s/releases/download/v0.32.4/k9s_Linux_amd64.tar.gz -O /opt/k9s.tar.gz \
-    && sudo mkdir -p /opt/k9s && sudo tar xzf /opt/k9s.tar.gz -C /opt/k9s \
-    && sudo install -o root -g root -m 0755 /opt/k9s/k9s /usr/local/bin/k9s
-
-# awscli
-RUN sudo wget -q https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -O /opt/awscli.zip \
-    && sudo unzip -q /opt/awscli.zip -d /opt/ | sudo tee -a /opt/awscli.log \
-    && sudo /opt/aws/install -u | sudo tee -a /opt/awscli.log
-
-# gcloud
-RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg \
-    && echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
-    && sudo apt-get update -y \
-    && sudo apt-get install -y google-cloud-cli \
-    && sudo apt install -y google-cloud-cli-gke-gcloud-auth-plugin
-
-# corretto 8
-RUN sudo wget -q https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.tar.gz -O /opt/corretto-8.tar.gz \
-    && sudo tar xzf /opt/corretto-8.tar.gz -C /opt \
-    && sudo ln -sf /opt/amazon-corretto-8*/bin/* /usr/local/bin
-
-# mvn
-RUN sudo wget -q https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz -O /opt/maven-3.tar.gz \
-    && sudo tar xzf /opt/maven-3.tar.gz -C /opt/ \
-    && sudo ln -sf /opt/apache-maven-3*/bin/* /usr/local/bin
-
-# terraform
-RUN sudo wget -q https://releases.hashicorp.com/terraform/1.6.6/terraform_1.6.6_linux_amd64.zip -O /opt/terraform-1.6.6.zip \
-    && sudo mkdir -p /opt/terraform-1.6.6/ && sudo unzip -q /opt/terraform-1.6.6.zip -d /opt/terraform-1.6.6/ \
-    && sudo ln -sf /opt/terraform-1.6.6/terraform /usr/local/bin/terraform
-
-RUN sudo wget -q https://releases.hashicorp.com/terraform/1.7.5/terraform_1.7.5_linux_amd64.zip -O /opt/terraform-1.7.5.zip \
-    && sudo mkdir -p /opt/terraform-1.7.5/ && sudo unzip -q /opt/terraform-1.7.5.zip -d /opt/terraform-1.7.5/
-
-RUN sudo wget -q https://releases.hashicorp.com/terraform/1.9.1/terraform_1.9.1_linux_amd64.zip -O /opt/terraform-1.9.1.zip \
-    && sudo mkdir -p /opt/terraform-1.9.1/ && sudo unzip -q /opt/terraform-1.9.1.zip -d /opt/terraform-1.9.1/
-
-# nodejs
-RUN sudo wget -q https://nodejs.org/dist/v18.20.3/node-v18.20.3-linux-x64.tar.xz -O /opt/node-v18.20.3-linux-x64.tar.xz \
-    && sudo tar xf /opt/node-v18.20.3-linux-x64.tar.xz -C /opt \
-    && sudo ln -sf /opt/node-v18.20.3-linux-x64/bin/* /usr/local/bin/
-
-RUN sudo wget -q https://nodejs.org/dist/v20.15.0/node-v20.15.0-linux-x64.tar.xz -O /opt/node-v20.15.0-linux-x64.tar.xz \
-    && sudo tar xf /opt/node-v20.15.0-linux-x64.tar.xz -C /opt
-
-# ansible
-RUN sudo apt install -y python3.10-venv \
-    && sudo mkdir -p /opt/ansible \
-    && sudo python3 -m venv /opt/ansible/.venv \
-    && sudo /opt/ansible/.venv/bin/pip install ansible ansible-core ansible-lint \
-    && sudo ln -sf /opt/ansible/.venv/bin/ansible* /usr/local/bin
-
 # zsh
 RUN sudo apt install -y zsh && sudo usermod -s /bin/zsh coder
 
@@ -91,8 +16,3 @@ RUN sudo apt install -y direnv
 # zoxide
 RUN sudo wget -q https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh -O /opt/install-zoxide.sh \
     && sudo chmod +x /opt/install-zoxide.sh && sudo /opt/install-zoxide.sh --bin-dir /usr/local/bin/
-
-# TODO: oh-my-zsh
-# TODO: zsh-autosuggestion
-
-COPY zshrc /etc/zsh/zshrc
