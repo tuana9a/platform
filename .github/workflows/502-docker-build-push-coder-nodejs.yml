@@ -1,9 +1,9 @@
-name: build-push-coder-base
+name: build-push-coder-nodejs
 
 on:
   pull_request:
     paths:
-      - "502-coder/docker/coder/Dockerfile.base"
+      - "502-coder/docker/coder/Dockerfile.nodejs"
 
 jobs:
   build-and-push:
@@ -26,9 +26,9 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: 502-coder/docker/coder
-          file: 502-coder/docker/coder/Dockerfile.base
+          file: 502-coder/docker/coder/Dockerfile.nodejs
           push: true
-          tags: tuana9a/coder:base
+          tags: tuana9a/coder:nodejs
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -37,5 +37,5 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          MESSAGE="OK build tuana9a/coder:base"
+          MESSAGE="OK build tuana9a/coder:nodejs"
           curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage -d chat_id=${TELEGRAM_CHAT_ID} -d text="${MESSAGE}"

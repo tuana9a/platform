@@ -1,0 +1,20 @@
+FROM codercom/enterprise-base:ubuntu
+
+USER coder
+
+RUN sudo apt update -y
+
+# direnv
+RUN sudo apt install -y direnv
+
+# zoxide
+RUN sudo wget -q https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh -O /opt/install-zoxide.sh \
+    && sudo chmod +x /opt/install-zoxide.sh && sudo /opt/install-zoxide.sh --bin-dir /usr/local/bin/
+
+# nodejs
+RUN sudo wget -q https://nodejs.org/dist/v18.20.3/node-v18.20.3-linux-x64.tar.xz -O /opt/node-v18.20.3-linux-x64.tar.xz \
+    && sudo tar xf /opt/node-v18.20.3-linux-x64.tar.xz -C /opt \
+    && sudo ln -sf /opt/node-v18.20.3-linux-x64/bin/* /usr/local/bin/
+
+RUN sudo wget -q https://nodejs.org/dist/v20.15.0/node-v20.15.0-linux-x64.tar.xz -O /opt/node-v20.15.0-linux-x64.tar.xz \
+    && sudo tar xf /opt/node-v20.15.0-linux-x64.tar.xz -C /opt
