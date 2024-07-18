@@ -7,9 +7,6 @@ RUN sudo apt update -y
 # tmux
 RUN sudo apt install -y tmux
 
-# zsh
-RUN sudo apt install -y zsh && sudo usermod -s /bin/zsh coder
-
 # direnv
 RUN sudo apt install -y direnv
 
