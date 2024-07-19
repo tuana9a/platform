@@ -5,6 +5,9 @@ metadata:
   namespace: dkhptd
 spec:
   template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/min-scale: "1"
     spec:
       containers:
         - image: tuana9a/hcr
@@ -17,5 +20,5 @@ spec:
               memory: "300Mi"
               cpu: "300m"
             limits:
-              memory: "1000Mi"
-              cpu: "1000m"
+              memory: "1500Mi"
+              cpu: "1500m"
