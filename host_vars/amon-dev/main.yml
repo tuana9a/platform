@@ -5,14 +5,14 @@ parted:
 openvpn_client_items:
   - file: amon-dev/amon-dev-zephyrus.ovpn
     name: amon-dev-zephyrus
-    state: stopped
-    enabled: false
   - file: amon-dev/amon-orisis.ovpn
     name: amon-orisis
     state: stopped
     enabled: false
   - file: amon-dev/amon-dev-orisis.ovpn
     name: amon-dev-orisis
+    state: stopped
+    enabled: false
 rsync_items:
   - src: amon-dev/mongodb/
     dest: /opt/mongodb/
