@@ -18,7 +18,7 @@ spec:
           image: cusspvz/redirect
           env:
             - name: REDIRECT
-              value: "https://hcr.dkhptd.knative.tuana9a.com/"
+              value: "https://hcr.dkhptd.knative.tuana9a.com"
 ---
 apiVersion: v1
 kind: Service

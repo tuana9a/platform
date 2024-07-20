@@ -19,7 +19,7 @@ resource "cloudflare_record" "dkhptd_api_dev" {
 resource "cloudflare_record" "hcr" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
   name    = "hcr"
-  value   = "hcr.dkhptd.knative.tuana9a.com"
+  value   = cloudflare_record.zephyrus.hostname
   type    = "CNAME"
   ttl     = 60
   proxied = false
