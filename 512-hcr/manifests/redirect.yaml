@@ -15,10 +15,10 @@ spec:
     spec:
       containers:
         - name: redirect
-          image: cusspvz/redirect
+          image: caprover/nginx-redirect
           env:
-            - name: REDIRECT
-              value: "https://hcr.dkhptd.knative.tuana9a.com"
+            - name: RETURN_LOCATION
+              value: "return 301 https://hcr.dkhptd.knative.tuana9a.com$request_uri;"
 ---
 apiVersion: v1
 kind: Service
