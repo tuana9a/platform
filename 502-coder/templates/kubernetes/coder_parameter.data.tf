@@ -89,4 +89,8 @@ data "coder_parameter" "image" {
     name  = "tuana9a/coder:terraform"
     value = "tuana9a/coder:terraform"
   }
+  option {
+    name  = "tuana9a/coder:go"
+    value = "tuana9a/coder:go"
+  }
 }
