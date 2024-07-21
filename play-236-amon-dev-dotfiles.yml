@@ -1,7 +1,14 @@
 - hosts: amon_dev
   tasks:
-    - import_tasks: ./tasks/copy_gitconfig.yml
+    - import_tasks: ./tasks/copy_id_rsa.yml
+    - name: copy .gitconfig
+      copy:
+        mode: "600"
+        src: "amon-dev/.gitconfig"
+        dest: "~/.gitconfig"
+        force: true
     - name: copy .zshrc
       copy:
         src: amon-dev/.zshrc
         dest: ~/.zshrc
+        force: true

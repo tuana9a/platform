@@ -2,8 +2,14 @@
   tasks:
     - import_tasks: ./tasks/copy_id_rsa.yml
     - import_tasks: ./tasks/copy_aws_credentials.yml
-    - import_tasks: ./tasks/copy_gitconfig.yml
+    - name: copy .gitconfig
+      copy:
+        mode: "600"
+        src: "tuana9a-dev/.gitconfig"
+        dest: "~/.gitconfig"
+        force: true
     - name: copy .zshrc
       copy:
         src: tuana9a-dev/.zshrc
         dest: ~/.zshrc
+        force: true
