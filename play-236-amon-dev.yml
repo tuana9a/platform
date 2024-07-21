@@ -4,7 +4,6 @@
     - import_tasks: ./tasks/set_timezone.yml
     - import_tasks: ./tasks/set_hostname.yml
     - import_tasks: ./tasks/parted.yml
-    - import_tasks: ./tasks/copy_id_rsa.yml
     - import_tasks: ./tasks/install_docker.yml
     - import_tasks: ./tasks/add_current_user_to_docker_group.yml
     - import_tasks: ./tasks/install_node_exporter.yml

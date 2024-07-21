@@ -1,6 +1,0 @@
-- name: Copy .gitconfig
-  copy:
-    mode: "600"
-    src: "{{ HOST_NAME }}/.gitconfig"
-    dest: "~/.gitconfig"
-    force: true

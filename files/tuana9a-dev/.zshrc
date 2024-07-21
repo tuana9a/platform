@@ -22,4 +22,5 @@ eval "$(direnv hook zsh)"
 
 # zoxide
 eval "$(zoxide init zsh)"
+
 alias cd=z
