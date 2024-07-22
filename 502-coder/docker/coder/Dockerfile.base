@@ -4,12 +4,15 @@ USER coder
 
 RUN sudo apt update -y
 
-# tmux
-RUN sudo apt install -y tmux
+RUN sudo apt install -y tmux direnv jq net-tools iputils-ping telnet
 
-# direnv
-RUN sudo apt install -y direnv
-
-# zoxide
 RUN sudo wget -q https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh -O /opt/install-zoxide.sh \
     && sudo chmod +x /opt/install-zoxide.sh && sudo /opt/install-zoxide.sh --bin-dir /usr/local/bin/
+
+RUN sudo apt install -y zsh && sudo usermod -s /bin/zsh coder
+
+RUN sudo mkdir /opt/zdotdir && sudo chown coder:coder /opt/zdotdir \
+    && sudo wget -q https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O /opt/install-ohmyzsh.sh \
+    && ZDOTDIR="/opt/zdotdir" sh /opt/install-ohmyzsh.sh
+
+COPY zshrc /etc/zsh/zshrc
