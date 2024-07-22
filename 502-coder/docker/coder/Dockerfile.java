@@ -4,12 +4,7 @@ USER coder
 
 RUN sudo apt update -y
 
-# direnv
-RUN sudo apt install -y direnv
-
-# zoxide
-RUN sudo wget -q https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh -O /opt/install-zoxide.sh \
-    && sudo chmod +x /opt/install-zoxide.sh && sudo /opt/install-zoxide.sh --bin-dir /usr/local/bin/
+RUN sudo apt install -y tmux direnv jq net-tools iputils-ping telnet zsh && sudo usermod -s /bin/zsh coder
 
 # corretto 8
 RUN sudo wget -q https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.tar.gz -O /opt/corretto-8.tar.gz \
