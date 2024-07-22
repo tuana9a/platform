@@ -4,15 +4,7 @@ USER coder
 
 RUN sudo apt update -y
 
-# tmux
-RUN sudo apt install -y tmux
-
-# direnv
-RUN sudo apt install -y direnv
-
-# zoxide
-RUN sudo wget -q https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh -O /opt/install-zoxide.sh \
-    && sudo chmod +x /opt/install-zoxide.sh && sudo /opt/install-zoxide.sh --bin-dir /usr/local/bin/
+RUN sudo apt install -y tmux direnv jq net-tools iputils-ping telnet zsh && sudo usermod -s /bin/zsh coder
 
 # kubectl
 RUN sudo curl -sL "https://dl.k8s.io/release/v1.28.11/bin/linux/amd64/kubectl" -o /usr/local/bin/kubectl \
