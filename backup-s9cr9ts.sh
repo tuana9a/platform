@@ -19,3 +19,9 @@ for f in $(find secrets -type f); do
   echo PUT: $key $f
   /usr/local/bin/r2.sh put-object $key $f;
 done
+
+for f in $(find [0-9]* -type f -name '*secret*'); do
+  key=platform/$f;
+  echo PUT: $key $f
+  /usr/local/bin/r2.sh put-object $key $f;
+done
