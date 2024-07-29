@@ -3,7 +3,7 @@ name: build-push-coder-java
 on:
   pull_request:
     paths:
-      - "502-coder/docker/coder/Dockerfile.java"
+      - "502-coder/docker/coder/java.Dockerfile"
 
 jobs:
   build-and-push:
@@ -26,7 +26,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: 502-coder/docker/coder
-          file: 502-coder/docker/coder/Dockerfile.java
+          file: 502-coder/docker/coder/java.Dockerfile
           push: true
           tags: tuana9a/coder:java
           cache-from: type=gha

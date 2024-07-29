@@ -3,7 +3,7 @@ name: build-push-coder-base
 on:
   pull_request:
     paths:
-      - "502-coder/docker/coder/Dockerfile.base"
+      - "502-coder/docker/coder/base.Dockerfile"
 
 jobs:
   build-and-push:
@@ -26,7 +26,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: 502-coder/docker/coder
-          file: 502-coder/docker/coder/Dockerfile.base
+          file: 502-coder/docker/coder/base.Dockerfile
           push: true
           tags: tuana9a/coder:base
           cache-from: type=gha

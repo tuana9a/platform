@@ -3,7 +3,7 @@ name: build-push-coder-nodejs
 on:
   pull_request:
     paths:
-      - "502-coder/docker/coder/Dockerfile.nodejs"
+      - "502-coder/docker/coder/nodejs.Dockerfile"
 
 jobs:
   build-and-push:
@@ -26,7 +26,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: 502-coder/docker/coder
-          file: 502-coder/docker/coder/Dockerfile.nodejs
+          file: 502-coder/docker/coder/nodejs.Dockerfile
           push: true
           tags: tuana9a/coder:nodejs
           cache-from: type=gha
