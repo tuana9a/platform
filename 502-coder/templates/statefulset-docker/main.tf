@@ -281,6 +281,7 @@ resource "kubernetes_stateful_set" "main" {
       }
     }
 
+    # https://github.com/docker/for-linux/issues/1172 Is your $HOME/.local/share/docker is on NFS? Then probably it does not work.
     # volume_claim_template {
     #   metadata {
     #     name      = "docker-data"
