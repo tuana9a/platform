@@ -1,9 +1,10 @@
 name: build-push-coder-go
 
 on:
+  workflow_dispatch:
   pull_request:
     paths:
-      - "502-coder/docker/coder/Dockerfile.go"
+      - "502-coder/docker/coder/go.Dockerfile"
 
 jobs:
   build-and-push:
@@ -26,7 +27,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: 502-coder/docker/coder
-          file: 502-coder/docker/coder/Dockerfile.go
+          file: 502-coder/docker/coder/go.Dockerfile
           push: true
           tags: tuana9a/coder:go
           cache-from: type=gha

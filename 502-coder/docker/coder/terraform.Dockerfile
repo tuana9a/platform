@@ -4,7 +4,7 @@ USER coder
 
 RUN sudo apt update -y
 
-RUN sudo apt install -y tmux direnv jq net-tools iputils-ping telnet zsh && sudo usermod -s /bin/zsh coder
+RUN sudo apt install -y tmux direnv jq dnsutils net-tools iputils-ping telnet zsh && sudo usermod -s /bin/zsh coder
 
 # kubectl
 RUN sudo curl -sL "https://dl.k8s.io/release/v1.28.11/bin/linux/amd64/kubectl" -o /usr/local/bin/kubectl \
@@ -13,20 +13,6 @@ RUN sudo curl -sL "https://dl.k8s.io/release/v1.28.11/bin/linux/amd64/kubectl" -
 # argocd
 RUN sudo curl -sL "https://github.com/argoproj/argo-cd/releases/download/v2.7.10/argocd-linux-amd64" -o /usr/local/bin/argocd \
     && sudo chmod 0755 /usr/local/bin/argocd
-
-# gh
-RUN (type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
-    && sudo mkdir -p -m 755 /etc/apt/keyrings \
-    && wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
-    && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-    && sudo apt update \
-    && sudo apt install gh -y
-
-# glab
-RUN sudo wget -q https://gitlab.com/gitlab-org/cli/-/releases/v1.39.0/downloads/glab_1.39.0_Linux_x86_64.tar.gz -O /opt/glab.tar.gz \
-    && sudo mkdir -p /opt/glab && sudo tar xzf /opt/glab.tar.gz -C /opt/glab \
-    && sudo install -o root -g root -m 0755 /opt/glab/bin/glab /usr/local/bin/glab
 
 # k9s
 RUN sudo wget -q https://github.com/derailed/k9s/releases/download/v0.32.4/k9s_Linux_amd64.tar.gz -O /opt/k9s.tar.gz \
@@ -55,10 +41,3 @@ RUN sudo wget -q https://releases.hashicorp.com/terraform/1.7.5/terraform_1.7.5_
 
 RUN sudo wget -q https://releases.hashicorp.com/terraform/1.9.1/terraform_1.9.1_linux_amd64.zip -O /opt/terraform-1.9.1.zip \
     && sudo mkdir -p /opt/terraform-1.9.1/ && sudo unzip -q /opt/terraform-1.9.1.zip -d /opt/terraform-1.9.1/
-
-# ansible
-RUN sudo apt install -y python3.10-venv \
-    && sudo mkdir -p /opt/ansible \
-    && sudo python3 -m venv /opt/ansible/.venv \
-    && sudo /opt/ansible/.venv/bin/pip install ansible ansible-core ansible-lint \
-    && sudo ln -sf /opt/ansible/.venv/bin/ansible* /usr/local/bin
