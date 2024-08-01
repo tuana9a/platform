@@ -197,9 +197,9 @@ resource "kubernetes_stateful_set" "main" {
 
         container {
           name  = "docker"
-          image = "docker:27.0-dind-rootless"
+          image = "docker:27.0-dind"
           security_context {
-            run_as_user = "1000"
+            run_as_user = "0"
             privileged  = true
           }
           resources {
@@ -227,6 +227,11 @@ resource "kubernetes_stateful_set" "main" {
           #   mount_path = "/home/rootless/.local/share/docker"
           #   read_only  = false
           # }
+          volume_mount {
+            name       = "docker-data"
+            mount_path = "/var/lib/docker"
+            read_only  = false
+          }
         }
 
         affinity {
@@ -297,6 +302,22 @@ resource "kubernetes_stateful_set" "main" {
     #     }
     #   }
     # }
+
+    volume_claim_template {
+      metadata {
+        name      = "docker-data"
+        namespace = var.namespace
+      }
+      spec {
+        access_modes       = ["ReadWriteOnce"]
+        storage_class_name = "nfs-client"
+        resources {
+          requests = {
+            storage = "32Gi"
+          }
+        }
+      }
+    }
 
     volume_claim_template {
       metadata {
