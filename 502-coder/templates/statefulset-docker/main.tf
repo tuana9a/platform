@@ -204,12 +204,12 @@ resource "kubernetes_stateful_set" "main" {
           }
           resources {
             requests = {
-              "cpu"    = "250m"
-              "memory" = "512Mi"
+              "cpu"    = "1"
+              "memory" = "2Gi"
             }
             limits = {
-              "cpu"    = "1000m"
-              "memory" = "2Gi"
+              "cpu"    = "2"
+              "memory" = "4Gi"
             }
           }
           env {
@@ -227,11 +227,11 @@ resource "kubernetes_stateful_set" "main" {
           #   mount_path = "/home/rootless/.local/share/docker"
           #   read_only  = false
           # }
-          volume_mount {
-            name       = "docker-data"
-            mount_path = "/var/lib/docker"
-            read_only  = false
-          }
+          # volume_mount {
+          #   name       = "docker-data"
+          #   mount_path = "/var/lib/docker"
+          #   read_only  = false
+          # }
         }
 
         affinity {
@@ -303,21 +303,21 @@ resource "kubernetes_stateful_set" "main" {
     #   }
     # }
 
-    volume_claim_template {
-      metadata {
-        name      = "docker-data"
-        namespace = var.namespace
-      }
-      spec {
-        access_modes       = ["ReadWriteOnce"]
-        storage_class_name = "nfs-client"
-        resources {
-          requests = {
-            storage = "32Gi"
-          }
-        }
-      }
-    }
+    # volume_claim_template {
+    #   metadata {
+    #     name      = "docker-data"
+    #     namespace = var.namespace
+    #   }
+    #   spec {
+    #     access_modes       = ["ReadWriteOnce"]
+    #     storage_class_name = "nfs-client"
+    #     resources {
+    #       requests = {
+    #         storage = "32Gi"
+    #       }
+    #     }
+    #   }
+    # }
 
     volume_claim_template {
       metadata {
