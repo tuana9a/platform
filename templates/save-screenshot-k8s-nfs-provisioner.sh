@@ -15,11 +15,8 @@ TELEGRAM_BOT_TOKEN="{{ NFS_BACKUP_TELEGRAM_BOT_TOKEN | default('') }}"
 TELEGRAM_CHAT_ID="{{ NFS_BACKUP_TELEGRAM_CHAT_ID | default('') }}"
 
 BACKUP_DIR=$1
-DUMP_PREFIX=$2
 
-if [ -z $DUMP_PREFIX ]; then echo DUMP_PREFIX is not set, default is "nfs".; DUMP_PREFIX=nfs; fi
-
-DUMP_FILE="$DUMP_PREFIX-dump-$(date +'%Y.%m.%d').tar.gz"
+DUMP_FILE="nfs-provisioner-screenshot-$(date +'%Y.%m.%d').txt"
 WORKDIR=/tmp
 SECONDS=0 # for calc duration
 
@@ -52,37 +49,32 @@ upload() {
 }
 
 mkdir -p $WORKDIR
-cd $WORKDIR || exit 1
 
 echo Dumping
-tar \
-{% for exclude in nfs_excludes %}
-  --exclude {{ exclude }} \
-{% endfor %}
-  -cvzf $DUMP_FILE $BACKUP_DIR
+ls -l {{ NFS_DIR }} > $WORKDIR/$DUMP_FILE
 
 if [ $? != 0 ]; then
   echo Something bad happened, exiting.
   DURATION=$SECONDS
-  MSG="FAILED $HOST_NAME backup-nfs $(($DURATION / 60))m$(($DURATION % 60))s"
+  MSG="FAILED $HOST_NAME save-screenshot-k8s-nfs-provisioner $(($DURATION / 60))m$(($DURATION % 60))s"
   notify "$MSG"
   exit 1
 fi
 
 S3_OBJECT_KEY=$HOST_NAME/$DUMP_FILE
 echo Uploading "$S3_OBJECT_KEY" "$WORKDIR/$DUMP_FILE"
-upload "$S3_OBJECT_KEY" "$DUMP_FILE"
+upload "$S3_OBJECT_KEY" "$WORKDIR/$DUMP_FILE"
 
 if [ $? != 0 ]; then
   echo Something bad happened, exiting.
   DURATION=$SECONDS
-  MSG="FAILED $HOST_NAME backup-nfs $(($DURATION / 60))m$(($DURATION % 60))s"
+  MSG="FAILED $HOST_NAME save-screenshot-k8s-nfs-provisioner $(($DURATION / 60))m$(($DURATION % 60))s"
   notify "$MSG"
   exit 1
 fi
 
 DURATION=$SECONDS
-MSG="SUCCESS $HOST_NAME backup-nfs $BACKUP_DIR $(($DURATION / 60))m$(($DURATION % 60))s"
+MSG="SUCCESS $HOST_NAME save-screenshot-k8s-nfs-provisioner $(($DURATION / 60))m$(($DURATION % 60))s"
 notify "$MSG"
 
-rm $DUMP_PREFIX-dump-*.tar.gz
+rm $WORKDIR/nfs-provisioner-screenshot-*.txt

@@ -8,3 +8,22 @@ nfs_server_exports:
 backup_nfs_items:
   - name: coder
     path: "/exports/nfs-client/coder-home-*"
+    excludes:
+      - .git
+      - .venv
+      - .m2
+      - .vscode-server
+      - node_modules
+      - .cache
+      - .terraform
+      - .tfenv
+      - .angular
+      - .nvm
+      - .npm
+      - .local
+      - .oh-my-zsh
+      - go/pkg
+      - "*.lock"
+      - "*tmp*"
+      - "Python-*"
+      - "amazon-corretto-*"
