@@ -217,6 +217,11 @@ resource "kubernetes_stateful_set" "main" {
             value = "/certs"
           }
           volume_mount {
+            mount_path = "/home/coder"
+            name       = "home"
+            read_only  = false
+          }
+          volume_mount {
             name       = "docker-certs"
             mount_path = "/certs"
             read_only  = false
