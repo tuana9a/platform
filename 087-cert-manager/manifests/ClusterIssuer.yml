@@ -9,6 +9,9 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-production
     solvers:
-      - http01:
-          ingress:
-            ingressClassName: nginx
+      - dns01:
+          cloudflare:
+            email: tuana9a@gmail.com
+            apiTokenSecretRef:
+              name: cloudflare-api-token-edit-dns
+              key: api-token
