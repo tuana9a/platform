@@ -24,6 +24,8 @@ coder:
   env:
     - name: CODER_ACCESS_URL
       value: "https://coder.tuana9a.com"
+    - name: CODER_WILDCARD_ACCESS_URL
+      value: "*.coder.tuana9a.com"
   envFrom:
     - configMapRef:
         name: coder-env
@@ -34,9 +36,11 @@ coder:
     enable: true
     className: nginx
     host: coder.tuana9a.com
+    wildcardHost: "*.coder.tuana9a.com"
     tls:
       enable: true
       secretName: coder-tuana9a-com-tls
+      wildcardSecretName: wildcard-coder-tuana9a-com-tls
     annotations:
       cert-manager.io/cluster-issuer: "letsencrypt-production"
       nginx.ingress.kubernetes.io/ssl-redirect: "true"
