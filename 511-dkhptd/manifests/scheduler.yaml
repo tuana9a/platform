@@ -1,0 +1,28 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dkhptd-scheduler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dkhptd-scheduler
+  template:
+    metadata:
+      labels:
+        app: dkhptd-scheduler
+    spec:
+      containers:
+        - name: dkhptd-scheduler
+          image: tuana9a/dkhptd-scheduler:2024.08.09.234206
+          envFrom:
+            - configMapRef:
+                name: dkhptd-scheduler
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "500m"
+            limits:
+              memory: "100Mi"
+              cpu: "500m"
