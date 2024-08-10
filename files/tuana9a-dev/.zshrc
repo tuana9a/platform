@@ -9,7 +9,7 @@ export PATH=$PATH:/usr/local/go/bin
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="random"
 ZSH_THEME_RANDOM_CANDIDATES=( "gentoo" )
-plugins=(git zsh-autosuggestions)
+plugins=(git zsh-autosuggestions aws gcloud kubectl kubectx)
 source $ZSH/oh-my-zsh.sh
 
 # nvm
