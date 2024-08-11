@@ -1,9 +1,9 @@
 storageClass:
-  - name: proxmox-ext4
+  - name: pve-sda
     storage: sda
     reclaimPolicy: Delete
-    fstype: ext4
-  - name: proxmox-xfs
-    storage: sda
+    fstype: xfs
+  - name: pve-sdb
+    storage: sdb
     reclaimPolicy: Delete
     fstype: xfs
