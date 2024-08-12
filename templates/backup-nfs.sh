@@ -54,6 +54,9 @@ upload() {
 mkdir -p $WORKDIR
 cd $WORKDIR || exit 1
 
+# cleanup old files (if exists)
+rm $DUMP_PREFIX-dump-*.tar.gz
+
 echo Dumping
 tar \
 {% for exclude in nfs_excludes %}

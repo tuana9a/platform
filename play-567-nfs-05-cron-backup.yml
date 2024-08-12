@@ -1,0 +1,52 @@
+- hosts: nfs
+  tasks:
+    - name: Copy script to remote
+      become: true
+      loop: "{{ backup_nfs_items }}"
+      vars:
+        nfs_excludes: "{{ item.excludes }}"
+      ansible.builtin.template:
+        src: backup-nfs.sh
+        dest: /usr/local/bin/backup-nfs-{{ item.name }}.sh
+        mode: "0700"
+        owner: "{{ ansible_user }}"
+
+    # deprecated
+    - name: Create a cronjob for that (deprecated)
+      loop: "{{ backup_nfs_items }}"
+      ansible.builtin.cron:
+        name: "backup-nfs.sh:{{ item.name }}"
+        minute: "0"
+        hour: "17"
+        # quote item.path to support glob like /exports/nfs-client/coder-*
+        job: '/usr/local/bin/backup-nfs.sh "{{ item.path }}" {{ item.name }} > /tmp/backup-nfs-{{ item.name }}.log 2>&1'
+        state: "absent"
+
+    - name: Create a cronjob for that
+      loop: "{{ backup_nfs_items }}"
+      become: true
+      ansible.builtin.cron:
+        name: "backup-nfs.sh:{{ item.name }}"
+        minute: "0"
+        hour: "17"
+        # quote item.path to support glob like /exports/nfs-client/coder-*
+        job: '/usr/local/bin/backup-nfs-{{ item.name }}.sh "{{ item.path }}" {{ item.name }} > /tmp/backup-nfs-{{ item.name }}.log 2>&1'
+        state: "{{ item.state | default('present') }}"
+
+    - name: Copy screenshot script to remote
+      become: true
+      vars:
+        NFS_DIR: "/exports/nfs-client"
+      ansible.builtin.template:
+        src: save-screenshot-k8s-nfs-provisioner.sh
+        dest: /usr/local/bin/save-screenshot-k8s-nfs-provisioner.sh
+        mode: "0700"
+        owner: "{{ ansible_user }}"
+
+    - name: Create a cronjob for save screenshot nfs provisioner
+      ansible.builtin.cron:
+        name: "save-screenshot-k8s-nfs-provisioner.sh"
+        minute: "0"
+        hour: "17"
+        # quote item.path to support glob like /exports/nfs-client/coder-*
+        job: "/usr/local/bin/save-screenshot-k8s-nfs-provisioner.sh /export/nfs-client > /tmp/save-screenshot-k8s-nfs-provisioner.log 2>&1"
