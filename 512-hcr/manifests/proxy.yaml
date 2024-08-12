@@ -20,19 +20,19 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: proxy
+  name: hcr-proxy
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: proxy
+      app: hcr-proxy
   template:
     metadata:
       labels:
-        app: proxy
+        app: hcr-proxy
     spec:
       containers:
-        - name: proxy
+        - name: nginx
           image: nginx:1.27.0
           volumeMounts:
             - name: hcr-proxy-conf
@@ -46,10 +46,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: proxy
+  name: hcr-proxy
 spec:
   selector:
-    app: proxy
+    app: hcr-proxy
   ports:
     - protocol: TCP
       port: 80
@@ -58,7 +58,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: proxy
+  name: hcr-proxy
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
     nginx.ingress.kubernetes.io/rewrite-target: /
@@ -76,6 +76,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: proxy
+                name: hcr-proxy
                 port:
                   number: 80
