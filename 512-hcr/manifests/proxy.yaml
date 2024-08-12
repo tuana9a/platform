@@ -67,7 +67,7 @@ spec:
   tls:
     - hosts:
         - hcr.tuana9a.com
-      secretName: proxy-tls
+      secretName: hcr-proxy-tls
   rules:
     - host: hcr.tuana9a.com
       http:
