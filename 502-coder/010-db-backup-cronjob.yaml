@@ -10,14 +10,15 @@ spec:
       template:
         spec:
           initContainers:
-            - name: postgres-dump
+            - name: dump
               image: postgres:16
               command:
                 - "sh"
                 - "-c"
                 - |
                   export PGPASSWORD=$PG_PASS
-                  pg_dump -h $PG_HOST -p ${PG_PORT:-5432} -U $PG_USER > /data/dump.sql
+                  echo === dumping database ===
+                  pg_dump -v -h $PG_HOST -p ${PG_PORT:-5432} -U $PG_USER -d $PG_DATABASE > /data/dump.sql
               volumeMounts:
                 - name: workdir
                   mountPath: /data
@@ -25,24 +26,26 @@ spec:
                 - configMapRef:
                     name: coder-postgres-backup
 
-            - name: tarball
+            - name: zip
               image: busybox:latest
               command:
                 - "sh"
                 - "-c"
                 - |
+                  echo === zipping dumpfile ===
                   cd /data
                   tar -czvf dump.tar.gz dump.sql
               volumeMounts:
                 - name: workdir
                   mountPath: /data
 
-            - name: aws-upload
+            - name: upload
               image: amazon/aws-cli:latest
               command:
                 - "sh"
                 - "-c"
                 - |
+                  echo === uploading dumpfile ===
                   OBJECT_KEY=coder/postgres-dump-$(date +'%Y.%m.%d').tar.gz
                   aws s3api --endpoint-url ${S3_ENDPOINT} put-object --bucket ${BUCKET_NAME} --key $OBJECT_KEY --body /data/dump.tar.gz
               envFrom:
@@ -52,12 +55,14 @@ spec:
                 - name: workdir
                   mountPath: /data
 
-            - name: telegram-notify
+          containers:
+            - name: postgres-backup
               image: curlimages/curl:latest
               command:
                 - sh
                 - -c
                 - |
+                  echo backup complete
                   MSG="coder postgress backup: success"
                   curl -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
                     -H "Content-Type: application/json" \
@@ -65,15 +70,6 @@ spec:
               envFrom:
                 - configMapRef:
                     name: coder-postgres-backup
-              volumeMounts:
-                - name: workdir
-                  mountPath: /data
-
-          containers:
-            - name: postgres-backup
-              image: busybox:latest
-              command: ["sh", "-c", "echo backup complete"]
-
           restartPolicy: Never
           volumes:
             - name: workdir
