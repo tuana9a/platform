@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rabbitmq-v2
+  namespace: dkhptd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq-v2
+  template:
+    metadata:
+      labels:
+        app: rabbitmq-v2
+    spec:
+      hostname: rabbitmq
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:3.12-management
+          volumeMounts:
+            - name: rabbitmq-data
+              mountPath: /var/lib/rabbitmq/mnesia
+          envFrom:
+            - configMapRef:
+                name: dkhptd-rabbitmq-v2-env
+          ports:
+            - containerPort: 5672
+            - containerPort: 15672
+  volumeClaimTemplates:
+    - metadata:
+        name: rabbitmq-data
+      spec:
+        storageClassName: pve-sda
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-v2
+  namespace: dkhptd
+  labels:
+    app: rabbitmq-v2
+spec:
+  ports:
+    - port: 5672
+      name: amqp
+    - port: 15672
+      name: management
+  clusterIP: None
+  selector:
+    app: rabbitmq-v2
