@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-v2
+  namespace: coder
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-v2
+  template:
+    metadata:
+      labels:
+        app: postgres-v2
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16
+          envFrom:
+            - configMapRef:
+                name: coder-postgres-v2-env
+          env:
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100M
+            limits:
+              cpu: 1000m
+              memory: 1000M
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+          ports:
+            - containerPort: 5432
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data
+      spec:
+        storageClassName: pve-sdb
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-v2
+  namespace: coder
+  labels:
+    app: postgres-v2
+spec:
+  ports:
+    - port: 5432
+      name: postgres
+  selector:
+    app: postgres-v2

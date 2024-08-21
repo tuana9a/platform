@@ -125,8 +125,9 @@ resource "kubernetes_stateful_set" "main" {
       }
       spec {
         security_context {
-          run_as_user = 1000
-          fs_group    = 1000
+          fs_group     = "1000"
+          run_as_user  = "1000"
+          run_as_group = "1000"
         }
 
         container {
@@ -176,7 +177,7 @@ resource "kubernetes_stateful_set" "main" {
           }
         }
 
-        # https://github.com/docker/for-linux/issues/1172 Is your $HOME/.local/share/docker is on NFS? Then probably it does not work.
+        # NOTE: to fix the ownership of the folder
         # init_container {
         #   name              = "chown-data"
         #   image             = "docker.io/library/busybox:1.31.1"
@@ -226,17 +227,11 @@ resource "kubernetes_stateful_set" "main" {
             mount_path = "/certs"
             read_only  = false
           }
-          # https://github.com/docker/for-linux/issues/1172 Is your $HOME/.local/share/docker is on NFS? Then probably it does not work.
-          # volume_mount {
-          #   name       = "docker-data"
-          #   mount_path = "/home/rootless/.local/share/docker"
-          #   read_only  = false
-          # }
-          # volume_mount {
-          #   name       = "docker-data"
-          #   mount_path = "/var/lib/docker"
-          #   read_only  = false
-          # }
+          volume_mount {
+            name       = "docker-data"
+            mount_path = "/var/lib/docker"
+            read_only  = false
+          }
         }
 
         affinity {
@@ -292,37 +287,21 @@ resource "kubernetes_stateful_set" "main" {
     }
 
     # https://github.com/docker/for-linux/issues/1172 Is your $HOME/.local/share/docker is on NFS? Then probably it does not work.
-    # volume_claim_template {
-    #   metadata {
-    #     name      = "docker-data"
-    #     namespace = var.namespace
-    #   }
-    #   spec {
-    #     access_modes       = ["ReadWriteOnce"]
-    #     storage_class_name = "nfs-client"
-    #     resources {
-    #       requests = {
-    #         storage = "32Gi"
-    #       }
-    #     }
-    #   }
-    # }
-
-    # volume_claim_template {
-    #   metadata {
-    #     name      = "docker-data"
-    #     namespace = var.namespace
-    #   }
-    #   spec {
-    #     access_modes       = ["ReadWriteOnce"]
-    #     storage_class_name = "nfs-client"
-    #     resources {
-    #       requests = {
-    #         storage = "32Gi"
-    #       }
-    #     }
-    #   }
-    # }
+    volume_claim_template {
+      metadata {
+        name      = "docker-data"
+        namespace = var.namespace
+      }
+      spec {
+        access_modes       = ["ReadWriteOnce"]
+        storage_class_name = "pve-sdb" # not using nfs-client anymore so don't worry
+        resources {
+          requests = {
+            storage = "32Gi"
+          }
+        }
+      }
+    }
 
     volume_claim_template {
       metadata {
@@ -331,7 +310,7 @@ resource "kubernetes_stateful_set" "main" {
       }
       spec {
         access_modes       = ["ReadWriteOnce"]
-        storage_class_name = "nfs-client"
+        storage_class_name = "pve-sdb"
         resources {
           requests = {
             storage = "1Gi"
