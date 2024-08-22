@@ -60,7 +60,7 @@ rm $DUMP_PREFIX-dump-*.tar.gz
 echo Dumping
 tar \
 {% for exclude in nfs_excludes %}
-  --exclude {{ exclude }} \
+  --exclude "{{ exclude }}" \
 {% endfor %}
   -cvzf $DUMP_FILE $BACKUP_DIR
 
