@@ -1,0 +1,64 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postgres-v2-restore
+  namespace: coder
+spec:
+  template:
+    spec:
+      initContainers:
+        - name: download
+          image: amazon/aws-cli:latest
+          command:
+            - "sh"
+            - "-c"
+            - |
+              echo === download dumpfile ===
+              OBJECT_KEY=coder/postgres-dump-2024.08.23.tar.gz
+              aws s3api --endpoint-url ${S3_ENDPOINT} get-object --bucket ${BUCKET_NAME} --key $OBJECT_KEY /data/dump.tar.gz
+              ls -la /data/
+          envFrom:
+            - configMapRef:
+                name: coder-postgres-v2-restore
+          volumeMounts:
+            - name: workdir
+              mountPath: /data
+
+        - name: unzip
+          image: busybox:latest
+          command:
+            - "sh"
+            - "-c"
+            - |
+              echo === unzip dumpfile ===
+              cd /data
+              tar -xzvf dump.tar.gz dump.sql
+          volumeMounts:
+            - name: workdir
+              mountPath: /data
+
+        - name: restore
+          image: postgres:16
+          command:
+            - "sh"
+            - "-c"
+            - |
+              export PGPASSWORD=$PG_PASS_V2
+              echo ========================
+              psql -h $PG_HOST_V2 -p ${PG_PORT:-5432} -U $PG_USER_V2 -d $PG_DATABASE -f /data/dump.sql
+          envFrom:
+            - configMapRef:
+                name: coder-postgres-v2-restore
+          volumeMounts:
+            - name: workdir
+              mountPath: /data
+
+      containers:
+        - name: postgres-v2-restore
+          image: busybox:latest
+          command: ["sh", "-c", "echo restore v2 complete"]
+
+      restartPolicy: Never
+      volumes:
+        - name: workdir
+          emptyDir: {}
