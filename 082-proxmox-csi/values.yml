@@ -1,9 +1,0 @@
-storageClass:
-  - name: pve-sda
-    storage: sda
-    reclaimPolicy: Delete
-    fstype: xfs
-  - name: pve-sdb
-    storage: sdb
-    reclaimPolicy: Delete
-    fstype: xfs
