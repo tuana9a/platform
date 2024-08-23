@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 echo "=== $(date) ==="
 
 HOST_NAME="{{ HOST_NAME }}"
@@ -54,38 +56,26 @@ upload() {
 mkdir -p $WORKDIR
 cd $WORKDIR || exit 1
 
+cleanup() {
+  rm $DUMP_PREFIX-dump-*.tar.gz
+}
+
 # cleanup old files (if exists)
-rm $DUMP_PREFIX-dump-*.tar.gz
+cleanup
 
 echo Dumping
 tar \
 {% for exclude in nfs_excludes %}
-  --exclude {{ exclude }} \
+  --exclude "{{ exclude }}" \
 {% endfor %}
   -cvzf $DUMP_FILE $BACKUP_DIR
-
-if [ $? != 0 ]; then
-  echo Something bad happened, exiting.
-  DURATION=$SECONDS
-  MSG="FAILED $HOST_NAME backup-nfs $(($DURATION / 60))m$(($DURATION % 60))s"
-  notify "$MSG"
-  exit 1
-fi
 
 S3_OBJECT_KEY=$HOST_NAME/$DUMP_FILE
 echo Uploading "$S3_OBJECT_KEY" "$WORKDIR/$DUMP_FILE"
 upload "$S3_OBJECT_KEY" "$DUMP_FILE"
 
-if [ $? != 0 ]; then
-  echo Something bad happened, exiting.
-  DURATION=$SECONDS
-  MSG="FAILED $HOST_NAME backup-nfs $(($DURATION / 60))m$(($DURATION % 60))s"
-  notify "$MSG"
-  exit 1
-fi
-
 DURATION=$SECONDS
 MSG="SUCCESS $HOST_NAME backup-nfs $BACKUP_DIR $(($DURATION / 60))m$(($DURATION % 60))s"
 notify "$MSG"
 
-rm $DUMP_PREFIX-dump-*.tar.gz
+cleanup
