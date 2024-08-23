@@ -31,7 +31,7 @@
         hour: "17"
         # quote item.path to support glob like /exports/nfs-client/coder-*
         job: '/usr/local/bin/backup-nfs-{{ item.name }}.sh "{{ item.path }}" {{ item.name }} > /tmp/backup-nfs-{{ item.name }}.log 2>&1'
-        state: "{{ item.state | default('present') }}"
+        state: "absent"
 
     - name: Copy screenshot script to remote
       become: true
@@ -50,3 +50,4 @@
         hour: "17"
         # quote item.path to support glob like /exports/nfs-client/coder-*
         job: "/usr/local/bin/save-screenshot-k8s-nfs-provisioner.sh /export/nfs-client > /tmp/save-screenshot-k8s-nfs-provisioner.log 2>&1"
+        state: "absent"
