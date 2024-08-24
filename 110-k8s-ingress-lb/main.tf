@@ -31,8 +31,8 @@ resource "proxmox_virtual_environment_vm" "k8s_ingress_lb" {
     datastore_id = local.proxmox_node.pve_cobi.storage.sda
     file_id      = "local:iso/jammy-server-cloudimg-amd64.img"
     interface    = "virtio0"
-    size         = 20
-    backup       = true
+    size         = 10
+    backup       = false
     replicate    = false
   }
 
