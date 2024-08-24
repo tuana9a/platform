@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "082-proxmox-csi"
+    prefix = "086-grafana"
   }
   required_providers {
     google = {
@@ -11,10 +11,6 @@ terraform {
     helm = {
       source  = "hashicorp/helm"
       version = "2.12.1"
-    }
-    kubernetes = {
-      source  = "hashicorp/kubernetes"
-      version = "2.27.0"
     }
   }
 }
@@ -29,8 +25,4 @@ provider "helm" {
   kubernetes {
     config_path = "~/.kube/config"
   }
-}
-
-provider "kubernetes" {
-  config_path = "~/.kube/config"
 }

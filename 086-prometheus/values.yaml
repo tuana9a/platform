@@ -1,6 +1,6 @@
 server:
   persistentVolume:
-    storageClass: nfs-client
+    storageClass: longhorn
 alertmanager:
   persistentVolume:
-    storageClass: nfs-client
+    storageClass: longhorn

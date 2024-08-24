@@ -1,16 +1,16 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "107-nfs-server"
+    prefix = "082-longhorn"
   }
   required_providers {
     google = {
       source  = "hashicorp/google"
       version = "5.29.1"
     }
-    proxmox = {
-      source  = "bpg/proxmox"
-      version = "0.51.0"
+    helm = {
+      source  = "hashicorp/helm"
+      version = "2.12.1"
     }
   }
 }
@@ -21,7 +21,8 @@ provider "google" {
   zone    = var.gcp_zone_name
 }
 
-provider "proxmox" {
-  endpoint  = var.pve_endpoint
-  api_token = var.pve_api_token
+provider "helm" {
+  kubernetes {
+    config_path = "~/.kube/config"
+  }
 }

@@ -31,11 +31,11 @@ spec:
     - metadata:
         name: rabbitmq-data
       spec:
-        storageClassName: pve-sda
+        storageClassName: longhorn
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 10Gi
+            storage: 2Gi
 ---
 apiVersion: v1
 kind: Service
