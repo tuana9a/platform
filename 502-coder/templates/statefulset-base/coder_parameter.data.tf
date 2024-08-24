@@ -58,7 +58,7 @@ data "coder_parameter" "home_disk_size" {
   mutable      = false
   validation {
     min = 1
-    max = 100
+    max = 10
   }
 }
 
@@ -72,29 +72,5 @@ data "coder_parameter" "image" {
   option {
     name  = "tuana9a/coder:base"
     value = "tuana9a/coder:base"
-  }
-  option {
-    name  = "tuana9a/coder:adrazaamon-devops"
-    value = "tuana9a/coder:adrazaamon-devops"
-  }
-  option {
-    name  = "tuana9a/coder:nodejs"
-    value = "tuana9a/coder:nodejs"
-  }
-  option {
-    name  = "tuana9a/coder:java"
-    value = "tuana9a/coder:java"
-  }
-  option {
-    name  = "tuana9a/coder:terraform"
-    value = "tuana9a/coder:terraform"
-  }
-  option {
-    name  = "tuana9a/coder:go"
-    value = "tuana9a/coder:go"
-  }
-  option {
-    name  = "tuana9a/coder:terraform-eks-example"
-    value = "tuana9a/coder:terraform-eks-example"
   }
 }

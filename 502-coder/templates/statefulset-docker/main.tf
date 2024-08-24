@@ -7,7 +7,7 @@ resource "coder_agent" "main" {
     set -e
 
     # install and start code-server
-    curl -fsSL https://code-server.dev/install.sh | sh -s -- --method=standalone --prefix=/tmp/code-server --version 4.11.0
+    curl -fsSL https://code-server.dev/install.sh | sh -s -- --method=standalone --prefix=/tmp/code-server --version 4.90.3
     /tmp/code-server/bin/code-server --auth none --port 13337 >/tmp/code-server.log 2>&1 &
   EOT
 
@@ -130,6 +130,25 @@ resource "kubernetes_stateful_set" "main" {
           run_as_group = "1000"
         }
 
+        # NOTE: to fix the ownership of the folder
+        # init_container {
+        #   name              = "chown-data"
+        #   image             = "docker.io/library/busybox:1.31.1"
+        #   image_pull_policy = "IfNotPresent"
+        #   command           = ["chown", "1000:1000", "/home/rootless/.local/share/docker"]
+        #   security_context {
+        #     capabilities {
+        #       add = ["CHOWN"]
+        #     }
+        #     run_as_non_root = false
+        #     run_as_user     = 0
+        #   }
+        #   volume_mount {
+        #     mount_path = "/home/rootless/.local/share/docker"
+        #     name       = "docker-data"
+        #   }
+        # }
+
         container {
           name              = "dev"
           image             = data.coder_parameter.image.value
@@ -177,25 +196,6 @@ resource "kubernetes_stateful_set" "main" {
           }
         }
 
-        # NOTE: to fix the ownership of the folder
-        # init_container {
-        #   name              = "chown-data"
-        #   image             = "docker.io/library/busybox:1.31.1"
-        #   image_pull_policy = "IfNotPresent"
-        #   command           = ["chown", "1000:1000", "/home/rootless/.local/share/docker"]
-        #   security_context {
-        #     capabilities {
-        #       add = ["CHOWN"]
-        #     }
-        #     run_as_non_root = false
-        #     run_as_user     = 0
-        #   }
-        #   volume_mount {
-        #     mount_path = "/home/rootless/.local/share/docker"
-        #     name       = "docker-data"
-        #   }
-        # }
-
         container {
           name  = "docker"
           image = "docker:27.0-dind"
@@ -227,11 +227,11 @@ resource "kubernetes_stateful_set" "main" {
             mount_path = "/certs"
             read_only  = false
           }
-          volume_mount {
-            name       = "docker-data"
-            mount_path = "/var/lib/docker"
-            read_only  = false
-          }
+          # volume_mount {
+          #   name       = "docker-data"
+          #   mount_path = "/var/lib/docker"
+          #   read_only  = false
+          # }
         }
 
         affinity {
@@ -251,6 +251,12 @@ resource "kubernetes_stateful_set" "main" {
                 }
               }
             }
+          }
+        }
+
+        volume {
+          name = "docker-certs"
+          empty_dir {
           }
         }
       }
@@ -277,7 +283,7 @@ resource "kubernetes_stateful_set" "main" {
       }
       spec {
         access_modes       = ["ReadWriteOnce"]
-        storage_class_name = "nfs-client"
+        storage_class_name = "longhorn"
         resources {
           requests = {
             storage = "${data.coder_parameter.home_disk_size.value}Gi"
@@ -287,36 +293,20 @@ resource "kubernetes_stateful_set" "main" {
     }
 
     # https://github.com/docker/for-linux/issues/1172 Is your $HOME/.local/share/docker is on NFS? Then probably it does not work.
-    volume_claim_template {
-      metadata {
-        name      = "docker-data"
-        namespace = var.namespace
-      }
-      spec {
-        access_modes       = ["ReadWriteOnce"]
-        storage_class_name = "pve-sdb" # not using nfs-client anymore so don't worry
-        resources {
-          requests = {
-            storage = "32Gi"
-          }
-        }
-      }
-    }
-
-    volume_claim_template {
-      metadata {
-        name      = "docker-certs"
-        namespace = var.namespace
-      }
-      spec {
-        access_modes       = ["ReadWriteOnce"]
-        storage_class_name = "pve-sdb"
-        resources {
-          requests = {
-            storage = "1Gi"
-          }
-        }
-      }
-    }
+    # volume_claim_template {
+    #   metadata {
+    #     name      = "docker-data"
+    #     namespace = var.namespace
+    #   }
+    #   spec {
+    #     access_modes       = ["ReadWriteOnce"]
+    #     storage_class_name = "longhorn"
+    #     resources {
+    #       requests = {
+    #         storage = "32Gi"
+    #       }
+    #     }
+    #   }
+    # }
   }
 }
