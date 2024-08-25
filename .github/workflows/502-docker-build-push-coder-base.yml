@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
-      - "502-coder/docker/coder/base.Dockerfile"
+      - "docker/coder/base.Dockerfile"
 
 jobs:
   build-and-push:
@@ -26,8 +26,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
-          context: 502-coder/docker/coder
-          file: 502-coder/docker/coder/base.Dockerfile
+          context: docker/coder
+          file: docker/coder/base.Dockerfile
           push: true
           tags: tuana9a/coder:base
           cache-from: type=gha

@@ -4,6 +4,10 @@ https://coder.com/docs/v2/latest/install/kubernetes
 
 https://coder.com/docs/v2/latest/install/offline
 
+# docker image
+
+See [docker/coder/](../docker/coder/)
+
 # configmap
 
 `postgres`
