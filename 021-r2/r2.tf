@@ -16,6 +16,13 @@ resource "aws_s3_bucket_lifecycle_configuration" "backup" {
   }
 }
 
+# the same as backup but 4ever
+resource "cloudflare_r2_bucket" "b4ckup" {
+  account_id = var.cloudflare_account_id
+  name       = "b4ckup"
+  location   = "APAC"
+}
+
 resource "cloudflare_r2_bucket" "public" {
   account_id = var.cloudflare_account_id
   name       = "public"
