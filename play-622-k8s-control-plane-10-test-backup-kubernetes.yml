@@ -1,0 +1,9 @@
+- hosts: k8s_control_plane
+  tasks:
+    - name: Execute the backup script
+      ansible.builtin.command: /usr/local/bin/backup-kubernetes.sh
+      register: backup_output
+
+    - name: Print the output of the backup script
+      ansible.builtin.debug:
+        msg: "{{ backup_output.stdout }}"
