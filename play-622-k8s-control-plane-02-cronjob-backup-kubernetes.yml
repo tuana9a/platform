@@ -1,0 +1,3 @@
+- hosts: k8s_control_plane
+  tasks:
+    - import_tasks: ./tasks/cronjob_backup_kubernetes.yml

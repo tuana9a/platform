@@ -2,5 +2,4 @@
   tasks:
     - import_tasks: ./tasks/cronjob_authorized_keys.yml
     - import_tasks: ./tasks/install_awscli.yml
-    - import_tasks: ./tasks/install_etcd.yml
-    - import_tasks: ./tasks/cronjob_backup_kubernetes.yml
+    # - import_tasks: ./tasks/install_etcd.yml # etcd is installed along side with the k8s control plane
