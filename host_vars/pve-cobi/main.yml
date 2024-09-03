@@ -2,6 +2,8 @@ HOST_NAME: pve-cobi
 openvpn_client_items:
   - file: pve/pve-cobi-zephyrus.ovpn
     name: pve-cobi-zephyrus
+    state: stopped
+    enabled: false
 update_dns_items:
   - record_name: pve.z.tuana9a.com
     extract_ip: $(/usr/sbin/ip addr show tun0 | grep 'inet ' | awk '{print $2}' | cut -d/ -f1)
