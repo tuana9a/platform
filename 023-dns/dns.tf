@@ -7,15 +7,6 @@ resource "cloudflare_record" "zephyrus" {
   proxied = false
 }
 
-resource "cloudflare_record" "orisis" {
-  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
-  name    = "orisis"
-  value   = local.orisis_public_ip
-  type    = "A"
-  ttl     = 60
-  proxied = false
-}
-
 resource "cloudflare_record" "imperial_ally_285602" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
   name    = "imperial-ally-285602"
