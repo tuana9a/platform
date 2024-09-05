@@ -13,5 +13,7 @@ spec:
           cloudflare:
             email: tuana9a@gmail.com
             apiTokenSecretRef:
-              name: cloudflare-api-token-edit-dns
+              name: cloudflare-api-token
+              # NOTE: secret is required to be in the same namespace as cert-manager deployment
+              # otherwise it's will throw error secret not found when dns challenging
               key: api-token
