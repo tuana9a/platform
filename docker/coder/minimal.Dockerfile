@@ -1,4 +1,4 @@
-FROM codercom/enterprise-base:ubuntu-20240909
+FROM codercom/enterprise-minimal:ubuntu-20240909
 
 USER coder
 
