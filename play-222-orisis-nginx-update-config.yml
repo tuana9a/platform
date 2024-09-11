@@ -1,3 +1,0 @@
-- hosts: orisis
-  tasks:
-    - import_tasks: ./tasks/update_nginx_config.yml
