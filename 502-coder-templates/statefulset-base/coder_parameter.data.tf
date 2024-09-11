@@ -73,4 +73,8 @@ data "coder_parameter" "image" {
     name  = "tuana9a/coder:base"
     value = "tuana9a/coder:base"
   }
+  option {
+    name  = "tuana9a/coder:minimal"
+    value = "tuana9a/coder:minimal"
+  }
 }
