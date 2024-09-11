@@ -1,6 +1,7 @@
 server:
   persistentVolume:
     storageClass: longhorn
+    size: 15Gi
 alertmanager:
   persistentVolume:
     storageClass: longhorn
