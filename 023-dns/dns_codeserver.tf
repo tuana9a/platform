@@ -1,15 +1,15 @@
-resource "cloudflare_record" "devaccess" {
+resource "cloudflare_record" "dev" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
-  name    = "devaccess"
+  name    = "dev"
   value   = cloudflare_record.zephyrus.hostname
   type    = "CNAME"
   ttl     = 60
   proxied = false
 }
 
-resource "cloudflare_record" "wildcard_devaccess" {
+resource "cloudflare_record" "wildcard_dev" {
   zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
-  name    = "*.devaccess"
+  name    = "*.dev"
   value   = cloudflare_record.zephyrus.hostname
   type    = "CNAME"
   ttl     = 60

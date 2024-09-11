@@ -1,0 +1,118 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: tuana9a
+  name: tuana9a-dev-code-server-forwarder-conf
+data:
+  code-server.conf: |
+    server {
+      listen 80;
+      server_name dev.tuana9a.com;
+
+      location / {
+        proxy_pass http://192.168.56.9:8009;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        # websocket
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+      }
+    }
+
+  code-server-expose-ports.conf: |
+    server {
+      listen 80;
+      server_name *.dev.tuana9a.com;
+
+      location / {
+        proxy_pass http://192.168.56.9:8009;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        # websocket
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tuana9a-dev-code-server-forwarder
+  namespace: tuana9a
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tuana9a-dev-code-server-forwarder
+  template:
+    metadata:
+      labels:
+        app: tuana9a-dev-code-server-forwarder
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.27.0
+          volumeMounts:
+            - name: tuana9a-dev-code-server-forwarder-conf
+              mountPath: /etc/nginx/conf.d
+              readOnly: true
+      volumes:
+        - name: tuana9a-dev-code-server-forwarder-conf
+          configMap:
+            name: tuana9a-dev-code-server-forwarder-conf
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tuana9a-dev-code-server-forwarder
+  namespace: tuana9a
+spec:
+  selector:
+    app: tuana9a-dev-code-server-forwarder
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tuana9a-dev-code-server-forwarder
+  namespace: tuana9a
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - "dev.tuana9a.com"
+      secretName: dev-tuana9a-com-tls
+    - hosts:
+        - "*.dev.tuana9a.com"
+      secretName: wildcard-dev-tuana9a-com-tls
+  rules:
+    - host: "dev.tuana9a.com"
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: tuana9a-dev-code-server-forwarder
+                port:
+                  number: 80
+    - host: "*.dev.tuana9a.com"
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: tuana9a-dev-code-server-forwarder
+                port:
+                  number: 80
