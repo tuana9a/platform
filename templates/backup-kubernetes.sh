@@ -16,6 +16,7 @@ TELEGRAM_CHAT_ID="{{ KUBERNETES_BACKUP_TELEGRAM_CHAT_ID | default('') }}"
 
 ETCD_SNAPSHOT=/tmp/snapshot.db
 DUMP_FILE="backup-kubernetes-$(date +'%Y.%m.%d.%H').tar.gz"
+S3_OBJECT_KEY=$HOST_NAME/$DUMP_FILE
 WORKDIR=/tmp
 SECONDS=0 # for calc duration
 
@@ -69,7 +70,6 @@ if [ $? != 0 ]; then
   exit 1
 fi
 
-S3_OBJECT_KEY=$HOST_NAME/$DUMP_FILE
 echo Uploading "$S3_OBJECT_KEY" "$WORKDIR/$DUMP_FILE"
 upload "$S3_OBJECT_KEY" "$DUMP_FILE"
 
