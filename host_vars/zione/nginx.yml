@@ -1,0 +1,3 @@
+nginx:
+  conf_d: empty/
+  stream_conf_d: zione/nginx/stream.conf.d/

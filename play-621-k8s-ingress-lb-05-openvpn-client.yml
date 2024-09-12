@@ -1,0 +1,4 @@
+- hosts: k8s_ingress_lb
+  tasks:
+    - import_tasks: ./tasks/install_openvpn.yml
+    - import_tasks: ./tasks/openvpn_client.yml

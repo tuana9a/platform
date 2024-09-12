@@ -1,0 +1,4 @@
+- hosts: tuana9a_dev
+  tasks:
+    - import_tasks: ./tasks/install_openvpn.yml
+    - import_tasks: ./tasks/openvpn_client.yml

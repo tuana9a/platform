@@ -1,5 +1,5 @@
-resource "bizflycloud_firewall" "pingable" {
-  name = "pingable"
+resource "bizflycloud_firewall" "allow_ping" {
+  name = "allow_ping"
   ingress {
     cidr       = "0.0.0.0/0"
     port_range = ""
@@ -12,8 +12,8 @@ resource "bizflycloud_firewall" "pingable" {
   }
 }
 
-resource "bizflycloud_firewall" "openssh" {
-  name = "openssh"
+resource "bizflycloud_firewall" "allow_ssh" {
+  name = "allow_ssh"
   ingress {
     cidr       = "0.0.0.0/0"
     port_range = "22"
@@ -26,8 +26,8 @@ resource "bizflycloud_firewall" "openssh" {
   }
 }
 
-resource "bizflycloud_firewall" "openvpn" {
-  name = "openvpn"
+resource "bizflycloud_firewall" "allow_openvpn" {
+  name = "allow_openvpn"
   ingress {
     cidr       = "0.0.0.0/0"
     port_range = "1194"
@@ -40,13 +40,22 @@ resource "bizflycloud_firewall" "openvpn" {
   }
 }
 
-resource "bizflycloud_firewall" "web_access" {
-  name = "web_access"
+resource "bizflycloud_firewall" "allow_http" {
+  name = "allow_http"
   ingress {
     cidr       = "0.0.0.0/0"
     port_range = "80"
     protocol   = "tcp"
   }
+  egress {
+    cidr       = ""
+    port_range = ""
+    protocol   = ""
+  }
+}
+
+resource "bizflycloud_firewall" "allow_https" {
+  name = "allow_https"
   ingress {
     cidr       = "0.0.0.0/0"
     port_range = "443"
@@ -59,13 +68,22 @@ resource "bizflycloud_firewall" "web_access" {
   }
 }
 
-resource "bizflycloud_firewall" "web_access_alternative" {
-  name = "web_access_alternative"
+resource "bizflycloud_firewall" "allow_http_alt" {
+  name = "allow_http_alt"
   ingress {
     cidr       = "0.0.0.0/0"
     port_range = "8080"
     protocol   = "tcp"
   }
+  egress {
+    cidr       = ""
+    port_range = ""
+    protocol   = ""
+  }
+}
+
+resource "bizflycloud_firewall" "allow_https_alt" {
+  name = "allow_https_alt"
   ingress {
     cidr       = "0.0.0.0/0"
     port_range = "8443"
@@ -78,8 +96,8 @@ resource "bizflycloud_firewall" "web_access_alternative" {
   }
 }
 
-resource "bizflycloud_firewall" "wireguard" {
-  name = "wireguard"
+resource "bizflycloud_firewall" "allow_wireguard" {
+  name = "allow_wireguard"
   ingress {
     cidr       = "0.0.0.0/0"
     port_range = "51820"
@@ -92,8 +110,8 @@ resource "bizflycloud_firewall" "wireguard" {
   }
 }
 
-resource "bizflycloud_firewall" "proxmox" {
-  name = "proxmox"
+resource "bizflycloud_firewall" "allow_proxmox" {
+  name = "allow_proxmox"
   ingress {
     cidr       = "0.0.0.0/0"
     port_range = "8006"
