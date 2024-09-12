@@ -1,4 +1,6 @@
-- hosts: zephyrus
+- hosts: zione
   tasks:
+    - import_tasks: ./tasks/install_tmux.yml
+    - import_tasks: ./tasks/install_nginx.yml
     - import_tasks: ./tasks/disable_nginx_site_default.yml
     - import_tasks: ./tasks/update_nginx_config.yml

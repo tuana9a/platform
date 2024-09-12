@@ -2,7 +2,11 @@ HOST_NAME: k8s-ingress-lb
 openvpn_client_items:
   - file: k8s-ingress-lb/k8s-ingress-lb-zephyrus.ovpn
     name: k8s-ingress-lb-zephyrus
+    state: stopped
+    enabled: false
   - file: k8s-lb/k8s-lb-zephyrus.ovpn
     name: k8s-lb-zephyrus
     state: stopped
-    enable: false
+    enabled: false
+  - file: k8s-ingress-lb/k8s-ingress-lb-zione.ovpn
+    name: k8s-ingress-lb-zione

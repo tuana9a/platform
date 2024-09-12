@@ -5,6 +5,8 @@ parted:
 openvpn_client_items:
   - file: tuana9a-dev/tuana9a-dev-zephyrus.ovpn
     name: tuana9a-dev-zephyrus
+    state: stopped
+    enabled: false
 wireguard_client_items:
   - file: tuana9a-dev/wg/tuana9a-dev-zpr.conf
     name: wg0

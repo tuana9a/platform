@@ -15,3 +15,12 @@ resource "cloudflare_record" "imperial_ally_285602" {
   ttl     = 60
   proxied = false
 }
+
+resource "cloudflare_record" "zione" {
+  zone_id = data.cloudflare_zones.tuana9a_com.zones[0].id
+  name    = "zione"
+  value   = local.zione_public_ip
+  type    = "A"
+  ttl     = 60
+  proxied = false
+}
