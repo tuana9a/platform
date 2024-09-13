@@ -15,7 +15,8 @@ TELEGRAM_BOT_TOKEN="{{ KUBERNETES_BACKUP_TELEGRAM_BOT_TOKEN | default('') }}"
 TELEGRAM_CHAT_ID="{{ KUBERNETES_BACKUP_TELEGRAM_CHAT_ID | default('') }}"
 
 ETCD_SNAPSHOT=/tmp/snapshot.db
-DUMP_FILE="kubernetes-dump-$(date +'%Y.%m.%d').tar.gz"
+DUMP_FILE="backup-kubernetes-$(date +'%Y.%m.%d.%H').tar.gz"
+S3_OBJECT_KEY=$HOST_NAME/$DUMP_FILE
 WORKDIR=/tmp
 SECONDS=0 # for calc duration
 
@@ -59,7 +60,7 @@ ETCDCTL_API=3 sudo /usr/local/bin/etcdctl snapshot save $ETCD_SNAPSHOT $ETCDCTL_
 ETCDCTL_API=3 sudo /usr/local/bin/etcdctl --write-out=table snapshot status $ETCD_SNAPSHOT $ETCDCTL_OPTS
 
 echo Dumping
-sudo tar -czvf $DUMP_FILE /tmp/snapshot.db /etc/kubernetes/pki /etc/kubernetes/manifests
+sudo tar -czvf $DUMP_FILE $ETCD_SNAPSHOT /etc/kubernetes/pki /etc/kubernetes/manifests
 
 if [ $? != 0 ]; then
   echo Something bad happened, exiting.
@@ -69,7 +70,6 @@ if [ $? != 0 ]; then
   exit 1
 fi
 
-S3_OBJECT_KEY=$HOST_NAME/$DUMP_FILE
 echo Uploading "$S3_OBJECT_KEY" "$WORKDIR/$DUMP_FILE"
 upload "$S3_OBJECT_KEY" "$DUMP_FILE"
 
