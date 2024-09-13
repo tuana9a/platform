@@ -1,6 +1,6 @@
-resource "argocd_application" "hcr" {
+resource "argocd_application" "k8s_forwarder" {
   metadata {
-    name = "hcr"
+    name = "k8s-forwarder"
   }
 
   wait = true
@@ -10,12 +10,11 @@ resource "argocd_application" "hcr" {
 
     destination {
       server    = "https://kubernetes.default.svc"
-      namespace = "dkhptd"
     }
 
     source {
       repo_url        = "https://github.com/tuana9a/platform.git"
-      path            = "512-hcr-manifests"
+      path            = "600-k8s-forwarder-manifests"
       target_revision = "main"
     }
 

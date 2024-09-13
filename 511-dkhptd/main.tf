@@ -15,7 +15,7 @@ resource "argocd_application" "dkhptd" {
 
     source {
       repo_url        = "https://github.com/tuana9a/platform.git"
-      path            = "511-dkhptd/manifests"
+      path            = "511-dkhptd-manifests"
       target_revision = "main"
     }
 
