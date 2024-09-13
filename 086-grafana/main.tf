@@ -1,6 +1,6 @@
 resource "helm_release" "grafana" {
   name             = "grafana"
-  namespace        = "prometheus"
+  namespace        = "grafana"
   create_namespace = true
 
   repository = "https://grafana.github.io/helm-charts"
