@@ -15,7 +15,7 @@ resource "argocd_application" "t9stbot" {
 
     source {
       repo_url        = "https://github.com/tuana9a/platform.git"
-      path            = "510-t9stbot/manifests"
+      path            = "510-t9stbot-manifests"
       target_revision = "main"
     }
 

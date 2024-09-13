@@ -1,6 +1,6 @@
-resource "argocd_application" "hcr" {
+resource "argocd_application" "cert_manager_argoprj" {
   metadata {
-    name = "hcr"
+    name = "cert-manager-argoprj"
   }
 
   wait = true
@@ -10,12 +10,11 @@ resource "argocd_application" "hcr" {
 
     destination {
       server    = "https://kubernetes.default.svc"
-      namespace = "dkhptd"
     }
 
     source {
       repo_url        = "https://github.com/tuana9a/platform.git"
-      path            = "512-hcr-manifests"
+      path            = "100-cert-manager-manifests"
       target_revision = "main"
     }
 
