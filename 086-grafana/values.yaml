@@ -15,6 +15,6 @@ datasources:
           httpHeaderName1: "X-Scope-OrgID"
         secureJsonData:
           httpHeaderValue1: "1"
-      - name: k8s-node-exporter
+      - name: prometheus
         type: prometheus
         url: http://prometheus-server.prometheus.svc.cluster.local
