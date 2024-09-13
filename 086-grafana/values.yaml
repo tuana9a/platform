@@ -6,6 +6,10 @@ datasources:
   datasources.yaml:
     apiVersion: 1
     datasources:
+      - name: prometheus
+        type: prometheus
+        url: http://prometheus-server.prometheus.svc.cluster.local
+        isDefault: true
       - name: loki
         type: loki
         url: http://loki-gateway.loki-system.svc.cluster.local
@@ -15,6 +19,3 @@ datasources:
           httpHeaderName1: "X-Scope-OrgID"
         secureJsonData:
           httpHeaderValue1: "1"
-      - name: k8s-node-exporter
-        type: prometheus
-        url: http://prometheus-server.prometheus.svc.cluster.local
