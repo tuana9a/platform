@@ -24,6 +24,8 @@ spec:
           env:
             - name: DEVICE
               value: "cpu"
+            - name: BIND
+              value: "0.0.0.0"
           resources:
             requests:
               memory: "512Mi"
