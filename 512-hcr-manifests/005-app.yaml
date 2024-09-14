@@ -6,11 +6,21 @@ spec:
   template:
     metadata:
       annotations:
-        autoscaling.knative.dev/min-scale: "1"
+        autoscaling.knative.dev/min-scale: "0"
     spec:
+      volumes:
+        - name: hcr-workdir
+          persistentVolumeClaim:
+            claimName: hcr-workdir
       containers:
-        - image: tuana9a/hcr
+        - image: python:3.8-slim-bullseye
           imagePullPolicy: Always
+          workingDir: /app/hust-captcha-resolver
+          volumeMounts:
+            - name: hcr-workdir
+              mountPath: /app
+          command: ["/bin/sh", "-c"]
+          args: [".venv/bin/python main.py"]
           env:
             - name: DEVICE
               value: "cpu"
@@ -19,5 +29,5 @@ spec:
               memory: "300Mi"
               cpu: "300m"
             limits:
-              memory: "1500Mi"
-              cpu: "1500m"
+              memory: "1000Mi"
+              cpu: "1000m"
