@@ -25,10 +25,25 @@ spec:
               value: "cpu"
             - name: BIND
               value: "0.0.0.0"
+            - name: PORT
+              value: "8080"
           resources:
             requests:
-              memory: "512Mi"
+              memory: "500Mi"
               cpu: "250m"
             limits:
-              memory: "1024Mi"
+              memory: "1234Mi" # argocd out of sync 1000Mi vs 1
               cpu: "500m"
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              port: 8080 # you can also check on a different port than the containerPort (traffic-port)
+              path: "/"
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+          startupProbe:
+            httpGet:
+              port: 8080
+              path: "/"
