@@ -1,12 +1,12 @@
-apiVersion: serving.knative.dev/v1
-kind: Service
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: hcr
 spec:
   template:
     metadata:
-      annotations:
-        autoscaling.knative.dev/min-scale: "0"
+      labels:
+        app: hcr
     spec:
       volumes:
         - name: hcr-workdir
@@ -14,6 +14,7 @@ spec:
             claimName: hcr-workdir
       containers:
         - image: python:3.8-slim-bullseye
+          name: hcr
           workingDir: /app/hust-captcha-resolver
           volumeMounts:
             - name: hcr-workdir
@@ -32,18 +33,51 @@ spec:
               memory: "500Mi"
               cpu: "250m"
             limits:
-              memory: "1234Mi" # argocd out of sync 1000Mi vs 1
+              memory: "1000Mi"
               cpu: "500m"
           ports:
             - containerPort: 8080
           readinessProbe:
             httpGet:
-              port: 8080 # you can also check on a different port than the containerPort (traffic-port)
+              port: 8080
               path: "/"
           livenessProbe:
             tcpSocket:
               port: 8080
-          startupProbe:
-            httpGet:
-              port: 8080
-              path: "/"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hcr
+spec:
+  selector:
+    app: hcr
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hcr
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - hcr.tuana9a.com
+      secretName: hcr-tuana9a-com-tls
+  rules:
+    - host: hcr.tuana9a.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hcr
+                port:
+                  number: 8080
