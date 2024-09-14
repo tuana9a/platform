@@ -3,6 +3,9 @@ kind: Deployment
 metadata:
   name: hcr
 spec:
+  selector:
+    matchLabels:
+      app: hcr
   template:
     metadata:
       labels:
