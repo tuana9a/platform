@@ -14,7 +14,6 @@ spec:
             claimName: hcr-workdir
       containers:
         - image: python:3.8-slim-bullseye
-          imagePullPolicy: Always
           workingDir: /app/hust-captcha-resolver
           volumeMounts:
             - name: hcr-workdir
