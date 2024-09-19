@@ -57,7 +57,7 @@ spec:
                 - sh
                 - -c
                 - |
-                  MSG="dkhptd mongo backup: success"
+                  MSG="SUCCESS: dkhptd/backup-mongo"
                   curl -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
                     -H "Content-Type: application/json" \
                     -d "{\"chat_id\":${TELEGRAM_CHAT_ID},\"disable_notification\":true,\"text\":\"${MSG}\"}"
