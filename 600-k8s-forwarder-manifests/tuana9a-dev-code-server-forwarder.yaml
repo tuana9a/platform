@@ -20,15 +20,14 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    external-dns.alpha.kubernetes.io/hostname: "*.dev.tuana9a.com"
+    external-dns.alpha.kubernetes.io/target: "zione.tuana9a.com"
 spec:
   ingressClassName: nginx
   tls:
     - hosts:
         - "dev.tuana9a.com"
       secretName: dev-tuana9a-com-tls
-    - hosts:
-        - "*.dev.tuana9a.com"
-      secretName: wildcard-dev-tuana9a-com-tls
   rules:
     - host: "dev.tuana9a.com"
       http:
@@ -40,6 +39,24 @@ spec:
                 name: tuana9a-dev-code-server-forwarder
                 port:
                   number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wildcard-tuana9a-dev-code-server-forwarder
+  namespace: tuana9a
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    external-dns.alpha.kubernetes.io/hostname: "*.dev.tuana9a.com"
+    external-dns.alpha.kubernetes.io/target: "zione.tuana9a.com"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - "*.dev.tuana9a.com"
+      secretName: wildcard-dev-tuana9a-com-tls
+  rules:
     - host: "*.dev.tuana9a.com"
       http:
         paths:
