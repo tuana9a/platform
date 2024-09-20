@@ -32,8 +32,11 @@ spec:
             - "-c"
             - |
               if [ ! -d "/app/hust-captcha-resolver" ]; then
-                git clone https://github.com/tuana9a/hust-captcha-resolver /app/hust-captcha-resolver;
+                mkdir -p /app/hust-captcha-resolver;
               fi;
+              git clone https://github.com/tuana9a/hust-captcha-resolver /tmp/hust-captcha-resolver;
+              cp -r /tmp/hust-captcha-resolver/* /app/hust-captcha-resolver;
+              rm -r /tmp/hust-captcha-resolver
         - name: download-weights
           image: alpine/curl
           volumeMounts:
@@ -56,9 +59,10 @@ spec:
             - "/bin/sh"
             - "-c"
             - |
-              if [ ! -d "/app/hust-captcha-resolver/.venv" ]; then
-                python3 -m venv .venv && .venv/bin/pip install -r requirements.txt;
+              if [ -d "/app/hust-captcha-resolver/.venv" ]; then
+                rm -r /app/hust-captcha-resolver/.venv
               fi
+              python3 -m venv .venv && .venv/bin/pip install -r requirements.txt;
       containers:
         - name: dummy
           image: hello-world
