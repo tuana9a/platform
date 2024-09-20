@@ -20,7 +20,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    external-dns.alpha.kubernetes.io/hostname: "*.dev.tuana9a.com"
+    external-dns.alpha.kubernetes.io/hostname: "dev.tuana9a.com"
     external-dns.alpha.kubernetes.io/target: "zione.tuana9a.com"
 spec:
   ingressClassName: nginx
@@ -46,7 +46,7 @@ metadata:
   name: wildcard-tuana9a-dev-code-server-forwarder
   namespace: tuana9a
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    cert-manager.io/cluster-issuer: "letsencrypt-cloudflare-production"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     external-dns.alpha.kubernetes.io/hostname: "*.dev.tuana9a.com"
     external-dns.alpha.kubernetes.io/target: "zione.tuana9a.com"
