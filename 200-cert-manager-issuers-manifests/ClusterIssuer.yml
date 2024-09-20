@@ -9,6 +9,21 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-production
     solvers:
+      - http01:
+          ingress:
+            ingressClassName: nginx
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-cloudflare-production
+spec:
+  acme:
+    email: tuana9a@gmail.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-cloudflare-production
+    solvers:
       - dns01:
           cloudflare:
             email: tuana9a@gmail.com
