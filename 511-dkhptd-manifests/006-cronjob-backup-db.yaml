@@ -11,7 +11,7 @@ spec:
         spec:
           initContainers:
             - name: mongo-dump
-              image: mongo:5.0
+              image: mongo:7.0
               command:
                 - "sh"
                 - "-c"

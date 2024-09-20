@@ -1,1 +1,0 @@
-../secrets/argocd_login.auto.tfvars

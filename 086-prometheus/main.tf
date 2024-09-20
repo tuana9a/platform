@@ -9,6 +9,6 @@ resource "helm_release" "prometheus" {
 
   values = [
     "${file("./values.yaml")}",
-    "${file("./values.secret.yaml")}",
+    "${file("./secrets/values.yaml")}",
   ]
 }
