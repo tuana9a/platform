@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hcr
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hcr
+  namespace: argocd
+spec:
+  destination:
+    namespace: hcr
+    server: https://kubernetes.default.svc
+  project: default
+  revisionHistoryLimit: 10
+  source:
+    path: 512-hcr-manifests
+    repoURL: https://github.com/tuana9a/platform.git
+    targetRevision: main
+  syncPolicy:
+    automated:
+      allowEmpty: true
+      prune: true
+      selfHeal: true

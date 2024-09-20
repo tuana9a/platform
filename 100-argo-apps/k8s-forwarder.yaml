@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: k8s-forwarder
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: k8s-forwarder
+  namespace: argocd
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: k8s-forwarder
+  project: default
+  revisionHistoryLimit: 10
+  source:
+    path: 600-k8s-forwarder-manifests
+    repoURL: https://github.com/tuana9a/platform.git
+    targetRevision: main
+  syncPolicy:
+    automated:
+      allowEmpty: true
+      prune: true
+      selfHeal: true
