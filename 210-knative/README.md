@@ -1,20 +1,14 @@
 # knative
 
-https://knative.dev/docs/install/operator/knative-with-operators/#create-the-knative-serving-custom-resource
+https://knative.dev/docs/install/operator/knative-with-operators/
+
+NOTE: this stack is now managed by argocd, just install the operator and skip following commands
 
 ```bash
-kubectl apply -f https://github.com/knative/operator/releases/download/knative-v1.14.4/operator.yaml
+wget https://github.com/knative/operator/releases/download/knative-v1.14.4/operator.yaml -O operator.yaml
 ```
 
-UPDATE: this stack is now managed by argocd, just install the operator and skip following commands
-
-```bash
-kubectl apply -f knative-serving.yml
-```
-
-```bash
-kubectl apply -f knative-eventing.yml
-```
+# note
 
 by default knative not support volume, need to enabled it with https://knative.dev/docs/serving/services/storage/
 
