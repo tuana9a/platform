@@ -18,4 +18,4 @@ spec:
     network:
       ingress-class: "kourier.ingress.networking.knative.dev"
     domain:
-      "knative.tuana9a.com": ""
+      "kn.tuana9a.com": ""

@@ -1,5 +1,7 @@
 # knative
 
+UPDATE: this stack is now managed by argocd
+
 https://knative.dev/docs/install/operator/knative-with-operators/#create-the-knative-serving-custom-resource
 
 ```bash
