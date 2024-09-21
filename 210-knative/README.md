@@ -1,12 +1,12 @@
 # knative
 
-UPDATE: this stack is now managed by argocd
-
 https://knative.dev/docs/install/operator/knative-with-operators/#create-the-knative-serving-custom-resource
 
 ```bash
 kubectl apply -f https://github.com/knative/operator/releases/download/knative-v1.14.4/operator.yaml
 ```
+
+UPDATE: this stack is now managed by argocd, just install the operator and skip following commands
 
 ```bash
 kubectl apply -f knative-serving.yml
