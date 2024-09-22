@@ -7,39 +7,28 @@ CLOUDFLARE_ACCOUNT_ID="{{ KUBERNETES_BACKUP_CLOUDFLARE_ACCOUNT_ID }}"
 S3_ENDPOINT="https://$CLOUDFLARE_ACCOUNT_ID.r2.cloudflarestorage.com"
 BUCKET_NAME="{{ KUBERNETES_BACKUP_BUCKET_NAME }}"
 
-export AWS_ACCESS_KEY_ID="{{ KUBERNETES_BACKUP_AWS_ACCESS_KEY_ID }}"
-export AWS_SECRET_ACCESS_KEY="{{ KUBERNETES_BACKUP_AWS_SECRET_ACCESS_KEY }}"
-export AWS_DEFAULT_REGION="{{ KUBERNETES_BACKUP_AWS_DEFAULT_REGION | default('auto') }}"
-
-TELEGRAM_BOT_TOKEN="{{ KUBERNETES_BACKUP_TELEGRAM_BOT_TOKEN | default('') }}"
-TELEGRAM_CHAT_ID="{{ KUBERNETES_BACKUP_TELEGRAM_CHAT_ID | default('') }}"
-
 ETCD_SNAPSHOT=/tmp/snapshot.db
 DUMP_FILE="backup-kubernetes-$(date +'%Y.%m.%d.%H').tar.gz"
 S3_OBJECT_KEY=$HOST_NAME/$DUMP_FILE
 WORKDIR=/tmp
 SECONDS=0 # for calc duration
 
+DISCORD_WEBHOOK="{{ KUBERNETES_BACKUP_DISCORD_WEBHOOK }}"
+
+export AWS_ACCESS_KEY_ID="{{ KUBERNETES_BACKUP_AWS_ACCESS_KEY_ID }}"
+export AWS_SECRET_ACCESS_KEY="{{ KUBERNETES_BACKUP_AWS_SECRET_ACCESS_KEY }}"
+export AWS_DEFAULT_REGION="{{ KUBERNETES_BACKUP_AWS_DEFAULT_REGION | default('auto') }}"
+
 if [ -z "$HOST_NAME" ]; then echo HOST_NAME is not set, default is "unknown".; HOST_NAME=unknown; fi
 if [ -z "$S3_ENDPOINT" ]; then echo S3_ENDPOINT is not set, exiting.; exit 1; fi
 if [ -z "$BUCKET_NAME" ]; then echo BUCKET_NAME is not set, exiting.; exit 1; fi
 
-if [[ -n $TELEGRAM_BOT_TOKEN || -n $TELEGRAM_CHAT_ID ]]; then
 notify() {
   msg=$1
   echo Send msg: "$msg"
-  curl -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
-    -H "Content-Type: application/json" \
-    -d "{\"chat_id\":$TELEGRAM_CHAT_ID,\"disable_notification\":true,\"text\":\"$msg\"}"
+  curl -X POST "$DISCORD_WEBHOOK" -H "Content-Type: application/json" -d "{\"content\":\"$msg\"}"
   echo
 }
-else
-notify() {
-  msg=$1
-  echo WARN: TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID is not set
-  echo $msg
-}
-fi
 
 upload() {
   KEY=$1
@@ -65,7 +54,7 @@ sudo tar -czvf $DUMP_FILE $ETCD_SNAPSHOT /etc/kubernetes/pki /etc/kubernetes/man
 if [ $? != 0 ]; then
   echo Something bad happened, exiting.
   DURATION=$SECONDS
-  MSG="FAILED $HOST_NAME backup-kubernetes $(($DURATION / 60))m$(($DURATION % 60))s"
+  MSG="---\\nFAILED backup-kubernetes\\nhost: \`$HOST_NAME\`\\nduration: \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
   notify "$MSG"
   exit 1
 fi
@@ -76,11 +65,11 @@ upload "$S3_OBJECT_KEY" "$DUMP_FILE"
 if [ $? != 0 ]; then
   echo Something bad happened, exiting.
   DURATION=$SECONDS
-  MSG="FAILED $HOST_NAME backup-kubernetes $(($DURATION / 60))m$(($DURATION % 60))s"
+  MSG="-----\\nFAILED backup-kubernetes\\nhost: \`$HOST_NAME\`\\nduration: \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
   notify "$MSG"
   exit 1
 fi
 
 DURATION=$SECONDS
-MSG="SUCCESS $HOST_NAME backup-kubernetes $(($DURATION / 60))m$(($DURATION % 60))s"
+MSG="-----\\nSUCCESS backup-kubernetes\\nhost: \`$HOST_NAME\`\\nduration: \`$(($DURATION / 60))m$(($DURATION % 60))s\`\\n\`$S3_OBJECT_KEY\`"
 notify "$MSG"

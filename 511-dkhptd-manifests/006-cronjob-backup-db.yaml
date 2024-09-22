@@ -4,13 +4,13 @@ metadata:
   name: mongo-backup
   namespace: dkhptd
 spec:
-  schedule: "0 17 * * *"
+  schedule: "0 0 * * *"
   jobTemplate:
     spec:
       template:
         spec:
           initContainers:
-            - name: mongo-dump
+            - name: dump
               image: mongo:7.0
               command:
                 - "sh"
@@ -24,7 +24,7 @@ spec:
                 - configMapRef:
                     name: dkhptd-mongo-backup
 
-            - name: tarball
+            - name: zip
               image: busybox:latest
               command:
                 - "sh"
@@ -36,7 +36,7 @@ spec:
                 - name: workdir
                   mountPath: /data
 
-            - name: aws-upload
+            - name: upload
               image: amazon/aws-cli:latest
               command:
                 - "sh"
@@ -51,16 +51,15 @@ spec:
                 - name: workdir
                   mountPath: /data
 
-            - name: telegram-notify
+            - name: notify
               image: curlimages/curl:latest
               command:
                 - sh
                 - -c
                 - |
-                  MSG="SUCCESS: dkhptd/backup-mongo"
-                  curl -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
-                    -H "Content-Type: application/json" \
-                    -d "{\"chat_id\":${TELEGRAM_CHAT_ID},\"disable_notification\":true,\"text\":\"${MSG}\"}"
+                  OBJECT_KEY=dkhptd/mongo-dump-$(date +'%Y.%m.%d').tar.gz
+                  MSG="-----\\nSUCCESS backup-mongo\\nns: \`dkhptd\`\\n\`$OBJECT_KEY\`"
+                  curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\"content\":\"${MSG}\"}"
               envFrom:
                 - configMapRef:
                     name: dkhptd-mongo-backup
@@ -69,7 +68,7 @@ spec:
                   mountPath: /data
 
           containers:
-            - name: mongo-backup
+            - name: dummy
               image: busybox:latest
               command: ["sh", "-c", "echo backup complete"]
 
