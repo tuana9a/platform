@@ -4,7 +4,7 @@ metadata:
   name: postgres-backup
   namespace: coder
 spec:
-  schedule: "0 17 * * *"
+  schedule: "0 0 * * *"
   jobTemplate:
     spec:
       template:
@@ -55,21 +55,25 @@ spec:
                 - name: workdir
                   mountPath: /data
 
-          containers:
-            - name: postgres-backup
+            - name: notify
               image: curlimages/curl:latest
               command:
                 - sh
                 - -c
                 - |
                   echo backup complete
-                  MSG="SUCCESS: coder/backup-postgres"
-                  curl -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
-                    -H "Content-Type: application/json" \
-                    -d "{\"chat_id\":${TELEGRAM_CHAT_ID},\"disable_notification\":true,\"text\":\"${MSG}\"}"
+                  OBJECT_KEY=coder/postgres-dump-$(date +'%Y.%m.%d').tar.gz
+                  MSG="-----\\nSUCCESS backup-postgres\\nns: \`coder\`\\n\`$OBJECT_KEY\`"
+                  curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\"content\":\"${MSG}\"}"
               envFrom:
                 - configMapRef:
                     name: coder-postgres-backup
+
+          containers:
+            - name: dummy
+              image: busybox:latest
+              command: ["sh", "-c", "echo backup complete"]
+
           restartPolicy: Never
           volumes:
             - name: workdir

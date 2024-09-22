@@ -4,6 +4,10 @@
       ansible.builtin.command: /usr/local/bin/backup-kubernetes.sh
       register: backup_output
 
-    - name: Print the output of the backup script
+    - name: Print stdout
       ansible.builtin.debug:
-        msg: "{{ backup_output.stdout }}"
+        msg: "{{ backup_output.stdout.split('\n')}}"
+
+    - name: Print stderr
+      ansible.builtin.debug:
+        msg: "{{ backup_output.stderr.split('\n')}}"
