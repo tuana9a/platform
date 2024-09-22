@@ -18,9 +18,16 @@ spec:
       http:
         paths:
           - pathType: Prefix
-            path: "/"
+            path: "/telegram"
             backend:
               service:
-                name: t9stbot
+                name: telegram-bot
+                port:
+                  number: 8080
+          - pathType: Prefix
+            path: "/discord"
+            backend:
+              service:
+                name: discord-bot
                 port:
                   number: 8080
