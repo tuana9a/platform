@@ -1,0 +1,34 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telegram-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: telegram-bot
+  template:
+    metadata:
+      labels:
+        app: telegram-bot
+    spec:
+      containers:
+        - name: t9stbot
+          image: tuana9a/t9stbot:2024.09.22.030448
+          envFrom:
+            - configMapRef:
+                name: t9stbot
+          command: ["node", "telegram-bot-webhook-main.js"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: telegram-bot
+spec:
+  selector:
+    app: telegram-bot
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080

@@ -6,9 +6,3 @@ env:
       secretKeyRef:
         name: cloudflare-api-token
         key: api-token
-
-  - name: CF_API_EMAIL
-    valueFrom:
-      secretKeyRef:
-        name: cloudflare-api-token
-        key: email
