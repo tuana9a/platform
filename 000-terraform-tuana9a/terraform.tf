@@ -1,4 +1,8 @@
 terraform {
+  backend "gcs" {
+    bucket = "terraform-tuana9a"
+    prefix = "000-terraform-tuana9a"
+  }
   required_providers {
     google = {
       source  = "hashicorp/google"
