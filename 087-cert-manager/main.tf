@@ -10,8 +10,3 @@ resource "helm_release" "cert_manager" {
 
   values = [file("./values.yml")]
 }
-
-resource "kubernetes_manifest" "cluster_issuer" {
-  depends_on = [helm_release.cert_manager]
-  manifest   = yamldecode(file("./manifests/ClusterIssuer.yml"))
-}
