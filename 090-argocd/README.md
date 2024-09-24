@@ -1,5 +1,15 @@
 # argocd
 
+apply
+
+```bash
+terraform init
+```
+
+```bash
+terraform apply
+```
+
 get argocd admin password
 
 ```bash
