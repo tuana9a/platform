@@ -1,0 +1,31 @@
+# destroying helm cert-manager will not destroy crds luckily because of this anotation
+# "helm.sh/resource-policy": keep
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cert-manager
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: cert-manager
+    repoURL: https://charts.jetstack.io
+    targetRevision: v1.15.0
+    helm:
+      releaseName: cert-manager
+      valuesObject:
+        crds:
+          enabled: "true"
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: cert-manager
+  syncPolicy:
+    automated:
+      allowEmpty: true
+      prune: true
+      selfHeal: true

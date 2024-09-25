@@ -1,9 +1,23 @@
 # argocd
 
+apply
+
+```bash
+terraform init
+```
+
+```bash
+terraform apply
+```
+
 get argocd admin password
 
 ```bash
 argocd admin initial-password -n argocd
+```
+
+```bash
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
 
 port forward for argocd access from dev machine

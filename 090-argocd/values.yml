@@ -7,7 +7,7 @@ configs:
 
 server:
   ingress:
-    enabled: true
+    enabled: false
     ingressClassName: nginx
     annotations:
       cert-manager.io/cluster-issuer: "letsencrypt-production"
@@ -19,7 +19,7 @@ server:
         secretName: argocd-tuana9a-com-tls
 
   ingressGrpc:
-    enabled: true
+    enabled: false
     ingressClassName: nginx
     annotations:
       cert-manager.io/cluster-issuer: "letsencrypt-production"
