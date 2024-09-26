@@ -3,8 +3,11 @@ kind: StorageClass
 metadata:
   name: nfs-vdc
 provisioner: k8s-sigs.io/nfs-subdir-external-provisioner-vdc
+allowVolumeExpansion: true
+reclaimPolicy: "Delete"
+volumeBindingMode: "Immediate"
 parameters:
-  archiveOnDelete: "false"
+  archiveOnDelete: "true"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -15,7 +18,7 @@ metadata:
   # replace with namespace where provisioner is deployed
   namespace: nfs-provisioner
 spec:
-  replicas: 1
+  replicas: 3
   strategy:
     type: Recreate
   selector:
@@ -40,6 +43,8 @@ spec:
               value: 192.168.56.7
             - name: NFS_PATH
               value: /exports/vdc/
+            - name: ENABLE_LEADER_ELECTION
+              value: "true"
       volumes:
         - name: nfs-client-root
           nfs:
