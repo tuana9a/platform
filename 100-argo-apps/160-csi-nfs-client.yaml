@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: nfs-provisioner
+  name: nfs-provisioner-vdb
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: nfs-subdir-external-provisioner-vdb
+  name: nfs-provisioner-vdb
   namespace: argocd
 spec:
   project: default
@@ -25,17 +25,22 @@ spec:
           path: /exports/vdb/
   destination:
     server: "https://kubernetes.default.svc"
-    namespace: nfs-provisioner
+    namespace: nfs-provisioner-vdb
   syncPolicy:
     automated:
       allowEmpty: false
       prune: false
       selfHeal: true
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nfs-provisioner-vdc
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: nfs-subdir-external-provisioner-vdc
+  name: nfs-provisioner-vdc
   namespace: argocd
 spec:
   project: default
@@ -54,7 +59,7 @@ spec:
           path: /exports/vdc/
   destination:
     server: "https://kubernetes.default.svc"
-    namespace: nfs-provisioner
+    namespace: nfs-provisioner-vdc
   syncPolicy:
     automated:
       allowEmpty: false
