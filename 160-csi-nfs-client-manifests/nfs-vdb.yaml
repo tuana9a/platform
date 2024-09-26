@@ -1,0 +1,47 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: nfs-vdb
+provisioner: k8s-sigs.io/nfs-subdir-external-provisioner-vdb
+parameters:
+  archiveOnDelete: "false"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nfs-client-provisioner-vdb
+  labels:
+    app: nfs-client-provisioner-vdb
+  # replace with namespace where provisioner is deployed
+  namespace: nfs-provisioner
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nfs-client-provisioner-vdb
+  template:
+    metadata:
+      labels:
+        app: nfs-client-provisioner-vdb
+    spec:
+      serviceAccountName: nfs-client-provisioner
+      containers:
+        - name: nfs-client-provisioner
+          image: registry.k8s.io/sig-storage/nfs-subdir-external-provisioner:v4.0.2
+          volumeMounts:
+            - name: nfs-client-root
+              mountPath: /persistentvolumes
+          env:
+            - name: PROVISIONER_NAME
+              value: k8s-sigs.io/nfs-subdir-external-provisioner-vdb
+            - name: NFS_SERVER
+              value: 192.168.56.7
+            - name: NFS_PATH
+              value: /exports/vdb/
+      volumes:
+        - name: nfs-client-root
+          nfs:
+            server: 192.168.56.7
+            path: /exports/vdb/
