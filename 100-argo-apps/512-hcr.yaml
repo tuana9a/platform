@@ -17,7 +17,7 @@ spec:
   source:
     path: 512-hcr-manifests
     repoURL: https://github.com/tuana9a/platform.git
-    targetRevision: main
+    targetRevision: comeback-to-nfs-provisioner
   syncPolicy:
     automated:
       allowEmpty: false
