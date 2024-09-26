@@ -66,5 +66,5 @@ spec:
               python3 -m venv .venv && .venv/bin/pip install -r requirements.txt;
       containers:
         - name: dummy
-          image: apline
+          image: alpine
           command: ["echo", "done"]
