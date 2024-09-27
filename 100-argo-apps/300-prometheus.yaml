@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prometheus
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - chart: prometheus
+      repoURL: https://prometheus-community.github.io/helm-charts
+      targetRevision: 25.20.1
+      helm:
+        releaseName: prometheus
+        valueFiles:
+          - $values/300-prometheus/values.yaml
+    - repoURL: https://github.com/tuana9a/platform.git
+      targetRevision: comeback-to-nfs-provisioner
+      ref: values
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: prometheus
+  syncPolicy:
+    automated:
+      allowEmpty: false
+      prune: false
+      selfHeal: true
