@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: mongo-v2-migration
+  name: mongo-migrate-v2-v3
   namespace: dkhptd
 spec:
   template:
@@ -18,7 +18,7 @@ spec:
               ls -l /data/dump
           envFrom:
             - configMapRef:
-                name: dkhptd-mongo-v2-migration
+                name: dkhptd-mongo-migrate-v2-v3
           volumeMounts:
             - name: workdir
               mountPath: /data
@@ -29,18 +29,18 @@ spec:
             - "sh"
             - "-c"
             - |
-              mongorestore $MONGO_CONNECTION_STRING_V2 /data/dump
+              mongorestore $MONGO_CONNECTION_STRING_NEW /data/dump
           envFrom:
             - configMapRef:
-                name: dkhptd-mongo-v2-migration
+                name: dkhptd-mongo-migrate-v2-v3
           volumeMounts:
             - name: workdir
               mountPath: /data
 
       containers:
-        - name: dkhptd-mongo-v2-migration
+        - name: dummy
           image: busybox:latest
-          command: ["sh", "-c", "echo migration v2 complete"]
+          command: ["sh", "-c", "echo done"]
 
       restartPolicy: Never
       volumes:

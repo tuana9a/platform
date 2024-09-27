@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: dkhptd-mongo-v2-conf
+  name: dkhptd-mongo-conf
   namespace: dkhptd
 data:
   mongod.conf: |
@@ -11,7 +11,7 @@ data:
       port: 27017
       bindIp: 0.0.0.0
     security:
-      authorization: disabled
+      authorization: enabled
     storage:
       wiredTiger:
         engineConfig:
@@ -20,21 +20,22 @@ data:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mongo-v2
+  name: mongo
   namespace: dkhptd
 spec:
+  serviceName: "mongo"
   replicas: 0
   selector:
     matchLabels:
-      app: mongo-v2
+      app: mongo
   template:
     metadata:
       labels:
-        app: mongo-v2
+        app: mongo
     spec:
       containers:
         - name: mongo
-          image: mongo:7.0
+          image: mongo:5.0
           command:
             - mongod
             - "--config"
@@ -47,33 +48,34 @@ spec:
               subPath: mongod.conf
           envFrom:
             - configMapRef:
-                name: dkhptd-mongo-v2-env
+                name: dkhptd-mongo-env
           ports:
             - containerPort: 27017
       volumes:
         - name: mongo-config
           configMap:
-            name: dkhptd-mongo-v2-conf
+            name: dkhptd-mongo-conf
   volumeClaimTemplates:
     - metadata:
         name: mongo-data
       spec:
-        storageClassName: longhorn
+        storageClassName: nfs-client
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 2Gi
+            storage: 10Gi
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mongo-v2
+  name: mongo
   namespace: dkhptd
   labels:
-    app: mongo-v2
+    app: mongo
 spec:
   ports:
     - port: 27017
       name: mongo
+  clusterIP: None
   selector:
-    app: mongo-v2
+    app: mongo
