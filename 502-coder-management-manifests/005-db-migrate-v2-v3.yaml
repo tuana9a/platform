@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: postgres-v2-migration
+  name: postgres-migrate-v2-v3
   namespace: coder
 spec:
   template:
@@ -21,7 +21,7 @@ spec:
               echo ========================
           envFrom:
             - configMapRef:
-                name: coder-postgres-v2-migration
+                name: coder-postgres-migrate-v2-v3
           volumeMounts:
             - name: workdir
               mountPath: /data
@@ -32,20 +32,20 @@ spec:
             - "sh"
             - "-c"
             - |
-              export PGPASSWORD=$PG_PASS_V2
+              export PGPASSWORD=$PG_PASS_NEW
               echo ========================
-              psql -h $PG_HOST_V2 -p ${PG_PORT:-5432} -U $PG_USER_V2 -d $PG_DATABASE -f /data/dump.sql
+              psql -h $PG_HOST_NEW -p ${PG_PORT:-5432} -U $PG_USER_NEW -d $PG_DATABASE -f /data/dump.sql
           envFrom:
             - configMapRef:
-                name: coder-postgres-v2-migration
+                name: coder-postgres-migrate-v2-v3
           volumeMounts:
             - name: workdir
               mountPath: /data
 
       containers:
-        - name: postgres-v2-migration
+        - name: dummy
           image: busybox:latest
-          command: ["sh", "-c", "echo migration v2 complete"]
+          command: ["sh", "-c", "echo done"]
 
       restartPolicy: Never
       volumes:

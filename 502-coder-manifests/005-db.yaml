@@ -5,7 +5,7 @@ metadata:
   namespace: coder
 spec:
   serviceName: "postgres"
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: postgres

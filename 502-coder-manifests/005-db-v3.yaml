@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: postgres-v2
+  name: postgres-v3
   namespace: coder
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
-      app: postgres-v2
+      app: postgres-v3
   template:
     metadata:
       labels:
-        app: postgres-v2
+        app: postgres-v3
     spec:
       containers:
         - name: postgres
           image: postgres:16
           envFrom:
             - configMapRef:
-                name: coder-postgres-v2-env
+                name: coder-postgres-v3-env
           env:
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
@@ -38,7 +38,7 @@ spec:
     - metadata:
         name: postgres-data
       spec:
-        storageClassName: longhorn
+        storageClassName: nfs-vdb
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
@@ -47,13 +47,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgres-v2
+  name: postgres-v3
   namespace: coder
   labels:
-    app: postgres-v2
+    app: postgres-v3
 spec:
   ports:
     - port: 5432
       name: postgres
   selector:
-    app: postgres-v2
+    app: postgres-v3

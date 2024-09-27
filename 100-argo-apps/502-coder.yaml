@@ -1,18 +1,29 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: coder
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: coder
   namespace: argocd
 spec:
-  destination:
-    namespace: coder
-    server: https://kubernetes.default.svc
   project: default
-  revisionHistoryLimit: 10
-  source:
-    path: 502-coder-manifests
-    repoURL: https://github.com/tuana9a/platform.git
-    targetRevision: main
+  sources:
+    - chart: coder
+      repoURL: https://helm.coder.com/v2
+      targetRevision: 2.13.2
+      helm:
+        releaseName: coder
+        valueFiles:
+          - $values/502-coder/values.yaml
+    - repoURL: https://github.com/tuana9a/platform.git
+      targetRevision: comeback-to-nfs-provisioner
+      ref: values
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: coder
   syncPolicy:
     automated:
       allowEmpty: false
