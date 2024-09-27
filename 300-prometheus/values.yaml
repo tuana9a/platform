@@ -6,14 +6,14 @@ alertmanager:
   persistence:
     storageClass: nfs-vdb
     size: 2Gi
-  # config:
-  #   enabled: true
-  #   route:
-  #     receiver: "discord"
-  #   receivers:
-  #     - name: "discord"
-  #       discord_configs:
-  #         - webhook_url_file: /etc/alertmanager/dicord_receiver.txt
+  config:
+    enabled: true
+    route:
+      receiver: "discord"
+    receivers:
+      - name: "discord"
+        discord_configs:
+          - webhook_url_file: /alertmanager/discord_webhook.txt
 serverFiles:
   alerts:
     kubernetes:
