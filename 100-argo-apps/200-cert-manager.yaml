@@ -19,7 +19,7 @@ spec:
       helm:
         releaseName: cert-manager
         valueFiles:
-          - $values/100-argo-apps/200-cert-manager-values.yaml
+          - $values/200-cert-manager/values.yaml
     - repoURL: https://github.com/tuana9a/platform.git
       targetRevision: comeback-to-nfs-provisioner
       ref: values

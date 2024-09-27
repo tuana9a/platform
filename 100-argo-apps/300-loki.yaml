@@ -17,7 +17,7 @@ spec:
       helm:
         releaseName: loki
         valueFiles:
-          - $values/100-argo-apps/300-loki-values.yaml
+          - $values/300-loki/values.yaml
     - repoURL: https://github.com/tuana9a/platform.git
       targetRevision: comeback-to-nfs-provisioner
       ref: values

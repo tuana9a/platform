@@ -17,7 +17,7 @@ spec:
       helm:
         releaseName: metrics-server
         valueFiles:
-          - $values/100-argo-apps/150-metrics-server-values.yaml
+          - $values/150-metrics-server/values.yaml
     - repoURL: https://github.com/tuana9a/platform.git
       targetRevision: comeback-to-nfs-provisioner
       ref: values
