@@ -9,5 +9,5 @@ kubectl -n grafana port-forward svc/grafana --address ${address:-0.0.0.0} ${port
 get admin password
 
 ```bash
-kubectl get secret -n grafana grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+kubectl -n grafana get secret grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 ```
