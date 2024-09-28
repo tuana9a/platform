@@ -1,0 +1,5 @@
+- name: install parted package
+  become: true
+  apt:
+    name: parted
+    state: present

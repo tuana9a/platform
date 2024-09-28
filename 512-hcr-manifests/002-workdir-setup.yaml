@@ -3,6 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: hcr-workdir
 spec:
+  storageClassName: "nfs-vdb"
   accessModes:
     - ReadWriteMany
   resources:
@@ -65,4 +66,5 @@ spec:
               python3 -m venv .venv && .venv/bin/pip install -r requirements.txt;
       containers:
         - name: dummy
-          image: hello-world
+          image: alpine
+          command: ["echo", "done"]

@@ -2,17 +2,18 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: rabbitmq-v2
+  name: rabbitmq
   namespace: dkhptd
 spec:
+  serviceName: "rabbitmq"
   replicas: 0
   selector:
     matchLabels:
-      app: rabbitmq-v2
+      app: rabbitmq
   template:
     metadata:
       labels:
-        app: rabbitmq-v2
+        app: rabbitmq
     spec:
       hostname: rabbitmq
       containers:
@@ -23,7 +24,7 @@ spec:
               mountPath: /var/lib/rabbitmq/mnesia
           envFrom:
             - configMapRef:
-                name: dkhptd-rabbitmq-v2-env
+                name: dkhptd-rabbitmq-env
           ports:
             - containerPort: 5672
             - containerPort: 15672
@@ -31,19 +32,19 @@ spec:
     - metadata:
         name: rabbitmq-data
       spec:
-        storageClassName: longhorn
+        storageClassName: nfs-client
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 2Gi
+            storage: 5Gi
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: rabbitmq-v2
+  name: rabbitmq
   namespace: dkhptd
   labels:
-    app: rabbitmq-v2
+    app: rabbitmq
 spec:
   ports:
     - port: 5672
@@ -52,4 +53,4 @@ spec:
       name: management
   clusterIP: None
   selector:
-    app: rabbitmq-v2
+    app: rabbitmq

@@ -1,0 +1,53 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postgres-migrate-v1-v2
+  namespace: coder
+spec:
+  template:
+    spec:
+      initContainers:
+        - name: postgres-dump
+          image: postgres:16
+          command:
+            - "sh"
+            - "-c"
+            - |
+              export PGPASSWORD=$PG_PASS
+              echo ========================
+              pg_dump -h $PG_HOST -p ${PG_PORT:-5432} -U $PG_USER -d $PG_DATABASE > /data/dump.sql
+              echo ========================
+              head /data/dump.sql
+              echo ========================
+          envFrom:
+            - configMapRef:
+                name: coder-postgres-migrate-v1-v2
+          volumeMounts:
+            - name: workdir
+              mountPath: /data
+
+        - name: postgres-restore
+          image: postgres:16
+          command:
+            - "sh"
+            - "-c"
+            - |
+              export PGPASSWORD=$PG_PASS_NEW
+              echo ========================
+              psql -h $PG_HOST_NEW -p ${PG_PORT:-5432} -U $PG_USER_NEW -d $PG_DATABASE -f /data/dump.sql
+          envFrom:
+            - configMapRef:
+                name: coder-postgres-migrate-v1-v2
+          volumeMounts:
+            - name: workdir
+              mountPath: /data
+
+      containers:
+        - name: dummy
+          image: busybox:latest
+          command: ["sh", "-c", "echo done"]
+
+      restartPolicy: Never
+      volumes:
+        - name: workdir
+          emptyDir: {}

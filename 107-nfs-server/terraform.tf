@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "110-k8s-ingress-lb"
+    prefix = "107-nfs-server"
   }
   required_providers {
     google = {
@@ -10,7 +10,11 @@ terraform {
     }
     proxmox = {
       source  = "bpg/proxmox"
-      version = "0.61.0"
+      version = "0.65.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.6.3"
     }
   }
 }
@@ -30,4 +34,7 @@ provider "proxmox" {
     username    = var.pve_ssh_agent_username
     private_key = file(var.pve_ssh_agent_private_key_file)
   }
+}
+
+provider "random" {
 }

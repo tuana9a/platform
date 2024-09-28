@@ -12,15 +12,17 @@ metadata:
   namespace: argocd
 spec:
   project: default
-  source:
-    chart: cert-manager
-    repoURL: https://charts.jetstack.io
-    targetRevision: v1.15.0
-    helm:
-      releaseName: cert-manager
-      valuesObject:
-        crds:
-          enabled: "true"
+  sources:
+    - chart: cert-manager
+      repoURL: https://charts.jetstack.io
+      targetRevision: v1.15.0
+      helm:
+        releaseName: cert-manager
+        valueFiles:
+          - $values/200-cert-manager/values.yaml
+    - repoURL: https://github.com/tuana9a/platform.git
+      targetRevision: main
+      ref: values
   destination:
     server: "https://kubernetes.default.svc"
     namespace: cert-manager

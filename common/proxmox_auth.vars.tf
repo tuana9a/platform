@@ -11,7 +11,7 @@ variable "pve_ssh_agent_username" {
   default = "root"
 }
 
-variable "pve_ssh_agent_private_key" {
+variable "pve_ssh_agent_private_key_file" {
   type    = string
   default = ""
 }

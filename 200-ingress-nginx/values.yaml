@@ -1,0 +1,12 @@
+controller:
+  service:
+    type: "LoadBalancer"
+  autoscaling:
+    enabled: "true"
+  resources:
+    limits:
+      cpu: 200m
+      memory: 500Mi
+    requests:
+      cpu: 100m
+      memory: 200Mi
