@@ -283,7 +283,7 @@ resource "kubernetes_stateful_set" "main" {
       }
       spec {
         access_modes       = ["ReadWriteOnce"]
-        storage_class_name = "longhorn"
+        storage_class_name = "nfs-vdb"
         resources {
           requests = {
             storage = "${data.coder_parameter.home_disk_size.value}Gi"
@@ -300,7 +300,7 @@ resource "kubernetes_stateful_set" "main" {
     #   }
     #   spec {
     #     access_modes       = ["ReadWriteOnce"]
-    #     storage_class_name = "longhorn"
+    #     storage_class_name = "nfs-vdb"
     #     resources {
     #       requests = {
     #         storage = "32Gi"
