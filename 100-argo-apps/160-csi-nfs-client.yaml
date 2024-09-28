@@ -17,7 +17,7 @@ spec:
   source:
     path: 160-csi-nfs-client-manifests
     repoURL: https://github.com/tuana9a/platform.git
-    targetRevision: comeback-to-nfs-provisioner
+    targetRevision: main
   syncPolicy:
     automated:
       allowEmpty: false
