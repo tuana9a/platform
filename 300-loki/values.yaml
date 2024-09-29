@@ -57,7 +57,7 @@ queryScheduler:
 distributor:
   replicas: 0
 compactor:
-  replicas: 3
+  replicas: 0
 indexGateway:
   replicas: 0
 bloomCompactor:
