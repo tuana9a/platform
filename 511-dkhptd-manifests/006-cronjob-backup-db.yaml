@@ -4,7 +4,7 @@ metadata:
   name: mongo-backup
   namespace: dkhptd
 spec:
-  schedule: "0 0 * * *"
+  schedule: "0 * * * *"
   jobTemplate:
     spec:
       template:
@@ -58,7 +58,7 @@ spec:
                 - -c
                 - |
                   OBJECT_KEY=dkhptd/mongo-dump-$(date +'%Y.%m.%d').tar.gz
-                  MSG="-----\\nSUCCESS backup-mongo\\nns: \`dkhptd\`\\n\`$OBJECT_KEY\`"
+                  MSG="SUCCESS backup-mongo ns: \`dkhptd\`"
                   curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\"content\":\"${MSG}\"}"
               envFrom:
                 - configMapRef:
@@ -70,7 +70,7 @@ spec:
           containers:
             - name: dummy
               image: busybox:latest
-              command: ["sh", "-c", "echo backup complete"]
+              command: ["sh", "-c", "echo done"]
 
           restartPolicy: Never
           volumes:

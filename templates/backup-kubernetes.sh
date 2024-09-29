@@ -54,7 +54,7 @@ sudo tar -czvf $DUMP_FILE $ETCD_SNAPSHOT /etc/kubernetes/pki /etc/kubernetes/man
 if [ $? != 0 ]; then
   echo Something bad happened, exiting.
   DURATION=$SECONDS
-  MSG="---\\nFAILED backup-kubernetes\\nhost: \`$HOST_NAME\`\\nduration: \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
+  MSG="FAILED backup-kubernetes host: \`$HOST_NAME\` duration: \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
   notify "$MSG"
   exit 1
 fi
@@ -65,11 +65,11 @@ upload "$S3_OBJECT_KEY" "$DUMP_FILE"
 if [ $? != 0 ]; then
   echo Something bad happened, exiting.
   DURATION=$SECONDS
-  MSG="-----\\nFAILED backup-kubernetes\\nhost: \`$HOST_NAME\`\\nduration: \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
+  MSG="FAILED backup-kubernetes host: \`$HOST_NAME\` duration: \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
   notify "$MSG"
   exit 1
 fi
 
 DURATION=$SECONDS
-MSG="-----\\nSUCCESS backup-kubernetes\\nhost: \`$HOST_NAME\`\\nduration: \`$(($DURATION / 60))m$(($DURATION % 60))s\`\\n\`$S3_OBJECT_KEY\`"
+MSG="SUCCESS backup-kubernetes host: \`$HOST_NAME\` duration: \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
 notify "$MSG"
