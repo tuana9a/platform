@@ -19,7 +19,7 @@ spec:
         valueFiles:
           - $values/300-loki/values.yaml
     - repoURL: https://github.com/tuana9a/platform.git
-      targetRevision: main
+      targetRevision: dev
       ref: values
   destination:
     server: "https://kubernetes.default.svc"
