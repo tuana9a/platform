@@ -52,7 +52,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: wildcard-tuana9a-dev-code-server-forwarder
-  namespace: tuana9a
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-cloudflare-production"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
