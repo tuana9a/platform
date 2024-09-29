@@ -4,7 +4,7 @@ metadata:
   name: postgres-backup
   namespace: coder
 spec:
-  schedule: "0 0 * * *"
+  schedule: "0 * * * *"
   jobTemplate:
     spec:
       template:
@@ -63,7 +63,7 @@ spec:
                 - |
                   echo backup complete
                   OBJECT_KEY=coder/postgres-dump-$(date +'%Y.%m.%d').tar.gz
-                  MSG="-----\\nSUCCESS backup-postgres\\nns: \`coder\`\\n\`$OBJECT_KEY\`"
+                  MSG="SUCCESS backup-postgres ns: \`coder\`"
                   curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\"content\":\"${MSG}\"}"
               envFrom:
                 - configMapRef:
@@ -72,7 +72,7 @@ spec:
           containers:
             - name: dummy
               image: busybox:latest
-              command: ["sh", "-c", "echo backup complete"]
+              command: ["sh", "-c", "echo done"]
 
           restartPolicy: Never
           volumes:

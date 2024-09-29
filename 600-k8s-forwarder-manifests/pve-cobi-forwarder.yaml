@@ -1,12 +1,21 @@
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: pve-cobi-forwarder
+subsets:
+  - addresses:
+      - ip: 192.168.56.1
+    ports:
+      - port: 8006
+        protocol: TCP
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: pve-cobi-forwarder
-  namespace: tuana9a
 spec:
-  type: ExternalName
-  externalName: 192.168.56.1
+  type: ClusterIP
+  clusterIP: None
   ports:
     - protocol: TCP
       port: 443
@@ -16,7 +25,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: pve-cobi-forwarder
-  namespace: tuana9a
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     cert-manager.io/cluster-issuer: "letsencrypt-production"

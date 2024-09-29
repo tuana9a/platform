@@ -17,19 +17,20 @@ loki:
     max_concurrent: 4
   limits_config:
     max_label_names_per_series: 20
+    retention_period: 24h
 
 deploymentMode: SimpleScalable
 
 backend:
-  replicas: 1
+  replicas: 3
   persistence:
     size: 10Gi
     storageClass: nfs-vdb
 
 read:
-  replicas: 1
+  replicas: 3
 write:
-  replicas: 1
+  replicas: 3
   persistence:
     storageClass: nfs-vdb
     size: 15Gi
