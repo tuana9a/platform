@@ -15,17 +15,17 @@ spec:
     spec:
       containers:
         - name: dkhptd-api-gateway
-          image: tuana9a/dkhptd-api-gateway:2024.09.03.032633
+          image: tuana9a/dkhptd-api-gateway:2024.09.29.034130
           envFrom:
             - configMapRef:
                 name: dkhptd-api-gateway
           resources:
             requests:
-              memory: "100Mi"
-              cpu: "500m"
+              memory: "50Mi"
+              cpu: "50m"
             limits:
               memory: "100Mi"
-              cpu: "500m"
+              cpu: "100m"
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
