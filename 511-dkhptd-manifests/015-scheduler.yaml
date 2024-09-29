@@ -21,8 +21,8 @@ spec:
                 name: dkhptd-scheduler
           resources:
             requests:
-              memory: "100Mi"
-              cpu: "500m"
+              memory: "50Mi"
+              cpu: "10m"
             limits:
               memory: "100Mi"
-              cpu: "500m"
+              cpu: "100m"
