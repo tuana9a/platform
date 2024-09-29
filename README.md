@@ -8,6 +8,39 @@ tuana9a's platform
 - dns, cdn, web (cloudflare)
 - load balancer, reverse proxy (haproxy, nginx)
 
+# dependency graph
+
+```mermaid
+graph TD;
+    argocd-->apps;
+    argocd-->promtail;
+    argocd-->cert-manager;
+    argocd-->external-dns;
+    argocd-->grafana;
+    argocd-->ingress;
+    argocd-->knative;
+    argocd-->prometheus;
+    argocd-->loki;
+    argocd-->metallb;
+    argocd-->metrics-server;
+    argocd-->coder;
+    argocd-->nfs-provisioner;
+    cert-manager-->apps;
+    external-dns-->apps;
+    flannel-->argocd;
+    ingress-->apps;
+    knative-->apps;
+    loki-->grafana;
+    loki-->promtail;
+    metallb-->ingress;
+    nfs-provisioner-->coder;
+    nfs-provisioner-->apps;
+    nfs-provisioner-->grafana;
+    nfs-provisioner-->loki;
+    nfs-provisioner-->prometheus;
+    prometheus-->grafana;
+```
+
 # gcloud
 
 setup `gcloud` cli auth
