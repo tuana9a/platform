@@ -22,15 +22,15 @@ loki:
 deploymentMode: SimpleScalable
 
 backend:
-  replicas: 1
+  replicas: 3
   persistence:
     size: 10Gi
     storageClass: nfs-vdb
 
 read:
-  replicas: 1
+  replicas: 3
 write:
-  replicas: 1
+  replicas: 3
   persistence:
     storageClass: nfs-vdb
     size: 15Gi
@@ -57,7 +57,7 @@ queryScheduler:
 distributor:
   replicas: 0
 compactor:
-  replicas: 1
+  replicas: 3
 indexGateway:
   replicas: 0
 bloomCompactor:
