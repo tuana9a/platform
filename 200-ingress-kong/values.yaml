@@ -1,11 +1,15 @@
 admin:
-  enabled: false
+  enabled: true
   http:
     enabled: false
   tls:
-    enabled: false
+    enabled: true
 manager:
-  enabled: false
+  enabled: true
+  http:
+    enabled: false
+  tls:
+    enabled: true
 ingressController:
   enabled: true
   resources:
