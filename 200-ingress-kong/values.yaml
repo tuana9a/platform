@@ -2,3 +2,12 @@ admin:
   enabled: false
 manager:
   enabled: false
+ingressController:
+  enabled: true
+  resources:
+    limits:
+      cpu: 100m
+      memory: 256Mi
+    requests:
+      cpu: 50m
+      memory: 128Mi
