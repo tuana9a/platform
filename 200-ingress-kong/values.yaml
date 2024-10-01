@@ -1,5 +1,9 @@
 admin:
   enabled: false
+  http:
+    enabled: false
+  tls:
+    enabled: false
 manager:
   enabled: false
 ingressController:
