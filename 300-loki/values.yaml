@@ -35,6 +35,13 @@ write:
     storageClass: nfs-vdb
     size: 15Gi
 
+# Cache config
+resultsCache:
+  allocatedMemory: 2000
+
+chunksCache:
+  allocatedMemory: 4000
+
 # Enable minio for storage
 minio:
   enabled: true
