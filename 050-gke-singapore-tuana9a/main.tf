@@ -6,5 +6,11 @@ resource "google_container_cluster" "zero" {
   subnetwork       = data.google_compute_subnetwork.zero_singapore.name
   enable_autopilot = true
 
+  cluster_autoscaling {
+    auto_provisioning_defaults {
+      disk_size = 32
+    }
+  }
+
   deletion_protection = true
 }
