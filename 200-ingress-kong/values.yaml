@@ -1,4 +1,4 @@
 admin:
-  enabled: true
+  enabled: false
 manager:
-  enabled: true
+  enabled: false
