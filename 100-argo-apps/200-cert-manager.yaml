@@ -1,10 +1,5 @@
 # destroying helm cert-manager will not destroy crds luckily because of this anotation
 # "helm.sh/resource-policy": keep
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: cert-manager
----
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -28,6 +23,5 @@ spec:
     namespace: cert-manager
   syncPolicy:
     automated:
-      allowEmpty: false
       prune: false
       selfHeal: true

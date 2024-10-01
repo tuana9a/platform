@@ -12,9 +12,8 @@ spec:
   source:
     path: 100-argo-apps
     repoURL: https://github.com/tuana9a/platform.git
-    targetRevision: main
+    targetRevision: bootstrap-gke
   syncPolicy:
     automated:
-      allowEmpty: false
       prune: false
       selfHeal: true
