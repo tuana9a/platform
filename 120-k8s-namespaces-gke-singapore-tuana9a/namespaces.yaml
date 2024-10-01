@@ -3,3 +3,8 @@ kind: Namespace
 metadata:
   name: ingress-kong
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-dns
+---

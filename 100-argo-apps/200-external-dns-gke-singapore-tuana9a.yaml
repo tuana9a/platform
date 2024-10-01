@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-dns
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - chart: external-dns
+      repoURL: https://kubernetes-sigs.github.io/external-dns
+      targetRevision: 1.15.0
+      helm:
+        releaseName: external-dns
+        valueFiles:
+          - $values/200-external-dns/values.yaml
+    - repoURL: https://github.com/tuana9a/platform.git
+      targetRevision: bootstrap-gke
+      ref: values
+  destination:
+    server: "https://34.126.156.251"
+    namespace: external-dns
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
