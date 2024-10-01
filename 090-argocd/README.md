@@ -40,7 +40,7 @@ FATA[0005] Failed to create service account "argocd-manager" in namespace "kube-
 There is a fix https://github.com/argoproj/argo-cd/issues/13054 is to specify other namespace
 
 ```bash
-kubectl config use-context gke_tuana9a_asia-southeast1_zero
-kubectl create ns argocd
-argocd cluster add gke_tuana9a_asia-southeast1_zero --system-namespace argocd
+ctx=gke_tuana9a_asia-southeast1-a_zero
+kubectl config use-context $ctx
+argocd cluster add $ctx
 ```

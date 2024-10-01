@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 spec:
   destination:
-    server: "https://34.126.156.251"
+    server: "https://34.142.170.198"
   project: default
   revisionHistoryLimit: 10
   source:
