@@ -1,0 +1,4 @@
+admin:
+  enabled: false
+manager:
+  enabled: false
