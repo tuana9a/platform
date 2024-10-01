@@ -17,7 +17,7 @@ spec:
       targetRevision: bootstrap-gke
       ref: values
   destination:
-    server: "https://34.143.141.239"
+    server: "https://34.126.156.251"
     namespace: ingress-kong
   syncPolicy:
     automated:
