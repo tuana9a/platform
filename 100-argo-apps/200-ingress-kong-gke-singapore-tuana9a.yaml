@@ -14,7 +14,7 @@ spec:
         valueFiles:
           - $values/200-ingress-kong/values.yaml
     - repoURL: https://github.com/tuana9a/platform.git
-      targetRevision: bootstrap-gke
+      targetRevision: main
       ref: values
   destination:
     server: "https://34.142.170.198"

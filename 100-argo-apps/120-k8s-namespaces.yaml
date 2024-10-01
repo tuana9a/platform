@@ -11,7 +11,7 @@ spec:
   source:
     path: 120-k8s-namespaces
     repoURL: https://github.com/tuana9a/platform.git
-    targetRevision: bootstrap-gke
+    targetRevision: main
   syncPolicy:
     automated:
       prune: false
