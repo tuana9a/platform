@@ -21,6 +21,5 @@ spec:
     namespace: metrics-server
   syncPolicy:
     automated:
-      allowEmpty: false
       prune: false
       selfHeal: true

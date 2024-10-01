@@ -15,6 +15,5 @@ spec:
     targetRevision: main
   syncPolicy:
     automated:
-      allowEmpty: false
       prune: false
       selfHeal: true

@@ -21,6 +21,5 @@ spec:
     namespace: grafana
   syncPolicy:
     automated:
-      allowEmpty: false
       prune: false
       selfHeal: true

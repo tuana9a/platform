@@ -21,6 +21,5 @@ spec:
     namespace: external-dns
   syncPolicy:
     automated:
-      allowEmpty: false
       prune: false
       selfHeal: true
