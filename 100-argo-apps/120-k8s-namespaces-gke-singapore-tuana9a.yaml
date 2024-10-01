@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: k8s-namespaces-gke-singapore-tuana9a
+  namespace: argocd
+spec:
+  destination:
+    server: https://34.143.141.239
+  project: default
+  revisionHistoryLimit: 10
+  source:
+    path: 120-k8s-namespaces-gke-singapore-tuana9a
+    repoURL: https://github.com/tuana9a/platform.git
+    targetRevision: bootstrap-gke
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
