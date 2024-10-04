@@ -15,6 +15,8 @@ loki:
   querier:
     # Default is 4, if you have enough memory and CPU you can increase, reduce if OOMing
     max_concurrent: 4
+  compactor:
+    retention_enabled: true
   limits_config:
     max_label_names_per_series: 20
     retention_period: 24h
