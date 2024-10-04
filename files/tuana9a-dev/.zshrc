@@ -25,4 +25,4 @@ eval "$(zoxide init zsh)"
 
 alias cd=z
 
-PROMPT='%(!.%B%F{red}.%B%F{green}%n@)%m %F{red}(*) $(kubectx_prompt_info) %F{blue}%(!.%1~.%~) ${vcs_info_msg_0_}%F{blue}%(!.#.$)%k%b%f '
+PROMPT='%(!.%B%F{red}.%B%F{green}%n@)%m %F{blue}%(!.%1~.%~) ${vcs_info_msg_0_}%F{white}($(kubectx_prompt_info)) %F{blue}%(!.#.$)%k%b%f '
