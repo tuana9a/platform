@@ -17,6 +17,7 @@ loki:
     max_concurrent: 4
   compactor:
     retention_enabled: true
+    delete_request_store: filesystem
   limits_config:
     max_label_names_per_series: 20
     retention_period: 24h
