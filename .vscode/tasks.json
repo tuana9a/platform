@@ -4,9 +4,9 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "tfmt",
+            "label": "terraform-format",
             "type": "shell",
-            "command": "./tfmt.sh",
+            "command": "./scripts/tfmt.sh",
             "options": {
                 "cwd": "${workspaceFolder}",
                 "env": {
@@ -16,21 +16,13 @@
             "problemMatcher": []
         },
         {
-            "label": "backup-tfstate",
+            "label": "backup-secrets",
             "type": "shell",
-            "command": "./backup-tfstate.sh",
-            "options": {
-                "cwd": "${workspaceFolder}",
-                "env": {
-                    "PAGER": ""
-                }
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "backup-s9cr9ts",
-            "type": "shell",
-            "command": "./backup-s9cr9ts.sh",
+            "command": "./scripts/backup.sh",
+            "args": [
+                "secrets",
+                "secret"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}",
                 "env": {
