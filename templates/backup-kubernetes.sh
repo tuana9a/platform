@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 echo "=== $(date) ==="
 
 HOST_NAME="$(hostname)"
@@ -44,32 +46,17 @@ ETCDCTL_CERT=/etc/kubernetes/pki/apiserver-etcd-client.crt
 ETCDCTL_KEY=/etc/kubernetes/pki/apiserver-etcd-client.key
 ETCDCTL_OPTS="--cacert=$ETCDCTL_CACERT --cert=$ETCDCTL_CERT --key=$ETCDCTL_KEY"
 
+echo Dumping
 ETCDCTL_API=3 sudo /usr/local/bin/etcdctl member list $ETCDCTL_OPTS
 ETCDCTL_API=3 sudo /usr/local/bin/etcdctl snapshot save $ETCD_SNAPSHOT $ETCDCTL_OPTS
 ETCDCTL_API=3 sudo /usr/local/bin/etcdctl --write-out=table snapshot status $ETCD_SNAPSHOT $ETCDCTL_OPTS
 
-echo Dumping
+echo Zipping $DUMP_FILE
 sudo tar -czvf $DUMP_FILE $ETCD_SNAPSHOT /etc/kubernetes/pki /etc/kubernetes/manifests
-
-if [ $? != 0 ]; then
-  echo Something bad happened, exiting.
-  DURATION=$SECONDS
-  MSG="FAILED backup-kubernetes host: \`$HOST_NAME\` duration: \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
-  notify "$MSG"
-  exit 1
-fi
 
 echo Uploading "$S3_OBJECT_KEY" "$WORKDIR/$DUMP_FILE"
 upload "$S3_OBJECT_KEY" "$DUMP_FILE"
 
-if [ $? != 0 ]; then
-  echo Something bad happened, exiting.
-  DURATION=$SECONDS
-  MSG="FAILED backup-kubernetes host: \`$HOST_NAME\` duration: \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
-  notify "$MSG"
-  exit 1
-fi
-
 DURATION=$SECONDS
-MSG="SUCCESS backup-kubernetes host: \`$HOST_NAME\` duration: \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
+MSG=":white_check_mark: \`backup-kubernetes\` \`$HOST_NAME\` \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
 notify "$MSG"

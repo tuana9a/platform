@@ -10,6 +10,30 @@ spec:
       template:
         spec:
           initContainers:
+            - name: env
+              image: busybox
+              command:
+                - "sh"
+                - "-c"
+                - |
+                  OBJECT_KEY=dkhptd/mongo-dump-$(date +'%Y.%m.%d.%H').tar.gz
+                  echo $OBJECT_KEY > /data/object_key.env
+              volumeMounts:
+                - name: workdir
+                  mountPath: /data
+
+            - name: starttime
+              image: busybox
+              command:
+                - "sh"
+                - "-c"
+                - |
+                  date +%s > /data/start.time
+                  cat /data/start.time
+              volumeMounts:
+                - name: workdir
+                  mountPath: /data
+
             - name: dump
               image: mongo:7.0
               command:
@@ -17,6 +41,7 @@ spec:
                 - "-c"
                 - |
                   mongodump --uri=${MONGO_CONNECTION_STRING} --out=/data/dump
+                  ls -ld /data/dump
               volumeMounts:
                 - name: workdir
                   mountPath: /data
@@ -32,18 +57,20 @@ spec:
                 - |
                   cd /data
                   tar -czvf dump.tar.gz dump
+                  ls -l /data/dump.tar.gz
               volumeMounts:
                 - name: workdir
                   mountPath: /data
 
             - name: upload
-              image: amazon/aws-cli:latest
+              image: amazon/aws-cli:2.18.0
               command:
                 - "sh"
                 - "-c"
                 - |
-                  OBJECT_KEY=dkhptd/mongo-dump-$(date +'%Y.%m.%d').tar.gz
+                  OBJECT_KEY=$(cat /data/object_key.env)
                   aws s3api --endpoint-url ${S3_ENDPOINT} put-object --bucket ${BUCKET_NAME} --key $OBJECT_KEY --body /data/dump.tar.gz
+                  echo upload completed
               envFrom:
                 - configMapRef:
                     name: dkhptd-mongo-backup
@@ -51,14 +78,29 @@ spec:
                 - name: workdir
                   mountPath: /data
 
+            - name: stoptime
+              image: busybox
+              command:
+                - "sh"
+                - "-c"
+                - |
+                  date +%s > /data/stop.time
+                  cat /data/stop.time
+              volumeMounts:
+                - name: workdir
+                  mountPath: /data
+
             - name: notify
-              image: curlimages/curl:latest
+              image: alpine/curl
               command:
                 - sh
                 - -c
                 - |
-                  OBJECT_KEY=dkhptd/mongo-dump-$(date +'%Y.%m.%d').tar.gz
-                  MSG="SUCCESS backup-mongo ns: \`dkhptd\`"
+                  START_TIME=$(cat "/data/start.time")
+                  STOP_TIME=$(cat "/data/stop.time")
+                  DURATION=$((STOP_TIME - START_TIME))
+                  OBJECT_KEY=$(cat /data/object_key.env)
+                  MSG=":white_check_mark: \`backup-mongo\` \`dkhptd\` \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
                   curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\"content\":\"${MSG}\"}"
               envFrom:
                 - configMapRef:
