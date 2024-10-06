@@ -10,6 +10,18 @@ spec:
       template:
         spec:
           initContainers:
+            - name: env
+              image: busybox
+              command:
+                - "sh"
+                - "-c"
+                - |
+                  OBJECT_KEY=coder/postgres-dump-$(date +'%Y.%m.%d.%H').tar.gz
+                  echo $OBJECT_KEY > /data/object_key.env
+              volumeMounts:
+                - name: workdir
+                  mountPath: /data
+
             - name: dump
               image: postgres:16
               command:
@@ -46,7 +58,7 @@ spec:
                 - "-c"
                 - |
                   echo === uploading dumpfile ===
-                  OBJECT_KEY=coder/postgres-dump-$(date +'%Y.%m.%d').tar.gz
+                  OBJECT_KEY=$(cat /data/object_key.env)
                   aws s3api --endpoint-url ${S3_ENDPOINT} put-object --bucket ${BUCKET_NAME} --key $OBJECT_KEY --body /data/dump.tar.gz
               envFrom:
                 - configMapRef:
@@ -62,7 +74,7 @@ spec:
                 - -c
                 - |
                   echo backup complete
-                  OBJECT_KEY=coder/postgres-dump-$(date +'%Y.%m.%d').tar.gz
+                  OBJECT_KEY=$(cat /data/object_key.env)
                   MSG="SUCCESS backup-postgres ns: \`coder\`"
                   curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\"content\":\"${MSG}\"}"
               envFrom:
