@@ -73,3 +73,8 @@ kind: Namespace
 metadata:
   name: k8s-forwarder
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vault
+---
