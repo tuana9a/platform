@@ -78,3 +78,26 @@ data "coder_parameter" "image" {
     value = "tuana9a/coder:minimal"
   }
 }
+
+data "coder_parameter" "dockerd" {
+  name         = "dockerd"
+  display_name = "dockerd"
+  description  = "Docker Daemon"
+  mutable      = true
+  type         = "string"
+  default      = "false"
+  option {
+    name  = "true"
+    value = "true"
+  }
+  option {
+    name  = "false"
+    value = "false"
+  }
+}
+
+locals {
+  coder_parameter = {
+    dockerd = data.coder_parameter.dockerd.value == "true" ? [1] : []
+  }
+}

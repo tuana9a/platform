@@ -1,0 +1,1 @@
+data "coder_workspace" "me" {}
