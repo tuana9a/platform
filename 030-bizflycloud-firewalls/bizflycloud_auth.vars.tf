@@ -1,1 +1,0 @@
-../common/bizflycloud_auth.vars.tf

@@ -1,0 +1,1 @@
+../common/bizflycloud_region.vars.tf

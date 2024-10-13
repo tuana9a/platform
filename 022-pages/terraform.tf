@@ -8,6 +8,10 @@ terraform {
       source  = "hashicorp/google"
       version = "5.29.1"
     }
+    vault = {
+      source  = "hashicorp/vault"
+      version = "4.4.0"
+    }
     cloudflare = {
       source  = "cloudflare/cloudflare"
       version = "4.17.0"
@@ -22,6 +26,12 @@ provider "google" {
   zone    = var.gcp_zone_name
 }
 
+provider "vault" {
+  address = "https://vault.tuana9a.com"
+
+  skip_child_token = true
+}
+
 provider "cloudflare" {
-  api_token = var.cloudflare_api_token
+  api_token = data.vault_kv_secret.edit_pages.data.cloudflare_api_token
 }
