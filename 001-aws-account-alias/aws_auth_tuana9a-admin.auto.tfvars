@@ -1,1 +1,0 @@
-../secrets/aws_auth_tuana9a-admin.auto.tfvars

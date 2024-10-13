@@ -1,1 +1,0 @@
-../common/aws_auth.vars.tf

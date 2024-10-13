@@ -1,1 +1,1 @@
-../secrets/vm_ssh_keys.auto.tfvars
+../common/vm_ssh_keys.auto.tfvars
