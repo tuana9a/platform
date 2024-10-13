@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vault-gke-singapore-tuana9a-manifests
+  namespace: argocd
+spec:
+  destination:
+    namespace: vault
+    server: "https://34.142.170.198"
+  project: default
+  revisionHistoryLimit: 10
+  source:
+    path: 195-vault-gke-singapore-tuana9a-manifests
+    repoURL: https://github.com/tuana9a/platform.git
+    # targetRevision: main
+    targetRevision: fix-vault-sealed-when-replacing-spot-instance
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
