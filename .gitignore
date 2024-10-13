@@ -153,5 +153,4 @@ override.tf.json
 
 # @tuana9a
 *tmp*
-*secret*
 *.env
