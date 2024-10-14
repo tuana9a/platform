@@ -60,3 +60,7 @@ upload "$S3_OBJECT_KEY" "$DUMP_FILE"
 DURATION=$SECONDS
 MSG=":white_check_mark: \`backup-kubernetes\` \`$HOST_NAME\` \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
 notify "$MSG"
+
+# cleanup
+sudo rm -f snapshot.db
+sudo rm -f backup-kubernetes-*.tar.gz
