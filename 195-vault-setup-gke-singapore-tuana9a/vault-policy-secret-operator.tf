@@ -1,14 +1,13 @@
-resource "vault_policy" "admin" {
-  name   = "admin"
+resource "vault_policy" "secret_operator" {
+  name   = "secret-operator"
   policy = <<EOT
-# Manage auth methods broadly
-path "auth/*"
+# Create and manage secrets
+path "${vault_mount.kv.path}/*"
 {
   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
 
-# Create and manage policies
-path "sys/policies/*"
+path "${vault_mount.kvv2.path}/*"
 {
   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
