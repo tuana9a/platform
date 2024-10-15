@@ -19,6 +19,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: t9stbot
+            - secretRef:
+                name: t9stbot
           command: ["node", "telegram-bot-webhook-main.js"]
 ---
 apiVersion: v1

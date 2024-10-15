@@ -1,3 +1,19 @@
+---
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultStaticSecret
+metadata:
+  name: coder-postgres-backup
+  namespace: coder
+spec:
+  type: kv-v1
+  mount: kv
+  path: coder/postgres-backup/env
+  destination:
+    name: coder-postgres-backup
+    create: true
+  refreshAfter: 30s
+  vaultAuthRef: vault/secrets-operator
+---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -46,7 +62,7 @@ spec:
                 - name: workdir
                   mountPath: /data
               envFrom:
-                - configMapRef:
+                - secretRef:
                     name: coder-postgres-backup
 
             - name: zip
@@ -72,7 +88,7 @@ spec:
                   aws s3api --endpoint-url ${S3_ENDPOINT} put-object --bucket ${BUCKET_NAME} --key $OBJECT_KEY --body /data/dump.tar.gz
                   echo upload completed
               envFrom:
-                - configMapRef:
+                - secretRef:
                     name: coder-postgres-backup
               volumeMounts:
                 - name: workdir
@@ -103,7 +119,7 @@ spec:
                   MSG=":white_check_mark: \`backup-postgres\` \`coder\` \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
                   curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\"content\":\"${MSG}\"}"
               envFrom:
-                - configMapRef:
+                - secretRef:
                     name: coder-postgres-backup
               volumeMounts:
                 - name: workdir

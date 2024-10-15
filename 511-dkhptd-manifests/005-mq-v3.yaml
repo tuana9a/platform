@@ -1,4 +1,19 @@
 ---
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultStaticSecret
+metadata:
+  name: dkhptd-rabbitmq-v3-env
+  namespace: dkhptd
+spec:
+  type: kv-v1
+  mount: kv
+  path: dkhptd/rabbitmq/env
+  destination:
+    name: dkhptd-rabbitmq-v3-env
+    create: true
+  refreshAfter: 30s
+  vaultAuthRef: vault/secrets-operator
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -22,7 +37,7 @@ spec:
             - name: rabbitmq-data
               mountPath: /var/lib/rabbitmq/mnesia
           envFrom:
-            - configMapRef:
+            - secretRef:
                 name: dkhptd-rabbitmq-v3-env
           ports:
             - containerPort: 5672

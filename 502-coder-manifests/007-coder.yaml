@@ -1,0 +1,24 @@
+---
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultStaticSecret
+metadata:
+  name: coder-env
+  namespace: coder
+spec:
+  type: kv-v1
+  mount: kv
+  path: coder/env
+  destination:
+    name: coder-env
+    create: true
+  refreshAfter: 30s
+  vaultAuthRef: vault/secrets-operator
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coder-env
+  namespace: coder
+data:
+  CODER_ACCESS_URL: "https://coder.tuana9a.com"
+  CODER_WILDCARD_ACCESS_URL: "*.coder.tuana9a.com"

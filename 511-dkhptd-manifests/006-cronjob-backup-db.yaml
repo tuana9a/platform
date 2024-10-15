@@ -1,3 +1,19 @@
+---
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultStaticSecret
+metadata:
+  name: dkhptd-mongo-backup-env
+  namespace: dkhptd
+spec:
+  type: kv-v1
+  mount: kv
+  path: dkhptd/mongo-backup/env
+  destination:
+    name: dkhptd-mongo-backup-env
+    create: true
+  refreshAfter: 30s
+  vaultAuthRef: vault/secrets-operator
+---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -46,8 +62,8 @@ spec:
                 - name: workdir
                   mountPath: /data
               envFrom:
-                - configMapRef:
-                    name: dkhptd-mongo-backup
+                - secretRef:
+                    name: dkhptd-mongo-backup-env
 
             - name: zip
               image: busybox:latest
@@ -72,8 +88,8 @@ spec:
                   aws s3api --endpoint-url ${S3_ENDPOINT} put-object --bucket ${BUCKET_NAME} --key $OBJECT_KEY --body /data/dump.tar.gz
                   echo upload completed
               envFrom:
-                - configMapRef:
-                    name: dkhptd-mongo-backup
+                - secretRef:
+                    name: dkhptd-mongo-backup-env
               volumeMounts:
                 - name: workdir
                   mountPath: /data
@@ -103,8 +119,8 @@ spec:
                   MSG=":white_check_mark: \`backup-mongo\` \`dkhptd\` \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
                   curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\"content\":\"${MSG}\"}"
               envFrom:
-                - configMapRef:
-                    name: dkhptd-mongo-backup
+                - secretRef:
+                    name: dkhptd-mongo-backup-env
               volumeMounts:
                 - name: workdir
                   mountPath: /data

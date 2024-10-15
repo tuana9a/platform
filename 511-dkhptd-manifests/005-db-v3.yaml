@@ -45,9 +45,6 @@ spec:
             - name: mongo-config
               mountPath: /etc/mongod.conf
               subPath: mongod.conf
-          envFrom:
-            - configMapRef:
-                name: dkhptd-mongo-v3-env
           ports:
             - containerPort: 27017
       volumes:

@@ -1,3 +1,24 @@
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultStaticSecret
+metadata:
+  name: dkhptd-worker
+  namespace: dkhptd
+spec:
+  type: kv-v1
+  mount: kv
+  path: dkhptd/worker/env
+  destination:
+    name: dkhptd-worker
+    create: true
+  refreshAfter: 30s
+  vaultAuthRef: vault/secrets-operator
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dkhptd-worker
+data:
+  PUPPETEER_LAUNCH_OPTIONS_TYPE: docker
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -19,6 +40,8 @@ spec:
           command: ["node", "./dist/launch-worker-rabbitmq-v1.js"]
           envFrom:
             - configMapRef:
+                name: dkhptd-worker
+            - secretRef:
                 name: dkhptd-worker
           resources:
             requests:

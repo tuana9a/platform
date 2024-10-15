@@ -1,4 +1,28 @@
 ---
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultStaticSecret
+metadata:
+  name: dkhptd-api-gateway
+  namespace: dkhptd
+spec:
+  type: kv-v1
+  mount: kv
+  path: dkhptd/api-gateway/env
+  destination:
+    name: dkhptd-api-gateway
+    create: true
+  refreshAfter: 30s
+  vaultAuthRef: vault/secrets-operator
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dkhptd-api-gateway
+  namespace: dkhptd
+data:
+  BIND: 0.0.0.0
+  PORT: "8080"
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -18,6 +42,8 @@ spec:
           image: tuana9a/dkhptd-api-gateway:2024.09.29.034130
           envFrom:
             - configMapRef:
+                name: dkhptd-api-gateway
+            - secretRef:
                 name: dkhptd-api-gateway
           resources:
             requests:

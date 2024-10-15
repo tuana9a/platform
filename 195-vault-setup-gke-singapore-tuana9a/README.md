@@ -28,6 +28,35 @@ terraform apply # yes
 
 # ops
 
+## approle secrets-operator
+
+```bash
+vault delete auth/approle/role/secrets-operator
+```
+
+```bash
+vault write auth/approle/role/secrets-operator \
+token_policies=secret-operator \
+token_ttl=1h \
+token_max_ttl=4h
+```
+
+```bash
+vault read auth/approle/role/secrets-operator/role-id
+vault read -field=role_id auth/approle/role/secrets-operator/role-id > /tmp/vault-approle.secrets-operator.role-id
+```
+
+```bash
+vault write -f auth/approle/role/secrets-operator/secret-id
+vault write -f -field=secret_id auth/approle/role/secrets-operator/secret-id > /tmp/vault-approle.secrets-operator.secret-id
+```
+
+```bash
+vault write auth/approle/login \
+role_id=$(cat /tmp/vault-approle.secrets-operator.role-id) \
+secret_id=$(cat /tmp/vault-approle.secrets-operator.secret-id)
+```
+
 ## user admin
 
 create user admin
