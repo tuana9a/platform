@@ -27,6 +27,10 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 ```bash
 kubectl -n argocd port-forward svc/argocd-server --address ${address:-0.0.0.0} ${port:-8443}:443
 ```
+or
+```bash
+kubectl -n argocd port-forward svc/argocd-server --address ${address:-0.0.0.0} ${port:-8080}:80
+```
 
 # add gke cluster
 

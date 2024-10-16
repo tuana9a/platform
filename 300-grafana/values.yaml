@@ -2,6 +2,19 @@ persistence:
   enabled: true
   storageClassName: nfs-vdb
   size: 2Gi
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    external-dns.alpha.kubernetes.io/hostname: "grafana.tuana9a.com"
+    external-dns.alpha.kubernetes.io/target: "zione.tuana9a.com"
+  hosts:
+    - "grafana.tuana9a.com"
+  tls:
+    - secretName: grafana-tuana9a-com-tls
+      hosts:
+        - "grafana.tuana9a.com"
 datasources:
   datasources.yaml:
     apiVersion: 1
