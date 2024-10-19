@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: external-dns-gke-singapore-tuana9a
+  name: 200-external-dns-gke-singapore-tuana9a
   namespace: argocd
 spec:
   project: default

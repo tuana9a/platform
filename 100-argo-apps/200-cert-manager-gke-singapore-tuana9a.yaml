@@ -3,7 +3,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cert-manager-gke-singapore-tuana9a
+  name: 200-cert-manager-gke-singapore-tuana9a
   namespace: argocd
 spec:
   project: default

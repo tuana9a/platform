@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: csi-nfs-client-manifests
+  name: 160-csi-nfs-client-manifests
   namespace: argocd
 spec:
   destination:

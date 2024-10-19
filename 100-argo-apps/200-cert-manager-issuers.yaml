@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cert-manager-issuers
+  name: 200-cert-manager-issuers
   namespace: argocd
 spec:
   destination:

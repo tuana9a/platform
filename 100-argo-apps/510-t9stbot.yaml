@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: t9stbot
+  name: 510-t9stbot
   namespace: argocd
 spec:
   destination:

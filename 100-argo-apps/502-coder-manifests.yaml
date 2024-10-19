@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: coder-manifests
+  name: 502-coder-manifests
   namespace: argocd
 spec:
   destination:

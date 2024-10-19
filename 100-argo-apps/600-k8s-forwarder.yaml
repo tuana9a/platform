@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: k8s-forwarder
+  name: 600-k8s-forwarder
   namespace: argocd
 spec:
   destination:

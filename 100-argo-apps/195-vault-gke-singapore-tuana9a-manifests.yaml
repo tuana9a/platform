@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: vault-gke-singapore-tuana9a-manifests
+  name: 195-vault-gke-singapore-tuana9a-manifests
   namespace: argocd
 spec:
   destination:

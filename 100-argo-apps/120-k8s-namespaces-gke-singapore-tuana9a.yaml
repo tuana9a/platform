@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: k8s-namespaces-gke-singapore-tuana9a
+  name: 120-k8s-namespaces-gke-singapore-tuana9a
   namespace: argocd
 spec:
   destination:

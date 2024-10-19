@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: dkhptd
+  name: 511-dkhptd
   namespace: argocd
 spec:
   destination:

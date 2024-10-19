@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: promtail
+  name: 300-promtail
   namespace: argocd
 spec:
   destination:

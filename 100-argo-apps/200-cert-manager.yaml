@@ -3,7 +3,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cert-manager
+  name: 200-cert-manager
   namespace: argocd
 spec:
   project: default
