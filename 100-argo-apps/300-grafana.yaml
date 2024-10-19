@@ -13,6 +13,7 @@ spec:
         releaseName: grafana
         valueFiles:
           - $values/300-grafana/values.yaml
+          - $values/300-grafana/datasource-values.yaml
     - repoURL: https://github.com/tuana9a/platform.git
       targetRevision: main
       ref: values
