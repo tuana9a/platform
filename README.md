@@ -73,6 +73,10 @@ ansible --version
 config ansible (optional)
 
 ```bash
-ln -sf $PWD/ansible.cfg ~/.ansible.cfg
-ln -sf $PWD/secrets/ansible-vault-password.txt ~/.ansible-vault-password.txt
+vim ~/.ansible.cfg
+```
+
+```conf
+[defaults]
+vault_password_file=~/.ansible-vault-password
 ```
