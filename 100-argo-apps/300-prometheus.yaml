@@ -22,5 +22,5 @@ spec:
   # # NOTE: wait until https://github.com/prometheus/alertmanager/pull/3728 being released
   # syncPolicy:
   #   automated:
-  #     prune: false
+  #     # prune: false
   #     selfHeal: true
