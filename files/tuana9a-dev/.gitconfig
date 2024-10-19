@@ -1,7 +1,0 @@
-[user]
-    name = Nguyen Minh Tuan
-    email = tuana9a@gmail.com
-[core]
-    editor = vim
-[init]
-    defaultBranch = main

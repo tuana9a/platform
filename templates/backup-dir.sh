@@ -1,22 +1,28 @@
 #!/bin/bash
 
+set -e
+
 echo "=== $(date) ==="
 
 HOST_NAME="{{ HOST_NAME }}"
-CLOUDFLARE_ACCOUNT_ID="{{ NFS_BACKUP_CLOUDFLARE_ACCOUNT_ID }}"
+CLOUDFLARE_ACCOUNT_ID="{{ BACKUP_DIR_CLOUDFLARE_ACCOUNT_ID }}"
 S3_ENDPOINT="https://$CLOUDFLARE_ACCOUNT_ID.r2.cloudflarestorage.com"
-BUCKET_NAME="{{ NFS_BACKUP_BUCKET_NAME }}"
+BUCKET_NAME="{{ BACKUP_DIR_BUCKET_NAME }}"
 
-export AWS_ACCESS_KEY_ID="{{ NFS_BACKUP_AWS_ACCESS_KEY_ID }}"
-export AWS_SECRET_ACCESS_KEY="{{ NFS_BACKUP_AWS_SECRET_ACCESS_KEY }}"
-export AWS_DEFAULT_REGION="{{ NFS_BACKUP_AWS_DEFAULT_REGION | default('auto') }}"
+export AWS_ACCESS_KEY_ID="{{ BACKUP_DIR_AWS_ACCESS_KEY_ID }}"
+export AWS_SECRET_ACCESS_KEY="{{ BACKUP_DIR_AWS_SECRET_ACCESS_KEY }}"
+export AWS_DEFAULT_REGION="{{ BACKUP_DIR_AWS_DEFAULT_REGION | default('auto') }}"
 
-TELEGRAM_BOT_TOKEN="{{ NFS_BACKUP_TELEGRAM_BOT_TOKEN | default('') }}"
-TELEGRAM_CHAT_ID="{{ NFS_BACKUP_TELEGRAM_CHAT_ID | default('') }}"
+TELEGRAM_BOT_TOKEN="{{ BACKUP_DIR_TELEGRAM_BOT_TOKEN | default('') }}"
+TELEGRAM_CHAT_ID="{{ BACKUP_DIR_TELEGRAM_CHAT_ID | default('') }}"
 
 BACKUP_DIR=$1
+DUMP_PREFIX=$2
 
-DUMP_FILE="nfs-provisioner-screenshot-$(date +'%Y.%m.%d').txt"
+if [ -z $DUMP_PREFIX ]; then echo DUMP_PREFIX is not set, default is "nfs".; DUMP_PREFIX=nfs; fi
+
+DUMP_FILE="$DU
+MP_PREFIX-dump-$(date +'%Y.%m.%d').tar.gz"
 WORKDIR=/tmp
 SECONDS=0 # for calc duration
 
@@ -49,32 +55,28 @@ upload() {
 }
 
 mkdir -p $WORKDIR
+cd $WORKDIR || exit 1
+
+cleanup() {
+  rm $DUMP_PREFIX-dump-*.tar.gz
+}
+
+# cleanup old files (if exists)
+cleanup
 
 echo Dumping
-ls -l {{ NFS_DIR }} > $WORKDIR/$DUMP_FILE
-
-if [ $? != 0 ]; then
-  echo Something bad happened, exiting.
-  DURATION=$SECONDS
-  MSG="FAILED $HOST_NAME save-screenshot-k8s-nfs-provisioner $(($DURATION / 60))m$(($DURATION % 60))s"
-  notify "$MSG"
-  exit 1
-fi
+tar \
+{% for exclude in excludes %}
+  --exclude "{{ exclude }}" \
+{% endfor %}
+  -cvzf $DUMP_FILE $BACKUP_DIR
 
 S3_OBJECT_KEY=$HOST_NAME/$DUMP_FILE
 echo Uploading "$S3_OBJECT_KEY" "$WORKDIR/$DUMP_FILE"
-upload "$S3_OBJECT_KEY" "$WORKDIR/$DUMP_FILE"
-
-if [ $? != 0 ]; then
-  echo Something bad happened, exiting.
-  DURATION=$SECONDS
-  MSG="FAILED $HOST_NAME save-screenshot-k8s-nfs-provisioner $(($DURATION / 60))m$(($DURATION % 60))s"
-  notify "$MSG"
-  exit 1
-fi
+upload "$S3_OBJECT_KEY" "$DUMP_FILE"
 
 DURATION=$SECONDS
-MSG="SUCCESS $HOST_NAME save-screenshot-k8s-nfs-provisioner $(($DURATION / 60))m$(($DURATION % 60))s"
+MSG="SUCCESS $HOST_NAME backup-dir $BACKUP_DIR $(($DURATION / 60))m$(($DURATION % 60))s"
 notify "$MSG"
 
-rm $WORKDIR/nfs-provisioner-screenshot-*.txt
+cleanup

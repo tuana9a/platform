@@ -3,14 +3,14 @@
 echo "=== $(date) ==="
 
 export KUBECONFIG="{{ kubeconfig }}"
-
+namespace="{{ namespace | default('ingress-nginx') }}"
 ip_file=/tmp/current-ingress-nginx-load-balancer-ip.txt
 
 if [ ! -f $ip_file ]; then
   touch $ip_file
 fi
 
-ip=$(kubectl get -n ingress-nginx service ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+ip=$(kubectl get -n $namespace service ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
 if [ -z $ip ]; then
   echo "\"$previous_ip\" -> \"$ip\", invalid ip, exiting..."
