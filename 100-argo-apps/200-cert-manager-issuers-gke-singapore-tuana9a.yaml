@@ -4,15 +4,15 @@ metadata:
   name: 200-cert-manager-issuers-gke-singapore-tuana9a
   namespace: argocd
 spec:
-  destination:
-    server: "https://34.142.170.198"
-    namespace: cert-manager
   project: default
   revisionHistoryLimit: 10
   source:
     path: 200-cert-manager-issuers-gke-singapore-tuana9a-manifests
     repoURL: https://github.com/tuana9a/platform.git
     targetRevision: main
+  destination:
+    server: "https://34.142.170.198"
+    namespace: cert-manager
   syncPolicy:
     automated:
       # prune: false

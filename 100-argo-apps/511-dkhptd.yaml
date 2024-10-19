@@ -4,15 +4,15 @@ metadata:
   name: 511-dkhptd
   namespace: argocd
 spec:
-  destination:
-    namespace: dkhptd
-    server: https://kubernetes.default.svc
   project: default
   revisionHistoryLimit: 10
   source:
     path: 511-dkhptd-manifests
     repoURL: https://github.com/tuana9a/platform.git
     targetRevision: main
+  destination:
+    namespace: dkhptd
+    server: https://kubernetes.default.svc
   syncPolicy:
     automated:
       # prune: false

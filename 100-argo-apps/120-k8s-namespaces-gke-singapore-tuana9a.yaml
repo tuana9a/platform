@@ -4,14 +4,14 @@ metadata:
   name: 120-k8s-namespaces-gke-singapore-tuana9a
   namespace: argocd
 spec:
-  destination:
-    server: "https://34.142.170.198"
   project: default
   revisionHistoryLimit: 10
   source:
     path: 120-k8s-namespaces-gke-singapore-tuana9a
     repoURL: https://github.com/tuana9a/platform.git
     targetRevision: main
+  destination:
+    server: "https://34.142.170.198"
   syncPolicy:
     automated:
       # prune: false

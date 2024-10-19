@@ -4,15 +4,15 @@ metadata:
   name: 190-metallb-manifests
   namespace: argocd
 spec:
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: metallb-system
   project: default
   revisionHistoryLimit: 10
   source:
     path: 190-metallb-manifests
     repoURL: https://github.com/tuana9a/platform.git
     targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: metallb-system
   syncPolicy:
     automated:
       # prune: false

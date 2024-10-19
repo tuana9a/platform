@@ -4,15 +4,15 @@ metadata:
   name: 100-argo-apps
   namespace: argocd
 spec:
-  destination:
-    namespace: argocd
-    server: https://kubernetes.default.svc
   project: default
   revisionHistoryLimit: 10
   source:
     path: 100-argo-apps
     repoURL: https://github.com/tuana9a/platform.git
     targetRevision: main
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
   syncPolicy:
     automated:
       # prune: false

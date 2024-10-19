@@ -4,15 +4,15 @@ metadata:
   name: 512-hcr
   namespace: argocd
 spec:
-  destination:
-    namespace: hcr
-    server: https://kubernetes.default.svc
   project: default
   revisionHistoryLimit: 10
   source:
     path: 512-hcr-manifests
     repoURL: https://github.com/tuana9a/platform.git
     targetRevision: main
+  destination:
+    namespace: hcr
+    server: https://kubernetes.default.svc
   syncPolicy:
     automated:
       # prune: false
