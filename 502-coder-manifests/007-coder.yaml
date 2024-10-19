@@ -14,11 +14,3 @@ spec:
   refreshAfter: 30s
   vaultAuthRef: vault/secrets-operator
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: coder-env
-  namespace: coder
-data:
-  CODER_ACCESS_URL: "https://coder.tuana9a.com"
-  CODER_WILDCARD_ACCESS_URL: "*.coder.tuana9a.com"

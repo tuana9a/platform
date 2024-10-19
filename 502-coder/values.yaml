@@ -21,10 +21,14 @@ coder:
           - patch
           - update
           - watch
+  # WARN: those two envs are hard coded, can not move it to configmap need to specify it right here
+  env:
+    - name: CODER_ACCESS_URL
+      value: "https://coder.tuana9a.com"
+    - name: CODER_WILDCARD_ACCESS_URL
+      value: "*.coder.tuana9a.com"
   envFrom:
     - secretRef:
-        name: coder-env
-    - configMapRef:
         name: coder-env
   service:
     enable: true
