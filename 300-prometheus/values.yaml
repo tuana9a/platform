@@ -13,7 +13,7 @@ alertmanager:
     receivers:
       - name: "discord"
         discord_configs:
-          - webhook_url_file: /alertmanager/discord_webhook.txt
+          - webhook_url: "TODO"
 serverFiles:
   alerts:
     kubernetes:
