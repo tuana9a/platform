@@ -35,6 +35,8 @@ read:
 write:
   replicas: 3
   persistence:
+    # YOLO ... Just kidding, I'm facing error with lok-write when it can not delete the folder, maybe because of https://github.com/grafana/loki/issues/13923
+    volumeClaimsEnabled: false
     storageClass: nfs-vdb
     size: 15Gi
 
