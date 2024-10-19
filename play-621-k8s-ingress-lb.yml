@@ -8,11 +8,4 @@
     - import_tasks: ./tasks/install_openvpn.yml
     - import_tasks: ./tasks/openvpn_client.yml
     - import_tasks: ./tasks/install_kubectl.yml
-    - name: Copy kubeconfig to remote
-      become: true
-      copy:
-        src: k8s-ingress-lb/kubeconfig
-        dest: "/opt/kubeconfig"
-    - import_tasks: ./tasks/cronjob_update_ingress_nginx_load_balancer_ip.yml
-      vars:
-        kubeconfig: "/opt/kubeconfig" # TODO: configurable
+

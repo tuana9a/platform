@@ -1,0 +1,11 @@
+- hosts: k8s_ingress_lb
+  tasks:
+    - name: Copy kubeconfig to remote
+      become: true
+      copy:
+        src: k8s-ingress-lb/kubeconfig
+        dest: "/opt/kubeconfig"
+    - import_tasks: ./tasks/cronjob_update_ingress_nginx_load_balancer_ip.yml
+      vars:
+        kubeconfig: "/opt/kubeconfig" # TODO: configurable
+        namespace: "ingress-nginx"
