@@ -21,7 +21,8 @@ spec:
   destination:
     server: "https://34.142.170.198"
     namespace: vault
-  syncPolicy:
-    automated:
-      # prune: false
-      selfHeal: true
+  # NOTE: vault/vault-agent-injector-cfg is flaking
+  # syncPolicy:
+  #   automated:
+  #     # prune: false
+  #     selfHeal: true
