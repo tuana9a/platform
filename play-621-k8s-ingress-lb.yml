@@ -1,6 +1,5 @@
 - hosts: k8s_ingress_lb
   tasks:
-    - import_tasks: ./tasks/cronjob_authorized_keys.yml
     - import_tasks: ./tasks/set_timezone.yml
     - import_tasks: ./tasks/install_tmux.yml
     - import_tasks: ./tasks/install_nginx.yml
