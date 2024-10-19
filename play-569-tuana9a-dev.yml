@@ -10,4 +10,3 @@
     - import_tasks: ./tasks/openvpn_client.yml
     - import_tasks: ./tasks/install_wireguard.yml
     - import_tasks: ./tasks/wireguard_client.yml
-    - import_tasks: ./tasks/cronjob_update_cloudflare_dns.yml
