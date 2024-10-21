@@ -1,0 +1,1 @@
+../common/gcp_network_zero.data.tf
