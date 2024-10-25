@@ -6,12 +6,19 @@ metadata:
 spec:
   project: default
   revisionHistoryLimit: 10
-  source:
-    path: 300-promtail
-    repoURL: https://github.com/tuana9a/platform.git
-    targetRevision: main
+  sources:
+    - chart: promtail
+      repoURL: https://grafana.github.io/helm-charts
+      targetRevision: 6.16.6
+      helm:
+        releaseName: promtail
+        valueFiles:
+          - $values/300-promtail/values.yaml
+    - repoURL: https://github.com/tuana9a/platform.git
+      targetRevision: main
+      ref: values
   destination:
-    server: https://kubernetes.default.svc
+    server: "https://kubernetes.default.svc"
     namespace: promtail
   syncPolicy:
     automated:
