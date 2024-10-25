@@ -21,6 +21,7 @@ metadata:
   namespace: coder
 spec:
   replicas: 1
+  serviceName: postgres-v3
   selector:
     matchLabels:
       app: postgres-v3
@@ -68,6 +69,7 @@ metadata:
   labels:
     app: postgres-v3
 spec:
+  clusterIP: None
   ports:
     - port: 5432
       name: postgres

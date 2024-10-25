@@ -21,6 +21,7 @@ metadata:
   namespace: dkhptd
 spec:
   replicas: 1
+  serviceName: rabbitmq-v3
   selector:
     matchLabels:
       app: rabbitmq-v3

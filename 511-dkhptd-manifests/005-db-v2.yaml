@@ -24,6 +24,7 @@ metadata:
   namespace: dkhptd
 spec:
   replicas: 0
+  serviceName: mongo-v2
   selector:
     matchLabels:
       app: mongo-v2
@@ -72,6 +73,7 @@ metadata:
   labels:
     app: mongo-v2
 spec:
+  clusterIP: None
   ports:
     - port: 27017
       name: mongo
