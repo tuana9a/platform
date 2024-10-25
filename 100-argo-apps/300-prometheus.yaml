@@ -14,6 +14,7 @@ spec:
         valueFiles:
           - $values/300-prometheus/values.yaml
           - $values/300-prometheus/alert-values.yaml
+          - $values/300-prometheus/alert-msg-template-values.yaml
     - repoURL: https://github.com/tuana9a/platform.git
       targetRevision: main
       ref: values
