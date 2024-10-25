@@ -14,6 +14,14 @@ spec:
   refreshAfter: 30s
   vaultAuthRef: vault/secrets-operator
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dkhptd-scheduler
+  namespace: dkhptd
+data:
+  HELLO: WORLD # dummy
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -33,6 +41,8 @@ spec:
           image: tuana9a/dkhptd-scheduler:2024.08.16.055606
           envFrom:
             - configMapRef:
+                name: dkhptd-scheduler
+            - secretRef:
                 name: dkhptd-scheduler
           resources:
             requests:
