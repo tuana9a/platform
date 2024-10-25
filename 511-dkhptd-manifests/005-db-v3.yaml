@@ -69,6 +69,7 @@ metadata:
   labels:
     app: mongo-v3
 spec:
+  clusterIP: None
   ports:
     - port: 27017
       name: mongo

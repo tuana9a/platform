@@ -52,6 +52,7 @@ metadata:
   labels:
     app: postgres-v2
 spec:
+  clusterIP: None
   ports:
     - port: 5432
       name: postgres
