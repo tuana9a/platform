@@ -53,6 +53,10 @@ minio:
   persistence:
     storageClass: nfs-vdb
     size: 10Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
 
 # Zero out replica counts of other deployment modes
 singleBinary:
