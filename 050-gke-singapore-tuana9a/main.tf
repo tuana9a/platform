@@ -12,4 +12,8 @@ resource "google_container_cluster" "zero" {
   initial_node_count       = 1
 
   deletion_protection = false
+
+  cluster_autoscaling {
+    autoscaling_profile = "OPTIMIZE_UTILIZATION"
+  }
 }
