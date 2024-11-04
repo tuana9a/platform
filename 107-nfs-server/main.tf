@@ -34,6 +34,12 @@ resource "proxmox_virtual_environment_vm" "nfs_server" {
     size         = 20
     backup       = true
     replicate    = false
+    speed {
+      read            = 20
+      read_burstable  = 30
+      write           = 20
+      write_burstable = 30
+    }
   }
 
   disk {
@@ -43,6 +49,12 @@ resource "proxmox_virtual_environment_vm" "nfs_server" {
     file_format  = "raw"
     backup       = true
     replicate    = false
+    speed {
+      read            = 100
+      read_burstable  = 200
+      write           = 100
+      write_burstable = 200
+    }
   }
 
   disk {
@@ -52,6 +64,12 @@ resource "proxmox_virtual_environment_vm" "nfs_server" {
     file_format  = "raw"
     backup       = true
     replicate    = false
+    speed {
+      read            = 50
+      read_burstable  = 100
+      write           = 50
+      write_burstable = 100
+    }
   }
 
   boot_order = ["virtio0"]

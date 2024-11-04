@@ -34,6 +34,12 @@ resource "proxmox_virtual_environment_vm" "k8s_ingress_lb" {
     size         = 10
     backup       = false
     replicate    = false
+    speed {
+      read            = 10
+      read_burstable  = 20
+      write           = 10
+      write_burstable = 20
+    }
   }
 
   # boot_order = ["virtio0"]

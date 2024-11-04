@@ -34,6 +34,12 @@ resource "proxmox_virtual_environment_vm" "lucas_dev" {
     size         = 32
     backup       = true
     replicate    = false
+    speed {
+      read            = 20
+      read_burstable  = 30
+      write           = 20
+      write_burstable = 30
+    }
   }
 
   boot_order = ["virtio0"]
