@@ -32,3 +32,12 @@ spec:
           limits:
             cpu: 50m
             memory: 100M
+    - name: kafka-controller
+      resources:
+        - container: controller
+          requests:
+            cpu: 10m
+            memory: 50M
+          limits:
+            cpu: 50m
+            memory: 100M

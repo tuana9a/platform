@@ -11,6 +11,11 @@ metadata:
   namespace: knative-serving
 spec:
   version: "1.14.1"
+  ingress:
+    istio:
+      enabled: false
+    kourier:
+      enabled: false
   config:
     network:
       ingress-class: "kong"
