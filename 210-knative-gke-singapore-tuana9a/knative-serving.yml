@@ -11,11 +11,8 @@ metadata:
   namespace: knative-serving
 spec:
   version: "1.14.1"
-  ingress:
-    kourier:
-      enabled: true
   config:
     network:
-      ingress-class: "kourier.ingress.networking.knative.dev"
+      ingress-class: "kong"
     domain:
       "kn.tuana9a.com": ""
