@@ -13,3 +13,22 @@ spec:
   source:
     kafka:
       enabled: true
+  workloads:
+    - name: eventing-controller
+      resources:
+        - container: eventing-controller
+          requests:
+            cpu: 10m
+            memory: 50M
+          limits:
+            cpu: 50m
+            memory: 100M
+    - name: eventing-webhook
+      resources:
+        - container: eventing-webhook
+          requests:
+            cpu: 10m
+            memory: 50M
+          limits:
+            cpu: 50m
+            memory: 100M

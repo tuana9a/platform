@@ -16,3 +16,54 @@ spec:
       ingress-class: "kong"
     domain:
       "kn.tuana9a.com": ""
+  workloads:
+    - name: controller
+      resources:
+        - container: controller
+          resources:
+          requests:
+            cpu: 10m
+            memory: 50Mi
+          limits:
+            cpu: 50m
+            memory: 100Mi
+    - name: webhook
+      resources:
+        - container: webhook
+          resources:
+          requests:
+            cpu: 10m
+            memory: 50Mi
+          limits:
+            cpu: 50m
+            memory: 100Mi
+    - name: activator
+      resources:
+        - container: activator
+          resources:
+          requests:
+            cpu: 10m
+            memory: 50Mi
+          limits:
+            cpu: 50m
+            memory: 100Mi
+    - name: autoscaler
+      resources:
+        - container: autoscaler
+          resources:
+          requests:
+            cpu: 10m
+            memory: 50Mi
+          limits:
+            cpu: 50m
+            memory: 100Mi
+    - name: autoscaler-hpa
+      resources:
+        - container: autoscaler-hpa
+          resources:
+          requests:
+            cpu: 10m
+            memory: 50Mi
+          limits:
+            cpu: 50m
+            memory: 100Mi
