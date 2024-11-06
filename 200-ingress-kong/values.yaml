@@ -14,8 +14,8 @@ ingressController:
   enabled: true
   resources:
     limits:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 20m
+      memory: 400Mi
     requests:
-      cpu: 50m
-      memory: 128Mi
+      cpu: 10m
+      memory: 350Mi

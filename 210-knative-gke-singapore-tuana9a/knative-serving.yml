@@ -25,50 +25,45 @@ spec:
     - name: controller
       resources:
         - container: controller
-          resources:
           requests:
             cpu: 10m
-            memory: 50Mi
+            memory: 30Mi
           limits:
-            cpu: 50m
-            memory: 100Mi
+            cpu: 20m
+            memory: 50Mi
     - name: webhook
       resources:
         - container: webhook
-          resources:
           requests:
             cpu: 10m
-            memory: 50Mi
+            memory: 30Mi
           limits:
-            cpu: 50m
-            memory: 100Mi
+            cpu: 20m
+            memory: 50Mi
     - name: activator
       resources:
         - container: activator
-          resources:
           requests:
             cpu: 10m
-            memory: 50Mi
+            memory: 30Mi
           limits:
-            cpu: 50m
-            memory: 100Mi
+            cpu: 20m
+            memory: 50Mi
     - name: autoscaler
       resources:
         - container: autoscaler
-          resources:
           requests:
             cpu: 10m
-            memory: 50Mi
+            memory: 30Mi
           limits:
-            cpu: 50m
-            memory: 100Mi
+            cpu: 20m
+            memory: 50Mi
     - name: autoscaler-hpa
       resources:
         - container: autoscaler-hpa
-          resources:
           requests:
             cpu: 10m
-            memory: 50Mi
+            memory: 30Mi
           limits:
-            cpu: 50m
-            memory: 100Mi
+            cpu: 20m
+            memory: 50Mi
