@@ -1,16 +1,5 @@
 # vault
 
-unseal
-
-```bash
-kubectl config use-context gke_tuana9a_asia-southeast1-a_zero
-for vid in {0..2}; do
-    for keyid in {0..2}; do
-        kubectl -n vault exec vault-$vid -- vault operator unseal $(cat /tmp/vault-unseal.key.$keyid);
-    done
-done
-```
-
 first access test
 
 ```bash
