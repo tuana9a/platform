@@ -41,3 +41,30 @@ spec:
           limits:
             cpu: 50m
             memory: 100M
+    - name: mt-broker-controller
+      resources:
+        - container: mt-broker-controller
+          requests:
+            cpu: 10m
+            memory: 50M
+          limits:
+            cpu: 50m
+            memory: 100M
+    - name: mt-broker-filter
+      resources:
+        - container: filter
+          requests:
+            cpu: 10m
+            memory: 50M
+          limits:
+            cpu: 50m
+            memory: 100M
+    - name: mt-broker-ingress
+      resources:
+        - container: ingress
+          requests:
+            cpu: 10m
+            memory: 50M
+          limits:
+            cpu: 50m
+            memory: 100M
