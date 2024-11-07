@@ -1,5 +1,7 @@
 # grafana
 
+we use sidecar to pickup configmap with specific label to configure datasource and dashboard
+
 port-forward
 
 ```bash
@@ -10,4 +12,10 @@ get admin password
 
 ```bash
 kubectl -n grafana get secret grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+```
+
+reset admin password
+
+```bash
+grafana cli --homepath "/usr/share/grafana/" admin reset-admin-password $(cat /tmp/password)
 ```

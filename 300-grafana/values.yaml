@@ -15,3 +15,10 @@ ingress:
     - secretName: grafana-tuana9a-com-tls
       hosts:
         - "grafana.tuana9a.com"
+sidecar:
+  dashboards:
+    enabled: true
+    label: grafana_dashboard
+  datasources:
+    enabled: true
+    label: grafana_datasource
