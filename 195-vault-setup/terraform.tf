@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "195-vault-setup-gke-singapore-tuana9a"
+    prefix = "195-vault-setup"
   }
   required_providers {
     google = {
