@@ -15,7 +15,6 @@ metadata:
   name: nfs-client-provisioner-vdb
   labels:
     app: nfs-client-provisioner-vdb
-  # replace with namespace where provisioner is deployed
   namespace: nfs-provisioner
 spec:
   replicas: 3
