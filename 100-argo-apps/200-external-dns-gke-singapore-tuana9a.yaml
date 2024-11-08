@@ -1,25 +1,25 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: 200-external-dns-gke-singapore-tuana9a
-  namespace: argocd
-spec:
-  project: default
-  sources:
-    - chart: external-dns
-      repoURL: https://kubernetes-sigs.github.io/external-dns
-      targetRevision: 1.15.0
-      helm:
-        releaseName: external-dns
-        valueFiles:
-          - $values/200-external-dns/values.yaml
-    - repoURL: https://github.com/tuana9a/platform.git
-      targetRevision: main
-      ref: values
-  destination:
-    server: "https://34.142.170.198"
-    namespace: external-dns
-  syncPolicy:
-    automated:
-      # prune: false
-      selfHeal: true
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: 200-external-dns-gke-singapore-tuana9a
+#   namespace: argocd
+# spec:
+#   project: default
+#   sources:
+#     - chart: external-dns
+#       repoURL: https://kubernetes-sigs.github.io/external-dns
+#       targetRevision: 1.15.0
+#       helm:
+#         releaseName: external-dns
+#         valueFiles:
+#           - $values/200-external-dns/values.yaml
+#     - repoURL: https://github.com/tuana9a/platform.git
+#       targetRevision: main
+#       ref: values
+#   destination:
+#     server: "https://34.142.170.198"
+#     namespace: external-dns
+#   syncPolicy:
+#     automated:
+#       # prune: false
+#       selfHeal: true

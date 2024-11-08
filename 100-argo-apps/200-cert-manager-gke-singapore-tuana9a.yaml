@@ -1,27 +1,27 @@
-# destroying helm cert-manager will not destroy crds luckily because of this anotation
-# "helm.sh/resource-policy": keep
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: 200-cert-manager-gke-singapore-tuana9a
-  namespace: argocd
-spec:
-  project: default
-  sources:
-    - chart: cert-manager
-      repoURL: https://charts.jetstack.io
-      targetRevision: v1.15.0
-      helm:
-        releaseName: cert-manager
-        valueFiles:
-          - $values/200-cert-manager/values.yaml
-    - repoURL: https://github.com/tuana9a/platform.git
-      targetRevision: main
-      ref: values
-  destination:
-    server: "https://34.142.170.198"
-    namespace: cert-manager
-  syncPolicy:
-    automated:
-      # prune: false
-      selfHeal: true
+# # destroying helm cert-manager will not destroy crds luckily because of this anotation
+# # "helm.sh/resource-policy": keep
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: 200-cert-manager-gke-singapore-tuana9a
+#   namespace: argocd
+# spec:
+#   project: default
+#   sources:
+#     - chart: cert-manager
+#       repoURL: https://charts.jetstack.io
+#       targetRevision: v1.15.0
+#       helm:
+#         releaseName: cert-manager
+#         valueFiles:
+#           - $values/200-cert-manager/values.yaml
+#     - repoURL: https://github.com/tuana9a/platform.git
+#       targetRevision: main
+#       ref: values
+#   destination:
+#     server: "https://34.142.170.198"
+#     namespace: cert-manager
+#   syncPolicy:
+#     automated:
+#       # prune: false
+#       selfHeal: true

@@ -1,25 +1,25 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: 200-ingress-kong-gke-singapore-tuana9a
-  namespace: argocd
-spec:
-  project: default
-  sources:
-    - chart: kong
-      repoURL: https://charts.konghq.com
-      targetRevision: 2.42.0
-      helm:
-        releaseName: ingress-kong
-        valueFiles:
-          - $values/200-ingress-kong/values.yaml
-    - repoURL: https://github.com/tuana9a/platform.git
-      targetRevision: main
-      ref: values
-  destination:
-    server: "https://34.142.170.198"
-    namespace: ingress-kong
-  syncPolicy:
-    automated:
-      # prune: false
-      selfHeal: true
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: 200-ingress-kong-gke-singapore-tuana9a
+#   namespace: argocd
+# spec:
+#   project: default
+#   sources:
+#     - chart: kong
+#       repoURL: https://charts.konghq.com
+#       targetRevision: 2.42.0
+#       helm:
+#         releaseName: ingress-kong
+#         valueFiles:
+#           - $values/200-ingress-kong/values.yaml
+#     - repoURL: https://github.com/tuana9a/platform.git
+#       targetRevision: main
+#       ref: values
+#   destination:
+#     server: "https://34.142.170.198"
+#     namespace: ingress-kong
+#   syncPolicy:
+#     automated:
+#       # prune: false
+#       selfHeal: true

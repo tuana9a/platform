@@ -1,15 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: 100-argo-apps
+  name: 210-knative-k8s-cobi-tuana9a
   namespace: argocd
 spec:
   project: default
   revisionHistoryLimit: 10
   source:
-    path: 100-argo-apps
+    path: 210-knative-k8s-cobi-tuana9a
     repoURL: https://github.com/tuana9a/platform.git
     targetRevision: main
   destination:
-    namespace: argocd
-    server: https://kubernetes.default.svc
+    server: "https://kubernetes.default.svc"
