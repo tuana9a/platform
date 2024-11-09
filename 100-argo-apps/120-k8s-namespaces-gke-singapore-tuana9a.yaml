@@ -14,5 +14,5 @@
 #     server: "https://34.142.170.198"
 #   syncPolicy:
 #     automated:
-#       # prune: false
+#       prune: false
 #       selfHeal: true

@@ -23,5 +23,5 @@
 #     namespace: cert-manager
 #   syncPolicy:
 #     automated:
-#       # prune: false
+#       prune: false
 #       selfHeal: true

@@ -22,5 +22,5 @@ spec:
     namespace: promtail
   syncPolicy:
     automated:
-      # prune: false
+      prune: false
       selfHeal: true
