@@ -32,7 +32,7 @@ spec:
     - kube-apiserver
     - ...
     - --oidc-issuer-url=https://accounts.google.com
-    - --oidc-client-id=474326114337-h9kpe020anghtfn8450knt6ltnqnar3t.apps.googleusercontent.com
+    - --oidc-client-id=
 ```
 
 Get the user with this format (ISSUER_URL#ACCOUNT_ID)
@@ -51,7 +51,7 @@ metadata:
   name: cluser-admin-tuana9a
 subjects:
   - kind: User
-    name: https://accounts.google.com#105303642619365489614
+    name: https://accounts.google.com#accountid
     apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole
