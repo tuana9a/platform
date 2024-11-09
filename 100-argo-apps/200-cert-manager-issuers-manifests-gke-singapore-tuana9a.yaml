@@ -1,13 +1,13 @@
 # apiVersion: argoproj.io/v1alpha1
 # kind: Application
 # metadata:
-#   name: 200-cert-manager-issuers-gke-singapore-tuana9a
+#   name: 200-cert-manager-issuers-manifests-gke-singapore-tuana9a
 #   namespace: argocd
 # spec:
 #   project: default
 #   revisionHistoryLimit: 10
 #   source:
-#     path: 200-cert-manager-issuers-gke-singapore-tuana9a-manifests
+#     path: 200-cert-manager-issuers-manifests-gke-singapore-tuana9a
 #     repoURL: https://github.com/tuana9a/platform.git
 #     targetRevision: main
 #   destination:
