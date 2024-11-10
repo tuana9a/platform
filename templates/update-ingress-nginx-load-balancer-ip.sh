@@ -2,15 +2,15 @@
 
 echo "=== $(date) ==="
 
-export KUBECONFIG="{{ kubeconfig }}"
 namespace="{{ namespace | default('ingress-nginx') }}"
 ip_file=/tmp/current-ingress-nginx-load-balancer-ip.txt
+stream_conf_file="/etc/nginx/stream.conf.d/ingress_nginx_load_balancer.conf"
 
 if [ ! -f $ip_file ]; then
   touch $ip_file
 fi
 
-ip=$(kubectl get -n $namespace service ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+ip=$(kubectl -n $namespace get service ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
 if [ -z $ip ]; then
   echo "\"$previous_ip\" -> \"$ip\", invalid ip, exiting..."
@@ -27,8 +27,8 @@ fi
 echo "\"$previous_ip\" -> \"$ip\", diff detected, updating nginx config "
 echo -n $ip > $ip_file
 
-echo "# This file is generated and will be overwrited
-# /etc/nginx/stream.conf.d/ingress_nginx_load_balancer.conf
+echo "# $stream_conf_file
+# This file is generated and will be overwrited
 # $(date)
 server {
   listen 80;
@@ -37,6 +37,6 @@ server {
 server {
   listen 443;
   proxy_pass ${ip}:443;
-}" | sudo tee /etc/nginx/stream.conf.d/ingress_nginx_load_balancer.conf
+}" | sudo tee $nginx_conf
 
 sudo systemctl reload nginx

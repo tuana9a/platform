@@ -1,11 +1,45 @@
 - hosts: k8s_ingress_lb
   tasks:
-    - name: Copy kubeconfig to remote
+    - name: Delete old location kubeconfig
       become: true
+      file:
+        path: "/opt/kubeconfig"
+        state: absent
+
+    - name: Ensure kubeconfig directory
+      ansible.builtin.file:
+        path: "/home/{{ ansible_user }}/.kube"
+        state: directory
+        mode: "0700"
+
+    - name: Copy kubeconfig to remote
       copy:
         src: k8s-ingress-lb/kubeconfig
-        dest: "/opt/kubeconfig"
-    - import_tasks: ./tasks/cronjob_update_ingress_nginx_load_balancer_ip.yml
+        dest: "/home/{{ ansible_user }}/.kube/config"
+        mode: "0600"
+
+    - name: Copy script to remote
+      become: true
+      ansible.builtin.template:
+        src: update-ingress-nginx-load-balancer-ip.sh
+        dest: /usr/local/bin/update-ingress-nginx-load-balancer-ip.sh
+        mode: "0700"
+        owner: "{{ ansible_user }}"
       vars:
-        kubeconfig: "/opt/kubeconfig" # TODO: configurable
-        namespace: "ingress-nginx"
+        namespace: ingress-nginx
+
+    - name: Create a cronjob for that
+      ansible.builtin.cron:
+        name: "update-ingress-nginx-load-balancer-ip.sh"
+        minute: "*/1"
+        job: "/usr/local/bin/update-ingress-nginx-load-balancer-ip.sh >> /tmp/update-ingress-nginx-load-balancer-ip.log 2>&1"
+
+    - name: Clear current log
+      copy:
+        content: ""
+        dest: /tmp/update-ingress-nginx-load-balancer-ip.log
+
+    - name: Clear current state load balancer ip
+      copy:
+        content: "9.9.9.9" # some random ip
+        dest: /tmp/current-ingress-nginx-load-balancer-ip.txt
