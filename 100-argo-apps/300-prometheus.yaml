@@ -21,8 +21,8 @@ spec:
   destination:
     server: "https://kubernetes.default.svc"
     namespace: prometheus
-  # NOTE: wait until https://github.com/prometheus/alertmanager/pull/3728 being released
-  # syncPolicy:
-  #   automated:
-  #     prune: false
-  #     selfHeal: true
+  # NOTE: wait https://github.com/prometheus/alertmanager/pull/3728 to be released
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false

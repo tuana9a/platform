@@ -12,3 +12,7 @@
 #     targetRevision: main
 #   destination:
 #     server: "https://34.142.170.198"
+#   syncPolicy:
+#     automated:
+#       prune: false
+#       selfHeal: false
