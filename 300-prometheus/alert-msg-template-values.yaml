@@ -8,23 +8,15 @@ alertmanager:
       {{ define "__subject" }}[{{ .Status | toUpper }}] {{ .CommonLabels.alertname }}{{ end }}
       {{ define "__description" }}{{ end }}
 
-      {{ define "__text_alert_list" }}{{ range . }}Labels:
-      {{ range .Labels.SortedPairs }} - {{ .Name }} = {{ .Value }}
-      {{ end }}Annotations:
-      {{ range .Annotations.SortedPairs }} - {{ .Name }} = {{ .Value }}
-      {{ end }}Source: {{ .GeneratorURL }}
+      {{ define "__text_alert_list" }}{{ range . }}Annotations:
+      {{ range .Annotations.SortedPairs }} - {{ .Name }} = {{ .Value }}{{ end }}
+      Source: {{ .GeneratorURL }}
       {{ end }}{{ end }}
 
-      {{ define "__text_alert_list_markdown" }}{{ range . }}
-      Labels:
-      {{ range .Labels.SortedPairs }}  - {{ .Name }} = {{ .Value }}
-      {{ end }}
-      Annotations:
-      {{ range .Annotations.SortedPairs }}  - {{ .Name }} = {{ .Value }}
-      {{ end }}
+      {{ define "__text_alert_list_markdown" }}{{ range . }}Annotations:
+      {{ range .Annotations.SortedPairs }}  - {{ .Name }} = {{ .Value }}{{ end }}
       Source: {{ .GeneratorURL }}
-      {{ end }}
-      {{ end }}
+      {{ end }}{{ end }}
 
       {{ define "slack.default.title" }}{{ template "__subject" . }}{{ end }}
       {{ define "slack.default.username" }}{{ template "__alertmanager" . }}{{ end }}
@@ -37,12 +29,10 @@ alertmanager:
       {{ define "slack.default.text" }}{{ end }}
       {{ define "slack.default.footer" }}{{ end }}
 
-
       {{ define "pagerduty.default.description" }}{{ template "__subject" . }}{{ end }}
       {{ define "pagerduty.default.client" }}{{ template "__alertmanager" . }}{{ end }}
       {{ define "pagerduty.default.clientURL" }}{{ template "__alertmanagerURL" . }}{{ end }}
       {{ define "pagerduty.default.instances" }}{{ template "__text_alert_list" . }}{{ end }}
-
 
       {{ define "opsgenie.default.message" }}{{ template "__subject" . }}{{ end }}
       {{ define "opsgenie.default.description" }}{{ .CommonAnnotations.SortedPairs.Values | join " " }}
@@ -56,7 +46,6 @@ alertmanager:
       {{- end }}
       {{- end }}
       {{ define "opsgenie.default.source" }}{{ template "__alertmanagerURL" . }}{{ end }}
-
 
       {{ define "wechat.default.message" }}{{ template "__subject" . }}
       {{ .CommonAnnotations.SortedPairs.Values | join " " }}
@@ -75,8 +64,6 @@ alertmanager:
       {{ define "wechat.default.to_party" }}{{ end }}
       {{ define "wechat.default.to_tag" }}{{ end }}
       {{ define "wechat.default.agent_id" }}{{ end }}
-
-
 
       {{ define "victorops.default.state_message" }}{{ .CommonAnnotations.SortedPairs.Values | join " " }}
       {{ if gt (len .Alerts.Firing) 0 -}}
