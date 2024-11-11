@@ -1,0 +1,5 @@
+openvpn_client_items:
+  - file: tuana9a-dev/tuana9a-dev-zephyrus.ovpn
+    name: tuana9a-dev-zephyrus
+    state: stopped
+    enabled: false

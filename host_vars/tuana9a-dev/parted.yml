@@ -1,0 +1,3 @@
+parted:
+  dev_path: /dev/vdb
+  mount_path: /data/

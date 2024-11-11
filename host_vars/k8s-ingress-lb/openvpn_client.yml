@@ -1,4 +1,3 @@
-HOST_NAME: k8s-ingress-lb
 openvpn_client_items:
   - file: k8s-ingress-lb/k8s-ingress-lb-zephyrus.ovpn
     name: k8s-ingress-lb-zephyrus
