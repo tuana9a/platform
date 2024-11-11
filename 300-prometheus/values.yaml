@@ -2,15 +2,3 @@ server:
   persistentVolume:
     storageClass: nfs-vdb
     size: 15Gi
-alertmanager:
-  persistence:
-    storageClass: nfs-vdb
-    size: 2Gi
-  config:
-    enabled: true
-    route:
-      receiver: "discord"
-    receivers:
-      - name: "discord"
-        discord_configs:
-          - webhook_url: "TODO"

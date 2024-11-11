@@ -13,6 +13,7 @@ spec:
         releaseName: prometheus
         valueFiles:
           - $values/300-prometheus/values.yaml
+          - $values/300-prometheus/alertmanager-values.yaml
           - $values/300-prometheus/alert-values.yaml
           - $values/300-prometheus/alert-msg-template-values.yaml
     - repoURL: https://github.com/tuana9a/platform.git
@@ -21,7 +22,6 @@ spec:
   destination:
     server: "https://kubernetes.default.svc"
     namespace: prometheus
-  # NOTE: wait https://github.com/prometheus/alertmanager/pull/3728 to be released
   syncPolicy:
     automated:
       prune: false
