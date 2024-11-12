@@ -1,24 +1,20 @@
 # https://knative.dev/docs/install/operator/knative-with-operators/#create-the-knative-serving-custom-resource
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: knative-serving
----
 apiVersion: operator.knative.dev/v1beta1
 kind: KnativeServing
 metadata:
   name: knative-serving
-  namespace: knative-serving
+  namespace: knative-serving # this namespace is hardcoded afaik
 spec:
   version: "1.14.1"
   ingress:
     istio:
       enabled: false
     kourier:
-      enabled: false
+      enabled: true
   config:
     network:
-      ingress-class: "kong"
+      # limited support ingress-class https://github.com/knative/serving/issues/10417
+      ingress-class: "kourier.ingress.networking.knative.dev"
     domain:
       "kn.tuana9a.com": ""
   workloads:

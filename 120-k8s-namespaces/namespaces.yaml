@@ -78,3 +78,12 @@ kind: Namespace
 metadata:
   name: vault
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: knative-eventing
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: knative-serving

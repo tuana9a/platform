@@ -1,18 +1,10 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: knative-eventing
----
 apiVersion: operator.knative.dev/v1beta1
 kind: KnativeEventing
 metadata:
   name: knative-eventing
-  namespace: knative-eventing
+  namespace: knative-eventing # this namespace is hardcoded afaik
 spec:
   version: "1.14.2"
-  source:
-    kafka:
-      enabled: true
   workloads:
     - name: eventing-controller
       resources:
