@@ -68,34 +68,6 @@ resource "bizflycloud_firewall" "allow_https" {
   }
 }
 
-resource "bizflycloud_firewall" "allow_http_alt" {
-  name = "allow_http_alt"
-  ingress {
-    cidr       = "0.0.0.0/0"
-    port_range = "8080"
-    protocol   = "tcp"
-  }
-  egress {
-    cidr       = ""
-    port_range = ""
-    protocol   = ""
-  }
-}
-
-resource "bizflycloud_firewall" "allow_https_alt" {
-  name = "allow_https_alt"
-  ingress {
-    cidr       = "0.0.0.0/0"
-    port_range = "8443"
-    protocol   = "tcp"
-  }
-  egress {
-    cidr       = ""
-    port_range = ""
-    protocol   = ""
-  }
-}
-
 resource "bizflycloud_firewall" "allow_wireguard" {
   name = "allow_wireguard"
   ingress {
