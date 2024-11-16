@@ -70,7 +70,7 @@ verify ansible installation
 ansible --version
 ```
 
-config ansible (optional)
+config ansible vault password (optional)
 
 ```bash
 vim ~/.ansible.cfg
@@ -78,5 +78,11 @@ vim ~/.ansible.cfg
 
 ```conf
 [defaults]
-vault_password_file=~/.ansible-vault-password
+vault_password_file=/path/to/pasword/file
+```
+
+read ansible vault password from (hashicorp) vault
+
+```bash
+vault kv get -format=json kv/platform/ansible-vault | jq -r ".data.password"
 ```

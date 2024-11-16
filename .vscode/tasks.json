@@ -4,7 +4,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "terraform-format",
+            "label": "tfmt",
             "type": "shell",
             "command": "./scripts/tfmt.sh",
             "options": {
@@ -18,10 +18,8 @@
         {
             "label": "backup-secrets",
             "type": "shell",
-            "command": "./scripts/backup.sh",
+            "command": "./scripts/backup-secrets.sh",
             "args": [
-                "secrets",
-                "secret"
             ],
             "options": {
                 "cwd": "${workspaceFolder}",
