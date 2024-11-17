@@ -1,5 +1,3 @@
-data "cloudflare_zones" "tuana9a_com" {
-  filter {
-    name = "tuana9a.com"
-  }
+data "cloudflare_zone" "tuana9a_com" {
+  name = "tuana9a.com"
 }
