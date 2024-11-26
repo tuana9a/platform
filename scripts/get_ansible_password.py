@@ -13,14 +13,13 @@ def main():
     if not vault_token:
         with open(f"{os.getenv('HOME')}/.vault-token") as f:
             vault_token = f.read().strip()
-    url = f"{vault_addr}/v1/{path}"
-    headers = {"X-Vault-Token": vault_token,
-               "Content-Type": "application/json"}
-    response = requests.get(url, headers=headers)
+    response = requests.get(f"{vault_addr}/v1/{path}",
+                            headers={"X-Vault-Token": vault_token,
+                                     "Content-Type": "application/json"})
     if response.status_code >= 200 and response.status_code < 300:
         print(response.json()["data"]["password"])
         return
-    print(f"Failed to get {path}: {response.status_code} - {response.text}")
+    print(f"FUCK get {path} - {response.status_code} - {response.text}")
 
 
 if __name__ == "__main__":
