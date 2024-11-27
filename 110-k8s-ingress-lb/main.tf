@@ -68,6 +68,6 @@ resource "proxmox_virtual_environment_vm" "k8s_ingress_lb" {
   on_boot = true
 
   lifecycle {
-    ignore_changes = [initialization]
+    ignore_changes = [initialization, cpu[0].architecture]
   }
 }

@@ -68,6 +68,6 @@ resource "proxmox_virtual_environment_vm" "lucas_dev" {
   on_boot = true
 
   lifecycle {
-    ignore_changes = [initialization]
+    ignore_changes = [initialization, cpu[0].architecture]
   }
 }

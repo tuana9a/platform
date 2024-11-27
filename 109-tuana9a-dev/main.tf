@@ -10,6 +10,8 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev" {
   name      = "tuana9a-dev"
   tags      = ["terraform", "ubuntu"]
 
+  started = false
+
   cpu {
     cores        = 4
     sockets      = 1
@@ -78,7 +80,7 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev" {
     bridge = "vmbr23"
   }
 
-  on_boot = true
+  on_boot = false
 
   lifecycle {
     ignore_changes = [initialization]
