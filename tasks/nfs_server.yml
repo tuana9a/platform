@@ -16,6 +16,7 @@
     group: root
     path: /etc/exports
     line: "{{ item.config }}"
+    state: "{{ item.state | default('present') }}"
 
 - name: Restart nfs-kernel-server service
   become: true

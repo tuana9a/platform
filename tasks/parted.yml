@@ -26,6 +26,7 @@
 - name: mount
   loop: "{{ parted }}"
   become: true
+  # this does write to /etc/fstab
   mount:
     fstype: ext4
     src: "{{ item.dev_path }}1"

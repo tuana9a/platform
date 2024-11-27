@@ -57,20 +57,20 @@ resource "proxmox_virtual_environment_vm" "nfs_server" {
     }
   }
 
-  disk {
-    datastore_id = local.proxmox_node.pve_cobi.storage.sdb
-    interface    = "virtio2"
-    size         = 300
-    file_format  = "raw"
-    backup       = true
-    replicate    = false
-    speed {
-      read            = 50
-      read_burstable  = 100
-      write           = 50
-      write_burstable = 100
-    }
-  }
+  # disk {
+  #   datastore_id = local.proxmox_node.pve_cobi.storage.sdb
+  #   interface    = "virtio2"
+  #   size         = 300
+  #   file_format  = "raw"
+  #   backup       = true
+  #   replicate    = false
+  #   speed {
+  #     read            = 50
+  #     read_burstable  = 100
+  #     write           = 50
+  #     write_burstable = 100
+  #   }
+  # }
 
   boot_order = ["virtio0"]
 
@@ -98,6 +98,6 @@ resource "proxmox_virtual_environment_vm" "nfs_server" {
   on_boot = true
 
   lifecycle {
-    ignore_changes = [initialization]
+    ignore_changes = [initialization, cpu[0].architecture]
   }
 }
