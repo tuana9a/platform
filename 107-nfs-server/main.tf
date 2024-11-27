@@ -11,7 +11,7 @@ resource "proxmox_virtual_environment_vm" "nfs_server" {
   tags      = ["terraform"]
 
   cpu {
-    cores        = 2
+    cores        = 1
     sockets      = 1
     architecture = "x86_64"
     flags        = []
@@ -19,7 +19,7 @@ resource "proxmox_virtual_environment_vm" "nfs_server" {
   }
 
   memory {
-    dedicated = 4096
+    dedicated = 1024
   }
 
   agent {
