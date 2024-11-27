@@ -1,5 +1,5 @@
 resource "aws_budgets_budget" "tuana9a_50USD" {
-  name         = "tuana9a_50USD"
+  name         = "50USD"
   budget_type  = "COST"
   limit_amount = "50"
   limit_unit   = "USD"
@@ -17,13 +17,13 @@ resource "aws_budgets_budget" "tuana9a_50USD" {
     comparison_operator        = "GREATER_THAN"
     threshold                  = 80
     threshold_type             = "PERCENTAGE"
-    notification_type          = "FORECASTED"
+    notification_type          = "ACTUAL"
     subscriber_email_addresses = ["tuana9a@gmail.com"]
   }
 }
 
 resource "aws_budgets_budget" "tuana9a_100USD" {
-  name         = "tuana9a_100USD"
+  name         = "100USD"
   budget_type  = "COST"
   limit_amount = "100"
   limit_unit   = "USD"
@@ -41,13 +41,13 @@ resource "aws_budgets_budget" "tuana9a_100USD" {
     comparison_operator        = "GREATER_THAN"
     threshold                  = 80
     threshold_type             = "PERCENTAGE"
-    notification_type          = "FORECASTED"
+    notification_type          = "ACTUAL"
     subscriber_email_addresses = ["tuana9a@gmail.com"]
   }
 }
 
 resource "aws_budgets_budget" "tuana9a_200USD" {
-  name         = "tuana9a_200USD"
+  name         = "200USD"
   budget_type  = "COST"
   limit_amount = "200"
   limit_unit   = "USD"
@@ -65,7 +65,7 @@ resource "aws_budgets_budget" "tuana9a_200USD" {
     comparison_operator        = "GREATER_THAN"
     threshold                  = 80
     threshold_type             = "PERCENTAGE"
-    notification_type          = "FORECASTED"
+    notification_type          = "ACTUAL"
     subscriber_email_addresses = ["tuana9a@gmail.com"]
   }
 }

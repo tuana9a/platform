@@ -1,6 +1,6 @@
-resource "google_billing_budget" "sixsixsix_budget_2mil_vnd" {
+resource "google_billing_budget" "sixsixsix_2000000VND" {
   billing_account = data.google_billing_account.sixsixsix.id
-  display_name    = "budget_2mil_vnd"
+  display_name    = "2000000VND"
   amount {
     specified_amount {
       currency_code = "VND"
@@ -20,16 +20,17 @@ resource "google_billing_budget" "sixsixsix_budget_2mil_vnd" {
   }
   threshold_rules {
     threshold_percent = 0.7
+    spend_basis       = "CURRENT_SPEND"
   }
   threshold_rules {
     threshold_percent = 0.9
-    spend_basis       = "FORECASTED_SPEND"
+    spend_basis       = "CURRENT_SPEND"
   }
 }
 
-resource "google_billing_budget" "sixsixsix_budget_4mil_vnd" {
+resource "google_billing_budget" "sixsixsix_4000000VND" {
   billing_account = data.google_billing_account.sixsixsix.id
-  display_name    = "budget_4mil_vnd"
+  display_name    = "4000000VND"
   amount {
     specified_amount {
       currency_code = "VND"
@@ -49,20 +50,21 @@ resource "google_billing_budget" "sixsixsix_budget_4mil_vnd" {
   }
   threshold_rules {
     threshold_percent = 0.5
+    spend_basis       = "CURRENT_SPEND"
   }
   threshold_rules {
     threshold_percent = 0.7
-    spend_basis       = "FORECASTED_SPEND"
+    spend_basis       = "CURRENT_SPEND"
   }
   threshold_rules {
     threshold_percent = 0.9
-    spend_basis       = "FORECASTED_SPEND"
+    spend_basis       = "CURRENT_SPEND"
   }
 }
 
-resource "google_billing_budget" "sixsixsix_budget_8mil_vnd" {
+resource "google_billing_budget" "sixsixsix_8000000VND" {
   billing_account = data.google_billing_account.sixsixsix.id
-  display_name    = "budget_8mil_vnd"
+  display_name    = "8000000VND"
   amount {
     specified_amount {
       currency_code = "VND"
@@ -82,14 +84,14 @@ resource "google_billing_budget" "sixsixsix_budget_8mil_vnd" {
   }
   threshold_rules {
     threshold_percent = 0.5
-    spend_basis       = "FORECASTED_SPEND"
+    spend_basis       = "CURRENT_SPEND"
   }
   threshold_rules {
     threshold_percent = 0.7
-    spend_basis       = "FORECASTED_SPEND"
+    spend_basis       = "CURRENT_SPEND"
   }
   threshold_rules {
     threshold_percent = 0.9
-    spend_basis       = "FORECASTED_SPEND"
+    spend_basis       = "CURRENT_SPEND"
   }
 }
