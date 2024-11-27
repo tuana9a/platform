@@ -1,3 +1,4 @@
+# NOTE: already disabled in 100-argo-apps/300-prometheus.yaml
 alertmanager:
   templates:
     # https://github.com/prometheus/alertmanager/blob/main/template/default.tmpl
