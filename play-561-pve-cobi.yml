@@ -5,5 +5,6 @@
     - import_tasks: ./tasks/install_openvpn.yml
     - import_tasks: ./tasks/openvpn_client.yml
     - import_tasks: ./tasks/cronjob.yml
+    - import_tasks: ./tasks/install_unzip.yml # required for install awscli
     - import_tasks: ./tasks/install_awscli.yml
     - import_tasks: ./tasks/install_htop.yml

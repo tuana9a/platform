@@ -4,4 +4,3 @@
     name:
       - haproxy
     state: present
-    update_cache: yes

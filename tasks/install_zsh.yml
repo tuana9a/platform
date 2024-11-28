@@ -4,7 +4,6 @@
     name:
       - zsh
     state: present
-    update_cache: yes
 
 - name: Ensure zsh is the default shell
   become: true

@@ -1,4 +1,4 @@
-- hosts: zione
+- hosts: parkingx
   tasks:
     - import_tasks: ./tasks/apt_update.yml
     - import_tasks: ./tasks/install_tmux.yml

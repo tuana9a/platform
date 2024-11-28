@@ -4,7 +4,6 @@
     name:
       - nginx-full
     state: present
-    update_cache: yes
 
 - name: Prepare conf.d
   become: true

@@ -1,5 +1,6 @@
 - hosts: tuana9a_dev
   tasks:
+    - import_tasks: ./tasks/apt_update.yml
     - import_tasks: ./tasks/install_python.yml
     - import_tasks: ./tasks/install_nvm.yml
     - import_tasks: ./tasks/install_tmux.yml
@@ -18,5 +19,6 @@
     - import_tasks: ./tasks/install_direnv.yml
     - import_tasks: ./tasks/install_go.yml
     - import_tasks: ./tasks/install_gcloud.yml
+    - import_tasks: ./tasks/install_unzip.yml # required for install awscli
     - import_tasks: ./tasks/install_awscli.yml
     - import_tasks: ./tasks/install_jq.yml

@@ -1,6 +1,7 @@
 - hosts: k8s_ingress_lb
   tasks:
     - import_tasks: ./tasks/set_timezone.yml
+    - import_tasks: ./tasks/apt_update.yml
     - import_tasks: ./tasks/install_tmux.yml
     - import_tasks: ./tasks/install_nginx.yml
     - import_tasks: ./tasks/disable_nginx_site_default.yml

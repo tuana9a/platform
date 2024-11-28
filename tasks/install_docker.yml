@@ -1,3 +1,8 @@
+- name: apt update
+  become: true
+  apt:
+    update_cache: yes
+
 - name: Install packages to allow apt to use a repository over HTTPS
   become: true
   apt:
@@ -6,7 +11,6 @@
       - gnupg
       - apt-transport-https
     state: present
-    update_cache: yes
 
 - name: Create keyrings directory
   become: true
@@ -37,6 +41,11 @@
   become: true
   shell: "echo deb [arch={{ architecture.stdout }} signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {{ ubuntu_version.stdout }} stable > /etc/apt/sources.list.d/docker.list"
 
+- name: apt update
+  become: true
+  apt:
+    update_cache: yes
+
 - name: Install Docker engine
   become: true
   apt:
@@ -45,7 +54,6 @@
       - docker-ce-cli
       - containerd.io
     state: present
-    update_cache: yes
 
 - name: Install docker-compose from official github repo
   become: true

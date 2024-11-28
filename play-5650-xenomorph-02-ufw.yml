@@ -1,0 +1,14 @@
+- hosts: xenomorph
+  tasks:
+    - community.general.ufw:
+        rule: limit
+        port: "22" # ssh
+        proto: tcp
+    - community.general.ufw:
+        rule: allow
+        port: "8006" # proxmox web
+        proto: tcp
+    - name: deny everything and enable ufw
+      community.general.ufw:
+        state: enabled
+        policy: deny # blackhole

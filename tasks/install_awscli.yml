@@ -1,9 +1,3 @@
-- name: Install unzip
-  become: true
-  apt:
-    name: unzip
-    state: present
-
 - name: Download awscliv2.zip
   become: true
   get_url:

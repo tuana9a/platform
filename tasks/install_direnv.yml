@@ -4,4 +4,3 @@
     name:
       - direnv
     state: present
-    update_cache: yes
