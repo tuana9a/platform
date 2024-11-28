@@ -8,7 +8,7 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
     external-dns.alpha.kubernetes.io/hostname: "grafana.tuana9a.com"
-    external-dns.alpha.kubernetes.io/target: "zione.tuana9a.com"
+    external-dns.alpha.kubernetes.io/target: "parkingx.tuana9a.com"
   hosts:
     - "grafana.tuana9a.com"
   tls:

@@ -9,3 +9,7 @@ openvpn_client_items:
     enabled: false
   - file: k8s-ingress-lb/k8s-ingress-lb-zione.ovpn
     name: k8s-ingress-lb-zione
+    state: stopped
+    enabled: false
+  - file: k8s-ingress-lb/k8s-ingress-lb-parkingx.ovpn
+    name: k8s-ingress-lb-parkingx
