@@ -14,20 +14,6 @@
                 }
             },
             "problemMatcher": []
-        },
-        {
-            "label": "backup-secrets",
-            "type": "shell",
-            "command": "./scripts/backup-secrets.sh",
-            "args": [
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}",
-                "env": {
-                    "PAGER": ""
-                }
-            },
-            "problemMatcher": []
         }
     ]
 }
