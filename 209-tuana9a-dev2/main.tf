@@ -35,10 +35,10 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev2" {
     backup       = true
     replicate    = false
     speed {
-      read            = 20
-      read_burstable  = 25
-      write           = 20
-      write_burstable = 25
+      read            = 50
+      read_burstable  = 75
+      write           = 50
+      write_burstable = 75
     }
   }
 
