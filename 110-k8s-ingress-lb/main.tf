@@ -32,7 +32,7 @@ resource "proxmox_virtual_environment_vm" "k8s_ingress_lb" {
     file_id      = "local:iso/jammy-server-cloudimg-amd64.img"
     interface    = "virtio0"
     size         = 10
-    backup       = false
+    backup       = true
     replicate    = false
     speed {
       read            = 10
