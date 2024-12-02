@@ -1,6 +1,7 @@
 - hosts: pve_cobi
   tasks:
     - import_tasks: ./tasks/set_timezone.yml
+    - import_tasks: ./tasks/install_tmux.yml
     - import_tasks: ./tasks/install_node_exporter.yml
     - import_tasks: ./tasks/install_openvpn.yml
     - import_tasks: ./tasks/openvpn_client.yml

@@ -3,6 +3,7 @@
     - import_tasks: ./tasks/set_hostname.yml
     - import_tasks: ./tasks/set_timezone.yml
     - import_tasks: ./tasks/apt_update.yml
+    - import_tasks: ./tasks/install_tmux.yml
     - import_tasks: ./tasks/install_ufw.yml
     - import_tasks: ./tasks/install_vim.yml
     - import_tasks: ./tasks/install_htop.yml
