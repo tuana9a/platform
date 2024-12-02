@@ -21,5 +21,5 @@
 #     namespace: external-dns
 #   syncPolicy:
 #     automated:
-#       prune: false
+#       prune: true
 #       selfHeal: true
