@@ -1,0 +1,3 @@
+- hosts: nfs
+  tasks:
+    - import_tasks: ./tasks/parted.yml
