@@ -27,6 +27,15 @@ resource "cloudflare_record" "dev2-8000_tuana9a_com" {
   proxied = true
 }
 
+resource "cloudflare_record" "ssh-dev2_tuana9a_com" {
+  zone_id = data.cloudflare_zone.tuana9a_com.id
+  name    = "ssh-dev2"
+  content = "${data.cloudflare_zero_trust_tunnel_cloudflared.pve_xeno_tunnel.id}.cfargotunnel.com"
+  type    = "CNAME"
+  ttl     = 1
+  proxied = true
+}
+
 resource "cloudflare_record" "lucas-dev_tuana9a_com" {
   zone_id = data.cloudflare_zone.tuana9a_com.id
   name    = "lucas-dev"
@@ -133,7 +142,20 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "pve_xeno_tunnel" {
       }
     }
     ingress_rule {
-      service = "http_status:404"
+      hostname = cloudflare_record.ssh-dev2_tuana9a_com.hostname
+      service  = "ssh://192.168.56.209:22"
+      origin_request {
+        bastion_mode             = false
+        disable_chunked_encoding = false
+        http2_origin             = false
+        keep_alive_connections   = 0
+        no_happy_eyeballs        = false
+        no_tls_verify            = false
+        proxy_port               = 0
+      }
+    }
+    ingress_rule {
+      service = "http_status:503"
     }
   }
 }
