@@ -1,27 +1,3 @@
----
-apiVersion: secrets.hashicorp.com/v1beta1
-kind: VaultStaticSecret
-metadata:
-  name: dkhptd-scheduler
-  namespace: dkhptd
-spec:
-  type: kv-v1
-  mount: kv
-  path: dkhptd/scheduler/env
-  destination:
-    name: dkhptd-scheduler
-    create: true
-  refreshAfter: 30s
-  vaultAuthRef: vault/secrets-operator
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: dkhptd-scheduler
-  namespace: dkhptd
-data:
-  HELLO: WORLD # dummy
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:

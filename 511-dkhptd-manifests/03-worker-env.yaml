@@ -1,0 +1,21 @@
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultStaticSecret
+metadata:
+  name: dkhptd-worker
+  namespace: dkhptd
+spec:
+  type: kv-v1
+  mount: kv
+  path: dkhptd/worker/env
+  destination:
+    name: dkhptd-worker
+    create: true
+  refreshAfter: 30s
+  vaultAuthRef: vault/secrets-operator
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dkhptd-worker
+data:
+  PUPPETEER_LAUNCH_OPTIONS_TYPE: docker

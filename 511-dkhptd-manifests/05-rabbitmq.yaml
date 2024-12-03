@@ -1,34 +1,20 @@
----
-apiVersion: secrets.hashicorp.com/v1beta1
-kind: VaultStaticSecret
-metadata:
-  name: dkhptd-rabbitmq-v3-env
-  namespace: dkhptd
-spec:
-  type: kv-v1
-  mount: kv
-  path: dkhptd/rabbitmq/env
-  destination:
-    name: dkhptd-rabbitmq-v3-env
-    create: true
-  refreshAfter: 30s
-  vaultAuthRef: vault/secrets-operator
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: rabbitmq-v3
+  name: rabbitmq
   namespace: dkhptd
 spec:
   replicas: 1
-  serviceName: rabbitmq-v3
+  serviceName: internal
   selector:
     matchLabels:
-      app: rabbitmq-v3
+      app: rabbitmq
+      internal: "1"
   template:
     metadata:
       labels:
-        app: rabbitmq-v3
+        app: rabbitmq
+        internal: "1"
     spec:
       hostname: rabbitmq
       containers:
@@ -39,7 +25,7 @@ spec:
               mountPath: /var/lib/rabbitmq/mnesia
           envFrom:
             - secretRef:
-                name: dkhptd-rabbitmq-v3-env
+                name: dkhptd-rabbitmq-env
           ports:
             - containerPort: 5672
             - containerPort: 15672
@@ -52,20 +38,3 @@ spec:
         resources:
           requests:
             storage: 2Gi
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: rabbitmq-v3
-  namespace: dkhptd
-  labels:
-    app: rabbitmq-v3
-spec:
-  ports:
-    - port: 5672
-      name: amqp
-    - port: 15672
-      name: management
-  clusterIP: None
-  selector:
-    app: rabbitmq-v3

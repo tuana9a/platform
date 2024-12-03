@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dkhptd-mongo-conf
+  namespace: dkhptd
+data:
+  mongod.conf: |
+    # configmap/dkhptd-mongo-conf
+    net:
+      port: 27017
+      bindIp: 0.0.0.0
+    security:
+      authorization: disabled
+    storage:
+      wiredTiger:
+        engineConfig:
+          cacheSizeGB: 2

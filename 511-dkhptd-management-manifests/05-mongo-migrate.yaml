@@ -1,14 +1,14 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: mongo-migrate-v2-v3
+  name: mongo-migrate
   namespace: dkhptd
 spec:
   template:
     spec:
       initContainers:
-        - name: mongo-dump
-          image: mongo:5.0
+        - name: dump
+          image: mongo:4.4
           command:
             - "sh"
             - "-c"
@@ -17,31 +17,30 @@ spec:
               echo ========================
               ls -l /data/dump
           envFrom:
-            - configMapRef:
-                name: dkhptd-mongo-migrate-v2-v3
+            - secretRef:
+                name: dkhptd-mongo-migrate-env
           volumeMounts:
             - name: workdir
               mountPath: /data
 
-        - name: mongo-restore
-          image: mongo:7.0
+        - name: restore
+          image: mongo:4.4
           command:
             - "sh"
             - "-c"
             - |
               mongorestore $MONGO_CONNECTION_STRING_NEW /data/dump
           envFrom:
-            - configMapRef:
-                name: dkhptd-mongo-migrate-v2-v3
+            - secretRef:
+                name: dkhptd-mongo-migrate-env
           volumeMounts:
             - name: workdir
               mountPath: /data
 
       containers:
-        - name: dummy
+        - name: done
           image: busybox:latest
           command: ["sh", "-c", "echo done"]
-
       restartPolicy: Never
       volumes:
         - name: workdir

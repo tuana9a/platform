@@ -1,41 +1,24 @@
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: dkhptd-mongo-v3-conf
-  namespace: dkhptd
-data:
-  mongod.conf: |
-    # configmap
-    net:
-      port: 27017
-      bindIp: 0.0.0.0
-    security:
-      authorization: disabled
-    storage:
-      wiredTiger:
-        engineConfig:
-          cacheSizeGB: 2
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mongo-v3
+  name: mongo
   namespace: dkhptd
 spec:
   replicas: 1
-  serviceName: mongo-v3
+  serviceName: internal
   selector:
     matchLabels:
-      app: mongo-v3
+      app: mongo
+      internal: "1"
   template:
     metadata:
       labels:
-        app: mongo-v3
+        app: mongo
+        internal: "1"
     spec:
       containers:
         - name: mongo
-          image: mongo:7.0
+          image: mongo:4.4
           command:
             - mongod
             - "--config"
@@ -51,7 +34,7 @@ spec:
       volumes:
         - name: mongo-config
           configMap:
-            name: dkhptd-mongo-v3-conf
+            name: dkhptd-mongo-conf
   volumeClaimTemplates:
     - metadata:
         name: mongo-data
@@ -61,18 +44,3 @@ spec:
         resources:
           requests:
             storage: 2Gi
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: mongo-v3
-  namespace: dkhptd
-  labels:
-    app: mongo-v3
-spec:
-  clusterIP: None
-  ports:
-    - port: 27017
-      name: mongo
-  selector:
-    app: mongo-v3
