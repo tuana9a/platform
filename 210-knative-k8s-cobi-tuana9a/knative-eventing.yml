@@ -19,7 +19,7 @@ spec:
       resources:
         - container: eventing-webhook
           requests:
-            cpu: 10m
+            cpu: 20m
             memory: 75M
           limits:
             cpu: 20m
