@@ -1,13 +1,13 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: postgres-migrate-v2-v3
+  name: coder-postgres-migrate
   namespace: coder
 spec:
   template:
     spec:
       initContainers:
-        - name: postgres-dump
+        - name: dump
           image: postgres:16
           command:
             - "sh"
@@ -20,13 +20,13 @@ spec:
               head /data/dump.sql
               echo ========================
           envFrom:
-            - configMapRef:
-                name: coder-postgres-migrate-v2-v3
+            - secretRef:
+                name: coder-postgres-migrate-env
           volumeMounts:
             - name: workdir
               mountPath: /data
 
-        - name: postgres-restore
+        - name: restore
           image: postgres:16
           command:
             - "sh"
@@ -36,17 +36,16 @@ spec:
               echo ========================
               psql -h $PG_HOST_NEW -p ${PG_PORT:-5432} -U $PG_USER_NEW -d $PG_DATABASE -f /data/dump.sql
           envFrom:
-            - configMapRef:
-                name: coder-postgres-migrate-v2-v3
+            - secretRef:
+                name: coder-postgres-migrate-env
           volumeMounts:
             - name: workdir
               mountPath: /data
 
       containers:
-        - name: dummy
+        - name: done
           image: busybox:latest
           command: ["sh", "-c", "echo done"]
-
       restartPolicy: Never
       volumes:
         - name: workdir

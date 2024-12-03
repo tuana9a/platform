@@ -1,0 +1,14 @@
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultStaticSecret
+metadata:
+  name: coder-env
+  namespace: coder
+spec:
+  type: kv-v1
+  mount: kv
+  path: coder/env
+  destination:
+    name: coder-env
+    create: true
+  refreshAfter: 30s
+  vaultAuthRef: vault/secrets-operator

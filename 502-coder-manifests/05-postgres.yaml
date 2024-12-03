@@ -1,41 +1,27 @@
----
-apiVersion: secrets.hashicorp.com/v1beta1
-kind: VaultStaticSecret
-metadata:
-  name: coder-postgres-v3-env
-  namespace: coder
-spec:
-  type: kv-v1
-  mount: kv
-  path: coder/postgres/env
-  destination:
-    name: coder-postgres-v3-env
-    create: true
-  refreshAfter: 30s
-  vaultAuthRef: vault/secrets-operator
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: postgres-v3
+  name: postgres
   namespace: coder
 spec:
   replicas: 1
-  serviceName: postgres-v3
+  serviceName: internal
   selector:
     matchLabels:
-      app: postgres-v3
+      app: postgres
+      internal: "1"
   template:
     metadata:
       labels:
-        app: postgres-v3
+        app: postgres
+        internal: "1"
     spec:
       containers:
         - name: postgres
           image: postgres:16
           envFrom:
             - secretRef:
-                name: coder-postgres-v3-env
+                name: coder-postgres-env
           env:
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
@@ -60,18 +46,3 @@ spec:
         resources:
           requests:
             storage: 2Gi
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres-v3
-  namespace: coder
-  labels:
-    app: postgres-v3
-spec:
-  clusterIP: None
-  ports:
-    - port: 5432
-      name: postgres
-  selector:
-    app: postgres-v3

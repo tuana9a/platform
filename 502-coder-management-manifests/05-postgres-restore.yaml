@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: postgres-v2-restore
+  name: coder-postgres-restore
   namespace: coder
 spec:
   template:
@@ -14,12 +14,13 @@ spec:
             - "-c"
             - |
               echo === download dumpfile ===
-              OBJECT_KEY=coder/postgres-dump-2024.08.23.tar.gz
-              aws s3api --endpoint-url ${S3_ENDPOINT} get-object --bucket ${BUCKET_NAME} --key $OBJECT_KEY /data/dump.tar.gz
+              OBJECT_KEY=coder/postgres-dump-2024.12.03.06.tar.gz
+              echo S3_ENDPOINT=$S3_ENDPOINT BUCKET_NAME=$BUCKET_NAME OBJECT_KEY=$OBJECT_KEY
+              aws s3api --endpoint-url ${S3_ENDPOINT} get-object --bucket ${BUCKET_NAME} --key ${OBJECT_KEY} /data/dump.tar.gz
               ls -la /data/
           envFrom:
-            - configMapRef:
-                name: coder-postgres-v2-restore
+            - secretRef:
+                name: coder-postgres-backup-env
           volumeMounts:
             - name: workdir
               mountPath: /data
@@ -43,21 +44,20 @@ spec:
             - "sh"
             - "-c"
             - |
-              export PGPASSWORD=$PG_PASS_V2
+              export PGPASSWORD=$PG_PASS
               echo ========================
-              psql -h $PG_HOST_V2 -p ${PG_PORT:-5432} -U $PG_USER_V2 -d $PG_DATABASE -f /data/dump.sql
+              psql -h $PG_HOST -p ${PG_PORT:-5432} -U $PG_USER -d $PG_DATABASE -f /data/dump.sql
           envFrom:
-            - configMapRef:
-                name: coder-postgres-v2-restore
+            - secretRef:
+                name: coder-postgres-backup-env
           volumeMounts:
             - name: workdir
               mountPath: /data
 
       containers:
-        - name: postgres-v2-restore
+        - name: done
           image: busybox:latest
-          command: ["sh", "-c", "echo restore v2 complete"]
-
+          command: ["sh", "-c", "echo done"]
       restartPolicy: Never
       volumes:
         - name: workdir
