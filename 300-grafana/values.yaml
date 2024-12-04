@@ -22,3 +22,6 @@ sidecar:
   datasources:
     enabled: true
     label: grafana_datasource
+grafana.ini:
+  security:
+    disable_brute_force_login_protection: "false"
