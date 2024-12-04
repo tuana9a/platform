@@ -1,18 +1,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: 210-knative-k8s-cobi-tuana9a
+  name: 210-kourier-forwarder-k8s-cobi-tuana9a
   namespace: argocd
 spec:
   project: default
   revisionHistoryLimit: 10
   source:
-    path: 210-knative-k8s-cobi-tuana9a
+    path: 210-kourier-forwarder-manifests-k8s-cobi-tuana9a
     repoURL: https://github.com/tuana9a/platform.git
     targetRevision: main
   destination:
-    server: "https://kubernetes.default.svc"
+    namespace: prometheus
+    server: https://kubernetes.default.svc
   syncPolicy:
     automated:
       prune: true
-      selfHeal: false
+      selfHeal: true
