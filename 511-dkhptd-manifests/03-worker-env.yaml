@@ -11,7 +11,7 @@ spec:
     name: dkhptd-worker
     create: true
   refreshAfter: 30s
-  vaultAuthRef: vault/secrets-operator
+  vaultAuthRef: vault-secrets-operator/default
 ---
 apiVersion: v1
 kind: ConfigMap

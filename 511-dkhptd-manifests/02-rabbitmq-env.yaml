@@ -11,4 +11,4 @@ spec:
     name: dkhptd-rabbitmq-env
     create: true
   refreshAfter: 30s
-  vaultAuthRef: vault/secrets-operator
+  vaultAuthRef: vault-secrets-operator/default
