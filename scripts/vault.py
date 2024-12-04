@@ -105,7 +105,7 @@ put_parser.add_argument(
 )
 put_parser.set_defaults(func=put)
 
-delete_parser = sub_parser.add_parser("delete")
+delete_parser = sub_parser.add_parser("delete", aliases=["del"])
 delete_parser.add_argument(
     "--secrets-file",
     type=str,
