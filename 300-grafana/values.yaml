@@ -25,3 +25,8 @@ sidecar:
 grafana.ini:
   security:
     disable_brute_force_login_protection: "false"
+admin:
+  ## Name of the secret. Can be templated.
+  existingSecret: "admin-login"
+  userKey: admin-user
+  passwordKey: admin-password
