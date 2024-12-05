@@ -19,9 +19,11 @@ sidecar:
   dashboards:
     enabled: true
     label: grafana_dashboard
+    labelValue: "1"
   datasources:
     enabled: true
     label: grafana_datasource
+    labelValue: "1"
 grafana.ini:
   security:
     disable_brute_force_login_protection: "false"
@@ -30,3 +32,13 @@ admin:
   existingSecret: "admin-login"
   userKey: admin-user
   passwordKey: admin-password
+dashboards:
+  default:
+    node-exporter-full:
+      gnetId: 1860
+      revision: 37
+      datasource: prometheus
+    kube-state-metrics-v2:
+      gnetId: 21742
+      revision: 1
+      datasource: prometheus
