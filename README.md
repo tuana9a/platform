@@ -8,37 +8,31 @@ tuana9a's platform
 - dns, cdn, web (cloudflare)
 - load balancer, reverse proxy (haproxy, nginx)
 
-# dependency graph
+# order
 
 ```mermaid
-graph TD;
-    argocd-->apps;
-    argocd-->promtail;
-    argocd-->cert-manager;
-    argocd-->external-dns;
-    argocd-->grafana;
-    argocd-->ingress;
-    argocd-->knative;
-    argocd-->prometheus;
-    argocd-->loki;
-    argocd-->metallb;
-    argocd-->metrics-server;
-    argocd-->coder;
-    argocd-->nfs-provisioner;
-    cert-manager-->apps;
-    external-dns-->apps;
-    flannel-->argocd;
-    ingress-->apps;
-    knative-->apps;
-    loki-->grafana;
-    loki-->promtail;
-    metallb-->ingress;
-    nfs-provisioner-->coder;
-    nfs-provisioner-->apps;
-    nfs-provisioner-->grafana;
-    nfs-provisioner-->loki;
-    nfs-provisioner-->prometheus;
-    prometheus-->grafana;
+flowchart TD;
+flannel-->argocd;
+flannel-->metallb;
+flannel-->knative;
+argocd-->metrics-server;
+argocd-->nfs-csi;
+argocd-->external-dns;
+nfs-csi-->loki;
+nfs-csi-->vault;
+loki-->promtail;
+ingress-nginx-->vault;
+external-dns-->cert-manager;
+cert-manager-->ingress-nginx;
+vault-->vault-secrets-operator;
+vault-secrets-operator-->prometheus;
+vault-secrets-operator-->apps;
+apps-->coder;
+apps-->hcr;
+apps-->dkhptd;
+apps-->t9stbot;
+apps-->paste;
+prometheus-->grafana;
 ```
 
 # gcloud
