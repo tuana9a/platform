@@ -142,3 +142,12 @@ resource "cloudflare_record" "mx_mx3_vhost_vn" {
 #   proxied  = false
 #   priority = 5
 # }
+
+resource "cloudflare_record" "txt_default__domain_key" {
+  zone_id = data.cloudflare_zone.tuana9a_com.id
+  name    = "default._domainkey"
+  value   = "v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyIT85mld5B8eUwMKRARYKtpszDfWlhrGq9nwAj15freOE7jO1GYJzNQkYIS4U0B8y93TWGHRHIAoqnHpd77LTTlcf92wOenu5POOgF1Q9Fe+DrNzyGmrHpAflMDVr7RmpSVNE0P10FFu9F2rejOLSrS1he15hzu0ztI/kr7NLK+q2s/4X5Bz5qagGmIdz7uNW/s+TnQAYA9JsA4YmmF4vLx4K0cEeWlG6pfQ8fmGxHedV10256hiwTx9uUYtzLEih2c1j26sAYfPKFBfZFXrLdsifATdVjrEbPsnJSd8nNoB/TYBTCnnKjULacr20VB6flXo021G5yK1aUctDl5AvQIDAQAB;"
+  type    = "TXT"
+  ttl     = 60
+  proxied = false
+}
