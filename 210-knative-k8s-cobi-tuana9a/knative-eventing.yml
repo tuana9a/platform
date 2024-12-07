@@ -18,8 +18,8 @@ spec:
             cpu: 10m
             memory: 75M
           limits:
-            cpu: 20m
-            memory: 100M
+            cpu: 100m
+            memory: 150M
     - name: eventing-webhook
       resources:
         - container: eventing-webhook
@@ -27,8 +27,8 @@ spec:
             cpu: 20m
             memory: 75M
           limits:
-            cpu: 20m
-            memory: 100M
+            cpu: 100m
+            memory: 150M
     - name: kafka-controller
       resources:
         - container: controller
@@ -36,8 +36,8 @@ spec:
             cpu: 10m
             memory: 75M
           limits:
-            cpu: 20m
-            memory: 100M
+            cpu: 100m
+            memory: 150M
     - name: mt-broker-controller
       resources:
         - container: mt-broker-controller
@@ -45,8 +45,8 @@ spec:
             cpu: 10m
             memory: 50M
           limits:
-            cpu: 20m
-            memory: 75M
+            cpu: 100m
+            memory: 100M
     - name: mt-broker-filter
       resources:
         - container: filter
@@ -54,8 +54,8 @@ spec:
             cpu: 10m
             memory: 50M
           limits:
-            cpu: 20m
-            memory: 75M
+            cpu: 100m
+            memory: 100M
     - name: mt-broker-ingress
       resources:
         - container: ingress
@@ -63,5 +63,5 @@ spec:
             cpu: 10m
             memory: 50M
           limits:
-            cpu: 20m
-            memory: 75M
+            cpu: 100m
+            memory: 100M

@@ -28,10 +28,10 @@ spec:
         - container: controller
           requests:
             cpu: 10m
-            memory: 30Mi
+            memory: 50Mi
           limits:
             cpu: 20m
-            memory: 50Mi
+            memory: 100Mi
     - name: webhook
       resources:
         - container: webhook
