@@ -45,7 +45,7 @@ resultsCache:
   allocatedMemory: 2000
 
 chunksCache:
-  allocatedMemory: 4000
+  allocatedMemory: 2000
 
 # Enable minio for storage
 minio:
