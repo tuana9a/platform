@@ -1,0 +1,5 @@
+- name: install libguestfs-tools
+  become: true
+  apt:
+    name: libguestfs-tools
+    state: present

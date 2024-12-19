@@ -1,0 +1,5 @@
+- name: install bmon
+  become: true
+  apt:
+    name: bmon
+    state: present

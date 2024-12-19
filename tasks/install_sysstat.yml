@@ -1,0 +1,5 @@
+- name: install sysstat
+  become: true
+  apt:
+    name: sysstat
+    state: present
