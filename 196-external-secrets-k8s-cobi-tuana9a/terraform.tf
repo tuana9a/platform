@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "195-vault-secrets-operator-k8s-cobi-tuana9a"
+    prefix = "196-external-secrets-k8s-cobi-tuana9a"
   }
   required_providers {
     google = {
