@@ -1,42 +1,41 @@
 #!/bin/bash
 
+# exit on error
+set -e
+
 echo "=== $(date) ==="
 
 namespace="{{ namespace | default('ingress-nginx') }}"
-ip_file=/tmp/current-ingress-nginx-load-balancer-ip.txt
-stream_conf_file="/etc/nginx/stream.conf.d/ingress_nginx_load_balancer.conf"
+nginx_stream_conf_file="/etc/nginx/stream.conf.d/ingress_nginx_load_balancer.conf"
 
-if [ ! -f $ip_file ]; then
-  touch $ip_file
-fi
+current_ip=$(kubectl -n $namespace get service ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
-ip=$(kubectl -n $namespace get service ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-
-if [ -z $ip ]; then
-  echo "\"$previous_ip\" -> \"$ip\", invalid ip, exiting..."
+if [ -z $current_ip ]; then
+  echo "invalid current_ip \"$current_ip\""
+  echo "exit 1"
   exit 1
 fi
 
-previous_ip=$(cat $ip_file)
+previous_ip=$(cat $nginx_stream_conf_file | grep -oP '\d+\.\d+\.\d+\.\d+' | head -n 1)
 
-if [ $previous_ip == $ip ]; then
-  echo "\"$previous_ip\" -> \"$ip\", no changes, exiting..."
+if [ $current_ip == $previous_ip  ]; then
+  echo "\"$current_ip\" == \"$previous_ip\" (no changes)"
+  echo "exit 0"
   exit 0
 fi
 
-echo "\"$previous_ip\" -> \"$ip\", diff detected, updating nginx config "
-echo -n $ip > $ip_file
+echo "\"$current_ip\" != \"$previous_ip\" (diff)"
+echo "update nginx config"
 
-echo "# $stream_conf_file
-# This file is generated and will be overwrited
-# $(date)
+echo "# $(date)
+# This file $nginx_stream_conf_file is generated and will be overwrited
 server {
   listen 80;
-  proxy_pass ${ip}:80;
+  proxy_pass $current_ip:80;
 }
 server {
   listen 443;
-  proxy_pass ${ip}:443;
-}" | sudo tee $nginx_conf
+  proxy_pass $current_ip:443;
+}" | sudo tee $nginx_stream_conf_file
 
 sudo systemctl reload nginx
