@@ -1,14 +1,14 @@
-apiVersion: secrets.hashicorp.com/v1beta1
-kind: VaultStaticSecret
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
 metadata:
   name: dkhptd-mongo-backup-env
-  namespace: dkhptd
 spec:
-  type: kv-v1
-  mount: kv
-  path: dkhptd/mongo-backup/env
-  destination:
+  refreshInterval: "15s"
+  secretStoreRef:
+    name: vault-tuana9a-com
+    kind: SecretStore
+  target:
     name: dkhptd-mongo-backup-env
-    create: true
-  refreshAfter: 30s
-  vaultAuthRef: vault-secrets-operator/default
+  dataFrom:
+    - extract:
+        key: dkhptd/mongo-backup/env
