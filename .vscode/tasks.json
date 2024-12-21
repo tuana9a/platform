@@ -6,7 +6,7 @@
         {
             "label": "tfmt",
             "type": "shell",
-            "command": "./scripts/tfmt.sh",
+            "command": "for d in [0-9][0-9][0-9]-*; do echo $d; cd $d; terraform fmt; cd ..; done",
             "options": {
                 "cwd": "${workspaceFolder}",
                 "env": {

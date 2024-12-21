@@ -55,10 +55,10 @@ spec:
         - container: autoscaler
           requests:
             cpu: 10m
-            memory: 30Mi
+            memory: 50Mi
           limits:
             cpu: 20m
-            memory: 50Mi
+            memory: 70Mi
     - name: autoscaler-hpa
       resources:
         - container: autoscaler-hpa

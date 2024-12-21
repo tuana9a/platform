@@ -1,39 +1,12 @@
 # platform
 
 tuana9a's platform
-- configuration as code (asnible)
-- infrastructure as code (terraform)
-- deploy apps (argocd)
-- infra (aws, proxmox)
-- dns, cdn, web (cloudflare)
-- load balancer, reverse proxy (haproxy, nginx)
-
-# order
-
-```mermaid
-flowchart TD;
-flannel-->argocd;
-flannel-->metallb;
-flannel-->knative;
-argocd-->metrics-server;
-argocd-->nfs-csi;
-argocd-->external-dns;
-nfs-csi-->loki;
-nfs-csi-->vault;
-loki-->promtail;
-ingress-nginx-->vault;
-external-dns-->cert-manager;
-cert-manager-->ingress-nginx;
-vault-->vault-secrets-operator;
-vault-secrets-operator-->prometheus;
-vault-secrets-operator-->apps;
-apps-->coder;
-apps-->hcr;
-apps-->dkhptd;
-apps-->t9stbot;
-apps-->paste;
-prometheus-->grafana;
-```
+- configuration as code: asnible
+- infrastructure as code: terraform
+- deploy apps, cd: argocd
+- cloud providers: aws, gcp, proxmox
+- dns, cdn, web: cloudflare
+- load balancer, reverse proxy: haproxy, nginx
 
 # gcloud
 
