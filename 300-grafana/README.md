@@ -19,3 +19,13 @@ reset admin password
 ```bash
 grafana cli --homepath "/usr/share/grafana/" admin reset-admin-password $(cat /tmp/password)
 ```
+
+# dashboards
+
+## node-exporter-full
+
+1860
+
+## kube-state-metrics-v2:
+
+21742

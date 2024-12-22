@@ -1,7 +1,3 @@
-persistence:
-  enabled: true
-  storageClassName: nfs-vdb
-  size: 2Gi
 ingress:
   enabled: true
   ingressClassName: nginx
@@ -32,13 +28,3 @@ admin:
   existingSecret: "admin-login"
   userKey: admin-user
   passwordKey: admin-password
-dashboards:
-  default:
-    node-exporter-full:
-      gnetId: 1860
-      revision: 37
-      datasource: prometheus
-    kube-state-metrics-v2:
-      gnetId: 21742
-      revision: 1
-      datasource: prometheus

@@ -1,4 +1,6 @@
 server:
+  global:
+    scrape_interval: 15s
   persistentVolume:
     storageClass: nfs-vdb
     size: 15Gi
