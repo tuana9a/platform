@@ -31,8 +31,12 @@
       color: green;
     }
 
-    .p-1 {
-      padding: 5px
+    .p-10 {
+      padding: 10px
+    }
+
+    .monospace {
+      font-family: monospace;
     }
   </style>
 </head>
@@ -43,14 +47,14 @@
       <div class="full-width">
         <div class="full-width center">
           <!-- <span>key</span>&nbsp;<span>=</span>&nbsp;<span class="full-width" type="text" id="key"></span> -->
-          <input type="text" class="full-width" id="key">
+          <input type="text" class="full-width monospace" id="key">
         </div>
         <div class="full-width center">
-          <textarea id="content" rows="20" class="full-width" style="resize: vertical;" placeholder=""></textarea>
+          <textarea id="content" rows="20" min class="full-width monospace" style="resize: vertical;" placeholder=""></textarea>
         </div>
         <div class="full-width center">
-          <button id="delButton" class="half-width red p-1">DELETE</button>
-          <button id="saveButton" class="half-width green p-1">SAVE</button>
+          <button id="delButton" class="half-width red p-10">DELETE</button>
+          <button id="saveButton" class="half-width green p-10">SAVE</button>
         </div>
       </div>
     </div>
