@@ -23,8 +23,7 @@ spec:
           volumeMounts:
             - name: hcr-workdir
               mountPath: /app
-          command: ["/bin/sh", "-c"]
-          args: [".venv/bin/python main.py"]
+          command: [".venv/bin/python", "main.py"]
           env:
             - name: DEVICE
               value: "cpu"
