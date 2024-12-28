@@ -17,7 +17,7 @@ spec:
                 - "sh"
                 - "-c"
                 - |
-                  OBJECT_KEY=dkhptd/mongo-dump-$(date +'%Y.%m.%d.%H').tar.gz
+                  OBJECT_KEY="$(date +'%Y%m%d%H')-dkhptd-mongo-dump.tar.gz"
                   echo $OBJECT_KEY > /data/object_key.env
               volumeMounts:
                 - name: workdir
@@ -101,11 +101,23 @@ spec:
                   STOP_TIME=$(cat "/data/stop.time")
                   DURATION=$((STOP_TIME - START_TIME))
                   OBJECT_KEY=$(cat /data/object_key.env)
-                  MSG=":white_check_mark: \`backup-mongo\` \`dkhptd\` \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
-                  curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\"content\":\"${MSG}\"}"
+                  # MSG=":white_check_mark: \`backup-mongo\` \`dkhptd\` \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
+                  # curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\"content\":\"${MSG}\"}"
+                  push_gateway_baseurl="http://prometheus-prometheus-pushgateway.prometheus.svc.cluster.local:9091"
+                  cat <<EOF | curl --data-binary @- $push_gateway_baseurl/metrics/job/mongo_backup_cronjob
+                  # TYPE mongo_backup_duration gauge
+                  mongo_backup_duration{namespace="$POD_NAMESPACE"} $DURATION
+                  # TYPE mongo_backup_unixtimestamp gauge
+                  mongo_backup_unixtimestamp{namespace="$POD_NAMESPACE"} $(date +%s)
+                  EOF
               envFrom:
                 - secretRef:
                     name: dkhptd-mongo-backup-env
+              env:
+                - name: POD_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
               volumeMounts:
                 - name: workdir
                   mountPath: /data

@@ -9,13 +9,15 @@ CLOUDFLARE_ACCOUNT_ID="{{ KUBERNETES_BACKUP_CLOUDFLARE_ACCOUNT_ID }}"
 S3_ENDPOINT="https://$CLOUDFLARE_ACCOUNT_ID.r2.cloudflarestorage.com"
 BUCKET_NAME="{{ KUBERNETES_BACKUP_BUCKET_NAME }}"
 
+datehour=$(date '+%Y%m%d%H');
+unixtimestamp=$(date +%s);
 ETCD_SNAPSHOT=/tmp/snapshot.db
-DUMP_FILE="backup-kubernetes-$(date +'%Y.%m.%d.%H').tar.gz"
-S3_OBJECT_KEY=$HOST_NAME/$DUMP_FILE
+DUMP_FILE="$datehour-k8s-cobi-$HOST_NAME-backup-kubernetes.tar.gz"
+S3_OBJECT_KEY=$DUMP_FILE
 WORKDIR=/tmp
 SECONDS=0 # for calc duration
 
-DISCORD_WEBHOOK="{{ KUBERNETES_BACKUP_DISCORD_WEBHOOK }}"
+# DISCORD_WEBHOOK="{{ KUBERNETES_BACKUP_DISCORD_WEBHOOK }}"
 
 export AWS_ACCESS_KEY_ID="{{ KUBERNETES_BACKUP_AWS_ACCESS_KEY_ID }}"
 export AWS_SECRET_ACCESS_KEY="{{ KUBERNETES_BACKUP_AWS_SECRET_ACCESS_KEY }}"
@@ -57,10 +59,28 @@ sudo tar -czvf $DUMP_FILE $ETCD_SNAPSHOT /etc/kubernetes/pki /etc/kubernetes/man
 echo Uploading "$S3_OBJECT_KEY" "$WORKDIR/$DUMP_FILE"
 upload "$S3_OBJECT_KEY" "$DUMP_FILE"
 
-DURATION=$SECONDS
-MSG=":white_check_mark: \`backup-kubernetes\` \`$HOST_NAME\` \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
-notify "$MSG"
-
 # cleanup
 sudo rm -f snapshot.db
-sudo rm -f backup-kubernetes-*.tar.gz
+sudo rm -f *backup-kubernetes*.tar.gz
+
+DURATION=$SECONDS
+# MSG=":white_check_mark: \`backup-kubernetes\` \`$HOST_NAME\` \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
+# notify "$MSG"
+
+kubectl --kubeconfig /etc/kubernetes/admin.conf -n default run backup-kubernetes-reports-$datehour-$RANDOM \
+--image=amazon/aws-cli:2.18.0 \
+--restart=Never \
+--namespace=default \
+--command -- /bin/sh -c '
+push_gateway_baseurl="http://prometheus-prometheus-pushgateway.prometheus.svc.cluster.local:9091";
+POD_NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace);
+
+cat <<EOF | curl --data-binary @- $push_gateway_baseurl/metrics/job/k8s_backup_cronjob
+# TYPE k8s_backup_datehour gauge
+k8s_backup_datehour{namespace="$POD_NAMESPACE"} '$datehour'
+# TYPE k8s_backup_duration gauge
+k8s_backup_duration{namespace="$POD_NAMESPACE"} '$DURATION'
+# TYPE k8s_backup_unixtimestamp gauge
+k8s_backup_unixtimestamp{namespace="$POD_NAMESPACE"} '$unixtimestamp'
+EOF
+'

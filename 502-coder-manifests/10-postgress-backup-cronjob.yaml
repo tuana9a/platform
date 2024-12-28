@@ -16,7 +16,7 @@ spec:
                 - "sh"
                 - "-c"
                 - |
-                  OBJECT_KEY=coder/postgres-dump-$(date +'%Y.%m.%d.%H').tar.gz
+                  OBJECT_KEY="$(date +'%Y%m%d%H')-coder-postgres-dump.tar.gz"
                   echo $OBJECT_KEY > /data/object_key.env
               volumeMounts:
                 - name: workdir
@@ -100,11 +100,23 @@ spec:
                   STOP_TIME=$(cat "/data/stop.time")
                   DURATION=$((STOP_TIME - START_TIME))
                   OBJECT_KEY=$(cat /data/object_key.env)
-                  MSG=":white_check_mark: \`backup-postgres\` \`coder\` \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
-                  curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\"content\":\"${MSG}\"}"
+                  # MSG=":white_check_mark: \`backup-postgres\` \`coder\` \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
+                  # curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\"content\":\"${MSG}\"}"
+                  push_gateway_baseurl="http://prometheus-prometheus-pushgateway.prometheus.svc.cluster.local:9091"
+                  cat <<EOF | curl --data-binary @- $push_gateway_baseurl/metrics/job/postgres_backup_cronjob
+                  # TYPE postgres_backup_duration gauge
+                  postgres_backup_duration{namespace="$POD_NAMESPACE"} $DURATION
+                  # TYPE postgres_backup_unixtimestamp gauge
+                  postgres_backup_unixtimestamp{namespace="$POD_NAMESPACE"} $(date +%s)
+                  EOF
               envFrom:
                 - secretRef:
                     name: coder-postgres-backup-env
+              env:
+                - name: POD_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
               volumeMounts:
                 - name: workdir
                   mountPath: /data
