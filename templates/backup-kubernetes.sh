@@ -67,7 +67,7 @@ DURATION=$SECONDS
 # MSG=":white_check_mark: \`backup-kubernetes\` \`$HOST_NAME\` \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
 # notify "$MSG"
 
-kubectl --kubeconfig /etc/kubernetes/admin.conf -n default run backup-kubernetes-reports-$datehour-$RANDOM \
+sudo kubectl --kubeconfig /etc/kubernetes/admin.conf -n default run backup-kubernetes-reports-$datehour-$RANDOM \
 --image=amazon/aws-cli:2.18.0 \
 --restart=Never \
 --namespace=default \
