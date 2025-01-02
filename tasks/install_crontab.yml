@@ -1,0 +1,6 @@
+- name: Install cron package
+  become: true
+  apt:
+    name:
+      - cron
+    state: present

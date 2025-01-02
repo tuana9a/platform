@@ -11,7 +11,7 @@
     dest: /opt
     remote_src: true
 
-- name: Install
+- name: /opt/aws/install -u
   become: true
   # add -u flag to update if there are already installed aws cli
   shell: /opt/aws/install -u > /opt/install-awscli.log
