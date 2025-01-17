@@ -31,9 +31,33 @@ dashboards:
       datasource:
         - name: DS_PROMETHEUS
           value: prometheus
+    Kubernetes_System_ApiServer:
+      gnetId: 15761
+      revision: 18
+      datasource:
+        - name: DS_PROMETHEUS
+          value: prometheus
     Kubernetes_System_CoreDNS:
       gnetId: 15762
       revision: 19
+      datasource:
+        - name: DS_PROMETHEUS
+          value: prometheus
+    Kubernetes_View_Namespaces:
+      gnetId: 15758
+      revision: 41
+      datasource:
+        - name: DS_PROMETHEUS
+          value: prometheus
+    Kubernetes_View_Nodes:
+      gnetId: 15759
+      revision: 32
+      datasource:
+        - name: DS_PROMETHEUS
+          value: prometheus
+    Kubernetes_View_Pods:
+      gnetId: 15760
+      revision: 34
       datasource:
         - name: DS_PROMETHEUS
           value: prometheus
