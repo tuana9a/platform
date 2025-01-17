@@ -11,6 +11,32 @@ ingress:
     - secretName: grafana-tuana9a-com-tls
       hosts:
         - "grafana.tuana9a.com"
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+      - name: "default"
+        orgId: 1
+        folder: ""
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/default
+dashboards:
+  default:
+    node-exporter-full:
+      gnetId: 1860
+      revision: 37
+      datasource:
+        - name: DS_PROMETHEUS
+          value: prometheus
+    Kubernetes_System_CoreDNS:
+      gnetId: 15762
+      revision: 19
+      datasource:
+        - name: DS_PROMETHEUS
+          value: prometheus
 sidecar:
   dashboards:
     enabled: true
