@@ -43,8 +43,8 @@ provider "cloudflare" {
 provider "aws" {
   region = "us-east-1"
 
-  access_key = data.vault_kv_secret.edit_r2.data.cloudflare_access_key
-  secret_key = data.vault_kv_secret.edit_r2.data.cloudflare_secret_key
+  access_key = data.vault_kv_secret.edit_r2.data.aws_access_key_id
+  secret_key = data.vault_kv_secret.edit_r2.data.aws_secret_access_key
 
   skip_credentials_validation = true
   skip_region_validation      = true
