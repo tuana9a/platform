@@ -87,7 +87,7 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
     nginx.ingress.kubernetes.io/rewrite-target: /
     external-dns.alpha.kubernetes.io/hostname: "hcr.tuana9a.com"
-    external-dns.alpha.kubernetes.io/target: "parkingx.tuana9a.com"
+    external-dns.alpha.kubernetes.io/target: "xenomorph.tuana9a.com"
 spec:
   ingressClassName: nginx
   tls:

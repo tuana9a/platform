@@ -12,7 +12,7 @@ server:
     annotations:
       cert-manager.io/cluster-issuer: "letsencrypt-production"
       external-dns.alpha.kubernetes.io/hostname: "argocd.tuana9a.com"
-      external-dns.alpha.kubernetes.io/target: "parkingx.tuana9a.com"
+      external-dns.alpha.kubernetes.io/target: "xenomorph.tuana9a.com"
     extraTls:
       - hosts:
           - argocd.tuana9a.com
@@ -24,7 +24,7 @@ server:
     annotations:
       cert-manager.io/cluster-issuer: "letsencrypt-production"
       external-dns.alpha.kubernetes.io/hostname: "grpc.argocd.tuana9a.com"
-      external-dns.alpha.kubernetes.io/target: "parkingx.tuana9a.com"
+      external-dns.alpha.kubernetes.io/target: "xenomorph.tuana9a.com"
     extraTls:
       - hosts:
           - grpc.argocd.tuana9a.com

@@ -1,7 +1,41 @@
-- name: Install kubectl
-  shell: |
-    cd /tmp
-    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
-    echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
-    sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+# - name: Install kubectl
+#   become: true
+#   shell: |
+#     cd /tmp
+#     curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+#     curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+#     echo "$(cat kubectl.sha256) kubectl" | sha256sum --check
+#     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+# === WITH CHAT GPT SUPPORT ===
+- name: Get the latest stable kubectl release version
+  ansible.builtin.shell: "curl -L -s https://dl.k8s.io/release/stable.txt"
+  register: kubectl_version
+  changed_when: false
+
+- name: Download kubectl binary
+  ansible.builtin.get_url:
+    url: "https://dl.k8s.io/release/{{ kubectl_version.stdout }}/bin/linux/amd64/kubectl"
+    dest: /tmp/kubectl
+    mode: "0755"
+
+- name: Download kubectl sha256 checksum
+  ansible.builtin.get_url:
+    url: "https://dl.k8s.io/release/{{ kubectl_version.stdout }}/bin/linux/amd64/kubectl.sha256"
+    dest: /tmp/kubectl.sha256
+
+- name: Verify the checksum
+  ansible.builtin.shell: 'echo "$(cat /tmp/kubectl.sha256) /tmp/kubectl" | sha256sum --check'
+  args:
+    executable: /bin/bash
+  register: checksum_result
+  failed_when: checksum_result.rc != 0
+
+- name: Install kubectl binary
+  ansible.builtin.copy:
+    remote_src: true
+    src: /tmp/kubectl
+    dest: /usr/local/bin/kubectl
+    owner: root
+    group: root
+    mode: "0755"

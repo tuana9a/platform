@@ -1,21 +1,27 @@
 - hosts: k8s_ingress_lb
   tasks:
-    - name: Delete old location kubeconfig
-      become: true
+    # - name: Delete old location kubeconfig
+    #   become: true
+    #   file:
+    #     path: "/opt/kubeconfig"
+    #     state: absent
+
+    - name: Delete old current state load balancer ip
       file:
-        path: "/opt/kubeconfig"
+        path: /tmp/current-ingress-nginx-load-balancer-ip.txt
         state: absent
 
-    - name: Ensure kubeconfig directory
-      ansible.builtin.file:
-        path: "/home/{{ ansible_user }}/.kube"
-        state: directory
-        mode: "0700"
+    # - name: Ensure kubeconfig directory
+    #   ansible.builtin.file:
+    #     path: "{{ lookup('env','HOME') }}/.kube"
+    #     state: directory
+    #     mode: "0700"
 
     - name: Copy kubeconfig to remote
+      become: true
       copy:
-        src: k8s-ingress-lb/kubeconfig
-        dest: "/home/{{ ansible_user }}/.kube/config"
+        src: xenomorph/kubeconfig
+        dest: "/opt/kubeconfig"
         mode: "0600"
 
     - name: Copy script to remote
@@ -39,7 +45,7 @@
         content: ""
         dest: /tmp/update-ingress-nginx-load-balancer-ip.log
 
-    - name: Clear current state load balancer ip
+    - name: Set overwrite flag
       copy:
-        content: "9.9.9.9" # some random ip
-        dest: /tmp/current-ingress-nginx-load-balancer-ip.txt
+        content: "1"
+        dest: /tmp/overwrite-flag
