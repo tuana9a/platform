@@ -1,4 +1,4 @@
-- hosts: k8s_ingress_lb
+- hosts: xenomorph
   tasks:
     # - name: Delete old location kubeconfig
     #   become: true

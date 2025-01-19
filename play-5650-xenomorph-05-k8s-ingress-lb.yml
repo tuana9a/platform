@@ -1,4 +1,4 @@
-- hosts: k8s_ingress_lb
+- hosts: xenomorph
   tasks:
     - import_tasks: ./tasks/apt_update.yml
     - import_tasks: ./tasks/install_nginx.yml
