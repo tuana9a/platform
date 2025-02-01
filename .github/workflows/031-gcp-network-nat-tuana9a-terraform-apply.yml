@@ -3,11 +3,11 @@ name: gcp network nat tuana9a terraform apply
 on:
   workflow_dispatch:
   pull_request:
-    # paths:
-    #   - "030-gcp-network-nat-tuana9a/**"
+    paths:
+      - "031-gcp-network-nat-tuana9a/**"
   push:
-    # paths:
-    #   - "030-gcp-network-nat-tuana9a/**"
+    paths:
+      - "031-gcp-network-nat-tuana9a/**"
     branches:
       - main
 
@@ -17,7 +17,7 @@ env:
   GCP_SERVICE_ACCOUNT: terraform-network-admin@tuana9a.iam.gserviceaccount.com
   GCP_WORKLOAD_IDENTITY_POOL: github
   GCP_WORKLOAD_IDENTITY_POOL_PROVIDER: github-tuana9a
-  WORKING_DIR: 030-gcp-network-nat-tuana9a/
+  WORKING_DIR: 031-gcp-network-nat-tuana9a/
 
 jobs:
   terraform-apply:
