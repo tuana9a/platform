@@ -14,7 +14,7 @@ on:
 env:
   GCP_PROJECT_ID: tuana9a
   GCP_PROJECT_ID_NUM: 474326114337
-  GCP_SERVICE_ACCOUNT: terraform-network-admin@tuana9a.iam.gserviceaccount.com
+  GCP_SERVICE_ACCOUNT: terraform-compute-admin@tuana9a.iam.gserviceaccount.com
   GCP_WORKLOAD_IDENTITY_POOL: github
   GCP_WORKLOAD_IDENTITY_POOL_PROVIDER: github-tuana9a
   WORKING_DIR: 031-gcp-network-firewall-tuana9a/
