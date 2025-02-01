@@ -17,6 +17,7 @@ env:
   GCP_SERVICE_ACCOUNT: terraform-network-admin@tuana9a.iam.gserviceaccount.com
   GCP_WORKLOAD_IDENTITY_POOL: github
   GCP_WORKLOAD_IDENTITY_POOL_PROVIDER: github-tuana9a
+  WORKING_DIR: 030-gcp-network-tuana9a/
 
 jobs:
   terraform-apply:
@@ -37,16 +38,16 @@ jobs:
         with:
           terraform_version: "1.7.1"
       - id: init
-        working-directory: 030-gcp-network-tuana9a/
+        working-directory: "${{ env.WORKING_DIR }}"
         run: terraform init
       - id: plan
-        working-directory: 030-gcp-network-tuana9a/
+        working-directory: "${{ env.WORKING_DIR }}"
         run: terraform plan -no-color
       - id: apply
-        working-directory: 030-gcp-network-tuana9a/
+        working-directory: "${{ env.WORKING_DIR }}"
         run: terraform apply -auto-approve
       - id: notify
         name: notify
         run: |
-          MESSAGE=":white_check_mark: gcp network tuana9a terraform apply\\n$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          MESSAGE=":white_check_mark: ${{ github.workflow }}\\n$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           curl -X POST ${{ secrets.DISCORD_WEBHOOK }} -H "Content-Type: application/json" -d "{\"content\":\"${MESSAGE}\"}"
