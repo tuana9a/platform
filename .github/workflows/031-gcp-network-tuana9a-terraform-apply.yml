@@ -1,0 +1,43 @@
+name: gcp network tuana9a terraform apply
+
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+env:
+  GCP_PROJECT_ID: tuana9a
+  GCP_PROJECT_ID_NUM: 474326114337
+  GCP_SERVICE_ACCOUNT: terraform-network-admin@tuana9a.iam.gserviceaccount.com
+  GCP_WORKLOAD_IDENTITY_POOL: github
+  GCP_WORKLOAD_IDENTITY_POOL_PROVIDER: github-tuana9a
+
+jobs:
+  terraform-apply:
+    runs-on: ubuntu-22.04
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          project_id: "${{ env.GCP_PROJECT_ID }}"
+          workload_identity_provider: "projects/${{ env.GCP_PROJECT_ID_NUM }}/locations/global/workloadIdentityPools/${{ env.GCP_WORKLOAD_IDENTITY_POOL }}/providers/${{ env.GCP_WORKLOAD_IDENTITY_POOL_PROVIDER }}"
+          service_account: "${{ env.GCP_SERVICE_ACCOUNT }}"
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.7.1"
+      - id: init
+        working-directory: 030-gcp-network-tuana9a/
+        run: terraform init
+      - id: plan
+        working-directory: 030-gcp-network-tuana9a/
+        run: terraform plan -no-color
+      - run: echo ${{ steps.plan.outputs.stdout }}
+      - run: echo ${{ steps.plan.outputs.stderr }}
+      - run: echo ${{ steps.plan.outputs.exitcode }}
