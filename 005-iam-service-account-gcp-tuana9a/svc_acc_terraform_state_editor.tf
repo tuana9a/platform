@@ -8,8 +8,9 @@ resource "google_project_iam_member" "terraform_state_editor_1" {
   role   = "roles/storage.objectUser"
   member = "serviceAccount:${google_service_account.terraform_state_editor.email}"
   condition {
+    # https://cloud.google.com/iam/docs/conditions-resource-attributes#resource-name
     title      = "restrict_bucket_terraform_tuana9a"
-    expression = "resource.name.startsWith('projects/${data.google_project.current.name}/buckets/terraform-tuana9a')"
+    expression = "resource.name.startsWith('projects/_/buckets/terraform-tuana9a')"
   }
 }
 
