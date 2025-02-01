@@ -3,11 +3,11 @@ name: gcp network nat tuana9a terraform apply
 on:
   workflow_dispatch:
   pull_request:
-    paths:
-      - "030-gcp-network-nat-tuana9a/**"
+    # paths:
+    #   - "030-gcp-network-nat-tuana9a/**"
   push:
-    paths:
-      - "030-gcp-network-nat-tuana9a/**"
+    # paths:
+    #   - "030-gcp-network-nat-tuana9a/**"
     branches:
       - main
 
