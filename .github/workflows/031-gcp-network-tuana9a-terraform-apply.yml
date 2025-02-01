@@ -38,6 +38,9 @@ jobs:
       - id: plan
         working-directory: 030-gcp-network-tuana9a/
         run: terraform plan -no-color
+      - id: apply
+        working-directory: 030-gcp-network-tuana9a/
+        run: terraform apply -auto-approve
       - id: notify
         name: notify
         run: |
