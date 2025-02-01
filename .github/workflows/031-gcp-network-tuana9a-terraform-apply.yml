@@ -38,6 +38,8 @@ jobs:
       - id: plan
         working-directory: 030-gcp-network-tuana9a/
         run: terraform plan -no-color
-      - run: echo "${{ steps.plan.outputs.stdout }}"
-      - run: echo "${{ steps.plan.outputs.stderr }}"
-      - run: echo "${{ steps.plan.outputs.exitcode }}"
+      - id: notify
+        name: notify
+        run: |
+          MESSAGE=":white_check_mark: gcp network tuana9a terraform apply\\n$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          curl -X POST ${{ secrets.DISCORD_WEBHOOK }} -H "Content-Type: application/json" -d "{\"content\":\"${MESSAGE}\"}"
