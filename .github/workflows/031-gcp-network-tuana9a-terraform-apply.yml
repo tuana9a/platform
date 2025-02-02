@@ -5,9 +5,11 @@ on:
   pull_request:
     paths:
       - "030-gcp-network-tuana9a/**"
+      - ".github/workflows/030-gcp-network-tuana9a*"
   push:
     paths:
       - "030-gcp-network-tuana9a/**"
+      - ".github/workflows/030-gcp-network-tuana9a*"
     branches:
       - main
 
@@ -42,7 +44,7 @@ jobs:
         run: terraform init
       - id: plan
         working-directory: "${{ env.WORKING_DIR }}"
-        run: terraform plan -no-color
+        run: terraform plan
       - id: apply
         working-directory: "${{ env.WORKING_DIR }}"
         run: terraform apply -auto-approve

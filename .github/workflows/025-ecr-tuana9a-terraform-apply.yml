@@ -5,9 +5,11 @@ on:
   pull_request:
     paths:
       - "025-ecr-tuana9a/**"
+      - ".github/workflows/025-ecr-tuana9a*"
   push:
     paths:
       - "025-ecr-tuana9a/**"
+      - ".github/workflows/025-ecr-tuana9a*"
     branches:
       - main
 
@@ -49,7 +51,7 @@ jobs:
         run: terraform init
       - id: plan
         working-directory: "${{ env.WORKING_DIR }}"
-        run: terraform plan -no-color
+        run: terraform plan
       - id: apply
         working-directory: "${{ env.WORKING_DIR }}"
         run: terraform apply -auto-approve
