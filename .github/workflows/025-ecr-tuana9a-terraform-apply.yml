@@ -19,6 +19,7 @@ env:
   GCP_WORKLOAD_IDENTITY_POOL_PROVIDER: github-tuana9a
   AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/terraform-ecr-editor
   WORKING_DIR: 025-ecr-tuana9a/
+  AWS_REGION: ap-southeast-1
 
 jobs:
   terraform-apply:
@@ -38,6 +39,7 @@ jobs:
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: "${{ env.AWS_ASSUME_ROLE }}"
+          aws-region: "${{ env.AWS_REGION }}"
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.7.1"
