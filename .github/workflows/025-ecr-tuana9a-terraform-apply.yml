@@ -40,6 +40,7 @@ jobs:
         with:
           role-to-assume: "${{ env.AWS_ASSUME_ROLE }}"
           aws-region: "${{ env.AWS_REGION }}"
+          retry-max-attempts: 3
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.7.1"
