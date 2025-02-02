@@ -8,6 +8,11 @@ resource "aws_ecr_repository" "registry_k8s_io" {
   }
 }
 
+resource "aws_ecr_repository_policy" "registry_k8s_io" {
+  repository = aws_ecr_repository.registry_k8s_io.name
+  policy     = data.aws_iam_policy_document.registry_k8s_io.json
+}
+
 data "aws_iam_policy_document" "registry_k8s_io" {
   statement {
     sid    = "allow-pull"
@@ -47,9 +52,4 @@ data "aws_iam_policy_document" "registry_k8s_io" {
       "ecr:DeleteRepositoryPolicy",
     ]
   }
-}
-
-resource "aws_ecr_repository_policy" "registry_k8s_io" {
-  repository = aws_ecr_repository.registry_k8s_io.name
-  policy     = data.aws_iam_policy_document.exregistry_k8s_ioample.json
 }
