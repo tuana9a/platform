@@ -17,7 +17,7 @@ env:
   GCP_SERVICE_ACCOUNT: terraform-state-editor@tuana9a.iam.gserviceaccount.com
   GCP_WORKLOAD_IDENTITY_POOL: github
   GCP_WORKLOAD_IDENTITY_POOL_PROVIDER: github-tuana9a
-  AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/terraform-ecr-editor
+  AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/terraform-ecr-admin
   WORKING_DIR: 025-ecr-tuana9a/
   AWS_REGION: ap-southeast-1
 
