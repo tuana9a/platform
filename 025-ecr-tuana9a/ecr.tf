@@ -1,7 +1,7 @@
 resource "aws_ecr_repository" "registry_k8s_io" {
   name = "registry.k8s.io"
 
-  image_tag_mutability = true
+  image_tag_mutability = "IMMUTABLE"
 
   image_scanning_configuration {
     scan_on_push = false
