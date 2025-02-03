@@ -2,7 +2,7 @@ alertmanager:
   image:
     repository: quay.io/prometheus/alertmanager
     pullPolicy: IfNotPresent
-    tag: "v0.28.0-rc.0" # fix https://github.com/prometheus/alertmanager/pull/3728
+    tag: "v0.28.0" # fix https://github.com/prometheus/alertmanager/pull/3728
   persistence:
     storageClass: nfs-vdb
     size: 2Gi
