@@ -5,6 +5,13 @@ on:
   pull_request:
     paths:
       - "docker/coder/base.Dockerfile"
+      - ".github/workflows/docker-build-push-coder-base*"
+  push:
+    branches:
+      - main
+    paths:
+      - "docker/coder/base.Dockerfile"
+      - ".github/workflows/docker-build-push-coder-base*"
 
 jobs:
   build-and-push:
