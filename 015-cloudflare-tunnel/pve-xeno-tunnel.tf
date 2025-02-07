@@ -54,36 +54,18 @@ resource "cloudflare_record" "ssh-dev2_tuana9a_com" {
   proxied = true
 }
 
-resource "cloudflare_record" "lucas-dev_tuana9a_com" {
+resource "cloudflare_record" "amon_tuana9a_com" {
   zone_id = data.cloudflare_zone.tuana9a_com.id
-  name    = "lucas-dev"
+  name    = "amon"
   content = "${data.cloudflare_zero_trust_tunnel_cloudflared.pve_xeno_tunnel.id}.cfargotunnel.com"
   type    = "CNAME"
   ttl     = 1
   proxied = true
 }
 
-resource "cloudflare_record" "lucas-dev-8000_tuana9a_com" {
+resource "cloudflare_record" "amon-8000_tuana9a_com" {
   zone_id = data.cloudflare_zone.tuana9a_com.id
-  name    = "lucas-dev-8000"
-  content = "${data.cloudflare_zero_trust_tunnel_cloudflared.pve_xeno_tunnel.id}.cfargotunnel.com"
-  type    = "CNAME"
-  ttl     = 1
-  proxied = true
-}
-
-resource "cloudflare_record" "dev-amon_tuana9a_com" {
-  zone_id = data.cloudflare_zone.tuana9a_com.id
-  name    = "dev-amon"
-  content = "${data.cloudflare_zero_trust_tunnel_cloudflared.pve_xeno_tunnel.id}.cfargotunnel.com"
-  type    = "CNAME"
-  ttl     = 1
-  proxied = true
-}
-
-resource "cloudflare_record" "dev-amon-8000_tuana9a_com" {
-  zone_id = data.cloudflare_zone.tuana9a_com.id
-  name    = "dev-amon-8000"
+  name    = "amon-8000"
   content = "${data.cloudflare_zero_trust_tunnel_cloudflared.pve_xeno_tunnel.id}.cfargotunnel.com"
   type    = "CNAME"
   ttl     = 1
@@ -191,33 +173,7 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "pve_xeno_tunnel" {
       }
     }
     ingress_rule {
-      hostname = cloudflare_record.lucas-dev_tuana9a_com.hostname
-      service  = "http://192.168.56.49:8049"
-      origin_request {
-        bastion_mode             = false
-        disable_chunked_encoding = false
-        http2_origin             = false
-        keep_alive_connections   = 0
-        no_happy_eyeballs        = false
-        no_tls_verify            = false
-        proxy_port               = 0
-      }
-    }
-    ingress_rule {
-      hostname = cloudflare_record.lucas-dev-8000_tuana9a_com.hostname
-      service  = "http://192.168.56.49:8000"
-      origin_request {
-        bastion_mode             = false
-        disable_chunked_encoding = false
-        http2_origin             = false
-        keep_alive_connections   = 0
-        no_happy_eyeballs        = false
-        no_tls_verify            = false
-        proxy_port               = 0
-      }
-    }
-    ingress_rule {
-      hostname = cloudflare_record.dev-amon_tuana9a_com.hostname
+      hostname = cloudflare_record.amon_tuana9a_com.hostname
       service  = "http://192.168.56.206:8206"
       origin_request {
         bastion_mode             = false
@@ -230,7 +186,7 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "pve_xeno_tunnel" {
       }
     }
     ingress_rule {
-      hostname = cloudflare_record.dev-amon-8000_tuana9a_com.hostname
+      hostname = cloudflare_record.amon-8000_tuana9a_com.hostname
       service  = "http://192.168.56.206:8000"
       origin_request {
         bastion_mode             = false
