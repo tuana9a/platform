@@ -16,7 +16,7 @@ env:
   WORKING_DIR: 025-gcp-artifact-hub-tuana9a/
 
 jobs:
-  terraform-apply:
+  terraform-plan:
     runs-on: ubuntu-22.04
 
     permissions:
