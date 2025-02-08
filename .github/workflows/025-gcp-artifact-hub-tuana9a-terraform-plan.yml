@@ -1,4 +1,4 @@
-name: gcp artifact hub tuana9a terraform apply
+name: gcp artifact hub tuana9a terraform plan
 
 on:
   workflow_dispatch:
