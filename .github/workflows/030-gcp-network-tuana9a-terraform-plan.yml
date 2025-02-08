@@ -1,26 +1,22 @@
-name: ecr tuana9a terraform apply
+name: gcp network tuana9a terraform plan
 
 on:
   workflow_dispatch:
-  push:
+  pull_request:
     paths:
-      - "025-ecr-tuana9a/**"
-      - ".github/workflows/025-ecr-tuana9a*"
-    branches:
-      - main
+      - "030-gcp-network-tuana9a/**"
+      - ".github/workflows/030-gcp-network-tuana9a*"
 
 env:
   GCP_PROJECT_ID: tuana9a
   GCP_PROJECT_ID_NUM: 474326114337
-  GCP_SERVICE_ACCOUNT: terraform-state-editor@tuana9a.iam.gserviceaccount.com
+  GCP_SERVICE_ACCOUNT: terraform-network-admin@tuana9a.iam.gserviceaccount.com
   GCP_WORKLOAD_IDENTITY_POOL: github
   GCP_WORKLOAD_IDENTITY_POOL_PROVIDER: github-tuana9a
-  AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/terraform-ecr-admin
-  WORKING_DIR: 025-ecr-tuana9a/
-  AWS_REGION: ap-southeast-1
+  WORKING_DIR: 030-gcp-network-tuana9a/
 
 jobs:
-  terraform-apply:
+  terraform-plan:
     runs-on: ubuntu-22.04
 
     permissions:
@@ -34,20 +30,15 @@ jobs:
           project_id: "${{ env.GCP_PROJECT_ID }}"
           workload_identity_provider: "projects/${{ env.GCP_PROJECT_ID_NUM }}/locations/global/workloadIdentityPools/${{ env.GCP_WORKLOAD_IDENTITY_POOL }}/providers/${{ env.GCP_WORKLOAD_IDENTITY_POOL_PROVIDER }}"
           service_account: "${{ env.GCP_SERVICE_ACCOUNT }}"
-      - uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: "${{ env.AWS_ASSUME_ROLE }}"
-          aws-region: "${{ env.AWS_REGION }}"
-          retry-max-attempts: 3
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.7.1"
       - id: init
         working-directory: "${{ env.WORKING_DIR }}"
         run: terraform init
-      - id: apply
+      - id: plan
         working-directory: "${{ env.WORKING_DIR }}"
-        run: terraform apply -auto-approve
+        run: terraform plan
       - id: notify
         name: notify
         run: |

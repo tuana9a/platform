@@ -1,13 +1,11 @@
-name: ecr tuana9a terraform apply
+name: ecr tuana9a terraform plan
 
 on:
   workflow_dispatch:
-  push:
+  pull_request:
     paths:
       - "025-ecr-tuana9a/**"
       - ".github/workflows/025-ecr-tuana9a*"
-    branches:
-      - main
 
 env:
   GCP_PROJECT_ID: tuana9a
@@ -20,7 +18,7 @@ env:
   AWS_REGION: ap-southeast-1
 
 jobs:
-  terraform-apply:
+  terraform-plan:
     runs-on: ubuntu-22.04
 
     permissions:
@@ -45,9 +43,9 @@ jobs:
       - id: init
         working-directory: "${{ env.WORKING_DIR }}"
         run: terraform init
-      - id: apply
+      - id: plan
         working-directory: "${{ env.WORKING_DIR }}"
-        run: terraform apply -auto-approve
+        run: terraform plan
       - id: notify
         name: notify
         run: |

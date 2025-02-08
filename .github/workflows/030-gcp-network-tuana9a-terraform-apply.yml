@@ -2,10 +2,6 @@ name: gcp network tuana9a terraform apply
 
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - "030-gcp-network-tuana9a/**"
-      - ".github/workflows/030-gcp-network-tuana9a*"
   push:
     paths:
       - "030-gcp-network-tuana9a/**"
@@ -42,9 +38,6 @@ jobs:
       - id: init
         working-directory: "${{ env.WORKING_DIR }}"
         run: terraform init
-      - id: plan
-        working-directory: "${{ env.WORKING_DIR }}"
-        run: terraform plan
       - id: apply
         working-directory: "${{ env.WORKING_DIR }}"
         run: terraform apply -auto-approve
