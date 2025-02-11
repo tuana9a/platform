@@ -4,6 +4,8 @@ persistence:
 controller:
   additionalPlugins:
     - oidc-provider:89.v3dfb_6d89b_618
+    - job-dsl:1.90
+    - timestamper:1.28
   ingress:
     enabled: true
     hostName: jenkins.tuana9a.com
@@ -21,12 +23,7 @@ controller:
           - jenkins.tuana9a.com
   JCasC:
     configScripts:
-      oidc: |
-        credentials:
-          system:
-            domainCredentials:
-            - credentials:
-              - idTokenFile:
-                  id: gcp-oidc-id-token
-                  scope: GLOBAL
-                  audience: "https://iam.googleapis.com/projects/474326114337/locations/global/workloadIdentityPools/jenkins/providers/jenkins-tuana9a-com"
+      general: |
+        unclassified:
+          timestamper:
+            allPipelines: true
