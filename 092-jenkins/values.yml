@@ -2,6 +2,10 @@ persistence:
   enabled: true
   storageClass: nfs-vdb
 controller:
+  additionalPlugins:
+    - oidc-provider:89.v3dfb_6d89b_618
+    - job-dsl:1.90
+    - timestamper:1.28
   ingress:
     enabled: true
     hostName: jenkins.tuana9a.com
@@ -17,3 +21,9 @@ controller:
       - secretName: jenkins-tuana9a-com-tls
         hosts:
           - jenkins.tuana9a.com
+  JCasC:
+    configScripts:
+      general: |
+        unclassified:
+          timestamper:
+            allPipelines: true
