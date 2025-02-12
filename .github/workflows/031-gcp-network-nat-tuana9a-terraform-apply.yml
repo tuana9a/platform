@@ -42,7 +42,8 @@ jobs:
         working-directory: "${{ env.WORKING_DIR }}"
         run: terraform apply -auto-approve
       - id: notify
+        if: ${{ always() }}
         name: notify
         run: |
-          MESSAGE=":white_check_mark: ${{ github.workflow }}\\n$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          MESSAGE="${{ github.workflow }} $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           curl -X POST ${{ secrets.DISCORD_WEBHOOK }} -H "Content-Type: application/json" -d "{\"content\":\"${MESSAGE}\"}"

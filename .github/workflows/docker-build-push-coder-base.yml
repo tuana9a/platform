@@ -41,6 +41,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Notify
+        if: ${{ always() }}
         run: |
-          MESSAGE="SUCCESS build-coder\\nimage: \`tuana9a/coder:base\`"
+          MESSAGE="${{ github.workflow }} $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           curl -X POST ${{ secrets.DISCORD_WEBHOOK }} -H "Content-Type: application/json" -d "{\"content\":\"${MESSAGE}\"}"
