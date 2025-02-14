@@ -12,3 +12,7 @@ spec:
       - http01:
           ingress:
             ingressClassName: nginx
+            ingressTemplate:
+              metadata:
+                annotations:
+                  external-dns.alpha.kubernetes.io/target: "xenomorph.tuana9a.com"
