@@ -16,9 +16,15 @@ update_config() {
   # NOTE: proxmox spawn temporary webserver at port 80 to renew its certificates
   # so we should only listen on https or 443
   # which it's acceptable and prevent insecure http access
+  # [UPDATE]: NOPE this will make cert-manager inside k8s cluster fail to issue new certificate using http + ingress
+  # so accessing this proxmox will using ssh tunnel (port-forward) to access it or cloudflare tunnel ...
   current_ip=$1
 
   content='# '$(date --utc +%FT%TZ)' This file '$nginx_stream_conf_file' is generated and will be overwrited
+server {
+  listen 80;
+  proxy_pass '$current_ip':80;
+}
 server {
   listen 443;
   proxy_pass '$current_ip':443;
