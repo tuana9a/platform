@@ -1,0 +1,16 @@
+name: check terraform key
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+
+jobs:
+  check-terraform-key:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+      - id: check-terraform-key
+        run: |
+          ./scripts/check-terraform-key.sh
