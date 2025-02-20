@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: dev2-code-server-forwarder
+subsets:
+  - addresses:
+      - ip: 192.168.56.209
+    ports:
+      - port: 8209
+        protocol: TCP
+---
+# https://github.com/kubernetes/ingress-nginx/issues/8941
+apiVersion: v1
+kind: Service
+metadata:
+  name: dev2-code-server-forwarder
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8209
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dev2-code-server-forwarder
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    external-dns.alpha.kubernetes.io/hostname: "dev2.tuana9a.com"
+    external-dns.alpha.kubernetes.io/target: "xenomorph.tuana9a.com"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - "dev2.tuana9a.com"
+      secretName: dev2-tuana9a-com-tls
+  rules:
+    - host: "dev2.tuana9a.com"
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: dev2-code-server-forwarder
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wildcard-dev2-code-server-forwarder
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-cloudflare-production"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    external-dns.alpha.kubernetes.io/hostname: "*.dev2.tuana9a.com"
+    external-dns.alpha.kubernetes.io/target: "xenomorph.tuana9a.com"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - "*.dev2.tuana9a.com"
+      secretName: wildcard-dev2-tuana9a-com-tls
+  rules:
+    - host: "*.dev2.tuana9a.com"
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: dev2-code-server-forwarder
+                port:
+                  number: 80

@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: pve-xeno-forwarder
+subsets:
+  - addresses:
+      - ip: 192.168.56.1
+    ports:
+      - port: 8006
+        protocol: TCP
+---
+# https://github.com/kubernetes/ingress-nginx/issues/8941
+apiVersion: v1
+kind: Service
+metadata:
+  name: pve-xeno-forwarder
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 8006
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pve-xeno-forwarder
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    external-dns.alpha.kubernetes.io/hostname: "pve-xeno.tuana9a.com"
+    external-dns.alpha.kubernetes.io/target: "xenomorph.tuana9a.com"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - "pve-xeno.tuana9a.com"
+      secretName: pve-xeno-tuana9a-com-tls
+  rules:
+    - host: "pve-xeno.tuana9a.com"
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: pve-xeno-forwarder
+                port:
+                  number: 443
