@@ -4,9 +4,9 @@ metadata:
   name: amon-code-server-forwarder
 subsets:
   - addresses:
-      - ip: 192.168.56.49
+      - ip: 192.168.56.206
     ports:
-      - port: 8049
+      - port: 8206
         protocol: TCP
 ---
 # https://github.com/kubernetes/ingress-nginx/issues/8941
@@ -20,7 +20,7 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8049
+      targetPort: 8206
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
