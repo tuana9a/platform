@@ -21,3 +21,7 @@ provider "google" {
   region  = var.gcp_region_name
   zone    = var.gcp_zone_name
 }
+
+provider "aws" {
+  region = "ap-southeast-1"
+}
