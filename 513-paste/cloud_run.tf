@@ -12,7 +12,7 @@ resource "google_cloud_run_v2_service" "paste" {
     }
 
     containers {
-      image = "tuana9a/paste-go:1.0.0"
+      image = "tuana9a/paste-go:2.0.4"
       resources {
         limits = {
           cpu    = "1"
