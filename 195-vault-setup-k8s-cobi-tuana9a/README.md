@@ -1,6 +1,16 @@
 # vault
 
-first access test
+# unseal
+
+```bash
+for vid in {0..2}; do
+    for keyid in {0..2}; do
+        kubectl -n vault exec vault-$vid -- vault operator unseal $(cat /tmp/vault-unseal.key.$keyid);
+    done
+done
+```
+
+# first access test
 
 ```bash
 export VAULT_ADDR=https://vault.tuana9a.com
