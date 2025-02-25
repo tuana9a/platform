@@ -22,19 +22,19 @@
 <div id="others">
   <script>
     const othersElement = document.currentScript?.parentElement || document.getElementById("others");
-    console.log(othersElement);
+    console.debug(othersElement);
     const imgPaths = [
-      "avatars/background.jpg",
-      "avatars/lockscreen.jpg",
-      "avatars/tuana9a-1080.jpg",
-      "avatars/tuana9a-256.jpg",
-      "avatars/tuana9a-512.jpg",
-      "avatars/tuana9a.jpg",
-      "avatars/tuannm20900.jpg",
+      "/avatars/background.jpg",
+      "/avatars/lockscreen.jpg",
+      "/avatars/tuana9a-1080.jpg",
+      "/avatars/tuana9a-256.jpg",
+      "/avatars/tuana9a-512.jpg",
+      "/avatars/tuana9a.jpg",
+      "/avatars/tuannm20900.jpg",
     ];
     for (const path of imgPaths) {
       const a = document.createElement("a");
-      a.href = `https://public.tuana9a.com/${path}`;
+      a.href = path;
       a.textContent = path;
       const div = document.createElement("div");
       div.appendChild(a);
