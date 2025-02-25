@@ -28,7 +28,9 @@ jobs:
       - id: upload
         name: upload
         working-directory: "${{ env.WORKING_DIR }}"
-        run: for f in $(find *); do echo $f; aws --debug s3api --endpoint-url "$S3_ENDPOINT_URL" put-object --bucket "$BUCKET_NAME" --key $f --body $f; done
+        # There is an uncompatible with aws
+        # https://community.cloudflare.com/t/an-error-occurred-internalerror-when-calling-the-putobject-operation/764905/11
+        run: for f in $(find *); do echo $f; aws --debug s3api --endpoint-url "$S3_ENDPOINT_URL" put-object --bucket "$BUCKET_NAME" --key $f --body $f --checksum-algorithm CRC32; done
       - id: notify
         if: ${{ always() }}
         name: notify
