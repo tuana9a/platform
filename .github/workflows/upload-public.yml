@@ -1,0 +1,35 @@
+name: upload public
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "public/**"
+      - ".github/workflows/upload-public*"
+
+env:
+  WORKING_DIR: public
+  S3_ENDPOINT: "${{ secrets.R2_ENDPOINT }}"
+  BUCKET_NAME: "public"
+  AWS_ACCESS_KEY_ID: "${{ secrets.R2_AWS_ACCESS_KEY_ID }}"
+  AWS_SECRET_ACCESS_KEY: "${{ secrets.R2_AWS_SECRET_ACCESS_KEY }}"
+  AWS_REGION: auto
+
+jobs:
+  upload-public:
+    runs-on: ubuntu-22.04
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - id: upload
+        working-directory: "${{ env.WORKING_DIR }}"
+        run: for f in $(find *); do r2 put-object --bucket "$BUCKET_NAME" --key $f --body $f; done
+      - id: notify
+        if: ${{ always() }}
+        name: notify
+        run: |
+          MESSAGE="${{ github.workflow }} $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          curl -X POST ${{ secrets.DISCORD_WEBHOOK }} -H "Content-Type: application/json" -d "{\"content\":\"${MESSAGE}\"}"
