@@ -8,7 +8,7 @@ on:
       - ".github/workflows/upload-public*"
 
 env:
-  WORKING_DIR: public
+  WORKING_DIR: public/
   S3_ENDPOINT_URL: "${{ secrets.R2_ENDPOINT_URL }}"
   BUCKET_NAME: "public"
   AWS_ACCESS_KEY_ID: "${{ secrets.R2_AWS_ACCESS_KEY_ID }}"
