@@ -25,8 +25,8 @@ jobs:
 
     steps:
       - id: upload
-        working-directory: "${{ env.WORKING_DIR }}"
-        run: for f in $(find *); do aws s3api --endpoint-url "$S3_ENDPOINT_URL" put-object --bucket "$BUCKET_NAME" --key $f --body $f; done
+        # working-directory: "${{ env.WORKING_DIR }}"
+        run: for f in $(find *); do echo aws s3api --endpoint-url "$S3_ENDPOINT_URL" put-object --bucket "$BUCKET_NAME" --key $f --body $f; done
       - id: notify
         if: ${{ always() }}
         name: notify
