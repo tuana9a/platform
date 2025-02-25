@@ -1,0 +1,39 @@
+name: upload public
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "public/**"
+      - ".github/workflows/upload-public*"
+
+env:
+  WORKING_DIR: public/
+  S3_ENDPOINT_URL: "${{ secrets.R2_ENDPOINT_URL }}"
+  BUCKET_NAME: "public"
+  AWS_ACCESS_KEY_ID: "${{ secrets.R2_AWS_ACCESS_KEY_ID }}"
+  AWS_SECRET_ACCESS_KEY: "${{ secrets.R2_AWS_SECRET_ACCESS_KEY }}"
+  AWS_REGION: auto
+
+jobs:
+  upload-public:
+    runs-on: ubuntu-22.04
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+      - id: upload
+        name: upload
+        working-directory: "${{ env.WORKING_DIR }}"
+        # There is an uncompatible with aws
+        # https://community.cloudflare.com/t/an-error-occurred-internalerror-when-calling-the-putobject-operation/764905/11
+        run: for f in $(find *); do echo $f; aws s3api --endpoint-url "$S3_ENDPOINT_URL" put-object --bucket "$BUCKET_NAME" --key $f --body $f --checksum-algorithm CRC32; done
+      - id: notify
+        if: ${{ always() }}
+        name: notify
+        run: |
+          MESSAGE="${{ github.workflow }} $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          curl -X POST ${{ secrets.DISCORD_WEBHOOK }} -H "Content-Type: application/json" -d "{\"content\":\"${MESSAGE}\"}"
