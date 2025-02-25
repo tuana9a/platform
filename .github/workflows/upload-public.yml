@@ -9,7 +9,7 @@ on:
 
 env:
   WORKING_DIR: public
-  S3_ENDPOINT: "${{ secrets.R2_ENDPOINT }}"
+  S3_ENDPOINT_URL: "${{ secrets.R2_ENDPOINT_URL }}"
   BUCKET_NAME: "public"
   AWS_ACCESS_KEY_ID: "${{ secrets.R2_AWS_ACCESS_KEY_ID }}"
   AWS_SECRET_ACCESS_KEY: "${{ secrets.R2_AWS_SECRET_ACCESS_KEY }}"
@@ -26,7 +26,7 @@ jobs:
     steps:
       - id: upload
         working-directory: "${{ env.WORKING_DIR }}"
-        run: for f in $(find *); do r2 put-object --bucket "$BUCKET_NAME" --key $f --body $f; done
+        run: for f in $(find *); do aws s3api --endpoint-url "$S3_ENDPOINT_URL" put-object --bucket "$BUCKET_NAME" --key $f --body $f; done
       - id: notify
         if: ${{ always() }}
         name: notify
