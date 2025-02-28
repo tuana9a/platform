@@ -7,6 +7,6 @@ resource "gitlab_project_variable" "paste-go" {
   project   = "tuana9a/paste-go"
   key       = each.key
   value     = data.vault_kv_secret.paste-go.data[each.key]
-  protected = true
+  protected = false
   masked    = false
 }

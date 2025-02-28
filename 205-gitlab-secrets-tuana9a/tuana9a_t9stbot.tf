@@ -7,6 +7,6 @@ resource "gitlab_project_variable" "t9stbot" {
   project   = "tuana9a/t9stbot"
   key       = each.key
   value     = data.vault_kv_secret.t9stbot.data[each.key]
-  protected = true
+  protected = false
   masked    = false
 }
