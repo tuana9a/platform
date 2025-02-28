@@ -1,3 +1,7 @@
+data "vault_kv_secret" "redis" {
+  path = "kv/paste/redis"
+}
+
 resource "google_cloud_run_v2_service" "paste" {
   name     = "paste"
   location = var.gcp_region_name
@@ -12,7 +16,7 @@ resource "google_cloud_run_v2_service" "paste" {
     }
 
     containers {
-      image = "tuana9a/paste-go:2.0.4"
+      image = "tuana9a/paste-go:2.0.0-6ecf562b"
       resources {
         limits = {
           cpu    = "1"
@@ -40,4 +44,26 @@ resource "google_cloud_run_v2_service_iam_member" "paste_noauth" {
   name     = google_cloud_run_v2_service.paste.name
   role     = "roles/run.invoker"
   member   = "allUsers"
+}
+
+# https://cloud.google.com/run/docs/mapping-custom-domains#terraform
+resource "google_cloud_run_domain_mapping" "paste" {
+  name     = cloudflare_record.paste.hostname
+  location = google_cloud_run_v2_service.paste.location
+  metadata {
+    namespace = data.google_project.current.project_id
+  }
+  spec {
+    route_name = google_cloud_run_v2_service.paste.name
+  }
+}
+
+# https://console.cloud.google.com/run/domains
+resource "cloudflare_record" "paste" {
+  zone_id = data.cloudflare_zone.tuana9a_com.id
+  name    = "paste"
+  value   = "ghs.googlehosted.com."
+  type    = "CNAME"
+  ttl     = 60
+  proxied = false
 }
