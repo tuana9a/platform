@@ -9,9 +9,10 @@ CLOUDFLARE_ACCOUNT_ID="{{ KUBERNETES_BACKUP_CLOUDFLARE_ACCOUNT_ID }}"
 S3_ENDPOINT="https://$CLOUDFLARE_ACCOUNT_ID.r2.cloudflarestorage.com"
 BUCKET_NAME="{{ KUBERNETES_BACKUP_BUCKET_NAME }}"
 
-datehour=$(date '+%Y%m%d%H');
-unixtimestamp=$(date +%s);
-ETCD_SNAPSHOT=/tmp/snapshot.db
+datehour=$(date '+%Y%m%d%H')
+hourminutesecond=$(date '+%H%M%S')
+unixtimestamp=$(date +%s)
+ETCD_SNAPSHOT=/snapshot.db
 DUMP_FILE="$datehour-k8s-cobi-$HOST_NAME-backup-kubernetes.tar.gz"
 S3_OBJECT_KEY=$DUMP_FILE
 WORKDIR=/tmp
@@ -48,39 +49,58 @@ ETCDCTL_CERT=/etc/kubernetes/pki/apiserver-etcd-client.crt
 ETCDCTL_KEY=/etc/kubernetes/pki/apiserver-etcd-client.key
 ETCDCTL_OPTS="--cacert=$ETCDCTL_CACERT --cert=$ETCDCTL_CERT --key=$ETCDCTL_KEY"
 
-echo Dumping
+echo === Members ===
 ETCDCTL_API=3 sudo /usr/local/bin/etcdctl member list $ETCDCTL_OPTS
-ETCDCTL_API=3 sudo /usr/local/bin/etcdctl snapshot save $ETCD_SNAPSHOT $ETCDCTL_OPTS
-ETCDCTL_API=3 sudo /usr/local/bin/etcdctl --write-out=table snapshot status $ETCD_SNAPSHOT $ETCDCTL_OPTS
 
-echo Zipping $DUMP_FILE
+echo === Dump $ETCD_SNAPSHOT ===
+ETCDCTL_API=3 sudo /usr/local/bin/etcdctl snapshot save $ETCD_SNAPSHOT $ETCDCTL_OPTS
+
+echo === Status ===
+sudo /usr/local/bin/etcdutl --write-out=table snapshot status $ETCD_SNAPSHOT
+
+echo === Zip $DUMP_FILE ===
 sudo tar -czvf $DUMP_FILE $ETCD_SNAPSHOT /etc/kubernetes/pki /etc/kubernetes/manifests
 
-echo Uploading "$S3_OBJECT_KEY" "$WORKDIR/$DUMP_FILE"
+echo === Upload "$S3_OBJECT_KEY" "$WORKDIR/$DUMP_FILE" ===
 upload "$S3_OBJECT_KEY" "$DUMP_FILE"
 
-# cleanup
+echo === Cleanup ===
 sudo rm -f snapshot.db
 sudo rm -f *backup-kubernetes*.tar.gz
 
+echo === Report ===
+
 DURATION=$SECONDS
+cat <<EOF | sudo kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f -
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: backup-kubernetes-reports-$datehour-$HOST_NAME-$hourminutesecond
+  namespace: default
+spec:
+  ttlSecondsAfterFinished: 259200 # 3 days
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: backup-kubernetes-reports
+        image: alpine/curl
+        command:
+        - /bin/sh
+        - -c
+        - |
+          push_gateway_baseurl="http://prometheus-prometheus-pushgateway.prometheus.svc.cluster.local:9091";
+          POD_NAMESPACE=\$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace);
+          cat <<EOF | curl --data-binary @- \$push_gateway_baseurl/metrics/job/k8s_backup_cronjob
+          # TYPE k8s_backup_datehour gauge
+          k8s_backup_datehour{namespace="\$POD_NAMESPACE"} $datehour
+          # TYPE k8s_backup_duration gauge
+          k8s_backup_duration{namespace="\$POD_NAMESPACE"} $DURATION
+          # TYPE k8s_backup_unixtimestamp gauge
+          k8s_backup_unixtimestamp{namespace="\$POD_NAMESPACE"} $unixtimestamp
+          EOF
+EOF
+
+echo === Notify ===
 # MSG=":white_check_mark: \`backup-kubernetes\` \`$HOST_NAME\` \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
 # notify "$MSG"
-
-sudo kubectl --kubeconfig /etc/kubernetes/admin.conf -n default run backup-kubernetes-reports-$datehour-$HOST_NAME-$RANDOM \
---image=amazon/aws-cli:2.18.0 \
---restart=Never \
---namespace=default \
---command -- /bin/sh -c '
-push_gateway_baseurl="http://prometheus-prometheus-pushgateway.prometheus.svc.cluster.local:9091";
-POD_NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace);
-
-cat <<EOF | curl --data-binary @- $push_gateway_baseurl/metrics/job/k8s_backup_cronjob
-# TYPE k8s_backup_datehour gauge
-k8s_backup_datehour{namespace="$POD_NAMESPACE"} '$datehour'
-# TYPE k8s_backup_duration gauge
-k8s_backup_duration{namespace="$POD_NAMESPACE"} '$DURATION'
-# TYPE k8s_backup_unixtimestamp gauge
-k8s_backup_unixtimestamp{namespace="$POD_NAMESPACE"} '$unixtimestamp'
-EOF
-'
