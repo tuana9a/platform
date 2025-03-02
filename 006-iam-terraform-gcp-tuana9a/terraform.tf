@@ -16,13 +16,13 @@ terraform {
 }
 
 provider "google" {
-  project = var.gcp_project_name
+  project = "tuana9a"
   region  = "asia-southeast1"
   zone    = "asia-southeast1-b"
 }
 
 provider "google-beta" {
-  project = var.gcp_project_name
+  project = "tuana9a"
   region  = "asia-southeast1"
   zone    = "asia-southeast1-b"
 }

@@ -12,7 +12,7 @@ terraform {
 }
 
 provider "google" {
-  project = var.gcp_project_name
+  project = "tuana9a"
   region  = "asia-southeast1"
   zone    = "asia-southeast1-b"
 
@@ -21,6 +21,6 @@ provider "google" {
   # you must specify a billing_project and set user_project_override to true in the provider configuration.
   # Otherwise the Billing Budgets API will return a 403 error.
   # Your account must have the serviceusage.services.use permission on the billing_project you defined.
-  billing_project       = var.gcp_project_name
+  billing_project       = "tuana9a"
   user_project_override = true
 }
