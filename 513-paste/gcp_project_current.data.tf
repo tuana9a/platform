@@ -1,1 +1,0 @@
-../common/gcp_project_current.data.tf

@@ -2,6 +2,9 @@ data "vault_kv_secret" "redis" {
   path = "kv/paste/redis"
 }
 
+data "google_project" "current" {
+}
+
 resource "google_cloud_run_v2_service" "paste" {
   name     = "paste"
   location = "asia-southeast1"
