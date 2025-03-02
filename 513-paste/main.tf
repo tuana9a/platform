@@ -4,7 +4,7 @@ data "vault_kv_secret" "redis" {
 
 resource "google_cloud_run_v2_service" "paste" {
   name     = "paste"
-  location = var.gcp_region_name
+  location = "asia-southeast1"
   client   = "terraform"
 
   template {

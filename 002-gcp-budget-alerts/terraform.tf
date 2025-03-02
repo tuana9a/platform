@@ -13,8 +13,8 @@ terraform {
 
 provider "google" {
   project = var.gcp_project_name
-  region  = var.gcp_region_name
-  zone    = var.gcp_zone_name
+  region  = "asia-southeast1"
+  zone    = "asia-southeast1-b"
 
   # Warning:
   # If you are using User ADCs (Application Default Credentials) with this resource,
