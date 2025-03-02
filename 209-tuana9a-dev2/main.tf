@@ -5,7 +5,7 @@ resource "random_password" "vm_password" {
 }
 
 resource "proxmox_virtual_environment_vm" "tuana9a_dev2" {
-  node_name = local.proxmox_node.pve_cobi.node_name
+  node_name = "xenomorph"
   vm_id     = 209
   name      = "tuana9a-dev2"
   tags      = ["terraform", "ubuntu"]
@@ -20,6 +20,7 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev2" {
 
   memory {
     dedicated = 8192
+    floating  = 4096
   }
 
   agent {
@@ -28,7 +29,7 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev2" {
   }
 
   disk {
-    datastore_id = local.proxmox_node.pve_cobi.storage.sda
+    datastore_id = "local"
     file_id      = "local:iso/jammy-server-cloudimg-amd64.img"
     interface    = "virtio0"
     size         = 64
@@ -45,7 +46,7 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev2" {
   boot_order = ["virtio0"]
 
   initialization {
-    datastore_id = local.proxmox_node.pve_cobi.storage.sda
+    datastore_id = "local"
 
     ip_config {
       ipv4 {
@@ -55,9 +56,11 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev2" {
     }
 
     user_account {
-      keys     = var.vm_ssh_keys
       password = random_password.vm_password.result
       username = "u"
+      keys = [
+        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCQJOt5/MleT8q4xsWwYFMkv6pVJbT/emLge65lc3t3/bXko7UaKM1STRuFCWMhug/KFRe3WGYOTH9hTYtgsvm60FcCfORMxpnq0bej8d0k36sg0wG/dWfGFZ5IGLQSP78Sac9w8fPZrVtorGI59oLW83MqECDV/x134Rogsrm4q2NT+fhWi9X1G899vC1vqDE7u0nzWJcRMCjQcVy9FH+dRXl6eBX4msmtdIcn1mwDB9bBhAHseVH6d6CJvWxOXE9C/gGOAmcTmvgvL6G++yPUwmd/Uljxjf3uLZcVkA+YMaq5UQbPM6x+VLcEMXU+9uQSfqRUVHq8mL+BFJduMmoyK9QWZ9PZ2k8HSdRcLnQEq8h2DizAHt5khmC0hUKMr/7hHLE1ESpiWmq8rPxnqqjDkdUAj8EE1oKIZ51sveI6CXaJX2GuXGMnDpeB4MULa7bTfWHpQ/6qgobufjIO5m+C977PU2vLs9Tzr3ZSsASXTX4SidszLYKjh6rVjN+w60c= u@tuana9a-dev"
+      ]
     }
   }
 
