@@ -33,7 +33,7 @@ provider "vault" {
 
 provider "bizflycloud" {
   auth_method                   = "application_credential"
-  region_name                   = var.bizflycloud_region_name
+  region_name                   = "HaNoi"
   application_credential_id     = data.vault_kv_secret.terraform.data.bizflycloud_application_credential_id
   application_credential_secret = data.vault_kv_secret.terraform.data.bizflycloud_application_credential_secret
 }
