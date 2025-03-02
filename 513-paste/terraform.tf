@@ -31,6 +31,10 @@ provider "vault" {
   skip_child_token = true
 }
 
+data "vault_kv_secret" "edit_dns" {
+  path = "kv/cloudflare/accounts/tuana9a/api-tokens/edit-dns"
+}
+
 provider "cloudflare" {
   api_token = data.vault_kv_secret.edit_dns.data.cloudflare_api_token
 }
