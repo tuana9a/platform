@@ -31,6 +31,10 @@ provider "vault" {
   skip_child_token = true
 }
 
+data "vault_kv_secret" "terraform" {
+  path = "kv/bizflycloud/accounts/tuana9a/api-tokens/terraform"
+}
+
 provider "bizflycloud" {
   auth_method                   = "application_credential"
   region_name                   = "HaNoi"
