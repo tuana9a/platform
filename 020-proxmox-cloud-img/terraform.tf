@@ -31,7 +31,12 @@ provider "vault" {
   skip_child_token = true
 }
 
+data "vault_kv_secret" "pve_token" {
+  path = "kv/proxmox/pve-xeno/api-tokens/tf"
+}
+
 provider "proxmox" {
-  endpoint  = data.vault_kv_secret.terraform.data.pve_endpoint
-  api_token = data.vault_kv_secret.terraform.data.pve_api_token
+  endpoint  = data.vault_kv_secret.pve_token.data.pve_endpoint
+  api_token = data.vault_kv_secret.pve_token.data.pve_api_token
+  insecure  = data.vault_kv_secret.pve_token.data.insecure
 }
