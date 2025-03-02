@@ -12,15 +12,15 @@ terraform {
 }
 
 provider "google" {
-  project = var.gcp_project_name
-  region  = var.gcp_region_name
-  zone    = var.gcp_zone_name
+  project = "tuana9a"
+  region  = "asia-southeast1"
+  zone    = "asia-southeast1-b"
 
   # Warning:
   # If you are using User ADCs (Application Default Credentials) with this resource,
   # you must specify a billing_project and set user_project_override to true in the provider configuration.
   # Otherwise the Billing Budgets API will return a 403 error.
   # Your account must have the serviceusage.services.use permission on the billing_project you defined.
-  billing_project       = var.gcp_project_name
+  billing_project       = "tuana9a"
   user_project_override = true
 }

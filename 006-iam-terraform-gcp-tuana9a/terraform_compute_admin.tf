@@ -3,7 +3,7 @@ resource "google_service_account" "terraform_compute_admin" {
 }
 
 resource "google_project_iam_member" "terraform_compute_admin_1" {
-  project = var.gcp_project_name
+  project = "tuana9a"
   # https://cloud.google.com/storage/docs/access-control/iam-roles
   role   = "roles/storage.objectUser"
   member = "serviceAccount:${google_service_account.terraform_compute_admin.email}"
@@ -15,7 +15,7 @@ resource "google_project_iam_member" "terraform_compute_admin_1" {
 }
 
 resource "google_project_iam_member" "terraform_compute_admin_2" {
-  project = var.gcp_project_name
+  project = "tuana9a"
   # https://cloud.google.com/storage/docs/access-control/iam-roles
   role   = "roles/compute.admin"
   member = "serviceAccount:${google_service_account.terraform_compute_admin.email}"

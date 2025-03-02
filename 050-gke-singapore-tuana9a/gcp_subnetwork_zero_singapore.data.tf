@@ -1,1 +1,0 @@
-../common/gcp_subnetwork_zero_singapore.data.tf

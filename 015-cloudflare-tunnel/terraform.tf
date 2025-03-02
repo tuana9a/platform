@@ -21,15 +21,23 @@ terraform {
 }
 
 provider "google" {
-  project = var.gcp_project_name
-  region  = var.gcp_region_name
-  zone    = var.gcp_zone_name
+  project = "tuana9a"
+  region  = "asia-southeast1"
+  zone    = "asia-southeast1-b"
 }
 
 provider "vault" {
   address = "https://vault.tuana9a.com"
 
   skip_child_token = true
+}
+
+data "vault_kv_secret" "edit_tunnel" {
+  path = "kv/cloudflare/accounts/tuana9a/api-tokens/edit-tunnel"
+}
+
+locals {
+  cloudflare_account_id = data.vault_kv_secret.edit_tunnel.data.cloudflare_account_id
 }
 
 provider "cloudflare" {

@@ -2,9 +2,16 @@ data "vault_kv_secret" "redis" {
   path = "kv/paste/redis"
 }
 
+data "google_project" "current" {
+}
+
+data "cloudflare_zone" "tuana9a_com" {
+  name = "tuana9a.com"
+}
+
 resource "google_cloud_run_v2_service" "paste" {
   name     = "paste"
-  location = var.gcp_region_name
+  location = "asia-southeast1"
   client   = "terraform"
 
   template {
