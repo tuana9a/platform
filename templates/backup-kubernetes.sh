@@ -75,10 +75,10 @@ cat <<EOF | sudo kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f -
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: backup-kubernetes-reports-$datehour-$HOST_NAME-$hourminutesecond
+  name: backup-kubernetes-reports-$datehour-$hourminutesecond-$HOST_NAME
   namespace: default
 spec:
-  ttlSecondsAfterFinished: 259200 # 3 days
+  ttlSecondsAfterFinished: 86400 # 1 days
   template:
     spec:
       restartPolicy: Never
