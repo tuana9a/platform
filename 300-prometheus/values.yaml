@@ -4,3 +4,10 @@ server:
   persistentVolume:
     storageClass: nfs-vdb
     size: 15Gi
+  resources:
+    limits:
+      cpu: 500m
+      memory: 2048Mi
+    requests:
+      cpu: 500m
+      memory: 1024Mi
