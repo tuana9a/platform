@@ -1,0 +1,41 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: uuid
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+        - image: tuana9a/uuid:git-8386fdd0bf27daa0359e5bfbf044521f0b2c0d79
+          env:
+            - name: BIND
+              value: "0.0.0.0"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: uuid
+  namespace: default
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    external-dns.alpha.kubernetes.io/hostname: "uuid.default.kn.tuana9a.com"
+    external-dns.alpha.kubernetes.io/target: "xenomorph.tuana9a.com"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - uuid.default.kn.tuana9a.com
+      secretName: uuid-default-kn-tuana9a-com-tls
+  rules:
+    - host: uuid.default.kn.tuana9a.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: forward-kourier
+                port:
+                  number: 80
