@@ -7,9 +7,5 @@ resource "helm_release" "jenkins" {
   chart      = "jenkins"
   version    = "5.8.10"
 
-  values = [
-    file("./values.yml"),
-    file("./oidc-values.yml"),
-    file("./test-oidc-values.yml"),
-  ]
+  values = [file("./values.yml")]
 }

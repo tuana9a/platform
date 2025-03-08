@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: general-jcasc
+  namespace: jenkins
+  labels:
+    jenkins-jenkins-config: "true"
+data:
+  general.yaml: |
+    unclassified:
+      timestamper:
+        allPipelines: true
