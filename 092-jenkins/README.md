@@ -21,3 +21,13 @@ So taking a look into existing configmap that used by the sidecar I'm seeing
 ![img](imgs/findings-jenkins-autoreload-1.png)
 
 ![img](imgs/findings-jenkins-autoreload-2.png)
+
+# oidc provider
+
+https://plugins.jenkins.io/oidc-provider/
+
+# job dsl
+
+https://plugins.jenkins.io/job-dsl/
+
+https://jenkinsci.github.io/job-dsl-plugin/
