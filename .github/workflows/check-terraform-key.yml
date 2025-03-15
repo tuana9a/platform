@@ -1,5 +1,3 @@
-name: check terraform key
-
 on:
   workflow_dispatch:
   pull_request:
@@ -14,11 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: check-terraform-key
-        run: |
-          ./scripts/check-terraform-key.sh
-
+        run: ./scripts/check-terraform-key.sh
+      - id: set-status-ok
+        run: echo 'status=ok' >> $GITHUB_ENV
       - name: Notify
         if: ${{ always() }}
         run: |
-          MESSAGE="${{ github.workflow }} $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          github_workflow=${{ github.workflow }}
+          workflow_name=$(echo $github_workflow | sed 's|.github/workflows/||')
+          MESSAGE="${status:-bad} $workflow_name $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           curl -X POST ${{ secrets.DISCORD_WEBHOOK }} -H "Content-Type: application/json" -d "{\"content\":\"${MESSAGE}\"}"
