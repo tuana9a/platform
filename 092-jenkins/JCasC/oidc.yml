@@ -22,6 +22,15 @@ data:
     jobs:
       - script: |
           pipelineJob('test-gcp-oidc') {
+            properties {
+              pipelineTriggers {
+                triggers {
+                  cron {
+                    spec('@daily')
+                  }
+                }
+              }
+            }
             definition {
               cpsScm {
                 scm {
@@ -33,12 +42,20 @@ data:
                   }
                 }
                 scriptPath(".jenkins/test-gcp-oidc.Jenkinsfile")
-                lightweight()
               }
             }
           }
       - script: |
           pipelineJob('test-aws-oidc') {
+            properties {
+              pipelineTriggers {
+                triggers {
+                  cron {
+                    spec('@daily')
+                  }
+                }
+              }
+            }
             definition {
               cpsScm {
                 scm {
@@ -50,7 +67,6 @@ data:
                   }
                 }
                 scriptPath(".jenkins/test-aws-oidc.Jenkinsfile")
-                lightweight()
               }
             }
           }
