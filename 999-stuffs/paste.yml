@@ -7,7 +7,7 @@ spec:
   template:
     spec:
       containers:
-        - image: tuana9a/paste-go:2.0.0-6ecf562b
+        - image: tuana9a/paste-go:2.0.0-546fe292
           env:
             - name: BIND
               value: "0.0.0.0"
