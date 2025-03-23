@@ -1,5 +1,6 @@
 - name: rsync conf.d dir to remote
   become: true
+  when: nginx.conf_d is defined
   ansible.posix.synchronize:
     src: "{{ nginx.conf_d }}"
     recursive: true
@@ -10,6 +11,7 @@
 
 - name: rsync stream.conf.d dir to remote
   become: true
+  when: nginx.stream_conf_d is defined
   ansible.posix.synchronize:
     src: "{{ nginx.stream_conf_d }}"
     recursive: true

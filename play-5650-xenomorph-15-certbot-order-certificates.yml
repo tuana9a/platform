@@ -1,0 +1,8 @@
+- hosts: xenomorph
+  tasks:
+    - name: certbot certificates
+      shell: certbot certonly --non-interactive --agree-tos --domains trithuctre.com --nginx -m tuana9a@gmail.com
+    - name: certbot certificates
+      shell: certbot certonly --non-interactive --agree-tos --domains trangchu.net --nginx -m tuana9a@gmail.com
+    - name: certbot certificates
+      shell: certbot certonly --non-interactive --agree-tos --domains netchat.site --nginx -m tuana9a@gmail.com

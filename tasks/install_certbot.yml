@@ -1,0 +1,22 @@
+- name: Install snapd
+  become: true
+  apt:
+    name: snapd
+    state: present
+
+- name: Install certbot
+  become: true
+  community.general.snap:
+    classic: true
+    name: certbot
+
+- name: Link binary
+  become: true
+  shell: "ln -sf /snap/bin/certbot /usr/bin/certbot"
+
+- name: Install certbot dns cloudflare
+  become: true
+  when: "install_certbot_dns_cloudlfare | default(false)"
+  community.general.snap:
+    classic: true
+    name: certbot-dns-cloudflare

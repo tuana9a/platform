@@ -1,0 +1,5 @@
+- name: install sudo
+  become: true
+  apt:
+    name: sudo
+    state: present

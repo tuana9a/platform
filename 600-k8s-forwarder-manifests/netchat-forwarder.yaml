@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: netchat-forwarder
+subsets:
+  - addresses:
+      - ip: 192.168.56.1
+    ports:
+      - port: 8080
+        protocol: TCP
+---
+# https://github.com/kubernetes/ingress-nginx/issues/8941
+apiVersion: v1
+kind: Service
+metadata:
+  name: netchat-forwarder
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: netchat-forwarder
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - "netchat.site"
+      secretName: netchat-site-tls
+  rules:
+    - host: "netchat.site"
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: netchat-forwarder
+                port:
+                  number: 80

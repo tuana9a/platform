@@ -1,3 +1,0 @@
-nginx:
-  conf_d: empty/
-  stream_conf_d: parkingx/nginx/stream.conf.d/

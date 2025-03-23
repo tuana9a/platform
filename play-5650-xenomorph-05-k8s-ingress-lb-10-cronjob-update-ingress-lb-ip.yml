@@ -39,6 +39,7 @@
         name: "update-ingress-nginx-load-balancer-ip.sh"
         minute: "*/1"
         job: "/usr/local/bin/update-ingress-nginx-load-balancer-ip.sh >> /tmp/update-ingress-nginx-load-balancer-ip.log 2>&1"
+        disabled: false
 
     - name: Clear current log
       copy:
