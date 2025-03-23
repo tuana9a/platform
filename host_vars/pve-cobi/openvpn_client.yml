@@ -1,5 +1,0 @@
-openvpn_client_items:
-  - file: pve/pve-cobi-zephyrus.ovpn
-    name: pve-cobi-zephyrus
-    state: stopped
-    enabled: false
