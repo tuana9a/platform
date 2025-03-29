@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: forward-kourier
+  namespace: default
+spec:
+  type: ExternalName
+  externalName: kourier-internal.knative-serving.svc.cluster.local
+  ports:
+    - port: 80
