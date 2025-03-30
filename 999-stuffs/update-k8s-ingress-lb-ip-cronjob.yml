@@ -1,0 +1,55 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: update-k8s-ingress-lb-ip
+  namespace: stuffs
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: k8s-ingress-lb
+          initContainers:
+            - name: lb-ip
+              image: bitnami/kubectl
+              volumeMounts:
+                - name: workdir
+                  mountPath: "/workdir"
+              command:
+                - "sh"
+                - "-c"
+                - |
+                  namespace=ingress-nginx
+                  lb_ip=$(kubectl -n $namespace get service ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+                  echo "lb_ip: $lb_ip"
+                  echo $lb_ip > /workdir/lb_ip
+            - name: update-ip
+              image: tuana9a/openssh
+              volumeMounts:
+                - name: workdir
+                  mountPath: "/workdir"
+                - name: update-k8s-ingress-lb-ip
+                  mountPath: "/var/secrets"
+                  readOnly: true
+              command:
+                - "sh"
+                - "-c"
+                - |
+                  lb_ip=$(cat /workdir/lb_ip)
+                  echo "lb_ip: $lb_ip"
+                  ls -la /var/secrets/
+                  ssh -i /var/secrets/id_rsa -o StrictHostKeyChecking=accept-new root@192.168.56.1 /usr/local/bin/update-ingress-nginx-load-balancer-ip.sh $lb_ip
+          containers:
+            - name: done
+              image: busybox:latest
+              command: ["sh", "-c", "echo done"]
+          restartPolicy: Never
+          volumes:
+            - name: update-k8s-ingress-lb-ip
+              secret:
+                secretName: update-k8s-ingress-lb-ip
+                # https://stackoverflow.com/questions/61728030/kubernetes-volume-mount-permissions-incorrect-for-secret
+                defaultMode: 384 # 600
+            - name: workdir
+              emptyDir: {}

@@ -1,0 +1,9 @@
+- hosts: xenomorph
+  tasks:
+    - name: Copy script
+      become: true
+      ansible.builtin.template:
+        src: update-ingress-nginx-load-balancer-ip.sh
+        dest: /usr/local/bin/update-ingress-nginx-load-balancer-ip.sh
+        mode: "0700"
+        owner: "{{ ansible_user }}"

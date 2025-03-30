@@ -17,36 +17,33 @@
     #     state: directory
     #     mode: "0700"
 
-    - name: Copy kubeconfig to remote
+    - name: Delete old kubeconfig
       become: true
-      copy:
-        src: xenomorph/kubeconfig
-        dest: "/opt/kubeconfig"
-        mode: "0600"
+      file:
+        path: "/opt/kubeconfig"
+        state: absent
 
-    - name: Copy script to remote
+    - name: Copy script
       become: true
       ansible.builtin.template:
         src: update-ingress-nginx-load-balancer-ip.sh
         dest: /usr/local/bin/update-ingress-nginx-load-balancer-ip.sh
         mode: "0700"
         owner: "{{ ansible_user }}"
-      vars:
-        namespace: ingress-nginx
 
-    - name: Create a cronjob for that
+    - name: Disable cronjob
       ansible.builtin.cron:
         name: "update-ingress-nginx-load-balancer-ip.sh"
         minute: "*/1"
         job: "/usr/local/bin/update-ingress-nginx-load-balancer-ip.sh >> /tmp/update-ingress-nginx-load-balancer-ip.log 2>&1"
-        disabled: false
+        disabled: true
 
-    - name: Clear current log
-      copy:
-        content: ""
-        dest: /tmp/update-ingress-nginx-load-balancer-ip.log
+    - name: Delete log
+      file:
+        path: /tmp/update-ingress-nginx-load-balancer-ip.log
+        state: absent
 
-    - name: Set overwrite flag
+    - name: Delete old overwrite flag
       copy:
-        content: "1"
-        dest: /tmp/overwrite-flag
+        file: /tmp/overwrite-flag
+        state: absent

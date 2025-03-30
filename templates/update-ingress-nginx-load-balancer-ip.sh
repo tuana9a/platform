@@ -3,62 +3,68 @@
 # exit on error
 set -e
 
-echo "=== $(date) ==="
+while getopts "f" o; do
+  case "${o}" in
+    f)
+      is_forced="yes"
+      ;;
+    *)
+      echo "Unknown"
+      exit 1
+      ;;
+  esac
+done
+shift $((OPTIND-1))
 
-namespace="{{ namespace | default('ingress-nginx') }}"
 nginx_stream_conf_file="/etc/nginx/stream.conf.d/ingress_nginx_load_balancer.conf"
-overwrite_flag_path=/tmp/overwrite-flag
-overwrite_flag=$(cat $overwrite_flag_path)
 
-current_ip=$(/usr/local/bin/kubectl --kubeconfig /opt/kubeconfig -n $namespace get service ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+new_ip=$1
 
 update_config() {
   # NOTE: proxmox spawn temporary webserver at port 80 to renew its certificates
-  # so we should only listen on https or 443
-  # which it's acceptable and prevent insecure http access
-  # [UPDATE]: NOPE this will make cert-manager inside k8s cluster fail to issue new certificate using http + ingress
+  # so we should only listen on https or 443, which it's acceptable and prevent insecure http access
+  # UPDATE: this will make cert-manager inside k8s cluster fail to issue new certificate using http + ingress
   # so accessing this proxmox will using ssh tunnel (port-forward) to access it or cloudflare tunnel ...
-  current_ip=$1
-
-  content='# '$(date --utc +%FT%TZ)' This file '$nginx_stream_conf_file' is generated and will be overwrited
+  new_ip=$1
+  content='# This file '$nginx_stream_conf_file' is generated
+# '$(date --utc +%FT%TZ)'
 server {
   listen 80;
-  proxy_pass '$current_ip':80;
+  proxy_pass '$new_ip':80;
 }
 server {
   listen 443;
-  proxy_pass '$current_ip':443;
+  proxy_pass '$new_ip':443;
 }
 '
 
   echo "$content" | tee $nginx_stream_conf_file
 }
 
-if [ -z $current_ip ]; then
-  echo "invalid current_ip \"$current_ip\""
+if [ -z "$new_ip" ]; then
+  echo "invalid new_ip $new_ip"
   echo "exit 1"
   exit 1
 fi
 
-previous_ip=$(cat $nginx_stream_conf_file | grep -oP '\d+\.\d+\.\d+\.\d+' | head -n 1)
+current_ip="9.9.9.9"
+if [ -f "$nginx_stream_conf_file" ]; then
+  current_ip=$(cat $nginx_stream_conf_file | grep -oP '\d+\.\d+\.\d+\.\d+' | head -n 1)
+fi
 
-echo "update nginx config"
-
-if [ $overwrite_flag == "1" ]; then
-  echo '$overwrite_flag == "1"'
-  update_config $current_ip
+if [ "$is_forced" == "yes" ]; then
+  echo "forced update"
+  update_config "$new_ip"
   systemctl reload nginx
-  echo -n "0" > $overwrite_flag_path
   exit 0
 fi
 
-if [ $current_ip == $previous_ip ]; then
-  echo "\"$current_ip\" == \"$previous_ip\" (no changes)"
+if [ "$new_ip" == "$current_ip" ]; then
+  echo "same: \"$new_ip\" == \"$current_ip\""
   exit 0
 fi
 
-echo "\"$current_ip\" != \"$previous_ip\" (diff)"
-echo "update nginx config"
-
-update_config $current_ip
+echo "diff: \"$new_ip\" != \"$current_ip\""
+update_config "$new_ip"
 systemctl reload nginx
+exit 0
