@@ -1,3 +1,0 @@
-- hosts: nginx
-  tasks:
-    - import_tasks: ./tasks/cronjob_backup_nginx.yml

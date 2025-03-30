@@ -1,3 +1,0 @@
-- hosts: rsync
-  tasks:
-    - import_tasks: ./tasks/rsync.yml

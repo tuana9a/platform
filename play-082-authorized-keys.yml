@@ -1,4 +1,0 @@
-- hosts: authorized_keys
-  tasks:
-    - import_tasks: ./tasks/remove_old_cronjob_authorized_keys.yml
-    - import_tasks: ./tasks/cronjob_authorized_keys.yml

@@ -1,6 +1,0 @@
-cronjob_items:
-  - name: set_tuana9a-dev.z.tuana9a.com
-    cmd: |
-      curl -X PUT https://paste.tuana9a.com/tuana9a-dev.z.tuana9a.com -H "Content-Type: text/plain" -d "$(/usr/sbin/ip addr show tun0 | grep 'inet ' | awk '{print $2}' | cut -d/ -f1)"
-    minute: "0"
-    state: absent

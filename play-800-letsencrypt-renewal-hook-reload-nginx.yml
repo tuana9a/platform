@@ -1,3 +1,0 @@
-- hosts: letsencrypt_renewal_hook_reload_nginx
-  tasks:
-    - import_tasks: ./tasks/letsencrypt_renewal_hook_reload_nginx.yml
