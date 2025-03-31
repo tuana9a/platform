@@ -1,3 +1,5 @@
+name: "ecr tuana9a terraform apply"
+
 on:
   workflow_dispatch:
   push:
@@ -52,7 +54,7 @@ jobs:
         if: ${{ always() }}
         name: notify
         run: |
-          github_workflow=${{ github.workflow }}
-          workflow_name=$(echo $github_workflow | sed 's|.github/workflows/||')
+          github_workflow="${{ github.workflow }}"
+          workflow_name=$github_workflow
           MESSAGE="${status:-bad} $workflow_name $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           curl -X POST ${{ secrets.DISCORD_WEBHOOK }} -H "Content-Type: application/json" -d "{\"content\":\"${MESSAGE}\"}"

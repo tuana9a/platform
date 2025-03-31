@@ -1,3 +1,5 @@
+name: "check terraform key"
+
 on:
   workflow_dispatch:
   pull_request:
@@ -18,7 +20,7 @@ jobs:
       - name: Notify
         if: ${{ always() }}
         run: |
-          github_workflow=${{ github.workflow }}
-          workflow_name=$(echo $github_workflow | sed 's|.github/workflows/||')
+          github_workflow="${{ github.workflow }}"
+          workflow_name=$github_workflow
           MESSAGE="${status:-bad} $workflow_name $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           curl -X POST ${{ secrets.DISCORD_WEBHOOK }} -H "Content-Type: application/json" -d "{\"content\":\"${MESSAGE}\"}"
