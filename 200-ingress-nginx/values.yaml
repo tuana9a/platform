@@ -1,6 +1,8 @@
 controller:
   service:
     type: "LoadBalancer"
+    annotations:
+      external-dns.alpha.kubernetes.io/hostname: ingress-nginx.svc.k8s-internal.tuana9a.com
   autoscaling:
     enabled: true
   resources:
