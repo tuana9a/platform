@@ -1,0 +1,8 @@
+- hosts: k8s_control_plane
+  tasks:
+    - name: Remove old cronjob
+      ansible.builtin.cron:
+        name: "backup-kubernetes.sh"
+        minute: "0"
+        job: "/usr/local/bin/backup-kubernetes.sh >> /tmp/backup-kubernetes.log 2>&1"
+        state: absent
