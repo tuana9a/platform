@@ -32,7 +32,7 @@ provider "vault" {
 }
 
 data "vault_kv_secret" "terraform_gitlab_secrets" {
-  path = "kv/gitlab.com/tuana9a/.at/terraform-gitlab-secrets"
+  path = "kv/gitlab.com/tuana9a/_/tokens/terraform-gitlab-secret-manager"
 }
 
 provider "gitlab" {

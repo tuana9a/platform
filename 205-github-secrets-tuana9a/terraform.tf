@@ -32,7 +32,7 @@ provider "vault" {
 }
 
 data "vault_kv_secret" "terraform_github_secrets" {
-  path = "kv/github.com/tuana9a/.pat/terraform-github-secrets"
+  path = "kv/github.com/tuana9a/_/tokens/terraform-github-secret-manager"
 }
 
 provider "github" {
