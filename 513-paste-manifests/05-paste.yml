@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paste
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: paste
+  template:
+    metadata:
+      labels:
+        app: paste
+    spec:
+      containers:
+        - image: tuana9a/paste-go:2.0.0
+          name: paste
+          env:
+            - name: BIND
+              value: "0.0.0.0"
+            - name: PORT
+              value: "8080"
+          resources:
+            requests:
+              memory: "250Mi"
+              cpu: "250m"
+            limits:
+              memory: "300Mi"
+              cpu: "300m"
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: "/"
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+---
+# apiVersion: autoscaling/v2
+# kind: HorizontalPodAutoscaler
+# metadata:
+#   name: paste
+# spec:
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: paste
+#   minReplicas: 1
+#   maxReplicas: 5
+#   metrics:
+#     - type: Resource
+#       resource:
+#         name: cpu
+#         target:
+#           type: Utilization
+#           averageUtilization: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: paste
+spec:
+  selector:
+    app: paste
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: paste
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    external-dns.alpha.kubernetes.io/hostname: "paste.tuana9a.com"
+    external-dns.alpha.kubernetes.io/target: "xenomorph.tuana9a.com"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - paste.tuana9a.com
+      secretName: paste-tuana9a-com-tls
+  rules:
+    - host: paste.tuana9a.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: paste
+                port:
+                  number: 8080
