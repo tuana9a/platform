@@ -27,30 +27,14 @@ terraform apply # yes
 
 # user management
 
-## user admin
-
-create user admin
-
 ```bash
+# user admin
 vault write auth/userpass/users/admin policies=auth-operator policies=sys-operator policies=secret-operator password=$(cat /path/to/secret)
-```
-
-login
-
-```bash
 vault login -method=userpass username=admin password=$(cat /path/to/secret)
 ```
 
-## user secret-operator
-
-create user secret-operator
-
 ```bash
+# user secret-operator
 vault write auth/userpass/users/secret-operator policies=secret-operator password=$(cat /path/to/secret)
-```
-
-login
-
-```bash
 vault login -method=userpass username=secret-operator password=$(cat /path/to/secret)
 ```
