@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo-exporter
+  namespace: dkhptd
+spec:
+  replicas: 1
+  serviceName: internal
+  selector:
+    matchLabels:
+      app: mongo-exporter
+      internal: "1"
+  template:
+    metadata:
+      labels:
+        app: mongo-exporter
+        internal: "1"
+    spec:
+      containers:
+        - name: mongo-exporter
+          image: percona/mongodb_exporter:0.40
+          args:
+            - "--mongodb.uri=mongodb://mongo-0.internal.dkhptd.svc.cluster.local"
+            - "--collect-all"
+          ports:
+            - containerPort: 9216
+        - name: push-metrics
+          image: alpine/curl
+          command:
+            - "sh"
+            - "-c"
+            - |
+              push_gateway_baseurl="http://prometheus-prometheus-pushgateway.prometheus.svc.cluster.local:9091";
+              POD_NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace);
+              function _exit() {
+                exit 0
+              }
+              trap _exit SIGINT SIGTERM
+              while true; do
+                date;
+                curl http://mongo-exporter-0.internal:9216/metrics -o body.txt;
+                curl --data-binary @body.txt $push_gateway_baseurl/metrics/job/mongo-exporter > /dev/null;
+                sleep 15;
+              done
