@@ -11,7 +11,7 @@ spec:
       template:
         spec:
           initContainers:
-            - name: set-env
+            - name: set-params
               image: busybox
               command:
                 - "sh"
@@ -19,18 +19,9 @@ spec:
                 - |
                   OBJECT_KEY="$(date +'%Y%m%d%H')-dkhptd-mongo-dump.tar.gz"
                   echo $OBJECT_KEY > /data/object_key.env
-              volumeMounts:
-                - name: workdir
-                  mountPath: /data
-
-            - name: set-start-time
-              image: busybox
-              command:
-                - "sh"
-                - "-c"
-                - |
                   date +%s > /data/start.time
                   cat /data/start.time
+                  ls -la /data/
               volumeMounts:
                 - name: workdir
                   mountPath: /data
@@ -42,7 +33,7 @@ spec:
                 - "-c"
                 - |
                   mongodump --uri=${MONGO_CONNECTION_STRING} --out=/data/dump
-                  ls -ld /data/dump
+                  ls -la /data/dump/
               volumeMounts:
                 - name: workdir
                   mountPath: /data
@@ -58,7 +49,7 @@ spec:
                 - |
                   cd /data
                   tar -czvf dump.tar.gz dump
-                  ls -l /data/dump.tar.gz
+                  ls -la /data/
               volumeMounts:
                 - name: workdir
                   mountPath: /data
@@ -72,21 +63,12 @@ spec:
                   OBJECT_KEY=$(cat /data/object_key.env)
                   aws s3api --endpoint-url ${S3_ENDPOINT} put-object --bucket ${BUCKET_NAME} --key $OBJECT_KEY --body /data/dump.tar.gz
                   echo upload completed
+                  date +%s > /data/stop.time
+                  cat /data/stop.time
+                  ls -la /data/
               envFrom:
                 - secretRef:
                     name: dkhptd-mongo-backup-env
-              volumeMounts:
-                - name: workdir
-                  mountPath: /data
-
-            - name: set-stop-time
-              image: busybox
-              command:
-                - "sh"
-                - "-c"
-                - |
-                  date +%s > /data/stop.time
-                  cat /data/stop.time
               volumeMounts:
                 - name: workdir
                   mountPath: /data
