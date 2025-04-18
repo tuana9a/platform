@@ -1,0 +1,130 @@
+# NOTE: to fix vault is sealed when spot instances dead, make pod restart
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: vault-backup
+spec:
+  schedule: "0 * * * *" # Adjust the schedule as needed
+  # https://stackoverflow.com/questions/51657105/how-to-ensure-kubernetes-cronjob-does-not-restart-on-failure
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      # https://stackoverflow.com/questions/51657105/how-to-ensure-kubernetes-cronjob-does-not-restart-on-failure
+      backoffLimit: 0
+      template:
+        spec:
+          # https://stackoverflow.com/questions/51657105/how-to-ensure-kubernetes-cronjob-does-not-restart-on-failure
+          restartPolicy: Never
+          volumes:
+            - name: workdir
+              emptyDir: {}
+          initContainers:
+            - name: set-params
+              image: busybox
+              command:
+                - "sh"
+                - "-c"
+                - |
+                  OBJECT_KEY="$(date +'%Y%m%d%H')-vault.snapshot.tar.gz"
+                  echo $OBJECT_KEY > /data/object_key.env
+                  date +%s > /data/start.time
+                  cat /data/start.time
+                  ls -la /data/
+              volumeMounts:
+                - name: workdir
+                  mountPath: /data
+
+            # To avoid this error "Error taking snapshot: incomplete snapshot, unable to read SHA256SUMS.sealed file"
+            # This error occurs when taking snapshot on vault node that's not ative/leader
+            # https://support.hashicorp.com/hc/en-us/articles/22097624571155-Vault-snapshot-save-fails-with-message-Error-taking-snapshot-incomplete-snapshot-unable-to-read-SHA256SUMS-sealed-file
+            - name: snapshot
+              image: hashicorp/vault:1.17.2
+              command: ["/bin/sh", "-c"]
+              args:
+                - |
+                  export VAULT_ADDR=http://vault-active.vault.svc.cluster.local:8200
+                  echo "$VAULT_ADDR"
+                  is_sealed=$(vault status | grep -i sealed | awk '{print $2}')
+                  if [ "$is_sealed" = "true" ]; then
+                    echo "vault is sealed. Exiting..."
+                    exit 1
+                  fi
+                  vault operator raft snapshot save /data/vault.snap
+                  vault token renew > /dev/null
+                  ls -la /data/
+              env:
+                - name: VAULT_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: vault-backup
+                      key: VAULT_TOKEN
+              volumeMounts:
+                - name: workdir
+                  mountPath: /data
+
+            - name: zip
+              image: busybox:latest
+              command:
+                - "sh"
+                - "-c"
+                - |
+                  cd /data
+                  tar -czvf vault.snap.tar.gz vault.snap
+                  ls -la /data/
+              volumeMounts:
+                - name: workdir
+                  mountPath: /data
+
+            - name: upload
+              image: amazon/aws-cli:2.18.0
+              command:
+                - "sh"
+                - "-c"
+                - |
+                  OBJECT_KEY=$(cat /data/object_key.env)
+                  aws s3api --endpoint-url ${S3_ENDPOINT} put-object --bucket ${BUCKET_NAME} --key $OBJECT_KEY --body /data/vault.snap.tar.gz
+                  echo upload completed
+                  date +%s > /data/stop.time
+                  cat /data/stop.time
+                  ls -la /data/
+              envFrom:
+                - secretRef:
+                    name: vault-backup
+              volumeMounts:
+                - name: workdir
+                  mountPath: /data
+
+            - name: notify
+              image: alpine/curl
+              command:
+                - sh
+                - -c
+                - |
+                  START_TIME=$(cat "/data/start.time")
+                  STOP_TIME=$(cat "/data/stop.time")
+                  DURATION=$((STOP_TIME - START_TIME))
+                  OBJECT_KEY=$(cat /data/object_key.env)
+                  # MSG=":white_check_mark: \`backup-vault\` \`vault\` \`$(($DURATION / 60))m$(($DURATION % 60))s\`"
+                  # curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\"content\":\"${MSG}\"}"
+                  push_gateway_baseurl="http://prometheus-prometheus-pushgateway.prometheus.svc.cluster.local:9091"
+                  cat <<EOF | curl --data-binary @- $push_gateway_baseurl/metrics/job/vault_backup_cronjob
+                  # TYPE vault_backup_duration gauge
+                  vault_backup_duration{namespace="$POD_NAMESPACE"} $DURATION
+                  # TYPE vault_backup_unixtimestamp gauge
+                  vault_backup_unixtimestamp{namespace="$POD_NAMESPACE"} $(date +%s)
+                  EOF
+              envFrom:
+                - secretRef:
+                    name: vault-backup
+              env:
+                - name: POD_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
+              volumeMounts:
+                - name: workdir
+                  mountPath: /data
+          containers:
+            - name: done
+              image: busybox:latest
+              command: ["sh", "-c", "echo done"]
