@@ -19,7 +19,7 @@ data:
                     remote {
                       url('https://github.com/tuana9a/platform.git')
                     }
-                    branch('cicd-ansible')
+                    branch('main')
                   }
                 }
                 scriptPath(".jenkins/k8s-control-plane-etcd-defrag.Jenkinsfile")
@@ -44,7 +44,7 @@ data:
                     remote {
                       url('https://github.com/tuana9a/platform.git')
                     }
-                    branch('cicd-ansible')
+                    branch('main')
                   }
                 }
                 scriptPath(".jenkins/k8s-control-plane-backup-kubernetes.Jenkinsfile")
