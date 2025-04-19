@@ -1,5 +1,9 @@
 # JCasC
 
+This is the JCasC folder inside jenkins master `/var/jenkins_home/casc_configs`
+
+## How I found the annotation for auto pickup the config map for jenkins JCasC
+
 I want to make the config auto reload to scan JCasC in configmap instead of puting it directly inside helm values file.
 
 The jenkins use the [kiwigrid/k8s-sidecar](https://github.com/kiwigrid/k8s-sidecar) to enable auto reload
