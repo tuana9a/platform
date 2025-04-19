@@ -1,6 +1,8 @@
 # ref: https://www.jenkins.io/doc/book/installing/docker/#on-macos-and-linux
 
-FROM jenkins/jenkins:2.492.2-jdk17
+ARG BUILD_TAG
+
+FROM jenkins/jenkins:${BUILD_TAG}
 
 USER root
 

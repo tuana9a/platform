@@ -2,16 +2,11 @@ name: "docker build push jenkins"
 
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - "docker/jenkins/Dockerfile"
-      - ".github/workflows/docker-build-push-jenkins*"
-  push:
-    branches:
-      - main
-    paths:
-      - "docker/jenkins/Dockerfile"
-      - ".github/workflows/docker-build-push-jenkins*"
+    inputs:
+      tag:
+        description: "Base image tag from original jenkins image"
+        required: true
+        type: string
 
 jobs:
   build-and-push:
@@ -33,7 +28,7 @@ jobs:
       - name: Set BUILD_TAG
         working-directory: "docker/jenkins"
         run: |
-          BUILD_TAG=$(cat Dockerfile | grep -Eo "jenkins/jenkins:.+" | cut -d ':' -f 2)
+          BUILD_TAG=${{ inputs.tag }}
           echo "BUILD_TAG=${BUILD_TAG}" >> "$GITHUB_ENV"
 
       - name: Build and push Docker image
@@ -41,6 +36,7 @@ jobs:
         with:
           context: docker/jenkins
           file: docker/jenkins/Dockerfile
+          build-args: "BUILD_TAG=${{ env.BUILD_TAG }}"
           push: true
           tags: tuana9a/jenkins:${{ env.BUILD_TAG }}
           cache-from: type=gha
