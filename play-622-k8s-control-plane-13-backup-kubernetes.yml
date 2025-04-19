@@ -1,0 +1,14 @@
+- hosts: k8s_control_plane
+  tasks:
+    - name: backup-kubernetes.sh
+      become: true
+      shell: /usr/local/bin/backup-kubernetes.sh
+      register: backup_output
+
+    - name: Print stdout
+      ansible.builtin.debug:
+        msg: "{{ backup_output.stdout.split('\n')}}"
+
+    - name: Print stderr
+      ansible.builtin.debug:
+        msg: "{{ backup_output.stderr.split('\n')}}"

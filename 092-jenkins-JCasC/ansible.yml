@@ -26,3 +26,21 @@ data:
               }
             }
           }
+      - script: |
+          pipelineJob('k8s-control-plane-backup-kubernetes') {
+            properties {
+            }
+            definition {
+              cpsScm {
+                scm {
+                  git {
+                    remote {
+                      url('https://github.com/tuana9a/platform.git')
+                    }
+                    branch('cicd-ansible')
+                  }
+                }
+                scriptPath(".jenkins/k8s-control-plane-backup-kubernetes.Jenkinsfile")
+              }
+            }
+          }
