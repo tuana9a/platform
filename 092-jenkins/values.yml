@@ -6,7 +6,7 @@ controller:
   installPlugins: []
   image:
     repository: tuana9a/jenkins
-    tag: 2.492.2-jdk17
+    tag: 2.506-slim-jdk21
   ingress:
     enabled: true
     hostName: jenkins.tuana9a.com
