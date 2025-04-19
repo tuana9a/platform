@@ -1,5 +1,13 @@
 - hosts: k8s_control_plane
   tasks:
+    - name: Copy script
+      become: true
+      ansible.builtin.template:
+        src: backup-kubernetes.sh
+        dest: /usr/local/bin/backup-kubernetes.sh
+        mode: "0700"
+        owner: "{{ ansible_user }}"
+
     - name: backup-kubernetes.sh
       become: true
       shell: /usr/local/bin/backup-kubernetes.sh

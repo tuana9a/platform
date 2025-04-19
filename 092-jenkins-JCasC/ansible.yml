@@ -29,6 +29,13 @@ data:
       - script: |
           pipelineJob('k8s-control-plane-backup-kubernetes') {
             properties {
+              pipelineTriggers {
+                triggers {
+                  cron {
+                    spec('0 0 * * *')
+                  }
+                }
+              }
             }
             definition {
               cpsScm {

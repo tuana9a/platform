@@ -6,3 +6,8 @@
         minute: "0"
         job: "/usr/local/bin/backup-kubernetes.sh >> /tmp/backup-kubernetes.log 2>&1"
         state: absent
+    - name: Remove cronjob
+      become: true
+      ansible.builtin.file:
+        path: "/etc/cron.d/backup-kubernetes"
+        state: absent
