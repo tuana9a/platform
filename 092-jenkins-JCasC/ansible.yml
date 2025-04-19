@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ansible-jcasc
+  namespace: jenkins
+  labels:
+    jenkins-jenkins-config: "true"
+data:
+  ansible.yaml: |
+    jobs:
+      - script: |
+          pipelineJob('k8s-control-plane-etcd-defrag') {
+            properties {
+            }
+            definition {
+              cpsScm {
+                scm {
+                  git {
+                    remote {
+                      url('https://github.com/tuana9a/platform.git')
+                    }
+                    branch('cicd-ansible')
+                  }
+                }
+                scriptPath(".jenkins/k8s-control-plane-etcd-defrag.Jenkinsfile")
+              }
+            }
+          }
