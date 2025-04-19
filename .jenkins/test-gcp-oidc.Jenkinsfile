@@ -13,8 +13,8 @@ pipeline {
     stages {
         stage('Debug') {
             steps {
-              sh 'hostname'
-              sh 'pwd'
+                sh 'hostname'
+                sh 'pwd'
             }
         }
         stage('List objects') {
