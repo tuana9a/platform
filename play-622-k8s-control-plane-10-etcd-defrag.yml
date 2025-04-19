@@ -1,0 +1,19 @@
+- hosts: k8s_control_plane
+  tasks:
+    - name: etcd defrag
+      become: true
+      shell: |
+        ETCDCTL_CACERT=/etc/kubernetes/pki/etcd/ca.crt
+        ETCDCTL_CERT=/etc/kubernetes/pki/apiserver-etcd-client.crt
+        ETCDCTL_KEY=/etc/kubernetes/pki/apiserver-etcd-client.key
+        ETCDCTL_OPTS="--cacert=$ETCDCTL_CACERT --cert=$ETCDCTL_CERT --key=$ETCDCTL_KEY"
+        /usr/local/bin/etcdctl $ETCDCTL_OPTS defrag
+      register: defrag_output
+
+    - name: Print stdout
+      ansible.builtin.debug:
+        msg: "{{ defrag_output.stdout.split('\n')}}"
+
+    - name: Print stderr
+      ansible.builtin.debug:
+        msg: "{{ defrag_output.stderr.split('\n')}}"

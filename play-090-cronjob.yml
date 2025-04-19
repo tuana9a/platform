@@ -1,3 +1,0 @@
-- hosts: cronjob
-  tasks:
-    - import_tasks: ./tasks/cronjob.yml
