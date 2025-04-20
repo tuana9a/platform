@@ -10,13 +10,7 @@ pipeline {
         ANSIBLE_HOST_KEY_CHECKING = "false"
     }
     stages {
-        stage('Debug') {
-            steps {
-                sh 'hostname'
-                sh 'pwd'
-            }
-        }
-        stage('List objects') {
+        stage('Main') {
             steps {
                 container('ansible') {
                     sh 'ansible-playbook -i inventory.ini --key-file "/var/secrets/id_rsa" --vault-password-file "/var/secrets/ansible_password" play-622-k8s-control-plane-13-backup-kubernetes.yml'

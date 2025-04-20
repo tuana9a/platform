@@ -1,6 +1,7 @@
 # platform
 
 tuana9a's platform
+
 - configuration as code: asnible
 - infrastructure as code: terraform
 - deploy apps, cd: argocd
@@ -8,27 +9,37 @@ tuana9a's platform
 - dns, cdn, web: cloudflare
 - load balancer, reverse proxy: haproxy, nginx
 
-# gcloud
+# How-to
+
+## gcloud
 
 setup `gcloud` cli auth
 
-```
+```bash
 gcloud auth application-default login
 ```
 
-# ansible
+## python env
 
 NOTE: using python of the os, change the 3.10 if necessary
 
 ```bash
-sudo -i
-apt install -y python3.10-venv
-mkdir -p /opt/ansible
-cd /opt/ansible
+sudo apt install -y python3.10-venv
+cd ~
 python3 -m venv .venv
 source .venv/bin/activate
+pip list
+```
+
+## ansible
+
+using python env from previous step
+
+```bash
+cd ~
+source .venv/bin/activate
 pip install ansible ansible-core ansible-lint
-ln -sf /opt/ansible/.venv/bin/ansible* /usr/local/bin
+ln -sf ~/.venv/bin/ansible* ~/.local/bin/
 ```
 
 verify ansible installation
@@ -37,19 +48,13 @@ verify ansible installation
 ansible --version
 ```
 
-config ansible vault password (optional)
+## python formatter
+
+using python env from previous step
 
 ```bash
-vim ~/.ansible.cfg
-```
-
-```conf
-[defaults]
-vault_password_file=/path/to/pasword/file
-```
-
-read ansible vault password from (hashicorp) vault
-
-```bash
-vault kv get -format=json kv/platform/ansible-vault | jq -r ".data.password"
+cd ~
+source .venv/bin/activate
+pip install black
+ln -sf ~/.venv/bin/black ~/.local/bin/
 ```

@@ -2,7 +2,3 @@
   tasks:
     - import_tasks: ./tasks/disable_nginx_site_default.yml
     - import_tasks: ./tasks/update_nginx_config.yml
-      vars:
-        nginx:
-          conf_d: xenomorph/nginx/conf.d/
-          stream_conf_d: xenomorph/nginx/stream.conf.d/

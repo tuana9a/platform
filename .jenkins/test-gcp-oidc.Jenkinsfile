@@ -11,13 +11,7 @@ pipeline {
         AWS_WEB_IDENTITY_TOKEN_FILE = credentials('gcp-oidc-id-token')
     }
     stages {
-        stage('Debug') {
-            steps {
-                sh 'hostname'
-                sh 'pwd'
-            }
-        }
-        stage('List objects') {
+        stage('Main') {
             steps {
                 container('gcloud') {
                     withCredentials([file(variable: 'ID_TOKEN_FILE', credentialsId: 'gcp-oidc-id-token')]) {

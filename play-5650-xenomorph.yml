@@ -1,8 +1,6 @@
 - hosts: xenomorph
   tasks:
     - import_tasks: ./tasks/set_hostname.yml
-      vars:
-        HOST_NAME: xenomorph
     - import_tasks: ./tasks/set_timezone.yml
     - import_tasks: ./tasks/apt_update.yml
     - import_tasks: ./tasks/install_tmux.yml

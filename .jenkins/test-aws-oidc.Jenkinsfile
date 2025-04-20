@@ -15,13 +15,7 @@ pipeline {
         AWS_WEB_IDENTITY_TOKEN_FILE = credentials('aws-oidc-id-token')
     }
     stages {
-        stage('Debug') {
-            steps {
-                sh 'hostname'
-                sh 'pwd'
-            }
-        }
-        stage('List buckets') {
+        stage('Main') {
             steps {
                 container('awscli') {
                     sh 'aws sts get-caller-identity'

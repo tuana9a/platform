@@ -1,5 +1,6 @@
 - hosts: k8s_control_plane
   tasks:
+    # Ref: https://github.com/ahrtr/etcd-defrag/blob/main/doc/etcd-defrag-cronjob.yaml
     - name: etcd defrag
       become: true
       shell: |

@@ -6,68 +6,62 @@ import requests
 import argparse
 
 
-def load_vault_token(args):
+def _get_vault_token(args=None):
+    if os.getenv("VAULT_TOKEN"):
+        return os.getenv("VAULT_TOKEN")
     if args:
         if args.vault_token:
             return args.vault_token
         if args.vault_token_file:
             with open(args.vault_token_file) as f:
                 return f.read().strip()
-
-    if os.getenv("VAULT_TOKEN"):
-        return os.getenv("VAULT_TOKEN")
+    raise Exception("can not get vault token")
 
 
-def put(args):
+def put_secrets(args):
     vault_addr = args.vault_addr
-
-    if args.vault_token:
-        vault_token = args.vault_token
-    elif os.getenv("VAULT_TOKEN"):
-        vault_token = os.getenv("VAULT_TOKEN")
-    elif args.vault_token_file:
-        with open(args.vault_token_file) as f:
-            vault_token = f.read().strip()
+    vault_token = _get_vault_token(args)
 
     with open(args.secrets_file, "r") as f:
         secrets = json.load(f)
+        for path in secrets:
+            data = secrets.get(path)
+            response = requests.post(
+                f"{vault_addr}/v1/{path}",
+                headers={
+                    "X-Vault-Token": vault_token,
+                    "Content-Type": "application/json",
+                },
+                json=data,
+            )
+            joke = (
+                "OK"
+                if response.status_code >= 200 and response.status_code < 300
+                else "FUCK"
+            )
+            print(f"{joke} - {response.status_code} - POST {path} - {response.text}")
 
-    for path in secrets:
-        secret_data = secrets.get(path)
-        headers = {"X-Vault-Token": vault_token,
-                   "Content-Type": "application/json"}
-        response = requests.post(
-            f"{vault_addr}/v1/{path}", headers=headers, json=secret_data)
-        if response.status_code >= 200 and response.status_code < 300:
-            print(f"OK put {path}")
-        else:
-            print(
-                f"FUCK put {path} - {response.status_code} - {response.text}")
 
-
-def delete(args):
+def delete_secrets(args):
     vault_addr = args.vault_addr
-
-    if args.vault_token:
-        vault_token = args.vault_token
-    elif os.getenv("VAULT_TOKEN"):
-        vault_token = os.getenv("VAULT_TOKEN")
-    elif args.vault_token_file:
-        with open(args.vault_token_file) as f:
-            vault_token = f.read().strip()
+    vault_token = _get_vault_token(args)
 
     with open(args.secrets_file, "r") as f:
         secrets = json.load(f)
-
-    for path in secrets:
-        response = requests.delete(f"{vault_addr}/v1/{path}",
-                                   headers={"X-Vault-Token": vault_token,
-                                            "Content-Type": "application/json"})
-        if response.status_code >= 200 and response.status_code < 300:
-            print(f"OK del {path}")
-        else:
-            print(
-                f"FUCK del {path} - {response.status_code} - {response.text}")
+        for path in secrets:
+            response = requests.delete(
+                f"{vault_addr}/v1/{path}",
+                headers={
+                    "X-Vault-Token": vault_token,
+                    "Content-Type": "application/json",
+                },
+            )
+            joke = (
+                "OK"
+                if response.status_code >= 200 and response.status_code < 300
+                else "FUCK"
+            )
+            print(f"{joke} - {response.status_code} - DELETE {path} - {response.text}")
 
 
 # Set up argument parser
@@ -103,7 +97,7 @@ put_parser.add_argument(
     default=os.getenv("SECRETS_FILE", "secrets.json"),
     help="The path to the secrets file (default: secrets.json)",
 )
-put_parser.set_defaults(func=put)
+put_parser.set_defaults(func=put_secrets)
 
 delete_parser = sub_parser.add_parser("delete", aliases=["del"])
 delete_parser.add_argument(
@@ -112,12 +106,10 @@ delete_parser.add_argument(
     default=os.getenv("SECRETS_FILE", "secrets.json"),
     help="The path to the secrets file (default: secrets.json)",
 )
-delete_parser.set_defaults(func=delete)
+delete_parser.set_defaults(func=delete_secrets)
 
 
 def main():
-
-    # Parse arguments
     args = parser.parse_args()
     args.func(args)
 

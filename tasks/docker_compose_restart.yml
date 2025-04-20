@@ -1,6 +1,0 @@
-- name: docker-compose restart
-  become: true
-  loop: "{{ compose_items }}"
-  shell:
-    cmd: "/usr/local/bin/docker-compose restart"
-    chdir: "{{ item.dir }}"

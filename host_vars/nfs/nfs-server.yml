@@ -4,6 +4,7 @@ parted:
     mount_path: /exports/vdb/
   # - dev_path: /dev/vdc
   #   mount_path: /exports/vdc/
+NFS_DIR: "/exports/nfs-client"
 nfs_server_exports:
   - path: /exports/vdb/
     config: /exports/vdb/ 192.168.56.0/24(rw,sync,no_root_squash,no_subtree_check)
