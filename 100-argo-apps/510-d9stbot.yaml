@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: 510-d9stbot
+  namespace: argocd
+spec:
+  project: default
+  revisionHistoryLimit: 10
+  source:
+    path: 510-d9stbot-manifests
+    repoURL: https://github.com/tuana9a/platform.git
+    targetRevision: main
+  destination:
+    namespace: d9stbot
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

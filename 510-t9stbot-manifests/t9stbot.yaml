@@ -2,34 +2,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: discord-bot
+  name: t9stbot
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: discord-bot
+      app: t9stbot
   template:
     metadata:
       labels:
-        app: discord-bot
+        app: t9stbot
     spec:
       containers:
         - name: t9stbot
-          image: tuana9a/t9stbot:2024.09.22.030448
+          image: tuana9a/t9stbot:master-0f4f059b
           envFrom:
             - configMapRef:
                 name: t9stbot
             - secretRef:
                 name: t9stbot
-          command: ["node", "discord-bot-main.js"]
+          command: ["node", "main-webhook.js"]
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: discord-bot
+  name: t9stbot
 spec:
   selector:
-    app: discord-bot
+    app: t9stbot
   type: ClusterIP
   ports:
     - port: 8080
