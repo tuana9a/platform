@@ -1,0 +1,10 @@
+host: "dev2.tuana9a.com"
+ingress:
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-cloudflare-production"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    external-dns.alpha.kubernetes.io/target: "xenomorph.tuana9a.com"
+target:
+  ip: 192.168.56.209
+  port: 8209

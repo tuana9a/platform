@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-target
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    {{- $service := .Values.service | default dict }}
+    - protocol: TCP
+      port: {{ $service.port | default 8080 }}
+      targetPort: {{ required "target.port" .Values.target.port }}

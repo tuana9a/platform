@@ -1,0 +1,13 @@
+host: "pve-xeno.tuana9a.com"
+ingress:
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    external-dns.alpha.kubernetes.io/target: "xenomorph.tuana9a.com"
+target:
+  ip: 192.168.56.1
+  port: 8006
+service:
+  port: 8443
