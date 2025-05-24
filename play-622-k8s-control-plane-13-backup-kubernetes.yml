@@ -11,6 +11,7 @@
     - name: backup-kubernetes.sh
       become: true
       shell: /usr/local/bin/backup-kubernetes.sh
+      environment: "{{ backup_env }}"
       register: backup_output
 
     - name: Print stdout

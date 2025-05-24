@@ -4,11 +4,15 @@ set -e
 
 echo "===$(date)==="
 
+if [[ -z "$CLOUDFLARE_ACCOUNT_ID" ]]; then echo "err: CLOUDFLARE_ACCOUNT_ID is not set" && exit 1; fi
+if [[ -z "$BUCKET_NAME" ]]; then echo "err: BUCKET_NAME is not set" && exit 1; fi
+# if [[ -z "$DISCORD_WEBHOOK" ]]; then echo "err: DISCORD_WEBHOOK is not set" && exit 1; fi
+if [[ -z "$AWS_ACCESS_KEY_ID" ]]; then echo "err: AWS_ACCESS_KEY_ID is not set" && exit 1; fi
+if [[ -z "$AWS_SECRET_ACCESS_KEY" ]]; then echo "err: AWS_SECRET_ACCESS_KEY is not set" && exit 1; fi
+if [[ -z "$AWS_DEFAULT_REGION" ]]; then echo "err: AWS_DEFAULT_REGION is not set" && exit 1; fi
+
 HOST_NAME="$(hostname)"
-CLOUDFLARE_ACCOUNT_ID="{{ KUBERNETES_BACKUP_CLOUDFLARE_ACCOUNT_ID }}"
 S3_ENDPOINT="https://$CLOUDFLARE_ACCOUNT_ID.r2.cloudflarestorage.com"
-BUCKET_NAME="{{ KUBERNETES_BACKUP_BUCKET_NAME }}"
-DISCORD_WEBHOOK="{{ KUBERNETES_BACKUP_DISCORD_WEBHOOK }}"
 
 ETCDCTL_CACERT=/etc/kubernetes/pki/etcd/ca.crt
 ETCDCTL_CERT=/etc/kubernetes/pki/apiserver-etcd-client.crt
@@ -24,18 +28,12 @@ S3_OBJECT_KEY=$DUMP_FILE
 WORKDIR=/tmp
 SECONDS=0 # for calc duration
 
-export AWS_ACCESS_KEY_ID="{{ KUBERNETES_BACKUP_AWS_ACCESS_KEY_ID }}"
-export AWS_SECRET_ACCESS_KEY="{{ KUBERNETES_BACKUP_AWS_SECRET_ACCESS_KEY }}"
-export AWS_DEFAULT_REGION="{{ KUBERNETES_BACKUP_AWS_DEFAULT_REGION | default('auto') }}"
-
-if [ -z "$HOST_NAME" ]; then echo HOST_NAME is not set, default is "unknown".; HOST_NAME=unknown; fi
-if [ -z "$S3_ENDPOINT" ]; then echo S3_ENDPOINT is not set, exiting.; exit 1; fi
-if [ -z "$BUCKET_NAME" ]; then echo BUCKET_NAME is not set, exiting.; exit 1; fi
-
 notify() {
   msg=$1
   echo Send msg: "$msg"
-  curl -X POST "$DISCORD_WEBHOOK" -H "Content-Type: application/json" -d "{\"content\":\"$msg\"}"
+  if [[ -n "$DISCORD_WEBHOOK" ]]; then
+    curl -X POST "$DISCORD_WEBHOOK" -H "Content-Type: application/json" -d "{\"content\":\"$msg\"}"
+  fi
   echo
 }
 

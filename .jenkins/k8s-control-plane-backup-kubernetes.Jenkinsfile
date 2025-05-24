@@ -1,7 +1,7 @@
 pipeline {
     agent {
         kubernetes {
-            yamlFile '.jenkins/ansible.yml'
+            yamlFile '.jenkins/backup-kubernetes.yml'
             defaultContainer 'shell'
             retries 2
         }
@@ -10,10 +10,25 @@ pipeline {
         ANSIBLE_HOST_KEY_CHECKING = "false"
     }
     stages {
-        stage('Main') {
+        stage('Prepare') {
             steps {
                 container('ansible') {
-                    sh 'ansible-playbook -i inventory.ini --key-file "/var/secrets/id_rsa" --vault-password-file "/var/secrets/ansible_password" play-622-k8s-control-plane-13-backup-kubernetes.yml'
+                    sh 'cat /var/secrets/id_rsa > ~/id_rsa && chmod 600 ~/id_rsa'
+                }
+            }
+        }
+        stage('Debug') {
+            steps {
+                container('ansible') {
+                    sh 'ls -lha ~/id_rsa && cat ~/id_rsa'
+                    sh 'cat /var/secrets/backup_env.yml'
+                }
+            }
+        }
+        stage('Backup') {
+            steps {
+                container('ansible') {
+                    sh 'ansible-playbook -i inventory.ini --key-file ~/id_rsa --extra-vars "@/var/secrets/backup_env.yml" play-622-k8s-control-plane-13-backup-kubernetes.yml'
                 }
             }
         }
