@@ -7,9 +7,5 @@ resource "helm_release" "prometheus" {
   chart      = "prometheus"
   version    = "25.20.1"
 
-  values = [
-    file("./values.yaml"),
-    file("./alertmanager-values.yaml"),
-    file("./alert-values.yaml"),
-  ]
+  values = [file("./values.yaml")]
 }
