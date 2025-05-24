@@ -1,4 +1,0 @@
-- hosts: parkingx
-  tasks:
-    - import_tasks: ./tasks/disable_nginx_site_default.yml
-    - import_tasks: ./tasks/update_nginx_config.yml
