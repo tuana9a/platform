@@ -13,7 +13,7 @@ pipeline {
         stage('Main') {
             steps {
                 container('ansible') {
-                    sh 'echo $id_rsa > ~/id_rsa && chmod 600 ~/id_rsa'
+                    sh 'echo "$id_rsa" > ~/id_rsa && chmod 600 ~/id_rsa'
                     sh 'echo $ansible_password > ~/.ansible-password && chmod 600 ~/.ansible-password'
                     sh 'cat ~/id_rsa'
                     sh 'cat ~/.ansible-password'
