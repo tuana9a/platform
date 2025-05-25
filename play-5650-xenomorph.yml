@@ -16,7 +16,5 @@
     - import_tasks: ./tasks/install_nginx.yml
     - import_tasks: ./tasks/disable_nginx_site_default.yml
     - import_tasks: ./tasks/install_certbot.yml
-    # - import_tasks: ./tasks/install_kubectl.yml
-    # - import_tasks: ./tasks/install_awscli.yml
     - import_tasks: ./tasks/install_docker.yml
     - import_tasks: ./tasks/install_fail2ban.yml
