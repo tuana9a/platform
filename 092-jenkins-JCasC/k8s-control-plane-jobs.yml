@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: ansible-jcasc
+  name: k8s-control-plane-jobs-jcasc
   namespace: jenkins
   labels:
     jenkins-jenkins-config: "true"
 data:
-  ansible.yaml: |
+  k8s-control-plane-jobs.yaml: |
     jobs:
       - script: |
           pipelineJob('k8s-control-plane-etcd-defrag') {
@@ -44,7 +44,7 @@ data:
                     remote {
                       url('https://github.com/tuana9a/platform.git')
                     }
-                    branch('main')
+                    branch('rock-n-roll')
                   }
                 }
                 scriptPath(".jenkins/k8s-control-plane-backup-kubernetes.Jenkinsfile")
