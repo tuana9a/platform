@@ -19,7 +19,7 @@ data:
                     remote {
                       url('https://github.com/tuana9a/platform.git')
                     }
-                    branch('main')
+                    branch('rock-n-roll')
                   }
                 }
                 scriptPath(".jenkins/k8s-control-plane-etcd-defrag.Jenkinsfile")

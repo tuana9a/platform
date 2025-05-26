@@ -26,7 +26,7 @@ data:
                     remote {
                       url('https://github.com/tuana9a/platform.git')
                     }
-                    branch('main')
+                    branch('rock-n-roll')
                   }
                 }
                 scriptPath(".jenkins/test-gcp-oidc.Jenkinsfile")
@@ -51,7 +51,7 @@ data:
                     remote {
                       url('https://github.com/tuana9a/platform.git')
                     }
-                    branch('main')
+                    branch('rock-n-roll')
                   }
                 }
                 scriptPath(".jenkins/test-aws-oidc.Jenkinsfile")

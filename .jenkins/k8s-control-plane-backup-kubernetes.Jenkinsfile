@@ -1,7 +1,7 @@
 pipeline {
     agent {
         kubernetes {
-            yamlFile '.jenkins/backup-kubernetes.yml'
+            yamlFile '.jenkins/podTemplate/backup-kubernetes.yml'
             defaultContainer 'shell'
             retries 2
         }

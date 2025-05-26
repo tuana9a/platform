@@ -17,14 +17,13 @@ spec:
         - sleep
       args:
         - infinity
-      envFrom:
-        - secretRef:
-            name: backup-kubernetes
       volumeMounts:
-        - name: secrets
+        - name: etcd-defrag
           mountPath: "/var/secrets"
           readOnly: true
   volumes:
-    - name: secrets
+    - name: etcd-defrag
       secret:
-        secretName: backup-kubernetes
+        secretName: etcd-defrag
+        # https://stackoverflow.com/questions/61728030/kubernetes-volume-mount-permissions-incorrect-for-secret
+        defaultMode: 384 # 600

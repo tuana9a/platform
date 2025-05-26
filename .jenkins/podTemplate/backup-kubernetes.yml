@@ -18,12 +18,10 @@ spec:
       args:
         - infinity
       volumeMounts:
-        - name: ansible
+        - name: secrets
           mountPath: "/var/secrets"
           readOnly: true
   volumes:
-    - name: ansible
+    - name: secrets
       secret:
-        secretName: ansible
-        # https://stackoverflow.com/questions/61728030/kubernetes-volume-mount-permissions-incorrect-for-secret
-        defaultMode: 384 # 600
+        secretName: backup-kubernetes

@@ -1,7 +1,7 @@
 pipeline {
     agent {
         kubernetes {
-            yamlFile '.jenkins/test-gcp-oidc.yml'
+            yamlFile '.jenkins/podTemplate/test-gcp-oidc.yml'
             defaultContainer 'shell'
             retries 2
         }

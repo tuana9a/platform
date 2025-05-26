@@ -5,7 +5,7 @@ pipeline {
             // Or, to avoid YAML:
             // containerTemplate {
             //     name 'shell'
-            yamlFile '.jenkins/test-aws-oidc.yml'
+            yamlFile '.jenkins/podTemplate/test-aws-oidc.yml'
             defaultContainer 'shell'
             retries 2
         }
