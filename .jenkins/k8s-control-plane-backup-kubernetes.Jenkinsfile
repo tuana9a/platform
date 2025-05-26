@@ -1,3 +1,6 @@
+def inventory
+def vmids = []
+
 pipeline {
     agent {
         kubernetes {
@@ -12,23 +15,64 @@ pipeline {
     stages {
         stage('Prepare') {
             steps {
+                echo "Generate ssh key"
                 container('ansible') {
-                    sh 'cat /var/secrets/id_rsa > ~/id_rsa && chmod 600 ~/id_rsa'
+                    sh 'ssh-keygen -t ecdsa -f /workdir/id_rsa && chmod 600 /workdir/id_rsa'
+                    script {
+                        inventory = readYaml file: "./inventory.yml"
+                        inventory["k8s_control_plane"]["hosts"].each { host, vars ->
+                            def vmid = vars["vmid"]
+                            vmids.add(vmid)
+                        }
+                    }
+                }
+                echo "Inject ssh auth key"
+                container('kp') {
+                    script {
+                        for (vmid in vmids) {
+                            sh '/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey add --vmid ' + vmid + ' -u u -k "$(cat /workdir/id_rsa.pub)"'
+                        }
+                    }
                 }
             }
         }
         stage('Debug') {
             steps {
                 container('ansible') {
-                    sh 'ls -lha ~/id_rsa && cat ~/id_rsa'
+                    sh 'cat /workdir/id_rsa'
+                    sh 'cat /workdir/id_rsa.pub'
                     sh 'cat /var/secrets/backup_env.yml'
+                    script {
+                        echo "vmids: $vmids"
+                    }
+                }
+                echo "View ssh keys"
+                container('kp') {
+                    script {
+                        for (vmid in vmids) {
+                            sh '/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey view --vmid ' + vmid + ' -u u'
+                        }
+                    }
                 }
             }
         }
         stage('Backup') {
             steps {
                 container('ansible') {
-                    sh 'ansible-playbook -i inventory.ini --key-file ~/id_rsa --extra-vars "@/var/secrets/backup_env.yml" play-622-k8s-control-plane-13-backup-kubernetes.yml'
+                    sh 'ansible-playbook -i inventory.yml --key-file /workdir/id_rsa --extra-vars "@/var/secrets/backup_env.yml" play-622-k8s-control-plane-13-backup-kubernetes.yml'
+                }
+            }
+        }
+    }
+    post {
+        always {
+            echo 'Cleanup'
+            container('kp') {
+                script {
+                    for (vmid in vmids) {
+                        sh '/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey remove --vmid ' + vmid + ' -u u -k "$(cat /workdir/id_rsa.pub)"'
+                        sh '/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey view --vmid ' + vmid + ' -u u'
+                    }
                 }
             }
         }

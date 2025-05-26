@@ -11,6 +11,19 @@ spec:
       securityContext:
         # ubuntu runs as root by default, it is recommended or even mandatory in some environments (such as pod security admission "restricted") to run as a non-root user.
         runAsUser: 1000
+    - name: kp
+      image: tuana9a/kp:dev-78b56d8
+      command:
+        - /bin/sh
+      args:
+        - -c
+        - "sleep infinity"
+      volumeMounts:
+        - name: secrets
+          mountPath: "/var/secrets"
+          readOnly: true
+        - name: workdir
+          mountPath: "/workdir"
     - name: ansible
       image: alpine/ansible:2.17.0
       command:
@@ -18,12 +31,14 @@ spec:
       args:
         - infinity
       volumeMounts:
-        - name: etcd-defrag
+        - name: secrets
           mountPath: "/var/secrets"
           readOnly: true
+        - name: workdir
+          mountPath: "/workdir"
   volumes:
-    - name: etcd-defrag
+    - name: secrets
       secret:
-        secretName: etcd-defrag
-        # https://stackoverflow.com/questions/61728030/kubernetes-volume-mount-permissions-incorrect-for-secret
-        defaultMode: 384 # 600
+        secretName: backup-kubernetes
+    - name: workdir
+      emptyDir: {}
