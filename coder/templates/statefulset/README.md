@@ -1,15 +1,6 @@
-# kubernetes
+# statefulset
 
-First push
+This template is a statefulset which have following features:
 
-```bash
-coder template push --variables-file vars.yml
-```
-
-# known issues
-
-Mount docker data over nfs will not work
-
-https://github.com/docker/for-linux/issues/1172#issuecomment-771647647
-
->@jjengla Is your $HOME/.local/share/docker is on NFS? Then probably it does not work.
+- as statefulset when we recreate workspace with the same name reuse volume from previous workspace
+- toggle dockerd (docker in docker) for dockerd for each workspace
