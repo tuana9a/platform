@@ -1,17 +1,11 @@
-name: "docker build push coder minimal"
+name: "docker build push coder"
 
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - "docker/coder/minimal.Dockerfile"
-      - ".github/workflows/docker-build-push-coder-minimal*"
-  push:
-    branches:
-      - main
-    paths:
-      - "docker/coder/minimal.Dockerfile"
-      - ".github/workflows/docker-build-push-coder-minimal*"
+    inputs:
+      filepath:
+        type: string
+        description: which filepath will be image tag
 
 jobs:
   build-and-push:
@@ -34,9 +28,9 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: docker/coder
-          file: docker/coder/minimal.Dockerfile
+          file: docker/coder/${{ github.event.inputs.filepath }}.Dockerfile
           push: true
-          tags: tuana9a/coder:minimal
+          tags: tuana9a/coder:${{ github.event.inputs.filepath }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -48,5 +42,6 @@ jobs:
         run: |
           github_workflow="${{ github.workflow }}"
           workflow_name=$github_workflow
-          MESSAGE="${status:-bad} $workflow_name $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          build_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          MESSAGE="${status:-bad} $workflow_name \`${{ github.event.inputs.filepath }}\` $build_url"
           curl -X POST ${{ secrets.DISCORD_WEBHOOK }} -H "Content-Type: application/json" -d "{\"content\":\"${MESSAGE}\"}"
