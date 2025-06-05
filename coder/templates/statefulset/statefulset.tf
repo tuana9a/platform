@@ -64,7 +64,7 @@ resource "kubernetes_stateful_set" "main" {
 
         container {
           name              = "dev"
-          image             = data.coder_parameter.image.value
+          image             = "tuana9a/coder:${data.coder_parameter.image_tag.value}"
           image_pull_policy = "Always"
           command           = ["sh", "-c", coder_agent.main.init_script]
           security_context {

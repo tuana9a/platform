@@ -62,27 +62,19 @@ data "coder_parameter" "home_disk_size" {
   }
 }
 
-data "coder_parameter" "image" {
-  name         = "image"
-  display_name = "Image"
-  description  = "Docker image"
-  default      = "tuana9a/coder:base"
+data "coder_parameter" "image_tag" {
+  name         = "image_tag"
+  display_name = "Image tag"
+  description  = "tuana9a/coder image tag"
+  default      = "base"
   icon         = "/icon/docker.png"
   mutable      = true
-  option {
-    name  = "tuana9a/coder:base"
-    value = "tuana9a/coder:base"
-  }
-  option {
-    name  = "tuana9a/coder:minimal"
-    value = "tuana9a/coder:minimal"
-  }
 }
 
 data "coder_parameter" "dockerd" {
   name         = "dockerd"
   display_name = "dockerd"
-  description  = "Docker Daemon"
+  description  = "Docker in docker"
   mutable      = true
   type         = "string"
   default      = "false"
