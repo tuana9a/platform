@@ -1,5 +1,3 @@
-ARG BUILD_TAG
-
-FROM alpine:${BUILD_TAG}
+FROM alpine:3.22.0
 
 RUN apk add openssh

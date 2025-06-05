@@ -2,11 +2,6 @@ name: "docker build push openssh"
 
 on:
   workflow_dispatch:
-    inputs:
-      tag:
-        description: "Base image tag from original alpine image"
-        required: true
-        type: string
 
 jobs:
   build-and-push:
@@ -28,7 +23,9 @@ jobs:
       - name: Set BUILD_TAG
         working-directory: "docker/openssh"
         run: |
-          BUILD_TAG=${{ inputs.tag }}
+          FULL_COMMIT_HASH="${{ github.sha }}"
+          COMMIT_HASH_SHORT="${FULL_COMMIT_HASH:0:7}"
+          BUILD_TAG="git-${COMMIT_HASH_SHORT}"
           echo "BUILD_TAG=${BUILD_TAG}" >> "$GITHUB_ENV"
 
       - name: Build and push Docker image
@@ -36,7 +33,6 @@ jobs:
         with:
           context: docker/openssh
           file: docker/openssh/Dockerfile
-          build-args: "BUILD_TAG=${{ env.BUILD_TAG }}"
           push: true
           tags: tuana9a/openssh:${{ env.BUILD_TAG }}
           cache-from: type=gha
@@ -50,5 +46,6 @@ jobs:
         run: |
           github_workflow="${{ github.workflow }}"
           workflow_name=$github_workflow
-          MESSAGE="${status:-bad} $workflow_name $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          build_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          MESSAGE="${status:-bad} $workflow_name \`tuana9a/openssh:${{ env.BUILD_TAG }}\` $build_url"
           curl -X POST ${{ secrets.DISCORD_WEBHOOK }} -H "Content-Type: application/json" -d "{\"content\":\"${MESSAGE}\"}"
