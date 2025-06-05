@@ -96,10 +96,10 @@ data "coder_parameter" "dockerd" {
   }
 }
 
-data "coder_parameter" "persist_dockerd" {
-  name         = "persist_dockerd"
-  display_name = "persist_dockerd"
-  description  = "Persist Docker Data"
+data "coder_parameter" "dockerd_persistent" {
+  name         = "dockerd_persistent"
+  display_name = "dockerd_persistent"
+  description  = "Docker data persistent"
   mutable      = true
   type         = "string"
   default      = "false"
@@ -117,6 +117,6 @@ locals {
   coder_parameter = {
     dockerd = data.coder_parameter.dockerd.value == "true" ? [1] : []
 
-    persist_dockerd = data.coder_parameter.dockerd.value == "true" && data.coder_parameter.persist_dockerd.value == "true" ? [1] : []
+    dockerd_persistent = data.coder_parameter.dockerd.value == "true" && data.coder_parameter.dockerd_persistent.value == "true" ? [1] : []
   }
 }

@@ -227,7 +227,7 @@ resource "kubernetes_stateful_set" "main" {
 
     # https://github.com/docker/for-linux/issues/1172 Is your $HOME/.local/share/docker is on NFS? Then probably it does not work.
     dynamic "volume_claim_template" {
-      for_each = local.coder_parameter.persist_dockerd
+      for_each = local.coder_parameter.dockerd_persistent
 
       content {
         metadata {
