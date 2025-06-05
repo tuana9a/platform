@@ -43,5 +43,5 @@ jobs:
           github_workflow="${{ github.workflow }}"
           workflow_name=$github_workflow
           build_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-          MESSAGE="${status:-bad} $workflow_name \`${{ github.event.inputs.filepath }}\` $build_url"
+          MESSAGE="${status:-bad} $workflow_name \`tuana9a/coder:${{ github.event.inputs.filepath }}\` $build_url"
           curl -X POST ${{ secrets.DISCORD_WEBHOOK }} -H "Content-Type: application/json" -d "{\"content\":\"${MESSAGE}\"}"
