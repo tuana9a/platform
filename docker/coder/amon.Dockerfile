@@ -29,3 +29,9 @@ RUN wget https://releases.hashicorp.com/terraform/1.7.5/terraform_1.7.5_linux_am
 RUN wget https://github.com/digitalocean/doctl/releases/download/v1.124.0/doctl-1.124.0-linux-amd64.tar.gz -O /tmp/doctl.tar.gz && \
   tar xzf /tmp/doctl.tar.gz -C /tmp && \
   sudo mv /tmp/doctl /usr/local/bin/
+
+RUN curl -L https://github.com/junegunn/fzf/releases/download/v0.62.0/fzf-0.62.0-linux_amd64.tar.gz -o /tmp/fzf.tar.gz && \
+  tar -xzf /tmp/fzf.tar.gz -C /tmp/ && \
+  sudo cp /tmp/fzf /usr/local/bin/ && \
+  sudo chmod +x /usr/local/bin/fzf && \
+  rm /tmp/fzf*
