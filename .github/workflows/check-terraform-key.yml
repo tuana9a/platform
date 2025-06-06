@@ -17,10 +17,3 @@ jobs:
         run: ./scripts/check-terraform-key.sh
       - id: set-status-ok
         run: echo 'status=ok' >> $GITHUB_ENV
-      - name: Notify
-        if: ${{ always() }}
-        run: |
-          github_workflow="${{ github.workflow }}"
-          workflow_name=$github_workflow
-          MESSAGE="${status:-bad} $workflow_name $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-          curl -X POST ${{ secrets.DISCORD_WEBHOOK }} -H "Content-Type: application/json" -d "{\"content\":\"${MESSAGE}\"}"
