@@ -1,6 +1,6 @@
 FROM tuana9a/coder:base
 
-RUN curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh -o /tmp/install-zoxide.sh && chmod +x /tmp/install-zoxide.sh \
+RUN curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh -o /tmp/install-zoxide.sh && chmod +x /tmp/install-zoxide.sh && \
   sudo /tmp/install-zoxide.sh --bin-dir /usr/local/bin --man-dir /usr/local/share/man
 
 RUN sudo curl -sL "https://dl.k8s.io/release/v1.30.13/bin/linux/amd64/kubectl" -o /usr/local/bin/kubectl && \
