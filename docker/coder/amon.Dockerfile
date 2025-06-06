@@ -25,3 +25,7 @@ RUN wget https://releases.hashicorp.com/terraform/1.7.5/terraform_1.7.5_linux_am
   unzip -d /tmp/ /tmp/terraform.zip && \
   sudo cp /tmp/terraform /usr/local/bin/ && \
   sudo chmod 0755 /usr/local/bin/terraform
+
+RUN wget https://github.com/digitalocean/doctl/releases/download/v1.124.0/doctl-1.124.0-linux-amd64.tar.gz -O /tmp/doctl.tar.gz && \
+  tar xzf /tmp/doctl.tar.gz -C /tmp && \
+  sudo mv /tmp/doctl /usr/local/bin/
