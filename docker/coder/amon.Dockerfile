@@ -20,3 +20,8 @@ RUN curl -sL https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-c
   sudo tar -xf /tmp/google-cloud-cli-linux-x86_64.tar.gz -C /usr/local/ && \
   sudo /usr/local/google-cloud-sdk/install.sh --usage-reporting false --command-completion false --path-update false && \
   rm /tmp/google-cloud-cli-linux-x86_64.tar.gz
+
+RUN wget https://releases.hashicorp.com/terraform/1.7.5/terraform_1.7.5_linux_amd64.zip -O /tmp/terraform.zip && \
+  unzip -d /tmp/ /tmp/terraform.zip && \
+  sudo cp /tmp/terraform /usr/local/bin/ && \
+  sudo chmod 0755 /usr/local/bin/terraform
