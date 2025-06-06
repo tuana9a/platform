@@ -1,6 +1,7 @@
 FROM tuana9a/coder:base
 
-RUN curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh --sudo --bin-dir /usr/local/bin --man-dir /usr/local/share/man
+RUN curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh -o /tmp/install-zoxide.sh && chmod +x /tmp/install-zoxide.sh \
+  sudo /tmp/install-zoxide.sh --bin-dir /usr/local/bin --man-dir /usr/local/share/man
 
 RUN sudo curl -sL "https://dl.k8s.io/release/v1.30.13/bin/linux/amd64/kubectl" -o /usr/local/bin/kubectl && \
   sudo chmod 0755 /usr/local/bin/kubectl
@@ -17,4 +18,5 @@ RUN sudo apt install -y python3.$(python3 --version | cut -d '.' -f2)-venv && \
 
 RUN curl -sL https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-linux-x86_64.tar.gz -o /tmp/google-cloud-cli-linux-x86_64.tar.gz && \
   sudo tar -xf /tmp/google-cloud-cli-linux-x86_64.tar.gz -C /usr/local/ && \
-  sudo /usr/local/google-cloud-sdk/install.sh --usage-reporting false --command-completion false --path-update false
+  sudo /usr/local/google-cloud-sdk/install.sh --usage-reporting false --command-completion false --path-update false && \
+  rm /tmp/google-cloud-cli-linux-x86_64.tar.gz
