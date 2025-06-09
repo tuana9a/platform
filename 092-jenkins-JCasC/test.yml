@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-jcasc
+  namespace: jenkins
+  labels:
+    jenkins-jenkins-config: "true"
+data:
+  test.yaml: |
+    jobs:
+      - script: |
+          pipelineJob('test') {
+            properties {
+            }
+            definition {
+              cpsScm {
+                scm {
+                  git {
+                    remote {
+                      url('https://github.com/tuana9a/platform.git')
+                    }
+                    branch('test')
+                  }
+                }
+                scriptPath(".jenkins/test.Jenkinsfile")
+              }
+            }
+          }
