@@ -7,7 +7,7 @@ resource "coder_agent" "main" {
     set -e
 
     # install and start code-server
-    curl -fsSL https://raw.githubusercontent.com/coder/code-server/main/install.sh | sh -s -- --method=standalone --prefix=/tmp/code-server --version 4.90.3
+    curl -fsSL https://raw.githubusercontent.com/coder/code-server/main/install.sh | sh -s -- --method=standalone --prefix=/tmp/code-server --version 4.100.3
     /tmp/code-server/bin/code-server --auth none --port 13337 >/tmp/code-server.log 2>&1 &
   EOT
 
