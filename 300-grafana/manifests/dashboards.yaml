@@ -2,6 +2,7 @@
 # kind: ConfigMap
 # metadata:
 #   name: dashboards
+#   namespace: grafana
 #   labels:
 #     grafana_dashboard: "1"
 # data:
