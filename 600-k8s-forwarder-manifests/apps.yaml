@@ -10,6 +10,8 @@ spec:
     - list:
         elements:
           - name: pve-xeno-tuana9a-com
+          - name: dev2-tuana9a-com
+          - name: wildcard-dev2-tuana9a-com
   template:
     metadata:
       name: "600-k8s-forwarder-{{.name}}"

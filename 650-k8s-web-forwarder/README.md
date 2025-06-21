@@ -14,18 +14,6 @@ helm uninstall -n k8s-forwarder amon-tuana9a-com
 helm uninstall -n k8s-forwarder wildcard-amon-tuana9a-com
 ```
 
-## dev2-tuana9a-com
-
-```bash
-helm upgrade --install -n k8s-forwarder --debug dev2-tuana9a-com ./charts/k8s-web-forwarder --values ./650-k8s-web-forwarder/dev2-tuana9a-com.values.yaml
-helm upgrade --install -n k8s-forwarder --debug wildcard-dev2-tuana9a-com ./charts/k8s-web-forwarder --values ./650-k8s-web-forwarder/wildcard-dev2-tuana9a-com.values.yaml
-```
-
-```bash
-helm uninstall -n k8s-forwarder dev2-tuana9a-com
-helm uninstall -n k8s-forwarder wildcard-dev2-tuana9a-com
-```
-
 ## namnd-tuana9a-com
 
 ```bash
