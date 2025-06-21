@@ -9,7 +9,7 @@ spec:
   source:
     path: 502-coder-manifests
     repoURL: https://github.com/tuana9a/platform.git
-    targetRevision: main
+    targetRevision: rock-n-roll
   destination:
     namespace: coder
     server: https://kubernetes.default.svc
