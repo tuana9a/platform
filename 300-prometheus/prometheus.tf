@@ -1,3 +1,7 @@
+resource "kubernetes_manifest" "alertmanager_secret" {
+  manifest = yamldecode(file("./manifests/alertmanager-secret.yaml"))
+}
+
 resource "helm_release" "prometheus" {
   name             = "prometheus"
   namespace        = "prometheus"
@@ -8,4 +12,6 @@ resource "helm_release" "prometheus" {
   version    = "25.20.1"
 
   values = [file("./values.yaml")]
+
+  depends_on = [kubernetes_manifest.alertmanager_secret]
 }
