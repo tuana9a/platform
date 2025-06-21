@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: k8s-forwarders
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - list:
+        elements:
+          - name: pve-xeno-tuana9a-com
+  template:
+    metadata:
+      name: "600-k8s-forwarder-{{.name}}"
+    spec:
+      project: default
+      revisionHistoryLimit: 10
+      source:
+        repoURL: https://github.com/tuana9a/platform.git
+        path: 600-k8s-forwarder-manifests/k8s-web-forwarder
+        targetRevision: rock-n-roll
+        helm:
+          releaseName: "{{.name}}"
+          valueFiles:
+            - values/{{.name}}.yaml
+      destination:
+        namespace: k8s-forwarder
+        server: https://kubernetes.default.svc
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
