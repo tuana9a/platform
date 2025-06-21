@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: t9stbot
-          image: tuana9a/t9stbot:master-0f4f059b
+          image: tuana9a/t9stbot:proxy-support-9681a4e2
           envFrom:
             - configMapRef:
                 name: t9stbot
