@@ -1,19 +1,17 @@
 #!/bin/bash
 
-for dir in $(ls -d */); do
-  cd $dir
-  if [ -f "terraform.tf" ]; then
-    key=$(basename "$dir")
-    
-    # Check if terraform.tf contains 'prefix = "<key>"'
-    if grep -q 'prefix = "'$key'"' "terraform.tf"; then
-      echo "$dir ok"
-    else
-      echo "$dir ERROR"
+for f in $(find . -not -path './.git*' -not -path './coder/templates/*' -not -path '*tmp*' -name terraform.tf); do
+  dir="$(dirname $f)"
+  key=${dir:2}
+  if grep --quiet 'prefix' $f; then
+    echo "=== $f ==="
+    echo "dir = $dir"
+    echo "key = $key"
+    if ! grep -o "prefix = \"$key\"" $f; then
+      echo "status = err"
       exit 1
     fi
-  else
-    echo "$dir empty"
+    echo "status = ok"
+    echo
   fi
-  cd ..
 done
