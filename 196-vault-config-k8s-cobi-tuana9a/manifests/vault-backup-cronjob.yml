@@ -1,25 +1,9 @@
-apiVersion: external-secrets.io/v1beta1
-kind: ExternalSecret
-metadata:
-  name: vault-backup
-  namespace: vault
-spec:
-  refreshInterval: "15s"
-  secretStoreRef:
-    name: vault-tuana9a-com
-    kind: SecretStore
-  target:
-    name: vault-backup
-  dataFrom:
-    - extract:
-        key: kv/mgmt/backup
----
 # NOTE: to fix vault is sealed when spot instances dead, make pod restart
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: vault-backup
   namespace: vault
+  name: vault-backup
 spec:
   schedule: "0 * * * *" # Adjust the schedule as needed
   # https://stackoverflow.com/questions/51657105/how-to-ensure-kubernetes-cronjob-does-not-restart-on-failure

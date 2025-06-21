@@ -2,8 +2,8 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: vault-unseal
   namespace: vault
+  name: vault-unseal
 spec:
   schedule: "* * * * *" # Adjust the schedule as needed
   # https://stackoverflow.com/questions/51657105/how-to-ensure-kubernetes-cronjob-does-not-restart-on-failure
