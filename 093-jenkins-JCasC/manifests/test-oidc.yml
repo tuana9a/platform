@@ -1,33 +1,15 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: k8s-control-plane-jobs-jcasc
   namespace: jenkins
+  name: test-oidc-jcasc
   labels:
     jenkins-jenkins-config: "true"
 data:
-  k8s-control-plane-jobs.yaml: |
+  test-oidc.yaml: |
     jobs:
       - script: |
-          pipelineJob('k8s-control-plane-etcd-defrag') {
-            properties {
-            }
-            definition {
-              cpsScm {
-                scm {
-                  git {
-                    remote {
-                      url('https://github.com/tuana9a/platform.git')
-                    }
-                    branch('rock-n-roll')
-                  }
-                }
-                scriptPath(".jenkins/k8s-control-plane-etcd-defrag.Jenkinsfile")
-              }
-            }
-          }
-      - script: |
-          pipelineJob('k8s-control-plane-backup-kubernetes') {
+          pipelineJob('test-gcp-oidc') {
             properties {
               pipelineTriggers {
                 triggers {
@@ -47,7 +29,32 @@ data:
                     branch('rock-n-roll')
                   }
                 }
-                scriptPath(".jenkins/k8s-control-plane-backup-kubernetes.Jenkinsfile")
+                scriptPath(".jenkins/test-gcp-oidc.Jenkinsfile")
+              }
+            }
+          }
+      - script: |
+          pipelineJob('test-aws-oidc') {
+            properties {
+              pipelineTriggers {
+                triggers {
+                  cron {
+                    spec('0 0 * * *')
+                  }
+                }
+              }
+            }
+            definition {
+              cpsScm {
+                scm {
+                  git {
+                    remote {
+                      url('https://github.com/tuana9a/platform.git')
+                    }
+                    branch('rock-n-roll')
+                  }
+                }
+                scriptPath(".jenkins/test-aws-oidc.Jenkinsfile")
               }
             }
           }
