@@ -38,16 +38,6 @@ helm uninstall -n k8s-forwarder namnd-tuana9a-com
 helm uninstall -n k8s-forwarder wildcard-namnd-tuana9a-com
 ```
 
-## pve-xeno-tuana9a-com
-
-```bash
-helm upgrade --install -n k8s-forwarder --debug pve-xeno-tuana9a-com ./charts/k8s-web-forwarder --values ./650-k8s-web-forwarder/pve-xeno-tuana9a-com.values.yaml
-```
-
-```bash
-helm uninstall -n k8s-forwarder pve-xeno-tuana9a-com
-```
-
 ## netchat-site
 
 ```bash
