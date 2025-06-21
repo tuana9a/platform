@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: internal
   namespace: coder
+  name: internal
 spec:
   clusterIP: None # headless service
   ipFamilyPolicy: SingleStack # WTF: Service "pg-internal" is invalid: [spec.ipFamilyPolicy: Invalid value: "RequireDualStack": this cluster is not configured for dual-stack services, spec.ipFamilies[1]: Invalid value: "IPv6": not configured on this cluster]

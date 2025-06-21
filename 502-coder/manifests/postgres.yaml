@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: postgres
   namespace: coder
+  name: postgres
 spec:
   replicas: 1
   serviceName: internal
@@ -21,7 +21,7 @@ spec:
           image: postgres:16
           envFrom:
             - secretRef:
-                name: coder-postgres-env
+                name: postgres-env
           env:
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
@@ -38,7 +38,9 @@ spec:
           ports:
             - containerPort: 5432
   volumeClaimTemplates:
-    - metadata:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
         name: postgres-data
       spec:
         storageClassName: nfs-vdb

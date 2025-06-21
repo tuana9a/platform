@@ -1,8 +1,8 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: postgres-backup
   namespace: coder
+  name: postgres-backup
 spec:
   schedule: "0 * * * *"
   jobTemplate:
@@ -38,7 +38,7 @@ spec:
                   mountPath: /data
               envFrom:
                 - secretRef:
-                    name: coder-postgres-backup-env
+                    name: postgres-backup-env
 
             - name: zip
               image: busybox:latest
@@ -67,7 +67,7 @@ spec:
                   ls -la /data/
               envFrom:
                 - secretRef:
-                    name: coder-postgres-backup-env
+                    name: postgres-backup-env
               volumeMounts:
                 - name: workdir
                   mountPath: /data
@@ -93,7 +93,7 @@ spec:
                   EOF
               envFrom:
                 - secretRef:
-                    name: coder-postgres-backup-env
+                    name: postgres-backup-env
               env:
                 - name: POD_NAMESPACE
                   valueFrom:
