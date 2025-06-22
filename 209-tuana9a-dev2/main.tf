@@ -11,7 +11,7 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev2" {
   tags      = ["terraform", "ubuntu"]
 
   cpu {
-    cores        = 4
+    cores        = 2
     sockets      = 1
     architecture = "x86_64"
     flags        = []
@@ -19,8 +19,8 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev2" {
   }
 
   memory {
-    dedicated = 8192
-    floating  = 4096
+    dedicated = 4096
+    floating  = 0
   }
 
   agent {
@@ -36,10 +36,10 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev2" {
     backup       = true
     replicate    = false
     speed {
-      read            = 50
-      read_burstable  = 75
-      write           = 50
-      write_burstable = 75
+      read            = 20
+      read_burstable  = 30
+      write           = 20
+      write_burstable = 30
     }
   }
 
