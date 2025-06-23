@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: d9stbot
-          image: tuana9a/d9stbot:dev-a86b9c7b
+          image: tuana9a/d9stbot:git-0c2387f5
           envFrom:
             - configMapRef:
                 name: d9stbot
