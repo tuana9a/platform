@@ -4,11 +4,11 @@ https://coder.com/docs/v2/latest/install/kubernetes
 
 https://coder.com/docs/v2/latest/install/offline
 
-# docker image
+# images
 
 See [docker/coder/](../docker/coder/)
 
-# configmap
+# config
 
 `postgres`
 
@@ -16,7 +16,7 @@ See [docker/coder/](../docker/coder/)
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: coder-postgres-env
+  name: postgres-env
   namespace: coder
 data:
   POSTGRES_USER: "root"
@@ -45,28 +45,4 @@ data:
   CODER_TELEMETRY_ENABLE: "false"
   CODER_DERP_SERVER_STUN_ADDRESSES: "disable" # Only use relayed connections
   CODER_BLOCK_DIRECT: "true" # force SSH traffic through control plane's DERP proxy
-```
-
-# postgres
-
-```bash
-kubectl -n coder port-forward svc/postgres --address ${address:-0.0.0.0} ${port:-5432}:5432
-```
-
-create user coder
-
-```sql
-TODO
-```
-
-create database coder
-
-```sql
-TODO
-```
-
-change owner of database to coder
-
-```sql
-TODO
 ```
