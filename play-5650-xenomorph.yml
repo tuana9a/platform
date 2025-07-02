@@ -18,3 +18,4 @@
     - import_tasks: ./tasks/install_certbot.yml
     - import_tasks: ./tasks/install_docker.yml
     - import_tasks: ./tasks/install_fail2ban.yml
+    - import_tasks: ./tasks/install_powertop.yml

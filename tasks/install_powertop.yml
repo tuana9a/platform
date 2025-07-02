@@ -1,0 +1,5 @@
+- name: install powertop
+  become: true
+  apt:
+    name: powertop
+    state: present
