@@ -44,3 +44,15 @@ path "sys/storage/raft/snapshot" {
 }
 EOT
 }
+
+resource "vault_policy" "dns_updater" {
+  name   = "dns-updater"
+  policy = <<EOT
+path "kv/cloudflare/accounts/tuana9a/api-tokens/edit-dns" {
+  capabilities = ["read"]
+}
+path "kv/public-ip/*" {
+  capabilities = ["read"]
+}
+EOT
+}
