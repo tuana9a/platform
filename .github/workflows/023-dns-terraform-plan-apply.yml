@@ -16,11 +16,26 @@ env:
   GCP_WORKLOAD_IDENTITY_POOL: github
   GCP_WORKLOAD_IDENTITY_POOL_PROVIDER: github-tuana9a
   WORKING_DIR: 023-dns/
-  VAULT_TOKEN: "${{ secrets.DNS_UPDATER_VAULT_TOKEN }}"
   PLAN_ARTIFACT_NAME: ${{ github.run_id }}-${{ github.run_attempt }}-terraform-plan
+  VAULT_TOKEN: "${{ secrets.DNS_UPDATER_VAULT_TOKEN }}"
+
 jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - id: set-env
+        name: set-env
+        run: |
+          workflow_name="${{ github.workflow }}"; echo $workflow_name
+          echo "workflow_name=$workflow_name" >> $GITHUB_OUTPUT
+          run_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"; echo $run_url
+          echo "run_url=$run_url" >> $GITHUB_OUTPUT
+    outputs:
+      workflow_name: ${{ steps.set-env.outputs.workflow_name }}
+      run_url: ${{ steps.set-env.outputs.run_url }}
   plan:
     runs-on: ubuntu-22.04
+    needs: [prepare]
     permissions:
       contents: read
       id-token: write
@@ -77,19 +92,22 @@ jobs:
       - id: apply
         name: apply
         working-directory: "${{ env.WORKING_DIR }}"
-        run: terraform apply -auto-approve tfplan.out
-      - id: set-status-ok
-        name: set-status-ok
-        run: echo 'status=ok' >> $GITHUB_ENV
+        run: |
+          terraform apply -auto-approve tfplan.out
+          echo 'status=ok' >> $GITHUB_OUTPUT
+    outputs:
+      status: ${{ steps.apply.outputs.status }}
   notify:
     runs-on: ubuntu-latest
-    needs: [plan, apply]
+    needs: [prepare, apply]
     if: ${{ always() }}
     steps:
       - id: notify
         name: notify
         run: |
-          github_workflow="${{ github.workflow }}"
-          workflow_name=$github_workflow
-          MESSAGE="${status:-bad} $workflow_name $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-          curl -X POST ${{ secrets.DISCORD_WEBHOOK }} -H "Content-Type: application/json" -d "{\"content\":\"${MESSAGE}\"}"
+          workflow_name="${{ needs.prepare.outputs.workflow_name }}"
+          run_url="${{ needs.prepare.outputs.run_url }}"
+          url="${{ secrets.DISCORD_WEBHOOK }}"
+          status=${{ needs.apply.outputs.status }}
+          content="${status:-bad} $workflow_name $run_url"
+          curl -X POST $url -H "Content-Type: application/json" -d "{\"content\":\"${content}\"}"
