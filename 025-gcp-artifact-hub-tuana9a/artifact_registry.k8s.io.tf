@@ -1,7 +1,7 @@
 resource "google_artifact_registry_repository" "registry_k8s_io" {
   location      = "asia-southeast1"
   repository_id = "registry-k8s-io"
-  description   = "mirroring registry.k8s.io"
+  description   = "registry.k8s.io"
   format        = "DOCKER"
 }
 
