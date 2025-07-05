@@ -7,6 +7,11 @@ locals {
       type   = "https"
       target = "https://hcr.tuana9a.com"
     }
+    dkhptd-api_tuana9a_com = {
+      name   = "dkhptd-api.tuana9a.com"
+      type   = "https"
+      target = "https://dkhptd-api.tuana9a.com"
+    }
     coder_tuana9a_com = {
       name    = "coder.tuana9a.com"
       type    = "https"
