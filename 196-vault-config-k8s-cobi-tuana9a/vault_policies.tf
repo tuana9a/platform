@@ -56,3 +56,12 @@ path "kv/public-ip/*" {
 }
 EOT
 }
+
+resource "vault_policy" "monitor_do" {
+  name   = "monitor-do"
+  policy = <<EOT
+path "kv/digitalocean/tuana9a/tokens/monitor-do" {
+  capabilities = ["read"]
+}
+EOT
+}
