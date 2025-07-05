@@ -23,6 +23,12 @@ locals {
       type   = "ping"
       target = "xenomorph.tuana9a.com"
     }
+    dev2_tuana9a_com = {
+      name    = "dev2.tuana9a.com"
+      type    = "https"
+      target  = "https://dev2.tuana9a.com"
+      regions = ["eu_west", "se_asia"]
+    }
   }
 }
 
