@@ -1,5 +1,10 @@
-resource "google_billing_budget" "two_1000000VND" {
-  billing_account = data.google_billing_account.two.id
+data "google_billing_account" "vpbank" {
+  display_name = "vpbank"
+  open         = true
+}
+
+resource "google_billing_budget" "vpbank_1000000VND" {
+  billing_account = data.google_billing_account.vpbank.id
   display_name    = "1000000VND"
   amount {
     specified_amount {
@@ -28,8 +33,8 @@ resource "google_billing_budget" "two_1000000VND" {
   }
 }
 
-resource "google_billing_budget" "two_2000000VND" {
-  billing_account = data.google_billing_account.two.id
+resource "google_billing_budget" "vpbank_2000000VND" {
+  billing_account = data.google_billing_account.vpbank.id
   display_name    = "2000000VND"
   amount {
     specified_amount {
@@ -62,8 +67,8 @@ resource "google_billing_budget" "two_2000000VND" {
   }
 }
 
-resource "google_billing_budget" "two_4000000" {
-  billing_account = data.google_billing_account.two.id
+resource "google_billing_budget" "vpbank_4000000" {
+  billing_account = data.google_billing_account.vpbank.id
   display_name    = "4000000VND"
   amount {
     specified_amount {
