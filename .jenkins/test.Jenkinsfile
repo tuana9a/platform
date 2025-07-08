@@ -1,6 +1,6 @@
 pipeline {
   parameters {
-    password(name: 'PASSWORD', defaultValue: '12341234')
+    password(name: 'PASSWORD', defaultValue: 'youshouldntseethis')
   }
   environment {
     PASSWORD = "${params.PASSWORD}"
