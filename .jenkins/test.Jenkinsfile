@@ -7,17 +7,17 @@ pipeline {
   }
   agent any
   stages {
-    stage('param password is not masked by default') {
+    stage('(x) param password') {
       steps {
         sh "curl -X PUT https://paste.tuana9a.com/text/password -H 'Content-Type: text/plain' -d ${params.PASSWORD}"
       }
     }
-    stage('set it into env variable doesn\'t help also') {
+    stage('(x) env variable') {
       steps {
         sh 'curl -X PUT https://paste.tuana9a.com/text/password -H "Content-Type: text/plain" -d $PASSWORD'
       }
     }
-    stage('set it to a groovy variable doesn\'t help also') {
+    stage('(x) groovy variable') {
       steps {
         script {
           def password = params.PASSWORD
@@ -25,7 +25,7 @@ pipeline {
         }
       }
     }
-    stage('using a wrap mask password would help') {
+    stage('(v) wrap mask password') {
       steps {
         script {
           wrap([$class: 'MaskPasswordsBuildWrapper', varPasswordPairs: [[password: params.PASSWORD, var: 'password']]]) {
