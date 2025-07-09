@@ -17,3 +17,8 @@ import {
   id = "apiVersion=v1,kind=ConfigMap,namespace=jenkins,name=test-oidc-jcasc"
   to = kubernetes_manifest.manifests["manifests/test-oidc.yml"]
 }
+
+import {
+  id = "apiVersion=v1,kind=ConfigMap,namespace=jenkins,name=test-jcasc"
+  to = kubernetes_manifest.manifests["manifests/test.yml"]
+}
