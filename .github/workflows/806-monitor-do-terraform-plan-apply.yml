@@ -3,6 +3,9 @@ name: "monitor do terraform plan apply"
 on:
   workflow_dispatch:
   pull_request:
+    paths:
+      - "806-monitor-do/**"
+      - ".github/workflows/806-monitor-do-terraform-plan-apply*"
   push:
     paths:
       - "806-monitor-do/**"
