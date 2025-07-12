@@ -2,7 +2,7 @@ host: "netchat.site"
 ingress:
   className: nginx
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-cloudflare-production"
+    cert-manager.io/cluster-issuer: "letsencrypt-production-cloudflare"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     external-dns.alpha.kubernetes.io/target: "xenomorph.tuana9a.com"
 target:
