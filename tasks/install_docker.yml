@@ -3,6 +3,15 @@
   shell: |
     curl -fsSL https://get.docker.com -o get-docker.sh
     sh ./get-docker.sh
+  register: debug
+
+- name: "stdout: Install docker using the convenience script"
+  debug:
+    msg: "{{ debug.stdout | split('\n') }}"
+
+- name: "stderr: Install docker using the convenience script"
+  debug:
+    msg: "{{ debug.stderr | split('\n') }}"
 
 - name: Install docker-compose from official github repo
   become: true

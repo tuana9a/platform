@@ -1,4 +1,4 @@
-- set_fact: node_exporter_version="1.5.0"
+- set_fact: node_exporter_version="1.9.1"
   when: node_exporter_version is undefined
 
 - name: Download node_exporter tarball
