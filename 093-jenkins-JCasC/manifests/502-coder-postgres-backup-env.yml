@@ -1,15 +1,15 @@
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
-  namespace: coder
-  name: postgres-backup-env
+  namespace: jenkins
+  name: 502-coder-postgres-backup-env
 spec:
   refreshInterval: "15s"
   secretStoreRef:
     name: vault-tuana9a-com
     kind: SecretStore
   target:
-    name: postgres-backup-env
+    name: 502-coder-postgres-backup-env
   dataFrom:
     - extract:
         key: coder/postgres-backup/env
