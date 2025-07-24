@@ -38,6 +38,7 @@ pipeline {
                     sh 'date +%s > /data/stop.time'
                     sh 'ls -lha /data/'
                     sh 'cat /data/stop.time'
+                    sh 'echo 1 > /data/status'
                 }
             }
         }
@@ -50,7 +51,11 @@ pipeline {
                 STOP_TIME=$(cat "/data/stop.time")
                 DURATION=$((STOP_TIME - START_TIME))
                 OBJECT_KEY=$(cat /data/object_key.env)
-                MSG=":white_check_mark: \\`backup-postgres\\` \\`coder\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\`"
+                case "$(cat /data/status)" in
+                    1) status_msg=":white_check_mark:" ;;
+                    *) status_msg=":x:" ;;
+                esac
+                MSG="$status_msg \\`backup-postgres\\` \\`coder\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\`"
                 curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\\"content\\":\\"${MSG}\\"}"
                 '''
                 sh '''

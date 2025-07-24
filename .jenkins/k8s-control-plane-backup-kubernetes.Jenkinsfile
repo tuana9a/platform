@@ -39,9 +39,8 @@ pipeline {
         stage('Debug') {
             steps {
                 container('ansible') {
-                    sh 'cat /workdir/id_rsa'
-                    sh 'cat /workdir/id_rsa.pub'
-                    sh 'cat /var/secrets/backup_env.yml'
+                    sh 'ls -lha /workdir/'
+                    sh 'ls -lha /var/secrets/'
                     script {
                         echo "vmids: $vmids"
                     }
@@ -60,6 +59,7 @@ pipeline {
             steps {
                 container('ansible') {
                     sh 'ansible-playbook -i inventory.yml --key-file /workdir/id_rsa --extra-vars "@/var/secrets/backup_env.yml" play-622-k8s-control-plane-13-backup-kubernetes.yml'
+                    sh 'echo 1 > /workdir/status'
                 }
             }
         }
@@ -73,6 +73,19 @@ pipeline {
                         sh '/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey remove --vmid ' + vmid + ' -u u -k "$(cat /workdir/id_rsa.pub)"'
                         sh '/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey view --vmid ' + vmid + ' -u u'
                     }
+                }
+            }
+            echo 'Notify'
+            container('notify') {
+                script {
+                    sh '''
+                    case "$(cat /workdir/status)" in
+                        1) status_msg=":white_check_mark:" ;;
+                        *) status_msg=":x:" ;;
+                    esac
+                    MSG="$status_msg \\`backup-kubernetes\\`"
+                    curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\\"content\\":\\"${MSG}\\"}"
+                    '''
                 }
             }
         }
