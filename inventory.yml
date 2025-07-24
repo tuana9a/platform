@@ -8,12 +8,12 @@ k8s_control_plane:
     192.168.56.22:
       ansible_user: u
       vmid: 122
-    192.168.56.23:
-      ansible_user: u
-      vmid: 123
-    192.168.56.24:
-      ansible_user: u
-      vmid: 124
+    # 192.168.56.23:
+    #   ansible_user: u
+    #   vmid: 123
+    # 192.168.56.24:
+    #   ansible_user: u
+    #   vmid: 124
 
 xenomorph:
   hosts:
