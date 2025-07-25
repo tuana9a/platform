@@ -6,15 +6,9 @@ nfs:
 k8s_control_plane:
   hosts:
     192.168.56.22:
+      nodename: i-122
       ansible_user: u
       vmid: 122
-    # 192.168.56.23:
-    #   ansible_user: u
-    #   vmid: 123
-    # 192.168.56.24:
-    #   ansible_user: u
-    #   vmid: 124
-
 xenomorph:
   hosts:
     xenomorph.tuana9a.com:
