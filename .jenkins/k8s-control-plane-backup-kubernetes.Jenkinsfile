@@ -23,10 +23,13 @@ pipeline {
     stages {
         stage('Prepare') {
             steps {
-                echo "Set default param"
+                echo "Set params"
                 container('ubuntu') {
                     sh 'echo 0 > /workdir/status'
                     sh 'date +%s > /workdir/start.time'
+                    sh 'date "+%Y%m%d%H" > /workdir/datehour'
+                    sh 'date "+%H%M%S" > /workdir/hourminutesecond'
+                    sh 'date +%s > /workdir/unixtimestamp'
                 }
                 echo "Get vm data"
                 container('ubuntu') {
@@ -41,38 +44,9 @@ pipeline {
                         }
                     }
                 }
-                echo "Generate ssh key"
+                echo "Instal tools"
                 container('ubuntu') {
-                    sh 'apt update && apt install -y openssh-client'
-                    sh 'ssh-keygen -t ecdsa -f /workdir/id_rsa && chmod 600 /workdir/id_rsa'
-                }
-                echo "Inject ssh key"
-                container('kp') {
-                    script {
-                        for (vm in vms) {
-                            def vmid = vm["vmid"]
-                            echo "Inject ssh auth key: ${vmid}"
-                            sh '/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey add --vmid ' + vmid + ' -u root -k "$(cat /workdir/id_rsa.pub)"'
-                        }
-                    }
-                }
-                echo "Copy k8s pki, manifests"
-                container('ubuntu') {
-                    script {
-                        for (vm in vms) {
-                            def vmid = vm["vmid"]
-                            def host = vm["host"]
-                            def nodename = vm["nodename"]
-                            echo "Copy etcd certs and chown"
-                            sh "ssh -o StrictHostKeyChecking=accept-new -i /workdir/id_rsa root@${host} echo helloworld"
-                            sh "scp -i /workdir/id_rsa -r root@${host}:/etc/kubernetes/pki /workdir/pki-${nodename}"
-                            sh "scp -i /workdir/id_rsa -r root@${host}:/etc/kubernetes/manifests /workdir/manifests-${nodename}"
-                        }
-                    }
-                }
-                echo "Install etcdctl"
-                container('ubuntu') {
-                    sh 'apt install -y curl'
+                    sh 'apt update && apt install -y openssh-client curl'
                     sh '''
                     ETCD_VER=v3.5.15
 
@@ -90,15 +64,41 @@ pipeline {
                     /usr/local/bin/etcdctl version
                     '''
                 }
+                echo "Generate ssh key"
+                container('ubuntu') {
+                    sh 'ssh-keygen -t ecdsa -f /workdir/id_rsa && chmod 600 /workdir/id_rsa'
+                }
+                echo "Inject ssh key"
+                container('kp') {
+                    script {
+                        for (vm in vms) {
+                            def vmid = vm["vmid"]
+                            echo "Inject ssh auth key: ${vmid}"
+                            sh "/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey add --vmid ${vmid} -u root -k \"\$(cat /workdir/id_rsa.pub)\""
+                        }
+                    }
+                }
+                echo "Download k8s certs and manifests"
+                container('ubuntu') {
+                    script {
+                        for (vm in vms) {
+                            def vmid = vm["vmid"]
+                            def host = vm["host"]
+                            def nodename = vm["nodename"]
+                            sh "ssh -o StrictHostKeyChecking=accept-new -i /workdir/id_rsa root@${host} echo helloworld"
+                            sh "scp -i /workdir/id_rsa -r root@${host}:/etc/kubernetes/pki /workdir/pki-${nodename}"
+                            sh "scp -i /workdir/id_rsa -r root@${host}:/etc/kubernetes/manifests /workdir/manifests-${nodename}"
+                        }
+                    }
+                }
             }
         }
         stage('Debug') {
             steps {
                 container('ubuntu') {
-                    sh 'ls -lha /workdir/'
                     sh 'ls -lha /var/secrets/'
+                    sh 'ls -lha /workdir/'
                     sh 'find /workdir/'
-                    sh 'cat /workdir/start.time'
                 }
                 echo "View ssh keys"
                 container('kp') {
@@ -106,7 +106,7 @@ pipeline {
                         for (vm in vms) {
                             def vmid = vm["vmid"]
                             echo "vmid: ${vmid}"
-                            sh '/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey view --vmid ' + vmid + ' -u root' // username is hardcoded
+                            sh "/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey view --vmid ${vmid} -u root" // username is hardcoded
                         }
                     }
                 }
@@ -170,39 +170,37 @@ pipeline {
                     script {
                         for (vm in vms) {
                             def nodename = vm["nodename"]
-                            sh """
-                            datehour=\$(date '+%Y%m%d%H')
-                            hourminutesecond=\$(date '+%H%M%S')
-                            unixtimestamp=\$(date +%s)
-                            aws s3api --endpoint-url \$S3_ENDPOINT put-object --bucket \$BUCKET_NAME --key \$datehour-k8s-backup-${nodename}.tar.gz --body /workdir/k8s-backup-${nodename}.tar.gz
-                            """
+                            sh "aws s3api --endpoint-url \$S3_ENDPOINT put-object --bucket \$BUCKET_NAME --key \$(cat /workdir/datehour)-k8s-backup-${nodename}.tar.gz --body /workdir/k8s-backup-${nodename}.tar.gz"
                         }
                     }
                     echo 'upload completed'
-                    sh 'echo 1 > /workdir/status'
                 }
             }
         }
         stage('Finally') { // just a divider
             steps {
                 echo "dummy"
+                sh 'echo 1 > /workdir/status'
             }
         }
     }
     post {
         always {
+            echo 'Set params'
+            container('ubuntu') {
+                sh 'date +%s > /workdir/stop.time'
+            }
             echo 'Cleanup'
             container('kp') {
                 script {
                     for (vm in vms) {
                         def vmid = vm["vmid"]
                         echo "vmid ${vmid}: remove temp key"
-                        sh '/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey remove --vmid ' + vmid + ' -u root -k "$(cat /workdir/id_rsa.pub)"'
+                        sh "/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey remove --vmid ${vmid} -u root -k \"\$(cat /workdir/id_rsa.pub)\""
                         echo "vmid ${vmid}: verify"
-                        sh '/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey view --vmid ' + vmid + ' -u root'
+                        sh "/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey view --vmid ${vmid} -u root"
                     }
                 }
-                sh 'date +%s > /workdir/stop.time'
             }
             echo 'Notify'
             container('ubuntu') {
@@ -211,12 +209,29 @@ pipeline {
                     START_TIME=$(cat "/workdir/start.time")
                     STOP_TIME=$(cat "/workdir/stop.time")
                     DURATION=$((STOP_TIME - START_TIME))
+                    DURATION_PRETTY="$(($DURATION / 60))m$(($DURATION % 60))s"
+                    echo $DURATION > /workdir/duration.time
+                    echo $DURATION_PRETTY > /workdir/duration_pretty.txt
+                    '''
+                    sh '''
                     case "$(cat /workdir/status)" in
                         1) status_msg=":white_check_mark:" ;;
                         *) status_msg=":x:" ;;
                     esac
-                    MSG="$status_msg \\`backup-kubernetes\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\`"
+                    MSG="$status_msg \\`backup-kubernetes\\` \\`$(cat /workdir/duration_pretty.txt)\\`"
                     curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\\"content\\":\\"${MSG}\\"}"
+                    '''
+                    sh '''
+                    push_gateway_baseurl="http://prometheus-prometheus-pushgateway.prometheus.svc.cluster.local:9091";
+                    POD_NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace);
+                    cat << EOF | curl --noproxy '*' --data-binary @- $push_gateway_baseurl/metrics/job/k8s_backup_cronjob
+# TYPE k8s_backup_datehour gauge
+k8s_backup_datehour{namespace="$POD_NAMESPACE"} $(cat /workdir/datehour)
+# TYPE k8s_backup_duration gauge
+k8s_backup_duration{namespace="$POD_NAMESPACE"} $(cat /workdir/duration.time)
+# TYPE k8s_backup_unixtimestamp gauge
+k8s_backup_unixtimestamp{namespace="$POD_NAMESPACE"} $(cat /workdir/unixtimestamp)
+EOF
                     '''
                 }
             }

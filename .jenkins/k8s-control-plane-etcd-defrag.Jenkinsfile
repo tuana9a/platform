@@ -25,7 +25,7 @@ pipeline {
     stages {
         stage('Prepare') {
             steps {
-                echo "Set default param"
+                echo "Set params"
                 container('ubuntu') {
                     sh 'echo 0 > /workdir/status'
                     sh 'date +%s > /workdir/start.time'
@@ -43,38 +43,9 @@ pipeline {
                         }
                     }
                 }
-                echo "Generate ssh key"
+                echo "Install tools"
                 container('ubuntu') {
-                    sh 'apt update && apt install -y openssh-client'
-                    sh 'ssh-keygen -t ecdsa -f /workdir/id_rsa && chmod 600 /workdir/id_rsa'
-                }
-                echo "Inject ssh key"
-                container('kp') {
-                    script {
-                        for (vm in vms) {
-                            def vmid = vm["vmid"]
-                            echo "Inject ssh auth key: ${vmid}"
-                            sh '/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey add --vmid ' + vmid + ' -u root -k "$(cat /workdir/id_rsa.pub)"'
-                        }
-                    }
-                }
-                echo "Copy k8s pki, manifests"
-                container('ubuntu') {
-                    script {
-                        for (vm in vms) {
-                            def vmid = vm["vmid"]
-                            def host = vm["host"]
-                            def nodename = vm["nodename"]
-                            echo "Copy etcd certs and chown"
-                            sh "ssh -o StrictHostKeyChecking=accept-new -i /workdir/id_rsa root@${host} echo helloworld"
-                            sh "scp -i /workdir/id_rsa -r root@${host}:/etc/kubernetes/pki /workdir/pki-${nodename}"
-                            sh "scp -i /workdir/id_rsa -r root@${host}:/etc/kubernetes/manifests /workdir/manifests-${nodename}"
-                        }
-                    }
-                }
-                echo "Install etcdctl"
-                container('ubuntu') {
-                    sh 'apt install -y curl'
+                    sh 'apt update && apt install -y openssh-client curl'
                     sh '''
                     ETCD_VER=v3.5.15
 
@@ -92,15 +63,40 @@ pipeline {
                     /usr/local/bin/etcdctl version
                     '''
                 }
+                echo "Generate ssh key"
+                container('ubuntu') {
+                    sh 'ssh-keygen -t ecdsa -f /workdir/id_rsa && chmod 600 /workdir/id_rsa'
+                }
+                echo "Inject ssh key"
+                container('kp') {
+                    script {
+                        for (vm in vms) {
+                            def vmid = vm["vmid"]
+                            echo "Inject ssh auth key: ${vmid}"
+                            sh "/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey add --vmid ${vmid} -u root -k \"\$(cat /workdir/id_rsa.pub)\""
+                        }
+                    }
+                }
+                echo "Download k8s certs"
+                container('ubuntu') {
+                    script {
+                        for (vm in vms) {
+                            def vmid = vm["vmid"]
+                            def host = vm["host"]
+                            def nodename = vm["nodename"]
+                            sh "ssh -o StrictHostKeyChecking=accept-new -i /workdir/id_rsa root@${host} echo helloworld"
+                            sh "scp -i /workdir/id_rsa -r root@${host}:/etc/kubernetes/pki /workdir/pki-${nodename}"
+                        }
+                    }
+                }
             }
         }
         stage('Debug') {
             steps {
                 container('ubuntu') {
-                    sh 'ls -lha /workdir/'
                     sh 'ls -lha /var/secrets/'
+                    sh 'ls -lha /workdir/'
                     sh 'find /workdir/'
-                    sh 'cat /workdir/start.time'
                 }
                 echo "View ssh keys"
                 container('kp') {
@@ -108,7 +104,7 @@ pipeline {
                         for (vm in vms) {
                             def vmid = vm["vmid"]
                             echo "vmid: ${vmid}"
-                            sh '/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey view --vmid ' + vmid + ' -u root' // username is hardcoded
+                            sh "/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey view --vmid ${vmid} -u root" // username is hardcoded
                         }
                     }
                 }
@@ -153,21 +149,30 @@ pipeline {
                 }
             }
         }
+        stage('Finally') { // just a divider
+            steps {
+                echo "dummy"
+                sh 'echo 1 > /workdir/status'
+            }
+        }
     }
     post {
         always {
+            echo 'Set params'
+            container('ubuntu') {
+                sh 'date +%s > /workdir/stop.time'
+            }
             echo 'Cleanup'
             container('kp') {
                 script {
                     for (vm in vms) {
                         def vmid = vm["vmid"]
                         echo "vmid ${vmid}: remove temp key"
-                        sh '/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey remove --vmid ' + vmid + ' -u root -k "$(cat /workdir/id_rsa.pub)"'
+                        sh "/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey remove --vmid ${vmid} -u root -k \"\$(cat /workdir/id_rsa.pub)\""
                         echo "vmid ${vmid}: verify"
-                        sh '/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey view --vmid ' + vmid + ' -u root'
+                        sh "/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey view --vmid ${vmid} -u root"
                     }
                 }
-                sh 'date +%s > /workdir/stop.time'
             }
         }
     }
