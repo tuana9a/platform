@@ -1,49 +1,38 @@
 - hosts: xenomorph
   tasks:
-    # - name: Delete old location kubeconfig
-    #   become: true
-    #   file:
-    #     path: "/opt/kubeconfig"
-    #     state: absent
-
     - name: Delete old current state load balancer ip
-      file:
+      ansible.builtin.file:
         path: /tmp/current-ingress-nginx-load-balancer-ip.txt
         state: absent
 
-    # - name: Ensure kubeconfig directory
-    #   ansible.builtin.file:
-    #     path: "{{ lookup('env','HOME') }}/.kube"
-    #     state: directory
-    #     mode: "0700"
-
-    - name: Delete old kubeconfig
-      become: true
-      file:
-        path: "/opt/kubeconfig"
+    - name: Delete update-ingress-nginx-load-balancer-ip.sh
+      ansible.builtin.file:
+        path: /usr/local/bin/update-ingress-nginx-load-balancer-ip.sh
         state: absent
 
-    - name: Copy script
-      become: true
-      ansible.builtin.template:
-        src: update-ingress-nginx-load-balancer-ip.sh
-        dest: /usr/local/bin/update-ingress-nginx-load-balancer-ip.sh
-        mode: "0700"
-        owner: "{{ ansible_user }}"
-
-    - name: Disable cronjob
+    - name: Remove cronjob
       ansible.builtin.cron:
         name: "update-ingress-nginx-load-balancer-ip.sh"
         minute: "*/1"
         job: "/usr/local/bin/update-ingress-nginx-load-balancer-ip.sh >> /tmp/update-ingress-nginx-load-balancer-ip.log 2>&1"
-        disabled: true
+        state: absent
 
     - name: Delete log
-      file:
+      ansible.builtin.file:
         path: /tmp/update-ingress-nginx-load-balancer-ip.log
         state: absent
 
     - name: Delete old overwrite flag
-      copy:
-        file: /tmp/overwrite-flag
+      ansible.builtin.file:
+        path: /tmp/overwrite-flag
+        state: absent
+
+    - name: Delete old location kubeconfig
+      ansible.builtin.file:
+        path: "/opt/kubeconfig"
+        state: absent
+
+    - name: Delete .kube directory
+      ansible.builtin.file:
+        path: "{{ lookup('env','HOME') }}/.kube"
         state: absent
