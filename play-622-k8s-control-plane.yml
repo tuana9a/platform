@@ -3,4 +3,4 @@
     - import_tasks: ./tasks/install_unzip.yml # required for install awscli
     - import_tasks: ./tasks/install_crontab.yml
     - import_tasks: ./tasks/install_awscli.yml
-    # - import_tasks: ./tasks/install_etcd.yml # etcd is already installed
+    - import_tasks: ./tasks/install_etcd.yml # etcd is already installed

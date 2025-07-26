@@ -1,5 +1,5 @@
 - set_fact:
-    ETCD_VER: v3.4.27
+    ETCD_VER: v3.5.15
   when: ETCD_VER is undefined
 
 - set_fact:
