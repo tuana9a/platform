@@ -1,4 +1,5 @@
 pipeline {
+    options { buildDiscarder(logRotator(numToKeepStr: '14')) }
     agent {
         kubernetes {
             yamlFile '.jenkins/podTemplate/test-gcp-oidc.yml'

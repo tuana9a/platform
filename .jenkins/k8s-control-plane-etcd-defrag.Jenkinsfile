@@ -4,6 +4,7 @@ def inventory
 def vms = []
 
 pipeline {
+    options { buildDiscarder(logRotator(numToKeepStr: '14')) }
     agent {
         kubernetes {
             yamlFile '.jenkins/podTemplate/etcd-defrag.yml'

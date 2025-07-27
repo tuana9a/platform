@@ -1,4 +1,5 @@
 pipeline {
+    options { buildDiscarder(logRotator(numToKeepStr: '14')) }
     agent {
         kubernetes {
             // Rather than inline YAML, in a multibranch Pipeline you could use: yamlFile 'jenkins-pod.yaml'
