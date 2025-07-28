@@ -1,9 +1,4 @@
 import {
-  id = "apiVersion=v1,kind=ConfigMap,namespace=jenkins,name=general-jcasc"
-  to = kubernetes_manifest.manifests["manifests/general.yml"]
-}
-
-import {
   id = "apiVersion=v1,kind=ConfigMap,namespace=jenkins,name=k8s-control-plane-jobs-jcasc"
   to = kubernetes_manifest.manifests["manifests/k8s-control-plane-jobs.yml"]
 }

@@ -2,11 +2,11 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   namespace: jenkins
-  name: general-jcasc
+  name: timestamper-jcasc
   labels:
     jenkins-jenkins-config: "true"
 data:
-  general.yaml: |
+  timestamper.yaml: |
     unclassified:
       timestamper:
         allPipelines: true
