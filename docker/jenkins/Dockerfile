@@ -19,3 +19,5 @@ RUN jenkins-plugin-cli --plugins kubernetes:4349.v8fe8f2b_ee9f1
 RUN jenkins-plugin-cli --plugins configuration-as-code:1971.vf9280461ea_89
 RUN jenkins-plugin-cli --plugins blueocean:1.27.19
 RUN jenkins-plugin-cli --plugins saferestart:102.v4dc1b_9636a_ee
+RUN jenkins-plugin-cli --plugins matrix-auth:3.2.6
+RUN jenkins-plugin-cli --plugins google-login:109.v022b_cf87b_e5b_
