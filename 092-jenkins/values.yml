@@ -6,7 +6,7 @@ controller:
   installPlugins: []
   image:
     repository: tuana9a/jenkins
-    tag: "git-2d5ab27"
+    tag: git-9b5a771
   ingress:
     enabled: true
     hostName: jenkins.tuana9a.com
@@ -22,3 +22,9 @@ controller:
       - secretName: jenkins-tuana9a-com-tls
         hosts:
           - jenkins.tuana9a.com
+  JCasC:
+    authorizationStrategy: "" # disable here we already have it configured in 093-jenkins-JCasC
+    securityRealm: "" # disable here we already have it configured in 093-jenkins-JCasC
+  additionalExistingSecrets:
+    - name: google-login
+      keyName: client-secret
