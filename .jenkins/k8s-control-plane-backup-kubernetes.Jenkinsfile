@@ -75,7 +75,7 @@ pipeline {
                         for (vm in vms) {
                             def vmid = vm["vmid"]
                             echo "Inject ssh auth key: ${vmid}"
-                            sh "/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey add --vmid ${vmid} -u root -k \"\$(cat /workdir/id_rsa.pub)\""
+                            sh "/usr/local/bin/kp -c /var/secrets/kp.config.json authkey add --vmid ${vmid} -u root -k \"\$(cat /workdir/id_rsa.pub)\""
                         }
                     }
                 }
@@ -107,7 +107,7 @@ pipeline {
                         for (vm in vms) {
                             def vmid = vm["vmid"]
                             echo "vmid: ${vmid}"
-                            sh "/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey view --vmid ${vmid} -u root" // username is hardcoded
+                            sh "/usr/local/bin/kp -c /var/secrets/kp.config.json authkey view --vmid ${vmid} -u root" // username is hardcoded
                         }
                     }
                 }
@@ -197,9 +197,9 @@ pipeline {
                     for (vm in vms) {
                         def vmid = vm["vmid"]
                         echo "vmid ${vmid}: remove temp key"
-                        sh "/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey remove --vmid ${vmid} -u root -k \"\$(cat /workdir/id_rsa.pub)\""
+                        sh "/usr/local/bin/kp -c /var/secrets/kp.config.json authkey remove --vmid ${vmid} -u root -k \"\$(cat /workdir/id_rsa.pub)\""
                         echo "vmid ${vmid}: verify"
-                        sh "/usr/local/bin/kp -c /var/secrets/kp.config.json vm authkey view --vmid ${vmid} -u root"
+                        sh "/usr/local/bin/kp -c /var/secrets/kp.config.json authkey view --vmid ${vmid} -u root"
                     }
                 }
             }

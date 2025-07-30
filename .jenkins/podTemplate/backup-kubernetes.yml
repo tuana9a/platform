@@ -23,7 +23,7 @@ spec:
         - name: workdir
           mountPath: "/workdir"
     - name: kp
-      image: tuana9a/kp:dev-78b56d8
+      image: tuana9a/kp:main-9c68a63
       command:
         - /bin/sh
       args:

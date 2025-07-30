@@ -6,7 +6,7 @@ controller:
   installPlugins: []
   image:
     repository: tuana9a/jenkins
-    tag: git-9b5a771
+    tag: git-2567168
   ingress:
     enabled: true
     hostName: jenkins.tuana9a.com
