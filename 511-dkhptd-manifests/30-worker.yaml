@@ -28,7 +28,6 @@ spec:
               cpu: "100m"
             limits:
               memory: "500Mi"
-              cpu: "200m"
 ---
 # apiVersion: autoscaling/v2
 # kind: HorizontalPodAutoscaler
