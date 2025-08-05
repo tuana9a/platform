@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
         - name: dkhptd-thoi-khoa-bieu-parser
-          image: tuana9a/dkhptd-thoi-khoa-bieu-parser:2025.08.05.022451
+          image: tuana9a/dkhptd-thoi-khoa-bieu-parser:2025.08.05.125342
           envFrom:
             - secretRef:
                 name: dkhptd-thoi-khoa-bieu-parser
