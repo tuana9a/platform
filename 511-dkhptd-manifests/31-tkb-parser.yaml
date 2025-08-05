@@ -33,6 +33,9 @@ spec:
           envFrom:
             - secretRef:
                 name: dkhptd-thoi-khoa-bieu-parser
+          env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
           resources:
             requests:
               memory: "50Mi"
