@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: dkhptd-scheduler
-          image: tuana9a/dkhptd-scheduler:2024.08.16.055606
+          image: tuana9a/dkhptd-scheduler:2025.08.06.123631
           envFrom:
             - configMapRef:
                 name: dkhptd-scheduler
