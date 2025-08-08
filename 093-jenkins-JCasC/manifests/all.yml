@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: jenkins
+  name: all-jcasc
+  labels:
+    jenkins-jenkins-config: "true"
+data:
+  all.yaml: |
+    jobs:
+      - script: |
+          pipelineJob('vault-unseal') {
+            definition {
+              cpsScm {
+                scm {
+                  git {
+                    remote {
+                      url('https://github.com/tuana9a/platform.git')
+                    }
+                    branch('rock-n-roll')
+                  }
+                }
+                scriptPath(".jenkins/vault-unseal.Jenkinsfile")
+              }
+            }
+          }
