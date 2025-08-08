@@ -24,7 +24,7 @@ pipeline {
     stages {
         stage('Prepare') {
             steps {
-                echo "Set params"
+                echo "set-params"
                 container('ubuntu') {
                     sh 'echo 0 > /workdir/status'
                     sh 'date +%s > /workdir/start.time'
@@ -32,7 +32,7 @@ pipeline {
                     sh 'date "+%H%M%S" > /workdir/hourminutesecond'
                     sh 'date +%s > /workdir/unixtimestamp'
                 }
-                echo "Get vm data"
+                echo "get-vm-data"
                 container('ubuntu') {
                     script {
                         inventory = readYaml file: "./inventory.yml"
@@ -45,7 +45,7 @@ pipeline {
                         }
                     }
                 }
-                echo "Instal tools"
+                echo "install-tools"
                 container('ubuntu') {
                     sh 'apt update && apt install -y openssh-client curl'
                     sh '''
@@ -65,11 +65,11 @@ pipeline {
                     /usr/local/bin/etcdctl version
                     '''
                 }
-                echo "Generate ssh key"
+                echo "generate-ssh-key"
                 container('ubuntu') {
                     sh 'ssh-keygen -t ecdsa -f /workdir/id_rsa && chmod 600 /workdir/id_rsa'
                 }
-                echo "Inject ssh key"
+                echo "jnject-ssh-key"
                 container('kp') {
                     script {
                         for (vm in vms) {
@@ -79,7 +79,7 @@ pipeline {
                         }
                     }
                 }
-                echo "Download k8s certs and manifests"
+                echo "download-k8s-certs-and-manifests"
                 container('ubuntu') {
                     script {
                         for (vm in vms) {
@@ -94,14 +94,14 @@ pipeline {
                 }
             }
         }
-        stage('Debug') {
+        stage('debug') {
             steps {
                 container('ubuntu') {
                     sh 'ls -lha /var/secrets/'
                     sh 'ls -lha /workdir/'
                     sh 'find /workdir/'
                 }
-                echo "View ssh keys"
+                echo "view-ssh-keys"
                 container('kp') {
                     script {
                         for (vm in vms) {
@@ -111,7 +111,7 @@ pipeline {
                         }
                     }
                 }
-                echo "List etcd members"
+                echo "list-etcd-members"
                 container('ubuntu') {
                     script {
                         for (vm in vms) {
@@ -131,9 +131,9 @@ pipeline {
                 }
             }
         }
-        stage('Backup') {
+        stage('backup') {
             steps {
-                echo 'etcd dump'
+                echo 'etcd-dump'
                 container('ubuntu') {
                     script {
                         for (vm in vms) {
@@ -175,23 +175,23 @@ pipeline {
                         }
                     }
                     echo 'upload completed'
+                    sh 'echo 1 > /workdir/status'
                 }
             }
         }
-        stage('Finally') { // just a divider
+        stage('finally') { // just a divider
             steps {
                 echo "dummy"
-                sh 'echo 1 > /workdir/status'
             }
         }
     }
     post {
         always {
-            echo 'Set params'
+            echo 'set-params'
             container('ubuntu') {
                 sh 'date +%s > /workdir/stop.time'
             }
-            echo 'Cleanup'
+            echo 'cleanup'
             container('kp') {
                 script {
                     for (vm in vms) {
@@ -203,7 +203,7 @@ pipeline {
                     }
                 }
             }
-            echo 'Notify'
+            echo 'notify'
             container('ubuntu') {
                 script {
                     sh '''

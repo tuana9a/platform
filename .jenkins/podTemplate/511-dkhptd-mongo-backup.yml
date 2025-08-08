@@ -18,7 +18,7 @@ spec:
             name: 511-dkhptd-mongo-backup-env
       volumeMounts:
         - name: workdir
-          mountPath: /data
+          mountPath: /workdir
 
     - name: mongo
       image: mongo:4.4
@@ -28,7 +28,7 @@ spec:
         - infinity
       volumeMounts:
         - name: workdir
-          mountPath: /data
+          mountPath: /workdir
       envFrom:
         - secretRef:
             name: 511-dkhptd-mongo-backup-env
@@ -44,7 +44,7 @@ spec:
             name: 511-dkhptd-mongo-backup-env
       volumeMounts:
         - name: workdir
-          mountPath: /data
+          mountPath: /workdir
 
   restartPolicy: Never
   volumes:

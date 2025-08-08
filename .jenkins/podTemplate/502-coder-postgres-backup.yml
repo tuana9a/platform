@@ -19,7 +19,7 @@ spec:
         - infinity
       volumeMounts:
         - name: workdir
-          mountPath: /data
+          mountPath: /workdir
 
     - name: dump
       image: postgres:16
@@ -29,7 +29,7 @@ spec:
         - infinity
       volumeMounts:
         - name: workdir
-          mountPath: /data
+          mountPath: /workdir
       envFrom:
         - secretRef:
             name: 502-coder-postgres-backup-env
@@ -42,7 +42,7 @@ spec:
         - infinity
       volumeMounts:
         - name: workdir
-          mountPath: /data
+          mountPath: /workdir
 
     - name: upload
       image: amazon/aws-cli:2.18.0
@@ -55,7 +55,7 @@ spec:
             name: 502-coder-postgres-backup-env
       volumeMounts:
         - name: workdir
-          mountPath: /data
+          mountPath: /workdir
 
     - name: notify
       image: alpine/curl
@@ -73,7 +73,7 @@ spec:
               fieldPath: metadata.namespace
       volumeMounts:
         - name: workdir
-          mountPath: /data
+          mountPath: /workdir
   restartPolicy: Never
   volumes:
     - name: workdir

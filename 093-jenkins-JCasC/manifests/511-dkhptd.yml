@@ -9,7 +9,7 @@ data:
   511-dkhptd-jobs.yaml: |
     jobs:
       - script: |
-          pipelineJob('511-dkhptd-dkhptd-backup') {
+          pipelineJob('511-dkhptd-mongo-backup') {
             properties {
               pipelineTriggers {
                 triggers {
