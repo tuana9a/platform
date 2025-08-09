@@ -24,7 +24,6 @@ data:
               }
             }
           }
-      - script: |
           pipelineJob('vault-secret-store-token-renew') {
             properties {
               pipelineTriggers {
@@ -46,6 +45,30 @@ data:
                   }
                 }
                 scriptPath(".jenkins/vault-secret-store-token-renew.Jenkinsfile")
+              }
+            }
+          }
+          pipelineJob('vault-backup') {
+            properties {
+              pipelineTriggers {
+                triggers {
+                  cron {
+                    spec('0 * * * *')
+                  }
+                }
+              }
+            }
+            definition {
+              cpsScm {
+                scm {
+                  git {
+                    remote {
+                      url('https://github.com/tuana9a/platform.git')
+                    }
+                    branch('rock-n-roll')
+                  }
+                }
+                scriptPath(".jenkins/vault-backup.Jenkinsfile")
               }
             }
           }
