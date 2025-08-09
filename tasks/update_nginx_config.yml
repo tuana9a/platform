@@ -1,3 +1,19 @@
+- name: Copy base nginx.conf
+  become: true
+  copy:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+    force: true
+
+- name: Ensure conf.d
+  become: true
+  ansible.builtin.file:
+    path: /etc/nginx/conf.d
+    owner: root
+    group: root
+    mode: "755"
+    state: directory
+
 - name: copy conf.d/* to remote
   become: true
   when: nginx.conf_d is defined
@@ -6,6 +22,15 @@
     src: "{{ item }}"
     dest: "/etc/nginx/conf.d/{{ item | basename }}"
     backup: true
+
+- name: Ensure stream.conf.d
+  become: true
+  ansible.builtin.file:
+    path: /etc/nginx/stream.conf.d
+    owner: root
+    group: root
+    mode: "755"
+    state: directory
 
 - name: copy stream.conf.d/* to remote
   become: true
