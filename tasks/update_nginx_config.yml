@@ -1,24 +1,20 @@
-- name: rsync conf.d dir to remote
+- name: copy conf.d/* to remote
   become: true
   when: nginx.conf_d is defined
-  ansible.posix.synchronize:
-    src: "{{ nginx.conf_d }}"
-    recursive: true
-    delete: true
-    dest: /etc/nginx/conf.d/
-    rsync_opts:
-      - "--exclude=*.j2"
+  loop: "{{ lookup('fileglob', '{{ nginx.conf_d }}/*', wantlist=True) }}"
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/etc/nginx/conf.d/{{ item | basename }}"
+    backup: true
 
-- name: rsync stream.conf.d dir to remote
+- name: copy stream.conf.d/* to remote
   become: true
   when: nginx.stream_conf_d is defined
-  ansible.posix.synchronize:
-    src: "{{ nginx.stream_conf_d }}"
-    recursive: true
-    delete: true
-    dest: /etc/nginx/stream.conf.d/
-    rsync_opts:
-      - "--exclude=*.j2"
+  loop: "{{ lookup('fileglob', '{{ nginx.stream_conf_d }}/*', wantlist=True) }}"
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/etc/nginx/stream.conf.d/{{ item | basename }}"
+    backup: true
 
 - name: Reload nginx service
   become: true
