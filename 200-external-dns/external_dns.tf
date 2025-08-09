@@ -1,11 +1,13 @@
-resource "helm_release" "external_dns" {
-  name             = "external-dns"
-  namespace        = "external-dns"
-  create_namespace = true
+# dns is now managed by terraform 023-dns stack
 
-  repository = "https://kubernetes-sigs.github.io/external-dns"
-  chart      = "external-dns"
-  version    = "1.15.0"
+# resource "helm_release" "external_dns" {
+#   name             = "external-dns"
+#   namespace        = "external-dns"
+#   create_namespace = true
 
-  values = [file("./values.yaml")]
-}
+#   repository = "https://kubernetes-sigs.github.io/external-dns"
+#   chart      = "external-dns"
+#   version    = "1.15.0"
+
+#   values = [file("./values.yaml")]
+# }
