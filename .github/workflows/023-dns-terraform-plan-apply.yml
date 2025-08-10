@@ -20,9 +20,13 @@ env:
   VAULT_TOKEN: "${{ secrets.DNS_UPDATER_VAULT_TOKEN }}"
 
 jobs:
-  prepare:
+  terraform-plan-apply:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
+      - uses: actions/checkout@v4
       - id: set-env
         name: set-env
         run: |
@@ -30,17 +34,6 @@ jobs:
           echo "workflow_name=$workflow_name" >> $GITHUB_OUTPUT
           run_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"; echo $run_url
           echo "run_url=$run_url" >> $GITHUB_OUTPUT
-    outputs:
-      workflow_name: ${{ steps.set-env.outputs.workflow_name }}
-      run_url: ${{ steps.set-env.outputs.run_url }}
-  plan:
-    runs-on: ubuntu-22.04
-    needs: [prepare]
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - uses: actions/checkout@v4
       - uses: google-github-actions/auth@v2
         with:
           project_id: "${{ env.GCP_PROJECT_ID }}"
@@ -53,6 +46,13 @@ jobs:
         name: init
         working-directory: "${{ env.WORKING_DIR }}"
         run: terraform init
+      - id: tfvars
+        name: add tfvars
+        working-directory: "${{ env.WORKING_DIR }}"
+        run: |
+          echo 'cloudflare_api_token = "${{ secrets.cloudflare_api_token_edit_dns }}"' >> hidden.auto.tfvars
+          echo 'xenomorph_ip = "${{ secrets.xenomorph_ip }}"' >> hidden.auto.tfvars
+          echo 'imperial_ally_285602_ip = "${{ secrets.imperial_ally_285602_ip }}"' >> hidden.auto.tfvars
       - id: plan
         name: plan
         working-directory: "${{ env.WORKING_DIR }}"
@@ -63,51 +63,31 @@ jobs:
         with:
           name: ${{ env.PLAN_ARTIFACT_NAME }}
           path: "${{ env.WORKING_DIR }}/tfplan.out"
-  apply:
-    runs-on: ubuntu-22.04
-    permissions:
-      contents: read
-      id-token: write
-    needs: [plan]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: google-github-actions/auth@v2
-        with:
-          project_id: "${{ env.GCP_PROJECT_ID }}"
-          workload_identity_provider: "projects/${{ env.GCP_PROJECT_ID_NUM }}/locations/global/workloadIdentityPools/${{ env.GCP_WORKLOAD_IDENTITY_POOL }}/providers/${{ env.GCP_WORKLOAD_IDENTITY_POOL_PROVIDER }}"
-          service_account: "${{ env.GCP_SERVICE_ACCOUNT }}"
-      - uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: "1.7.1"
-      - id: init
-        name: init
-        working-directory: "${{ env.WORKING_DIR }}"
-        run: terraform init
-      - id: download-plan
-        name: download-plan
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ env.PLAN_ARTIFACT_NAME }}
-          path: "${{ env.WORKING_DIR }}"
       - id: apply
         name: apply
         working-directory: "${{ env.WORKING_DIR }}"
         run: |
           terraform apply -auto-approve tfplan.out
-          echo 'status=ok' >> $GITHUB_OUTPUT
+          echo 'status=1' >> $GITHUB_OUTPUT
     outputs:
       status: ${{ steps.apply.outputs.status }}
+      workflow_name: ${{ steps.set-env.outputs.workflow_name }}
+      run_url: ${{ steps.set-env.outputs.run_url }}
   notify:
     runs-on: ubuntu-latest
-    needs: [prepare, apply]
+    needs: [terraform-plan-apply]
     if: ${{ always() }}
     steps:
       - id: notify
         name: notify
         run: |
-          workflow_name="${{ needs.prepare.outputs.workflow_name }}"
-          run_url="${{ needs.prepare.outputs.run_url }}"
+          workflow_name="${{ needs.terraform-plan-apply.outputs.workflow_name }}"
+          run_url="${{ needs.terraform-plan-apply.outputs.run_url }}"
           url="${{ secrets.DISCORD_WEBHOOK }}"
-          status=${{ needs.apply.outputs.status }}
-          content="${status:-bad} $workflow_name $run_url"
+          status=${{ needs.terraform-plan-apply.outputs.status }}
+          case "$status" in
+              1) status_msg=":white_check_mark:" ;;
+              *) status_msg=":x:" ;;
+          esac
+          content="$status_msg $workflow_name $run_url"
           curl -X POST $url -H "Content-Type: application/json" -d "{\"content\":\"${content}\"}"
