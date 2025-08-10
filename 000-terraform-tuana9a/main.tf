@@ -3,4 +3,8 @@ resource "google_storage_bucket" "terraform" {
   location = "ASIA-SOUTHEAST1"
 
   force_destroy = false
+
+  versioning {
+    enabled = true
+  }
 }
