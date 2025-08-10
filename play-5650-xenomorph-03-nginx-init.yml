@@ -1,3 +1,0 @@
-- hosts: xenomorph
-  tasks:
-    - import_tasks: ./tasks/nginx_init.yml

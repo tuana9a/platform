@@ -1,14 +1,16 @@
 controller:
   service:
     type: "LoadBalancer"
-    annotations:
-      external-dns.alpha.kubernetes.io/hostname: ingress-nginx.svc.k8s-internal.tuana9a.com
+    nodePorts:
+      http: 30080
+      https: 30443
+    # annotations:
+    #   external-dns.alpha.kubernetes.io/hostname: ingress-nginx.svc.k8s-internal.tuana9a.com
   autoscaling:
     enabled: true
   resources:
     limits:
-      cpu: 150m
-      memory: 250Mi
+      memory: 300Mi
     requests:
       cpu: 100m
-      memory: 200Mi
+      memory: 250Mi
