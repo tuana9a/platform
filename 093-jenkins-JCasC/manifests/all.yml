@@ -72,3 +72,26 @@ data:
               }
             }
           }
+          multibranchPipelineJob('095-github-runners-terraform-plan-apply') {
+            branchSources {
+              git {
+                // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
+                id('1754893933') // date +%s
+                remote('https://github.com/tuana9a/platform.git')
+                includes('rock-n-roll')
+              }
+            }
+            factory {
+              workflowBranchProjectFactory {
+                scriptPath('.jenkins/095-github-runners-terraform-plan-apply.Jenkinsfile')
+              }
+            }
+            orphanedItemStrategy {
+              discardOldItems {
+                numToKeep(14)
+              }
+            }
+            triggers {
+              cron('* * * * *')
+            }
+          }
