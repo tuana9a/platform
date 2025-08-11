@@ -21,6 +21,7 @@ locals {
     "t9stbot.tuana9a.com"          = var.xenomorph_ip
     "uuid.stuffs.kn.tuana9a.com"   = var.xenomorph_ip
     "vault.tuana9a.com"            = var.xenomorph_ip
+    "ryuu.tuana9a.com"             = var.xenomorph_ip
   }
 }
 
