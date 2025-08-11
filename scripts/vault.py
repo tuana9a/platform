@@ -93,6 +93,7 @@ sub_parser = parser.add_subparsers(required=True)
 put_parser = sub_parser.add_parser("put")
 put_parser.add_argument(
     "--secrets-file",
+    "-f",
     type=str,
     default=os.getenv("SECRETS_FILE", "secrets.json"),
     help="The path to the secrets file (default: secrets.json)",
@@ -102,6 +103,7 @@ put_parser.set_defaults(func=put_secrets)
 delete_parser = sub_parser.add_parser("delete", aliases=["del"])
 delete_parser.add_argument(
     "--secrets-file",
+    "-f",
     type=str,
     default=os.getenv("SECRETS_FILE", "secrets.json"),
     help="The path to the secrets file (default: secrets.json)",
