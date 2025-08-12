@@ -1,4 +1,4 @@
-# https://github.com/actions/actions-runner-controller/blob/master/docs/quickstart.md
+# LEGACY: https://github.com/actions/actions-runner-controller/blob/master/docs/quickstart.md
 resource "helm_release" "actions_runner_controller" {
   name             = "actions-runner-controller"
   namespace        = "github-runners"
