@@ -140,7 +140,7 @@ pipeline {
                             1) status_msg=":white_check_mark:" ;;
                             *) status_msg=":x:" ;;
                         esac
-                        MSG="$status_msg \\`github-runners-terraform-plan-apply\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\`"
+                        MSG="$status_msg \\`github-runners\\` \\`terraform-plan-apply\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\` $BUILD_URL"
                         curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\\"content\\":\\"${MSG}\\"}"
                         '''
                     }
