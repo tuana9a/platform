@@ -9,6 +9,95 @@ data:
   all.yaml: |
     jobs:
       - script: |
+          pipelineJob('k8s-control-plane-etcd-defrag') {
+            properties {
+            }
+            definition {
+              cpsScm {
+                scm {
+                  git {
+                    remote {
+                      url('https://github.com/tuana9a/platform.git')
+                    }
+                    branch('rock-n-roll')
+                  }
+                }
+                scriptPath(".jenkins/k8s-control-plane-etcd-defrag.Jenkinsfile")
+              }
+            }
+          }
+          pipelineJob('k8s-control-plane-backup-kubernetes') {
+            properties {
+              pipelineTriggers {
+                triggers {
+                  cron {
+                    spec('0 0 * * *')
+                  }
+                }
+              }
+            }
+            definition {
+              cpsScm {
+                scm {
+                  git {
+                    remote {
+                      url('https://github.com/tuana9a/platform.git')
+                    }
+                    branch('rock-n-roll')
+                  }
+                }
+                scriptPath(".jenkins/k8s-control-plane-backup-kubernetes.Jenkinsfile")
+              }
+            }
+          }
+          pipelineJob('511-dkhptd-mongo-backup') {
+            properties {
+              pipelineTriggers {
+                triggers {
+                  cron {
+                    spec('0 0 * * *')
+                  }
+                }
+              }
+            }
+            definition {
+              cpsScm {
+                scm {
+                  git {
+                    remote {
+                      url('https://github.com/tuana9a/platform.git')
+                    }
+                    branch('rock-n-roll')
+                  }
+                }
+                scriptPath(".jenkins/511-dkhptd-mongo-backup.Jenkinsfile")
+              }
+            }
+          }
+          pipelineJob('502-coder-postgres-backup') {
+            properties {
+              pipelineTriggers {
+                triggers {
+                  cron {
+                    spec('0 0 * * *')
+                  }
+                }
+              }
+            }
+            definition {
+              cpsScm {
+                scm {
+                  git {
+                    remote {
+                      url('https://github.com/tuana9a/platform.git')
+                    }
+                    branch('rock-n-roll')
+                  }
+                }
+                scriptPath(".jenkins/502-coder-postgres-backup.Jenkinsfile")
+              }
+            }
+          }
           pipelineJob('vault-unseal') {
             definition {
               cpsScm {

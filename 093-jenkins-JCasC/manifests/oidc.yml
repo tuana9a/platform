@@ -19,3 +19,55 @@ data:
                   id: aws-oidc-id-token
                   scope: GLOBAL
                   audience: "sts.amazonaws.com"
+  test-oidc.yaml: |
+    jobs:
+      - script: |
+          pipelineJob('test-gcp-oidc') {
+            properties {
+              pipelineTriggers {
+                triggers {
+                  cron {
+                    spec('0 0 * * *')
+                  }
+                }
+              }
+            }
+            definition {
+              cpsScm {
+                scm {
+                  git {
+                    remote {
+                      url('https://github.com/tuana9a/platform.git')
+                    }
+                    branch('rock-n-roll')
+                  }
+                }
+                scriptPath(".jenkins/test-gcp-oidc.Jenkinsfile")
+              }
+            }
+          }
+      - script: |
+          pipelineJob('test-aws-oidc') {
+            properties {
+              pipelineTriggers {
+                triggers {
+                  cron {
+                    spec('0 0 * * *')
+                  }
+                }
+              }
+            }
+            definition {
+              cpsScm {
+                scm {
+                  git {
+                    remote {
+                      url('https://github.com/tuana9a/platform.git')
+                    }
+                    branch('rock-n-roll')
+                  }
+                }
+                scriptPath(".jenkins/test-aws-oidc.Jenkinsfile")
+              }
+            }
+          }
