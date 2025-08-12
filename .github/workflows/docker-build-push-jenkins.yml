@@ -24,9 +24,9 @@ jobs:
         working-directory: "docker/jenkins"
         run: |
           FULL_COMMIT_HASH="${{ github.sha }}"
-          COMMIT_HASH_SHORT="${FULL_COMMIT_HASH:0:7}"
+          SHORT_COMMIT_HASH="${FULL_COMMIT_HASH:0:7}"
           echo "FULL_COMMIT_HASH=${FULL_COMMIT_HASH}" >> "$GITHUB_ENV"
-          echo "COMMIT_HASH_SHORT=${COMMIT_HASH_SHORT}" >> "$GITHUB_ENV"
+          echo "SHORT_COMMIT_HASH=${SHORT_COMMIT_HASH}" >> "$GITHUB_ENV"
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
@@ -34,12 +34,12 @@ jobs:
           context: docker/jenkins
           file: docker/jenkins/Dockerfile
           push: true
-          tags: tuana9a/jenkins:git-${{ env.COMMIT_HASH_SHORT }},tuana9a/jenkins:git-${{ env.FULL_COMMIT_HASH }}
+          tags: tuana9a/jenkins:git-${{ env.SHORT_COMMIT_HASH }},tuana9a/jenkins:git-${{ env.FULL_COMMIT_HASH }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - id: set-status-ok
-        run: echo 'status=ok' >> $GITHUB_ENV
+        run: echo 'status=1' >> $GITHUB_ENV
 
       - name: Notify
         if: ${{ always() }}
@@ -47,5 +47,9 @@ jobs:
           github_workflow="${{ github.workflow }}"
           workflow_name=$github_workflow
           build_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-          MESSAGE="${status:-bad} $workflow_name \`tuana9a/jenkins:git-${{ env.COMMIT_HASH_SHORT }}\`, \`tuana9a/jenkins:git-${{ env.FULL_COMMIT_HASH }}\` $build_url"
+          case "$status" in
+            1) status_msg=":white_check_mark:" ;;
+            *) status_msg=":x:" ;;
+          esac
+          MESSAGE="$status_msg $workflow_name \`tuana9a/jenkins:git-${{ env.SHORT_COMMIT_HASH }}\`, \`tuana9a/jenkins:git-${{ env.FULL_COMMIT_HASH }}\` $build_url"
           curl -X POST ${{ secrets.DISCORD_WEBHOOK }} -H "Content-Type: application/json" -d "{\"content\":\"${MESSAGE}\"}"

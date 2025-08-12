@@ -21,3 +21,5 @@ RUN jenkins-plugin-cli --plugins blueocean:1.27.19
 RUN jenkins-plugin-cli --plugins saferestart:102.v4dc1b_9636a_ee
 RUN jenkins-plugin-cli --plugins matrix-auth:3.2.6
 RUN jenkins-plugin-cli --plugins google-login:109.v022b_cf87b_e5b_
+RUN jenkins-plugin-cli --plugins dark-theme:524.vd675b_22b_30cb_
+RUN jenkins-plugin-cli --plugins pipeline-graph-view:619.v92f3fcdc39db_
