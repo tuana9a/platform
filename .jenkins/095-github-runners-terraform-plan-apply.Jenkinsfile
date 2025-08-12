@@ -1,3 +1,5 @@
+def proceed = false
+
 pipeline {
     options { buildDiscarder(logRotator(numToKeepStr: '14')) }
     agent {
@@ -18,7 +20,22 @@ pipeline {
         GOOGLE_APPLICATION_CREDENTIALS = "$WORKSPACE_TMP/application_default_credentials.json"
     }
     stages {
+        stage('proceed?') {
+            when { 
+                anyOf { 
+                    changeset "095-*/**/*"
+                    changeset ".jenkins/095-*"
+                }
+            }
+            steps {
+                echo 'match pattern set proceed to true'
+                script {
+                    proceed = true
+                }
+            }
+        }
         stage('prepare') {
+            when { expression { proceed } }
             steps {
                 echo 'set-params'
                 container('ubuntu') {
@@ -64,6 +81,7 @@ pipeline {
             }
         }
         stage('debug') {
+            when { expression { proceed } }
             steps {
                 container('ubuntu') {
                     sh 'ls -lha /workdir/'
@@ -72,6 +90,7 @@ pipeline {
             }
         }
         stage('terraform') {
+            when { expression { proceed } }
             steps {
                 container('ubuntu') {
                     withCredentials([file(variable: 'ID_TOKEN_FILE', credentialsId: 'gcp-oidc-id-token')]) {
@@ -101,6 +120,7 @@ pipeline {
             }
         }
         stage('noti') {
+            when { expression { proceed } }
             steps {
                 echo "dummy"
             }
@@ -109,18 +129,22 @@ pipeline {
     post {
         always {
             container('ubuntu') {
-                sh 'date +%s > /workdir/stop.time'
-                sh '''
-                START_TIME=$(cat "/workdir/start.time")
-                STOP_TIME=$(cat "/workdir/stop.time")
-                DURATION=$((STOP_TIME - START_TIME))
-                case "$(cat /workdir/status)" in
-                    1) status_msg=":white_check_mark:" ;;
-                    *) status_msg=":x:" ;;
-                esac
-                MSG="$status_msg \\`github-runners-terraform-plan-apply\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\`"
-                curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\\"content\\":\\"${MSG}\\"}"
-                '''
+                script {
+                    if (proceed) {
+                        sh 'date +%s > /workdir/stop.time'
+                        sh '''
+                        START_TIME=$(cat "/workdir/start.time")
+                        STOP_TIME=$(cat "/workdir/stop.time")
+                        DURATION=$((STOP_TIME - START_TIME))
+                        case "$(cat /workdir/status)" in
+                            1) status_msg=":white_check_mark:" ;;
+                            *) status_msg=":x:" ;;
+                        esac
+                        MSG="$status_msg \\`github-runners-terraform-plan-apply\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\`"
+                        curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\\"content\\":\\"${MSG}\\"}"
+                        '''
+                    }
+                }
             }
         }
     }
