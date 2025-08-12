@@ -2,26 +2,25 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
-    - name: shell
+    - name: ubuntu
       image: ubuntu
       command:
         - sleep
       args:
         - infinity
-      securityContext:
-        # ubuntu runs as root by default, it is recommended or even mandatory in some environments (such as pod security admission "restricted") to run as a non-root user.
-        runAsUser: 1000
-    - name: set-params
-      image: busybox
-      command:
-        - sleep
-      args:
-        - infinity
+      env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+      envFrom:
+        - secretRef:
+            name: 502-coder-postgres-backup-env
       volumeMounts:
         - name: workdir
           mountPath: /workdir
 
-    - name: dump
+    - name: postgres
       image: postgres:16
       command:
         - sleep
@@ -34,17 +33,7 @@ spec:
         - secretRef:
             name: 502-coder-postgres-backup-env
 
-    - name: zip
-      image: busybox:latest
-      command:
-        - sleep
-      args:
-        - infinity
-      volumeMounts:
-        - name: workdir
-          mountPath: /workdir
-
-    - name: upload
+    - name: awscli
       image: amazon/aws-cli:2.18.0
       command:
         - sleep
@@ -57,23 +46,6 @@ spec:
         - name: workdir
           mountPath: /workdir
 
-    - name: notify
-      image: alpine/curl
-      command:
-        - sleep
-      args:
-        - infinity
-      envFrom:
-        - secretRef:
-            name: 502-coder-postgres-backup-env
-      env:
-        - name: POD_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-      volumeMounts:
-        - name: workdir
-          mountPath: /workdir
   restartPolicy: Never
   volumes:
     - name: workdir

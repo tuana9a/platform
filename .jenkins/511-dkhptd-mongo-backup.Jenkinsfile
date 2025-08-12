@@ -12,9 +12,9 @@ pipeline {
             steps {
                 echo 'set-params'
                 container('ubuntu') {
-                    sh 'OBJECT_KEY=$(date +"%Y%m%d%H")-dkhptd-mongo-dump.tar.gz && echo $OBJECT_KEY > /workdir/object_key.env'
                     sh 'date +%s > /workdir/start.time'
                     sh 'echo 0 > /workdir/status'
+                    sh 'OBJECT_KEY=$(date +"%Y%m%d%H")-dkhptd-mongo-dump.tar.gz && echo $OBJECT_KEY > /workdir/object_key.env'
                 }
                 echo 'install-tools'
                 container('ubuntu') {
@@ -75,7 +75,7 @@ pipeline {
                     1) status_msg=":white_check_mark:" ;;
                     *) status_msg=":x:" ;;
                 esac
-                MSG="$status_msg \\`backup-mongo\\` \\`dkhptd\\` \\`$OBJECT_KEY\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\`"
+                MSG="$status_msg \\`backup-mongo\\` \\`dkhptd\\` \\`$OBJECT_KEY\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\` $BUILD_URL"
                 curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\\"content\\":\\"${MSG}\\"}"
                 '''
                 sh '''
@@ -88,8 +88,6 @@ mongo_backup_duration{namespace="$POD_NAMESPACE"} $DURATION
 # TYPE mongo_backup_unixtimestamp gauge
 mongo_backup_unixtimestamp{namespace="$POD_NAMESPACE"} $(date +%s)
 EOF
-                '''
-                sh '''
                 cat /workdir/backup.metrics
                 push_gateway_baseurl="http://prometheus-prometheus-pushgateway.prometheus.svc.cluster.local:9091"
                 curl --data-binary "@/workdir/backup.metrics" $push_gateway_baseurl/metrics/job/mongo_backup_cronjob
