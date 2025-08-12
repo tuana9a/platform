@@ -60,7 +60,9 @@ jobs:
       - id: plan
         name: plan
         working-directory: "${{ env.WORKING_DIR }}"
-        run: terraform plan -out=tfplan.out
+        run: |
+          echo 'do_token="${{ secrets.monitor_do_token }}"' > hidden.tmp.auto.tfvars
+          terraform plan -out=tfplan.out
       - id: upload-plan
         name: upload-plan
         uses: actions/upload-artifact@v4
@@ -97,8 +99,9 @@ jobs:
         name: apply
         working-directory: "${{ env.WORKING_DIR }}"
         run: |
+          echo 'do_token="${{ secrets.monitor_do_token }}"' > hidden.tmp.auto.tfvars
           terraform apply -auto-approve tfplan.out
-          echo 'status=ok' >> $GITHUB_OUTPUT
+          echo 'status=1' >> $GITHUB_OUTPUT
     outputs:
       status: ${{ steps.apply.outputs.status }}
   notify:
@@ -113,5 +116,9 @@ jobs:
           run_url="${{ needs.prepare.outputs.run_url }}"
           url="${{ secrets.DISCORD_WEBHOOK }}"
           status=${{ needs.apply.outputs.status }}
-          content="${status:-bad} $workflow_name $run_url"
+          case "$status" in
+            1) status_msg=":white_check_mark:" ;;
+            *) status_msg=":x:" ;;
+          esac
+          content="$status_msg $workflow_name $run_url"
           curl -X POST $url -H "Content-Type: application/json" -d "{\"content\":\"${content}\"}"
