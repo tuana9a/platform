@@ -7,10 +7,6 @@ pipeline {
             retries 2
         }
     }
-    environment {
-        AWS_ROLE_ARN = 'arn:aws:iam::384588864907:role/test-jenkins-oidc'
-        AWS_WEB_IDENTITY_TOKEN_FILE = credentials('gcp-oidc-id-token')
-    }
     stages {
         stage('Main') {
             steps {
