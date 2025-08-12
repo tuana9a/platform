@@ -14,6 +14,7 @@ pipeline {
                 container('ubuntu') {
                     sh 'OBJECT_KEY=$(date +"%Y%m%d%H")-dkhptd-mongo-dump.tar.gz && echo $OBJECT_KEY > /workdir/object_key.env'
                     sh 'date +%s > /workdir/start.time'
+                    sh 'echo 0 > /workdir/status'
                 }
                 echo 'install-tools'
                 container('ubuntu') {
@@ -50,11 +51,8 @@ pipeline {
             steps {
                 container('awscli') {
                     sh 'OBJECT_KEY=$(cat /workdir/object_key.env) && aws s3api --endpoint-url ${S3_ENDPOINT} put-object --bucket ${BUCKET_NAME} --key $OBJECT_KEY --body /workdir/dump.tar.gz'
-                    sh 'echo upload completed'
-                    sh 'date +%s > /workdir/stop.time'
-                    sh 'ls -lha /workdir/'
-                    sh 'cat /workdir/stop.time'
                     sh 'echo 1 > /workdir/status'
+                    sh 'echo upload completed'
                 }
             }
         }
@@ -67,6 +65,7 @@ pipeline {
     post {
         always {
             container('ubuntu') {
+                sh 'date +%s > /workdir/stop.time'
                 sh '''
                 START_TIME=$(cat "/workdir/start.time")
                 STOP_TIME=$(cat "/workdir/stop.time")
@@ -76,7 +75,7 @@ pipeline {
                     1) status_msg=":white_check_mark:" ;;
                     *) status_msg=":x:" ;;
                 esac
-                MSG="$status_msg \\`backup-mongo\\` \\`dkhptd\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\`"
+                MSG="$status_msg \\`backup-mongo\\` \\`dkhptd\\` \\`$OBJECT_KEY\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\`"
                 curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\\"content\\":\\"${MSG}\\"}"
                 '''
                 sh '''
