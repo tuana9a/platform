@@ -219,7 +219,7 @@ pipeline {
                         1) status_msg=":white_check_mark:" ;;
                         *) status_msg=":x:" ;;
                     esac
-                    MSG="$status_msg \\`backup-kubernetes\\` \\`$(cat /workdir/duration_pretty.txt)\\`"
+                    MSG="$status_msg \\`backup-kubernetes\\` \\`$(cat /workdir/duration_pretty.txt)\\` $BUILD_URL"
                     curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\\"content\\":\\"${MSG}\\"}"
                     '''
                     sh '''

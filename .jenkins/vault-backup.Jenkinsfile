@@ -74,11 +74,12 @@ pipeline {
                 START_TIME=$(cat "/workdir/start.time")
                 STOP_TIME=$(cat "/workdir/stop.time")
                 DURATION=$((STOP_TIME - START_TIME))
+                OBJECT_KEY=$(cat /workdir/object_key.env)
                 case "$(cat /workdir/status)" in
                     1) status_msg=":white_check_mark:" ;;
                     *) status_msg=":x:" ;;
                 esac
-                MSG="$status_msg \\`vault-backup\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\`"
+                MSG="$status_msg \\`vault-backup\\` \\`$OBJECT_KEY\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\` $BUILD_URL"
                 if [ -f /var/secrets/DISCORD_WEBHOOK ]; then
                     curl -X POST "$(cat /var/secrets/DISCORD_WEBHOOK)" -H "Content-Type: application/json" -d "{\\"content\\":\\"${MSG}\\"}";
                 fi
