@@ -25,4 +25,10 @@ resource "helm_release" "gha_runner_scale_set_all" {
     value = var.github_token
     type  = "string"
   }
+
+  set {
+    name  = "template.spec.serviceAccountName"
+    value = "zeus"
+    type  = "string"
+  }
 }
