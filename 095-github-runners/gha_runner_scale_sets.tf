@@ -1,6 +1,13 @@
+locals {
+  runner_profiles = {
+    0 = {}
+  }
+}
+
 # https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/quickstart
-resource "helm_release" "gha_runner_scale_set_default" {
-  name             = "gha-runner-default"
+resource "helm_release" "gha_runner_scale_set_all" {
+  for_each         = local.runner_profiles
+  name             = "self-hosted-${each.key}"
   namespace        = "github-runners"
   create_namespace = true
   repository       = "oci://ghcr.io/actions/actions-runner-controller-charts"
