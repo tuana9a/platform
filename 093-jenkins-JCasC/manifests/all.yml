@@ -142,7 +142,7 @@ data:
               pipelineTriggers {
                 triggers {
                   cron {
-                    spec('0 * * * *')
+                    spec('0 0 * * *')
                   }
                 }
               }
