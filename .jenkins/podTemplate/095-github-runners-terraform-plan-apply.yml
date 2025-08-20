@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod
 spec:
-  serviceAccountName: godhand
+  serviceAccountName: odin
   containers:
     - name: ubuntu
       image: ubuntu

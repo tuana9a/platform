@@ -2,10 +2,10 @@ apiVersion: rbac.authorization.k8s.io/v1
 # This cluster role binding allows anyone in the "manager" group to read secrets in any namespace.
 kind: ClusterRoleBinding
 metadata:
-  name: godhand
+  name: odin
 subjects:
   - kind: ServiceAccount
-    name: godhand
+    name: odin
     namespace: jenkins
 roleRef:
   kind: ClusterRole
