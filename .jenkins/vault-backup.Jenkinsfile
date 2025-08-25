@@ -30,13 +30,22 @@ pipeline {
                 }
             }
         }
+        stage('renew') {
+            steps {
+                container('vault') {
+                    sh '''
+                    export VAULT_ADDR=http://vault-active.vault.svc.cluster.local:8200
+                    vault token renew > /dev/null
+                    '''
+                }
+            }
+        }
         stage('snap') {
             steps {
                 container('vault') {
                     sh '''
                     export VAULT_ADDR=http://vault-active.vault.svc.cluster.local:8200
                     vault operator raft snapshot save /workdir/vault.snap
-                    vault token renew > /dev/null
                     '''
                 }
             }
