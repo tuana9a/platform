@@ -8,7 +8,7 @@ kind: Pod
 spec:
   containers:
     - name: ubuntu
-      image: ubuntu
+      image: tuana9a/ubuntu:git-1d3169e
       command: ["sleep", "infinity"]
       volumeMounts:
         - name: secrets
@@ -43,10 +43,6 @@ spec:
                 container('ubuntu') {
                     sh 'date +%s > /workdir/start.time'
                     sh 'echo 0 > /workdir/status'
-                }
-                echo 'install-tools'
-                container('ubuntu') {
-                    sh 'apt update && apt install -y curl'
                 }
             }
         }

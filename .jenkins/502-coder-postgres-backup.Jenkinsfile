@@ -8,7 +8,7 @@ kind: Pod
 spec:
   containers:
     - name: ubuntu
-      image: ubuntu
+      image: tuana9a/ubuntu:git-1d3169e
       command:
         - sleep
       args:
@@ -68,10 +68,6 @@ spec:
                     sh 'date +%s > /workdir/start.time'
                     sh 'echo 0 > /workdir/status'
                     sh 'OBJECT_KEY="$(date +%Y%m%d%H)-coder-postgres-dump.sql.tar.gz" && echo $OBJECT_KEY > /workdir/object_key.env'
-                }
-                echo 'install-tools'
-                container('ubuntu') {
-                    sh 'apt update && apt install -y curl'
                 }
             }
         }
