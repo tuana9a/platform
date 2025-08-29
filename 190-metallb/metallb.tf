@@ -6,4 +6,6 @@ resource "helm_release" "metallb" {
   repository = "https://metallb.github.io/metallb"
   chart      = "metallb"
   version    = "0.15.2"
+
+  timeout = 60 * 10 # 10 mins
 }
