@@ -1,4 +1,3 @@
-
 import {
   id = "apiVersion=metallb.io/v1beta1,kind=IPAddressPool,namespace=metallb-system,name=vmbr56"
   to = kubernetes_manifest.manifests["manifests/vmbr56-IPAddressPool.yaml"]
