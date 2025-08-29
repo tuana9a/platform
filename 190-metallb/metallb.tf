@@ -5,5 +5,5 @@ resource "helm_release" "metallb" {
 
   repository = "https://metallb.github.io/metallb"
   chart      = "metallb"
-  version    = "0.14.5"
+  version    = "0.15.2"
 }
