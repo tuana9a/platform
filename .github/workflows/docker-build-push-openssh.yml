@@ -3,49 +3,57 @@ name: "docker build push openssh"
 on:
   workflow_dispatch:
 
+env:
+  WORKING_DIR: docker/openssh
+  IMAGE_NAME: tuana9a/openssh
+  DOCKER_HUB_USERNAME: tuana9a
+
 jobs:
   build-and-push:
     runs-on: ubuntu-22.04
 
     steps:
-      - name: Checkout code
+      - name: checkout
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
+      - name: buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Login to DockerHub
-        uses: docker/login-action@v3
-        with:
-          username: tuana9a
-          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-
-      - name: Set BUILD_TAG
-        working-directory: "docker/openssh"
+      - name: env
         run: |
           FULL_COMMIT_HASH="${{ github.sha }}"
-          COMMIT_HASH_SHORT="${FULL_COMMIT_HASH:0:7}"
-          BUILD_TAG="git-${COMMIT_HASH_SHORT}"
-          echo "BUILD_TAG=${BUILD_TAG}" >> "$GITHUB_ENV"
+          echo "FULL_COMMIT_HASH=${FULL_COMMIT_HASH}" >> "$GITHUB_ENV"
+          SHORT_COMMIT_HASH="${FULL_COMMIT_HASH:0:7}"
+          echo "SHORT_COMMIT_HASH=${SHORT_COMMIT_HASH}" >> "$GITHUB_ENV"
 
-      - name: Build and push Docker image
+      - name: login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+      - name: build-push
         uses: docker/build-push-action@v6
         with:
-          context: docker/openssh
-          file: docker/openssh/Dockerfile
+          context: "${{ env.WORKING_DIR }}"
+          file: "${{ env.WORKING_DIR }}/Dockerfile"
           push: true
-          tags: tuana9a/openssh:${{ env.BUILD_TAG }}
+          tags: ${{ env.IMAGE_NAME }}:git-${{ env.SHORT_COMMIT_HASH }},${{ env.IMAGE_NAME }}:git-${{ env.FULL_COMMIT_HASH }},${{ env.IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - id: set-status-ok
-        run: echo 'status=ok' >> $GITHUB_ENV
+        run: echo 'status=1' >> $GITHUB_ENV
 
-      - name: Notify
+      - name: noti
         if: ${{ always() }}
         run: |
           github_workflow="${{ github.workflow }}"
           workflow_name=$github_workflow
           build_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-          MESSAGE="${status:-bad} $workflow_name \`tuana9a/openssh:${{ env.BUILD_TAG }}\` $build_url"
+          case "$status" in
+            1) status_msg=":white_check_mark:" ;;
+            *) status_msg=":x:" ;;
+          esac
+          MESSAGE="$status_msg $workflow_name \`${{ env.IMAGE_NAME }}:git-${{ env.SHORT_COMMIT_HASH }}\`, \`${{ env.IMAGE_NAME }}:git-${{ env.FULL_COMMIT_HASH }}\` $build_url"
           curl -X POST ${{ secrets.DISCORD_WEBHOOK }} -H "Content-Type: application/json" -d "{\"content\":\"${MESSAGE}\"}"
