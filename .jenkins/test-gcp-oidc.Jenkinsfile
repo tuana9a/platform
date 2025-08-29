@@ -2,7 +2,27 @@ pipeline {
     options { buildDiscarder(logRotator(numToKeepStr: '14')) }
     agent {
         kubernetes {
-            yamlFile '.jenkins/podTemplate/test-gcp-oidc.yml'
+            yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - name: shell
+      image: ubuntu
+      command:
+        - sleep
+      args:
+        - infinity
+      securityContext:
+        # ubuntu runs as root by default, it is recommended or even mandatory in some environments (such as pod security admission "restricted") to run as a non-root user.
+        runAsUser: 1000
+    - name: gcloud
+      image: google/cloud-sdk:stable
+      command:
+        - sleep
+      args:
+        - infinity
+'''
             defaultContainer 'shell'
             retries 2
         }

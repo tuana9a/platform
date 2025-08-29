@@ -2,11 +2,27 @@ pipeline {
     options { buildDiscarder(logRotator(numToKeepStr: '14')) }
     agent {
         kubernetes {
-            // Rather than inline YAML, in a multibranch Pipeline you could use: yamlFile 'jenkins-pod.yaml'
-            // Or, to avoid YAML:
-            // containerTemplate {
-            //     name 'shell'
-            yamlFile '.jenkins/podTemplate/test-aws-oidc.yml'
+            yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - name: shell
+      image: ubuntu
+      command:
+        - sleep
+      args:
+        - infinity
+      securityContext:
+        # ubuntu runs as root by default, it is recommended or even mandatory in some environments (such as pod security admission "restricted") to run as a non-root user.
+        runAsUser: 1000
+    - name: awscli
+      image: amazon/aws-cli
+      command:
+        - sleep
+      args:
+        - infinity            
+'''
             defaultContainer 'shell'
             retries 2
         }

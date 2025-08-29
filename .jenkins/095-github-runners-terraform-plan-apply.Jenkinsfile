@@ -4,7 +4,41 @@ pipeline {
     options { buildDiscarder(logRotator(numToKeepStr: '14')) }
     agent {
         kubernetes {
-            yamlFile '.jenkins/podTemplate/095-github-runners-terraform-plan-apply.yml'
+            yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  serviceAccountName: odin
+  containers:
+    - name: ubuntu
+      image: ubuntu
+      command:
+        - sleep
+      args:
+        - infinity
+      env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+      envFrom:
+        - secretRef:
+            name: 095-github-runners-terraform-plan-apply
+      volumeMounts:
+        - name: workdir
+          mountPath: /workdir
+        - name: tfvars
+          mountPath: "/var/secrets"
+          readOnly: true
+
+  restartPolicy: Never
+  volumes:
+    - name: workdir
+      emptyDir: {}
+    - name: tfvars
+      secret:
+        secretName: 095-github-runners-terraform-plan-apply
+'''
             defaultContainer 'ubuntu'
             retries 2
         }

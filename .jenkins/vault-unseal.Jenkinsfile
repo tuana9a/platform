@@ -2,7 +2,36 @@ pipeline {
     options { buildDiscarder(logRotator(numToKeepStr: '14')) }
     agent {
         kubernetes {
-            yamlFile '.jenkins/podTemplate/vault-unseal.yml'
+            yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - name: ubuntu
+      image: ubuntu
+      command: ["sleep", "infinity"]
+      volumeMounts:
+        - name: secrets
+          mountPath: "/var/secrets"
+          readOnly: true
+        - name: workdir
+          mountPath: "/workdir"
+    - name: vault
+      image: hashicorp/vault:1.17.2
+      command: ["sleep", "infinity"]
+      volumeMounts:
+        - name: secrets
+          mountPath: "/var/secrets"
+          readOnly: true
+        - name: workdir
+          mountPath: "/workdir"
+  volumes:
+    - name: secrets
+      secret:
+        secretName: vault-unseal-keys
+    - name: workdir
+      emptyDir: {}
+'''
             defaultContainer 'ubuntu'
             retries 2
         }

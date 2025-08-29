@@ -2,7 +2,60 @@ pipeline {
     options { buildDiscarder(logRotator(numToKeepStr: '14')) }
     agent {
         kubernetes {
-            yamlFile '.jenkins/podTemplate/511-dkhptd-mongo-backup.yml'
+            yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - name: ubuntu
+      image: ubuntu
+      command:
+        - sleep
+      args:
+        - infinity
+      env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+      envFrom:
+        - secretRef:
+            name: 511-dkhptd-mongo-backup-env
+      volumeMounts:
+        - name: workdir
+          mountPath: /workdir
+
+    - name: mongo
+      image: mongo:4.4
+      command:
+        - sleep
+      args:
+        - infinity
+      volumeMounts:
+        - name: workdir
+          mountPath: /workdir
+      envFrom:
+        - secretRef:
+            name: 511-dkhptd-mongo-backup-env
+
+    - name: awscli
+      image: amazon/aws-cli:2.18.0
+      command:
+        - sleep
+      args:
+        - infinity
+      envFrom:
+        - secretRef:
+            name: 511-dkhptd-mongo-backup-env
+      volumeMounts:
+        - name: workdir
+          mountPath: /workdir
+
+  restartPolicy: Never
+  volumes:
+    - name: workdir
+      emptyDir: {}
+'''
             defaultContainer 'ubuntu'
             retries 2
         }

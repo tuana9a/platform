@@ -2,7 +2,39 @@ pipeline {
     options { buildDiscarder(logRotator(numToKeepStr: '5')) }
     agent {
         kubernetes {
-            yamlFile '.jenkins/podTemplate/vault-secret-store-token-renew.yml'
+            yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - name: ubuntu
+      image: ubuntu
+      command: ["sleep", "infinity"]
+      volumeMounts:
+        - name: workdir
+          mountPath: "/workdir"
+        - name: secrets
+          mountPath: "/var/secrets"
+          readOnly: true
+    - name: vault
+      image: hashicorp/vault:1.17.2
+      command: ["sleep", "infinity"]
+      envFrom:
+        - secretRef:
+            name: vault-secret-store-token-renew
+      volumeMounts:
+        - name: workdir
+          mountPath: "/workdir"
+        - name: secrets
+          mountPath: "/var/secrets"
+          readOnly: true
+  volumes:
+    - name: workdir
+      emptyDir: {}
+    - name: secrets
+      secret:
+        secretName: vault-secret-store-token-renew
+'''
             defaultContainer 'ubuntu'
             retries 2
         }

@@ -5,7 +5,66 @@ pipeline {
     options { buildDiscarder(logRotator(numToKeepStr: '14')) }
     agent {
         kubernetes {
-            yamlFile '.jenkins/podTemplate/backup-kubernetes.yml'
+            yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - name: ubuntu
+      image: ubuntu
+      command:
+        - sleep
+      args:
+        - infinity
+      env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+      envFrom:
+        - secretRef:
+            name: backup-kubernetes-env
+      volumeMounts:
+        - name: secrets
+          mountPath: "/var/secrets"
+          readOnly: true
+        - name: workdir
+          mountPath: "/workdir"
+    - name: kp
+      image: tuana9a/kp:main-9c68a63
+      command:
+        - /bin/sh
+      args:
+        - -c
+        - "sleep infinity"
+      volumeMounts:
+        - name: secrets
+          mountPath: "/var/secrets"
+          readOnly: true
+        - name: workdir
+          mountPath: "/workdir"
+    - name: awscli
+      image: amazon/aws-cli:2.18.0
+      command:
+        - sleep
+      args:
+        - infinity
+      envFrom:
+        - secretRef:
+            name: backup-kubernetes-env
+      volumeMounts:
+        - name: workdir
+          mountPath: /workdir
+  volumes:
+    - name: secrets
+      secret:
+        secretName: backup-kubernetes
+    - name: secrets-env
+      secret:
+        secretName: backup-kubernetes-env
+    - name: workdir
+      emptyDir: {}
+'''
             defaultContainer 'ubuntu'
             retries 2
         }

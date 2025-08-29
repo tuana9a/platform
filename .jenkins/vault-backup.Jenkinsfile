@@ -2,7 +2,54 @@ pipeline {
     options { buildDiscarder(logRotator(numToKeepStr: '14')) }
     agent {
         kubernetes {
-            yamlFile '.jenkins/podTemplate/vault-backup.yml'
+            yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - name: ubuntu
+      image: ubuntu
+      command: ["sleep", "infinity"]
+      envFrom:
+        - secretRef:
+            name: vault-backup
+      volumeMounts:
+        - name: secrets
+          mountPath: "/var/secrets"
+          readOnly: true
+        - name: workdir
+          mountPath: "/workdir"
+    - name: vault
+      image: hashicorp/vault:1.17.2
+      command: ["sleep", "infinity"]
+      envFrom:
+        - secretRef:
+            name: vault-backup
+      volumeMounts:
+        - name: secrets
+          mountPath: "/var/secrets"
+          readOnly: true
+        - name: workdir
+          mountPath: "/workdir"
+    - name: awscli
+      image: amazon/aws-cli:2.18.0
+      command:
+        - sleep
+      args:
+        - infinity
+      envFrom:
+        - secretRef:
+            name: vault-backup
+      volumeMounts:
+        - name: workdir
+          mountPath: /workdir
+  volumes:
+    - name: secrets
+      secret:
+        secretName: vault-backup
+    - name: workdir
+      emptyDir: {}
+'''
             defaultContainer 'ubuntu'
             retries 2
         }

@@ -7,7 +7,43 @@ pipeline {
     options { buildDiscarder(logRotator(numToKeepStr: '14')) }
     agent {
         kubernetes {
-            yamlFile '.jenkins/podTemplate/etcd-defrag.yml'
+            yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - name: ubuntu
+      image: ubuntu
+      command:
+        - sleep
+      args:
+        - infinity
+      volumeMounts:
+        - name: secrets
+          mountPath: "/var/secrets"
+          readOnly: true
+        - name: workdir
+          mountPath: "/workdir"
+    - name: kp
+      image: tuana9a/kp:main-9c68a63
+      command:
+        - /bin/sh
+      args:
+        - -c
+        - "sleep infinity"
+      volumeMounts:
+        - name: secrets
+          mountPath: "/var/secrets"
+          readOnly: true
+        - name: workdir
+          mountPath: "/workdir"
+  volumes:
+    - name: secrets
+      secret:
+        secretName: backup-kubernetes
+    - name: workdir
+      emptyDir: {}
+'''
             defaultContainer 'ubuntu'
             retries 2
         }
