@@ -11,7 +11,7 @@ kind: Pod
 spec:
   containers:
     - name: ubuntu
-      image: ubuntu
+      image: tuana9a/toolbox:etcd-3.5.15
       command:
         - sleep
       args:
@@ -103,26 +103,6 @@ spec:
                             vms.add(vm)
                         }
                     }
-                }
-                echo "install-tools"
-                container('ubuntu') {
-                    sh 'apt update && apt install -y openssh-client curl'
-                    sh '''
-                    ETCD_VER=v3.5.15
-
-                    # choose either URL
-                    GOOGLE_URL=https://storage.googleapis.com/etcd
-                    GITHUB_URL=https://github.com/etcd-io/etcd/releases/download
-                    DOWNLOAD_URL=${GOOGLE_URL}
-
-                    mkdir -p /tmp/etcd-download
-
-                    curl -L ${DOWNLOAD_URL}/${ETCD_VER}/etcd-${ETCD_VER}-linux-amd64.tar.gz -o /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz
-                    tar xzvf /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz -C /tmp/etcd-download --strip-components=1
-
-                    cp /tmp/etcd-download/etcd* /usr/local/bin/
-                    /usr/local/bin/etcdctl version
-                    '''
                 }
                 echo "generate-ssh-key"
                 container('ubuntu') {
