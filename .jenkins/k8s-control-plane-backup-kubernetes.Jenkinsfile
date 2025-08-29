@@ -3,6 +3,7 @@ def vms = []
 
 pipeline {
     options { buildDiscarder(logRotator(numToKeepStr: '14')) }
+    triggers { cron('0 0 * * *') }
     agent {
         kubernetes {
             yaml '''

@@ -95,7 +95,7 @@ spec:
                     1) status_msg=":white_check_mark:" ;;
                     *) status_msg=":x:" ;;
                 esac
-                MSG="$status_msg \\`vault-unseal\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\`"
+                MSG="$status_msg \\`vault-unseal\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\` $BUILD_URL"
                 if [ -f /var/secrets/DISCORD_WEBHOOK ]; then
                     curl -X POST "$(cat /var/secrets/DISCORD_WEBHOOK)" -H "Content-Type: application/json" -d "{\\"content\\":\\"${MSG}\\"}";
                 fi
