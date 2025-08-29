@@ -17,7 +17,6 @@ env:
   GCP_WORKLOAD_IDENTITY_POOL_PROVIDER: github-tuana9a
   WORKING_DIR: 023-dns/
   PLAN_ARTIFACT_NAME: ${{ github.run_id }}-${{ github.run_attempt }}-terraform-plan
-  VAULT_TOKEN: "${{ secrets.DNS_UPDATER_VAULT_TOKEN }}"
 
 jobs:
   terraform-plan-apply:
@@ -50,9 +49,7 @@ jobs:
         name: add tfvars
         working-directory: "${{ env.WORKING_DIR }}"
         run: |
-          echo 'cloudflare_api_token = "${{ secrets.cloudflare_api_token_edit_dns }}"' >> hidden.auto.tfvars
-          echo 'xenomorph_ip = "${{ secrets.xenomorph_ip }}"' >> hidden.auto.tfvars
-          echo 'imperial_ally_285602_ip = "${{ secrets.imperial_ally_285602_ip }}"' >> hidden.auto.tfvars
+          printf '${{ secrets.tfvars_023_dns }}' > hidden.auto.tfvars
       - id: plan
         name: plan
         working-directory: "${{ env.WORKING_DIR }}"
