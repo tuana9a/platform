@@ -83,3 +83,17 @@ resource "github_repository_ruleset" "platform_rock-n-roll" {
     }
   }
 }
+
+resource "github_repository_webhook" "platform" {
+  repository = data.github_repository.platform.name
+
+  configuration {
+    url          = "https://jenkins.tuana9a.com/github-webhook/"
+    content_type = "json"
+    insecure_ssl = false
+  }
+
+  active = false
+
+  events = ["push"]
+}
