@@ -16,7 +16,7 @@ RUN jenkins-plugin-cli --plugins mask-passwords:199.va_0218b_a_59186
 RUN jenkins-plugin-cli --plugins pipeline-utility-steps:2.19.0
 RUN jenkins-plugin-cli --plugins timestamper:1.29
 RUN jenkins-plugin-cli --plugins kubernetes:4358.vcfd9c5a_0a_f51
-RUN jenkins-plugin-cli --plugins configuration-as-code:1971.vf9280461ea_89
+RUN jenkins-plugin-cli --plugins configuration-as-code:1985.vdda_32d0c4ea_b_
 RUN jenkins-plugin-cli --plugins blueocean:1.27.19
 RUN jenkins-plugin-cli --plugins saferestart:102.v4dc1b_9636a_ee
 RUN jenkins-plugin-cli --plugins matrix-auth:3.2.6
