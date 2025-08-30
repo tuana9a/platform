@@ -22,5 +22,6 @@ provider "google" {
 }
 
 provider "helm" {
-  # auto detect
+  kubernetes {
+  }
 }
