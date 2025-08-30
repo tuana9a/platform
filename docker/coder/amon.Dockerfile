@@ -1,4 +1,8 @@
-FROM tuana9a/coder:base
+FROM codercom/enterprise-base:ubuntu-20250829
+
+USER coder
+
+RUN sudo apt update -y && sudo apt install -y tmux direnv jq dnsutils net-tools iputils-ping telnet zsh && sudo usermod -s /bin/zsh coder
 
 RUN curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh -o /tmp/install-zoxide.sh && chmod +x /tmp/install-zoxide.sh \
   && sudo /tmp/install-zoxide.sh --bin-dir /usr/local/bin --man-dir /usr/local/share/man
