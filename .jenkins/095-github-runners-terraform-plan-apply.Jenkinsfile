@@ -2,6 +2,9 @@ def proceed = false
 
 pipeline {
     options { buildDiscarder(logRotator(numToKeepStr: '14')) }
+    triggers {
+        githubPush()
+    }
     agent {
         kubernetes {
             yaml '''
