@@ -1,26 +1,22 @@
-name: "806-monitor-do"
+name: "031-gcp-network-nat-tuana9a"
 
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - "806-monitor-do/**"
-      - ".github/workflows/806-monitor-do-terraform-plan-apply*"
   push:
     paths:
-      - "806-monitor-do/**"
-      - ".github/workflows/806-monitor-do-terraform-plan-apply*"
+      - "031-gcp-network-nat-tuana9a/**"
+      - ".github/workflows/031-gcp-network-nat-tuana9a*"
     branches:
       - rock-n-roll
 
 env:
   GCP_PROJECT_ID: tuana9a
   GCP_PROJECT_ID_NUM: 474326114337
-  GCP_SERVICE_ACCOUNT: terraform-state-editor@tuana9a.iam.gserviceaccount.com
+  GCP_SERVICE_ACCOUNT: terraform-network-admin@tuana9a.iam.gserviceaccount.com
   GCP_WORKLOAD_IDENTITY_POOL: github
   GCP_WORKLOAD_IDENTITY_POOL_PROVIDER: github-tuana9a
-  PLAN_ARTIFACT_NAME: ${{ github.run_id }}-terraform-plan
-  WORKING_DIR: 806-monitor-do/
+  PLAN_ARTIFACT_NAME: ${{ github.run_id }}-${{ github.run_attempt }}-terraform-plan
+  WORKING_DIR: 031-gcp-network-nat-tuana9a/
 
 jobs:
   terraform-plan-apply:
@@ -49,10 +45,6 @@ jobs:
         name: init
         working-directory: "${{ env.WORKING_DIR }}"
         run: terraform init
-      - id: tfvars
-        name: add tfvars
-        working-directory: "${{ env.WORKING_DIR }}"
-        run: printf '${{ secrets.tfvars_806_monitor_do }}' > hidden.auto.tfvars
       - id: plan
         name: plan
         working-directory: "${{ env.WORKING_DIR }}"

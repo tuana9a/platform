@@ -1,7 +1,6 @@
-name: "check terraform key"
+name: "check-terraform-key"
 
 on:
-  workflow_dispatch:
   pull_request:
   push:
     branches:
@@ -9,8 +8,7 @@ on:
 
 jobs:
   check-terraform-key:
-    runs-on: ubuntu-22.04
-
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - id: check-terraform-key

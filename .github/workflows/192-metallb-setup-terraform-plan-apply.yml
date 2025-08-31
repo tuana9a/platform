@@ -1,4 +1,4 @@
-name: "metallb setup terraform plan apply"
+name: "192-metallb-setup"
 
 on:
   workflow_dispatch:
@@ -15,8 +15,8 @@ env:
   GCP_SERVICE_ACCOUNT: terraform-state-editor@tuana9a.iam.gserviceaccount.com
   GCP_WORKLOAD_IDENTITY_POOL: github
   GCP_WORKLOAD_IDENTITY_POOL_PROVIDER: github-tuana9a
-  WORKING_DIR: 192-metallb-setup/
   PLAN_ARTIFACT_NAME: ${{ github.run_id }}-${{ github.run_attempt }}-terraform-plan
+  WORKING_DIR: 192-metallb-setup/
 
 jobs:
   terraform-plan-apply:
@@ -61,11 +61,12 @@ jobs:
       - id: apply
         name: apply
         working-directory: "${{ env.WORKING_DIR }}"
-        run: |
-          terraform apply -auto-approve tfplan.out
-          echo 'status=1' >> $GITHUB_OUTPUT
+        run: terraform apply -auto-approve tfplan.out
+      - id: status-ok
+        name: status-ok
+        run: echo 'status=1' >> $GITHUB_OUTPUT
     outputs:
-      status: ${{ steps.apply.outputs.status }}
+      status: ${{ steps.status-ok.outputs.status }}
       workflow_name: ${{ steps.set-env.outputs.workflow_name }}
       run_url: ${{ steps.set-env.outputs.run_url }}
   notify:
@@ -84,5 +85,5 @@ jobs:
             1) status_msg=":white_check_mark:" ;;
             *) status_msg=":x:" ;;
           esac
-          content="$status_msg $workflow_name $run_url"
+          content="$status_msg \`$workflow_name\` $run_url"
           curl -X POST $url -H "Content-Type: application/json" -d "{\"content\":\"${content}\"}"

@@ -1,4 +1,4 @@
-name: "docker build push ubuntu"
+name: "docker-build-push-ubuntu"
 
 on:
   workflow_dispatch:
@@ -55,5 +55,5 @@ jobs:
             1) status_msg=":white_check_mark:" ;;
             *) status_msg=":x:" ;;
           esac
-          MESSAGE="$status_msg $workflow_name \`${{ env.IMAGE_NAME }}:git-${{ env.SHORT_COMMIT_HASH }}\`, \`${{ env.IMAGE_NAME }}:git-${{ env.FULL_COMMIT_HASH }}\` $build_url"
+          MESSAGE="$status_msg \`$workflow_name\` \`${{ env.IMAGE_NAME }}:git-${{ env.SHORT_COMMIT_HASH }}\`, \`${{ env.IMAGE_NAME }}:git-${{ env.FULL_COMMIT_HASH }}\` $build_url"
           curl -X POST ${{ secrets.DISCORD_WEBHOOK }} -H "Content-Type: application/json" -d "{\"content\":\"${MESSAGE}\"}"

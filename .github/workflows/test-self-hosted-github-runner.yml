@@ -1,9 +1,9 @@
-name: test github self-hosted runner
+name: "test-github-self-hosted-runner"
 on:
   workflow_dispatch:
 
 jobs:
-  Explore-GitHub-Actions:
-    runs-on: gha-runner-default
+  test:
+    runs-on: self-hosted-0
     steps:
       - run: echo "🎉 This job uses runner scale set runners!"

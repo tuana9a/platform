@@ -1,15 +1,11 @@
-name: "806-monitor-do"
+name: "025-ecr-tuana9a"
 
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - "806-monitor-do/**"
-      - ".github/workflows/806-monitor-do-terraform-plan-apply*"
   push:
     paths:
-      - "806-monitor-do/**"
-      - ".github/workflows/806-monitor-do-terraform-plan-apply*"
+      - "025-ecr-tuana9a/**"
+      - ".github/workflows/025-ecr-tuana9a*"
     branches:
       - rock-n-roll
 
@@ -19,8 +15,10 @@ env:
   GCP_SERVICE_ACCOUNT: terraform-state-editor@tuana9a.iam.gserviceaccount.com
   GCP_WORKLOAD_IDENTITY_POOL: github
   GCP_WORKLOAD_IDENTITY_POOL_PROVIDER: github-tuana9a
-  PLAN_ARTIFACT_NAME: ${{ github.run_id }}-terraform-plan
-  WORKING_DIR: 806-monitor-do/
+  PLAN_ARTIFACT_NAME: ${{ github.run_id }}-${{ github.run_attempt }}-terraform-plan
+  WORKING_DIR: 025-ecr-tuana9a/
+  AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/terraform-ecr-admin
+  AWS_REGION: ap-southeast-1
 
 jobs:
   terraform-plan-apply:
@@ -42,6 +40,11 @@ jobs:
           project_id: "${{ env.GCP_PROJECT_ID }}"
           workload_identity_provider: "projects/${{ env.GCP_PROJECT_ID_NUM }}/locations/global/workloadIdentityPools/${{ env.GCP_WORKLOAD_IDENTITY_POOL }}/providers/${{ env.GCP_WORKLOAD_IDENTITY_POOL_PROVIDER }}"
           service_account: "${{ env.GCP_SERVICE_ACCOUNT }}"
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: "${{ env.AWS_ASSUME_ROLE }}"
+          aws-region: "${{ env.AWS_REGION }}"
+          retry-max-attempts: 3
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.7.1"
@@ -49,10 +52,6 @@ jobs:
         name: init
         working-directory: "${{ env.WORKING_DIR }}"
         run: terraform init
-      - id: tfvars
-        name: add tfvars
-        working-directory: "${{ env.WORKING_DIR }}"
-        run: printf '${{ secrets.tfvars_806_monitor_do }}' > hidden.auto.tfvars
       - id: plan
         name: plan
         working-directory: "${{ env.WORKING_DIR }}"
