@@ -81,8 +81,8 @@ jobs:
           url="${{ secrets.DISCORD_WEBHOOK }}"
           status=${{ needs.terraform-plan-apply.outputs.status }}
           case "$status" in
-              1) status_msg=":white_check_mark:" ;;
-              *) status_msg=":x:" ;;
+            1) status_msg=":white_check_mark:" ;;
+            *) status_msg=":x:" ;;
           esac
           content="$status_msg $workflow_name $run_url"
           curl -X POST $url -H "Content-Type: application/json" -d "{\"content\":\"${content}\"}"
