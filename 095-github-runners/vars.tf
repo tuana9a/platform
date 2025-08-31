@@ -5,6 +5,6 @@
 # Click Generate Token and then copy the token locally ( we’ll need it later).
 
 variable "github_token" {
-  type = string
+  type      = string
   sensitive = true
 }
