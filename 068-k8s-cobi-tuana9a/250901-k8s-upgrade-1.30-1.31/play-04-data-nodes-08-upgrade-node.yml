@@ -1,0 +1,12 @@
+- hosts: data_nodes
+  vars:
+    kubernetes_version_major: "1.31"
+    kubernetes_version_minor: "1.31.12"
+  tasks:
+    - name: apply upgrades
+      shell: |
+        set -xeu
+        sudo kubeadm upgrade node
+      register: apply_upgrade
+    - debug:
+        msg: "{{ apply_upgrade.stdout | split('\n') }}"
