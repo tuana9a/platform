@@ -1,5 +1,5 @@
 pipeline {
-    options { buildDiscarder(logRotator(numToKeepStr: '14')) }
+    options { buildDiscarder(logRotator(numToKeepStr: '3')) }
     agent {
         kubernetes {
             yaml '''
@@ -59,6 +59,7 @@ spec:
             steps {
                 container('vault') {
                     sh '''
+                    set +x
                     for instanceId in $(seq 0 2); do
                         export VAULT_ADDR=http://vault-$instanceId.vault-internal.vault.svc.cluster.local:8200
                         echo "VAULT_ADDR=$VAULT_ADDR"
