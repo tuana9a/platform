@@ -1,4 +1,5 @@
 {
     "workbench.editor.tabSizing": "fixed",
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
+    "terminal.integrated.tabs.enabled": false
 }
