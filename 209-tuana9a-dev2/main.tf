@@ -11,7 +11,7 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev2" {
   tags      = ["terraform", "ubuntu"]
 
   cpu {
-    cores        = 2
+    cores        = 4
     sockets      = 1
     architecture = "x86_64"
     flags        = []
@@ -19,7 +19,7 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev2" {
   }
 
   memory {
-    dedicated = 4096
+    dedicated = 8192
     floating  = 0
   }
 
