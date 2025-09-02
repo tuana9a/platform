@@ -27,14 +27,11 @@ provider "google" {
 
 provider "vault" {
   address = "https://vault.tuana9a.com"
+  token   = var.vault_token
 
   skip_child_token = true
 }
 
-data "vault_kv_secret" "terraform_github_secrets" {
-  path = "kv/github.com/tuana9a/_/tokens/terraform-github-secret-manager"
-}
-
 provider "github" {
-  token = data.vault_kv_secret.terraform_github_secrets.data.token
+  token = var.github_token
 }
