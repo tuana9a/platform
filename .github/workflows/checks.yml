@@ -12,10 +12,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: check-terraform-key
-        run: ./scripts/check-terraform-key.sh
+        run: ./scripts/check_terraform_key.sh
   check-terraform-fmt:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - id: check-terraform-fmt
-        run: ./scripts/check-terraform-fmt.sh
+        run: ./scripts/check_terraform_fmt.sh
