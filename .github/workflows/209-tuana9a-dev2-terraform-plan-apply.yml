@@ -69,22 +69,14 @@ jobs:
       - id: status-ok
         name: status-ok
         run: echo 'status=1' >> $GITHUB_OUTPUT
-    outputs:
-      status: ${{ steps.status-ok.outputs.status }}
-      workflow_name: ${{ steps.set-env.outputs.workflow_name }}
-      run_url: ${{ steps.set-env.outputs.run_url }}
-  notify:
-    runs-on: ubuntu-latest
-    needs: [terraform-plan-apply]
-    if: ${{ always() }}
-    steps:
       - id: notify
         name: notify
+        if: ${{ always() }}
         run: |
-          workflow_name="${{ needs.terraform-plan-apply.outputs.workflow_name }}"
-          run_url="${{ needs.terraform-plan-apply.outputs.run_url }}"
+          workflow_name="${{ steps.set-env.outputs.workflow_name }}"
+          run_url="${{ steps.set-env.outputs.run_url }}"
           url="${{ secrets.DISCORD_WEBHOOK }}"
-          status=${{ needs.terraform-plan-apply.outputs.status }}
+          status="${{ steps.status-ok.outputs.status }}"
           case "$status" in
             1) status_msg=":white_check_mark:" ;;
             *) status_msg=":x:" ;;
