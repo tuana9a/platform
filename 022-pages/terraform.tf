@@ -8,13 +8,9 @@ terraform {
       source  = "hashicorp/google"
       version = "5.29.1"
     }
-    vault = {
-      source  = "hashicorp/vault"
-      version = "4.4.0"
-    }
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "4.17.0"
+      version = "4.52.1"
     }
   }
   required_version = ">= 1.2.0"
@@ -26,20 +22,6 @@ provider "google" {
   zone    = "asia-southeast1-b"
 }
 
-provider "vault" {
-  address = "https://vault.tuana9a.com"
-
-  skip_child_token = true
-}
-
-data "vault_kv_secret" "edit_pages" {
-  path = "kv/cloudflare/accounts/tuana9a/api-tokens/edit-pages"
-}
-
-locals {
-  cloudflare_account_id = data.vault_kv_secret.edit_pages.data.cloudflare_account_id
-}
-
 provider "cloudflare" {
-  api_token = data.vault_kv_secret.edit_pages.data.cloudflare_api_token
+  api_token = var.cloudflare_api_token
 }

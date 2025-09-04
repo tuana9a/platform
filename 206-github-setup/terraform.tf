@@ -8,10 +8,6 @@ terraform {
       source  = "hashicorp/google"
       version = "5.29.1"
     }
-    vault = {
-      source  = "hashicorp/vault"
-      version = "4.4.0"
-    }
     github = {
       source  = "integrations/github"
       version = "6.5.0"
@@ -25,16 +21,6 @@ provider "google" {
   zone    = "asia-southeast1-b"
 }
 
-provider "vault" {
-  address = "https://vault.tuana9a.com"
-
-  skip_child_token = true
-}
-
-data "vault_kv_secret" "terraform_github_secrets" {
-  path = "kv/github.com/tuana9a/_/tokens/terraform-github-repo-manager"
-}
-
 provider "github" {
-  token = data.vault_kv_secret.terraform_github_secrets.data.token
+  token = var.github_token
 }

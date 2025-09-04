@@ -8,10 +8,6 @@ terraform {
       source  = "hashicorp/google"
       version = "5.29.1"
     }
-    vault = {
-      source  = "hashicorp/vault"
-      version = "4.4.0"
-    }
     proxmox = {
       source  = "bpg/proxmox"
       version = "0.51.0"
@@ -25,18 +21,8 @@ provider "google" {
   zone    = "asia-southeast1-b"
 }
 
-provider "vault" {
-  address = "https://vault.tuana9a.com"
-
-  skip_child_token = true
-}
-
-data "vault_kv_secret" "pve_token" {
-  path = "kv/proxmox/pve-xeno/api-tokens/tf"
-}
-
 provider "proxmox" {
-  endpoint  = data.vault_kv_secret.pve_token.data.pve_endpoint
-  api_token = data.vault_kv_secret.pve_token.data.pve_api_token
-  insecure  = data.vault_kv_secret.pve_token.data.insecure
+  endpoint  = var.pve_endpoint
+  api_token = var.pve_api_token
+  insecure  = var.pve_insecure
 }

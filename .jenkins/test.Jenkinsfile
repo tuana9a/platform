@@ -1,4 +1,5 @@
 pipeline {
+  options { buildDiscarder(logRotator(numToKeepStr: '14')) }
   parameters {
     password(name: 'PASSWORD', defaultValue: 'youshouldntseethis')
   }

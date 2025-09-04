@@ -1,0 +1,24 @@
+name: "checks"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-terraform-key:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: check-terraform-key
+        run: ./scripts/check_terraform_key.sh
+  check-terraform-fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.7.1"
+      - id: check-terraform-fmt
+        run: ./scripts/check_terraform_fmt.sh

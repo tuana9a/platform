@@ -1,4 +1,4 @@
-name: "dns terraform plan apply"
+name: "023-dns"
 
 on:
   workflow_dispatch:
@@ -15,9 +15,8 @@ env:
   GCP_SERVICE_ACCOUNT: terraform-state-editor@tuana9a.iam.gserviceaccount.com
   GCP_WORKLOAD_IDENTITY_POOL: github
   GCP_WORKLOAD_IDENTITY_POOL_PROVIDER: github-tuana9a
-  WORKING_DIR: 023-dns/
   PLAN_ARTIFACT_NAME: ${{ github.run_id }}-${{ github.run_attempt }}-terraform-plan
-  VAULT_TOKEN: "${{ secrets.DNS_UPDATER_VAULT_TOKEN }}"
+  WORKING_DIR: 023-dns/
 
 jobs:
   terraform-plan-apply:
@@ -49,10 +48,7 @@ jobs:
       - id: tfvars
         name: add tfvars
         working-directory: "${{ env.WORKING_DIR }}"
-        run: |
-          echo 'cloudflare_api_token = "${{ secrets.cloudflare_api_token_edit_dns }}"' >> hidden.auto.tfvars
-          echo 'xenomorph_ip = "${{ secrets.xenomorph_ip }}"' >> hidden.auto.tfvars
-          echo 'imperial_ally_285602_ip = "${{ secrets.imperial_ally_285602_ip }}"' >> hidden.auto.tfvars
+        run: printf '${{ secrets.tfvars_023_dns }}' > hidden.auto.tfvars
       - id: plan
         name: plan
         working-directory: "${{ env.WORKING_DIR }}"
@@ -66,11 +62,12 @@ jobs:
       - id: apply
         name: apply
         working-directory: "${{ env.WORKING_DIR }}"
-        run: |
-          terraform apply -auto-approve tfplan.out
-          echo 'status=1' >> $GITHUB_OUTPUT
+        run: terraform apply -auto-approve tfplan.out
+      - id: status-ok
+        name: status-ok
+        run: echo 'status=1' >> $GITHUB_OUTPUT
     outputs:
-      status: ${{ steps.apply.outputs.status }}
+      status: ${{ steps.status-ok.outputs.status }}
       workflow_name: ${{ steps.set-env.outputs.workflow_name }}
       run_url: ${{ steps.set-env.outputs.run_url }}
   notify:
@@ -86,8 +83,8 @@ jobs:
           url="${{ secrets.DISCORD_WEBHOOK }}"
           status=${{ needs.terraform-plan-apply.outputs.status }}
           case "$status" in
-              1) status_msg=":white_check_mark:" ;;
-              *) status_msg=":x:" ;;
+            1) status_msg=":white_check_mark:" ;;
+            *) status_msg=":x:" ;;
           esac
-          content="$status_msg $workflow_name $run_url"
+          content="$status_msg \`$workflow_name\` $run_url"
           curl -X POST $url -H "Content-Type: application/json" -d "{\"content\":\"${content}\"}"

@@ -1,5 +1,5 @@
 pipeline {
-    options { buildDiscarder(logRotator(numToKeepStr: '14')) }
+    options { buildDiscarder(logRotator(numToKeepStr: '3')) }
     agent {
         kubernetes {
             yaml '''
@@ -59,6 +59,7 @@ spec:
             steps {
                 container('vault') {
                     sh '''
+                    set +x
                     for instanceId in $(seq 0 2); do
                         export VAULT_ADDR=http://vault-$instanceId.vault-internal.vault.svc.cluster.local:8200
                         echo "VAULT_ADDR=$VAULT_ADDR"
@@ -95,7 +96,7 @@ spec:
                     1) status_msg=":white_check_mark:" ;;
                     *) status_msg=":x:" ;;
                 esac
-                MSG="$status_msg \\`vault-unseal\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\`"
+                MSG="$status_msg \\`vault-unseal\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\` $BUILD_URL"
                 if [ -f /var/secrets/DISCORD_WEBHOOK ]; then
                     curl -X POST "$(cat /var/secrets/DISCORD_WEBHOOK)" -H "Content-Type: application/json" -d "{\\"content\\":\\"${MSG}\\"}";
                 fi

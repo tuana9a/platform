@@ -12,10 +12,6 @@ terraform {
       source  = "hashicorp/vault"
       version = "4.4.0"
     }
-    kubernetes = {
-      source = "hashicorp/kubernetes"
-      version = "2.37.1"
-    }
   }
 }
 
@@ -27,8 +23,4 @@ provider "google" {
 
 provider "vault" {
   address = "https://vault.tuana9a.com"
-}
-
-provider "kubernetes" {
-  config_path = "~/.kube/config"
 }

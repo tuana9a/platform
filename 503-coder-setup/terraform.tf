@@ -25,11 +25,6 @@ provider "google" {
   zone    = "asia-southeast1-b"
 }
 
-variable "coder_token" {
-  type      = string
-  sensitive = true
-}
-
 provider "coderd" {
   url   = "https://coder.tuana9a.com"
   token = var.coder_token

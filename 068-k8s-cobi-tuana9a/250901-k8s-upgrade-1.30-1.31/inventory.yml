@@ -1,0 +1,30 @@
+first_control_plane:
+  hosts:
+    192.168.56.22:
+      nodename: i-122
+      ansible_user: u
+      vmid: 122
+control_planes:
+  hosts:
+    192.168.56.22:
+      nodename: i-122
+      ansible_user: u
+      vmid: 122
+data_nodes:
+  hosts:
+    192.168.56.26:
+      nodename: i-126
+      ansible_user: u
+      vmid: 126
+    192.168.56.28:
+      nodename: i-128
+      ansible_user: u
+      vmid: 128
+    192.168.56.29:
+      nodename: i-129
+      ansible_user: u
+      vmid: 129
+    192.168.56.30:
+      nodename: i-130
+      ansible_user: u
+      vmid: 130

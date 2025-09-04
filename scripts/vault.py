@@ -4,6 +4,7 @@ import os
 import json
 import requests
 import argparse
+import yaml
 
 
 def _get_vault_token(args=None):
@@ -23,7 +24,7 @@ def put_secrets(args):
     vault_token = _get_vault_token(args)
 
     with open(args.secrets_file, "r") as f:
-        secrets = json.load(f)
+        secrets = yaml.safe_load(f)
         for path in secrets:
             data = secrets.get(path)
             response = requests.post(
@@ -47,7 +48,7 @@ def delete_secrets(args):
     vault_token = _get_vault_token(args)
 
     with open(args.secrets_file, "r") as f:
-        secrets = json.load(f)
+        secrets = yaml.safe_load(f)
         for path in secrets:
             response = requests.delete(
                 f"{vault_addr}/v1/{path}",

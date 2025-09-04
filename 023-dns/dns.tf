@@ -1,7 +1,5 @@
 locals {
   apps = {
-    "*.amon.tuana9a.com"           = var.xenomorph_ip
-    "amon.tuana9a.com"             = var.xenomorph_ip
     "argocd.tuana9a.com"           = var.xenomorph_ip
     "*.coder.tuana9a.com"          = var.xenomorph_ip
     "coder.tuana9a.com"            = var.xenomorph_ip
@@ -12,8 +10,6 @@ locals {
     "grafana.tuana9a.com"          = var.xenomorph_ip
     "hcr.tuana9a.com"              = var.xenomorph_ip
     "jenkins.tuana9a.com"          = var.xenomorph_ip
-    "*.namnd.tuana9a.com"          = var.xenomorph_ip
-    "namnd.tuana9a.com"            = var.xenomorph_ip
     "paste.default.kn.tuana9a.com" = var.xenomorph_ip
     "paste.stuffs.kn.tuana9a.com"  = var.xenomorph_ip
     "paste.tuana9a.com"            = var.xenomorph_ip
