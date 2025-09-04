@@ -13,10 +13,10 @@ RUN curl -L https://github.com/junegunn/fzf/releases/download/v0.62.0/fzf-0.62.0
   && sudo chmod +x /usr/local/bin/fzf \
   && rm /tmp/fzf*
 
-RUN sudo curl -sL "https://dl.k8s.io/release/v1.30.13/bin/linux/amd64/kubectl" -o /usr/local/bin/kubectl \
+RUN sudo curl -sL "https://dl.k8s.io/release/v1.33.4/bin/linux/amd64/kubectl" -o /usr/local/bin/kubectl \
   && sudo chmod 0755 /usr/local/bin/kubectl
 
-RUN wget https://github.com/derailed/k9s/releases/download/v0.32.4/k9s_Linux_amd64.tar.gz -O /tmp/k9s.tar.gz \
+RUN wget https://github.com/derailed/k9s/releases/download/v0.50.9/k9s_Linux_amd64.tar.gz -O /tmp/k9s.tar.gz \
   && tar xzf /tmp/k9s.tar.gz -C /tmp/ \
   && sudo cp /tmp/k9s /usr/local/bin/ \
   && rm /tmp/k9s*
