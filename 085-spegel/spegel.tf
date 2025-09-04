@@ -6,4 +6,14 @@ resource "helm_release" "spegel" {
   repository = "oci://ghcr.io/spegel-org/helm-charts"
   chart      = "spegel"
   version    = "0.3.0"
+
+  set {
+    name  = "spegel.resolveTags"
+    value = "false"
+  }
+
+  set {
+    name  = "spegel.resolveLatestTag"
+    value = "false"
+  }
 }
