@@ -64,11 +64,15 @@ roleRef:
 
 How-to: <https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/#normal-user>
 
+Generate client key+cert
+
 ```bash
 username=k8s-ingress-lb
 openssl genrsa -out $username.key 2048
 openssl req -new -key $username.key -out $username.csr -subj "/CN=$username"
 ```
+
+Create signing request
 
 ```bash
 csr_base64=$(cat $username.csr | base64 | tr -d "\n")
@@ -80,16 +84,25 @@ metadata:
 spec:
   request: $csr_base64
   signerName: kubernetes.io/kube-apiserver-client
-  expirationSeconds: 31556952  # one year
+  expirationSeconds: 31556952 # one year
   usages:
   - client auth
 EOF
 ```
 
+Approve certificate
+
 ```bash
 kubectl certificate approve $username
+```
+
+Download approved cert
+
+```bash
 kubectl get csr $username -o jsonpath='{.status.certificate}'| base64 -d > $username.crt
 ```
+
+Encode base64 for kubeconfig
 
 ```bash
 cat $username.key | base64 | tr -d "\n"
