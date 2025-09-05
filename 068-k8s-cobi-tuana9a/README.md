@@ -38,3 +38,9 @@ data:
     evictionHard:
       nodefs.available: "2Gi"
 ```
+
+# tunning
+
+nodelocaldns: https://kubernetes.io/docs/tasks/administer-cluster/nodelocaldns
+
+etcd: https://etcd.io/docs/v3.5/tuning/
