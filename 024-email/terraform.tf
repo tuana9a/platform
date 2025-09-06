@@ -26,16 +26,13 @@ provider "google" {
   zone    = "asia-southeast1-b"
 }
 
-data "vault_kv_secret" "tuana9a_admin" {
-  path = "kv/cloudflare/accounts/tuana9a/api-tokens/tuana9a-admin"
-}
-
 provider "vault" {
   address = "https://vault.tuana9a.com"
+  token   = var.vault_token
 
   skip_child_token = true
 }
 
 provider "cloudflare" {
-  api_token = data.vault_kv_secret.tuana9a_admin.data.cloudflare_api_token
+  api_token = var.cloudflare_api_token
 }
