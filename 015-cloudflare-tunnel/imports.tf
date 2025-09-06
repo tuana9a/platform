@@ -3,6 +3,11 @@
 #   to = cloudflare_record.dev2_tuana9a_com
 # }
 
+# import {
+#   id = "${local.cloudflare_account_id}/${data.cloudflare_zero_trust_tunnel_cloudflared.pve_cobi_tunnel.id}"
+#   to = cloudflare_zero_trust_tunnel_cloudflared_config.pve_cobi_tunnel
+# }
+
 import {
   id = "${local.cloudflare_account_id}/${data.cloudflare_zero_trust_tunnel_cloudflared.pve_xeno_tunnel.id}"
   to = cloudflare_zero_trust_tunnel_cloudflared_config.pve_xeno_tunnel
