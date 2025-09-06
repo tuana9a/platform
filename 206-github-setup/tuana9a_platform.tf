@@ -93,7 +93,7 @@ resource "github_repository_webhook" "platform" {
     insecure_ssl = false
   }
 
-  active = false
+  active = true
 
   events = ["push"]
 }
