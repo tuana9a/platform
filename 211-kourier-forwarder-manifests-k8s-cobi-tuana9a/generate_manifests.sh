@@ -1,11 +1,9 @@
 #!/bin/bash
 
-# Example: generate.sh default dkhptd t9stbot
-
-ns_arr=("$@")
+ns_arr=("default" "dkhptd" "t9stbot" "stuffs")
 
 for ns in "${ns_arr[@]}"; do
-  cat <<EOF > ns-$ns-forward-kourier.yml
+  cat <<EOF > ./manifests/ns-$ns-forward-kourier.yml
 kind: Service
 apiVersion: v1
 metadata:
