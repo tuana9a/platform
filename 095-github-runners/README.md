@@ -2,9 +2,9 @@
 
 for deploying github self-hosted runners
 
-# drama
+# known issues
 
-scale set runner is only supporting single label???
+(drama) "scale set runner is only supporting single label"
 
 https://github.com/actions/actions-runner-controller/issues/3330
 
