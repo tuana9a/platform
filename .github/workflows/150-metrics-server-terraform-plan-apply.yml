@@ -1,0 +1,81 @@
+name: "150-metrics-server"
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "150-metrics-server/**"
+      - ".github/workflows/150-metrics-server-terraform-plan-apply*"
+    branches:
+      - rock-n-roll
+
+env:
+  GCP_PROJECT_ID: tuana9a
+  GCP_PROJECT_ID_NUM: 474326114337
+  GCP_SERVICE_ACCOUNT: terraform-state-editor@tuana9a.iam.gserviceaccount.com
+  GCP_WORKLOAD_IDENTITY_POOL: github
+  GCP_WORKLOAD_IDENTITY_POOL_PROVIDER: github-tuana9a
+  PLAN_ARTIFACT_NAME: ${{ github.run_id }}-${{ github.run_attempt }}-terraform-plan
+  WORKING_DIR: 150-metrics-server/
+
+jobs:
+  terraform-plan-apply:
+    runs-on: self-hosted-0
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - id: set-env
+        name: set-env
+        run: |
+          workflow_name="${{ github.workflow }}"; echo $workflow_name
+          echo "workflow_name=$workflow_name" >> $GITHUB_OUTPUT
+          run_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"; echo $run_url
+          echo "run_url=$run_url" >> $GITHUB_OUTPUT
+      - uses: google-github-actions/auth@v2
+        with:
+          project_id: "${{ env.GCP_PROJECT_ID }}"
+          workload_identity_provider: "projects/${{ env.GCP_PROJECT_ID_NUM }}/locations/global/workloadIdentityPools/${{ env.GCP_WORKLOAD_IDENTITY_POOL }}/providers/${{ env.GCP_WORKLOAD_IDENTITY_POOL_PROVIDER }}"
+          service_account: "${{ env.GCP_SERVICE_ACCOUNT }}"
+      - uses: actions/setup-node@v4 # [/usr/bin/env: 'node' no such file or directory](https://github.com/hashicorp/setup-terraform/issues/84)
+        with:
+          node-version: '22'
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.7.1"
+      - id: init
+        name: init
+        working-directory: "${{ env.WORKING_DIR }}"
+        run: terraform init
+      - id: plan
+        name: plan
+        working-directory: "${{ env.WORKING_DIR }}"
+        run: terraform plan -out=tfplan.out
+      - id: upload-plan
+        name: upload-plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PLAN_ARTIFACT_NAME }}
+          path: "${{ env.WORKING_DIR }}/tfplan.out"
+      - id: apply
+        name: apply
+        working-directory: "${{ env.WORKING_DIR }}"
+        run: terraform apply -auto-approve tfplan.out
+      - id: status-ok
+        name: status-ok
+        run: echo 'status=1' >> $GITHUB_OUTPUT
+      - id: notify
+        name: notify
+        if: ${{ always() }}
+        run: |
+          workflow_name="${{ steps.set-env.outputs.workflow_name }}"
+          run_url="${{ steps.set-env.outputs.run_url }}"
+          url="${{ secrets.DISCORD_WEBHOOK }}"
+          status="${{ steps.status-ok.outputs.status }}"
+          case "$status" in
+            1) status_msg=":white_check_mark:" ;;
+            *) status_msg=":x:" ;;
+          esac
+          content="$status_msg \`$workflow_name\` $run_url"
+          curl -X POST $url -H "Content-Type: application/json" -d "{\"content\":\"${content}\"}"
