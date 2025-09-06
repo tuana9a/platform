@@ -1,18 +1,15 @@
-resource "coderd_user" "amon" {
-  username   = "adrazaamon"
-  email      = "adrazaamon@gmail.com"
-  name       = "Amon Ad-Raza"
-  login_type = "oidc"
+data "vault_kv_secret" "users" {
+  path = "kv/coder/users"
 }
 
-resource "coderd_user" "long7" {
-  username   = "longduongxx86"
-  email      = "longduongxx86@gmail.com"
-  login_type = "oidc"
+locals {
+  users = yamldecode(data.vault_kv_secret.users.data.users)
 }
 
-resource "coderd_user" "tuana91a" {
-  username   = "tuana91a"
-  email      = "tuana91a@gmail.com"
-  login_type = "oidc"
+resource "coderd_user" "all" {
+  for_each   = nonsensitive(toset(keys(local.users)))
+  username   = local.users[each.key].username
+  email      = local.users[each.key].email
+  name       = lookup(local.users[each.key], "name", null)
+  login_type = local.users[each.key].login_type
 }
