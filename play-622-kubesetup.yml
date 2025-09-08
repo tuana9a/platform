@@ -1,0 +1,10 @@
+- hosts: k8s_cluster
+  tasks:
+    - import_tasks: ./tasks/kubeinstall_runc.yml
+      when: not kubesetup_completed
+    - import_tasks: ./tasks/kubeinstall_cni.yml
+      when: not kubesetup_completed
+    - import_tasks: ./tasks/kubeinstall_containerd.yml
+      when: not kubesetup_completed
+    - import_tasks: ./tasks/kubesetup.yml
+      when: not kubesetup_completed

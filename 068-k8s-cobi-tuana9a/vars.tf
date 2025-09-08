@@ -37,3 +37,9 @@ variable "pve_ssh_private_key" {
   sensitive = true
   default   = ""
 }
+
+variable "vm_authoried_keys" {
+  type      = list(string)
+  sensitive = false
+  default   = []
+}

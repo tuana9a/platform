@@ -1,0 +1,18 @@
+- name: Install cni
+  become: true
+  shell: |
+    set -e
+
+    if [ ! -f "/opt/cni-plugins-linux-amd64-v1.5.1.tgz" ]; then
+      wget -q https://github.com/containernetworking/plugins/releases/download/v1.5.1/cni-plugins-linux-amd64-v1.5.1.tgz -O /opt/cni-plugins-linux-amd64-v1.5.1.tgz
+    fi
+
+    mkdir -p /opt/cni/bin
+    tar Cxzvf /opt/cni/bin /opt/cni-plugins-linux-amd64-v1.5.1.tgz
+  register: install_cni_output
+- name: Install cni [stdout]
+  debug:
+    msg: "{{ install_cni_output.stdout | split('\n') }}"
+- name: Install cni [stderr]
+  debug:
+    msg: "{{ install_cni_output.stderr | split('\n') }}"

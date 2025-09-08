@@ -1,0 +1,87 @@
+- name: Install containerd
+  become: true
+  shell: |
+    set -e
+
+    if [ ! -f "/opt/containerd-1.7.24-linux-amd64.tar.gz" ]; then
+      wget -q https://github.com/containerd/containerd/releases/download/v1.7.24/containerd-1.7.24-linux-amd64.tar.gz -O /opt/containerd-1.7.24-linux-amd64.tar.gz
+    fi
+
+    tar Cxzvf /usr/local /opt/containerd-1.7.24-linux-amd64.tar.gz
+
+    mkdir -p /etc/containerd
+    cat << EOF > /etc/containerd/config.toml
+    # DO NOT EDIT
+    version = 2
+    [plugins]
+      [plugins."io.containerd.grpc.v1.cri"]
+        [plugins."io.containerd.grpc.v1.cri".registry]
+          config_path = "/etc/containerd/certs.d" # spegel
+        [plugins."io.containerd.grpc.v1.cri".containerd]
+          discard_unpacked_layers = false # spegel
+          [plugins."io.containerd.grpc.v1.cri".containerd.runtimes]
+            [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+              runtime_type = "io.containerd.runc.v2" # kube
+              [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
+                SystemdCgroup = true # kube
+    EOF
+
+    # https://raw.githubusercontent.com/containerd/containerd/main/containerd.service
+    cat << EOF > /lib/systemd/system/containerd.service
+    # Copyright The containerd Authors.
+    #
+    # Licensed under the Apache License, Version 2.0 (the "License");
+    # you may not use this file except in compliance with the License.
+    # You may obtain a copy of the License at
+    #
+    #     http://www.apache.org/licenses/LICENSE-2.0
+    #
+    # Unless required by applicable law or agreed to in writing, software
+    # distributed under the License is distributed on an "AS IS" BASIS,
+    # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    # See the License for the specific language governing permissions and
+    # limitations under the License.
+
+    [Unit]
+    Description=containerd container runtime
+    Documentation=https://containerd.io
+    After=network.target dbus.service
+
+    [Service]
+    ExecStartPre=-/sbin/modprobe overlay
+    ExecStart=/usr/local/bin/containerd
+    {{ containerd_envs | default('') }}
+    Type=notify
+    Delegate=yes
+    KillMode=process
+    Restart=always
+    RestartSec=5
+
+    # Having non-zero Limit*s causes performance problems due to accounting overhead
+    # in the kernel. We recommend using cgroups to do container-local accounting.
+    LimitNPROC=infinity
+    LimitCORE=infinity
+
+    # Comment TasksMax if your systemd version does not supports it.
+    # Only systemd 226 and above support this version.
+    TasksMax=infinity
+    OOMScoreAdjust=-999
+
+    [Install]
+    WantedBy=multi-user.target
+    EOF
+  register: install_containerd_output
+- name: Install containerd [stdout]
+  debug:
+    msg: "{{ install_containerd_output.stdout | split('\n') }}"
+- name: Install containerd [stderr]
+  debug:
+    msg: "{{ install_containerd_output.stderr | split('\n') }}"
+
+- name: systemctl daemon-reload, restart containerd
+  become: true
+  ansible.builtin.systemd_service:
+    name: containerd
+    state: restarted
+    enabled: true
+    daemon_reload: true

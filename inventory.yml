@@ -5,13 +5,22 @@ nfs:
   hosts:
     192.168.56.7:
       ansible_user: u
-k8s_control_plane:
-  hosts:
-    192.168.56.22:
-      nodename: i-122
-      ansible_user: u
-      vmid: 122
 xenomorph:
   hosts:
     xenomorph.tuana9a.com:
       ansible_user: root
+k8s_cluster:
+  hosts:
+    192.168.56.22: &i-122
+      ansible_user: u
+      nodename: i-122
+      vmid: 122
+      kubesetup_completed: true
+    192.168.56.31: &i-131
+      ansible_user: u
+      nodename: i-131
+      vmid: 131
+      kubesetup_completed: true
+k8s_control_plane:
+  hosts:
+    192.168.56.22: *i-122

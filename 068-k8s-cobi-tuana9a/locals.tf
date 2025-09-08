@@ -43,4 +43,15 @@ locals {
       template_vm_id = 1002
     }
   }
+  vm_list = {
+    131 = {
+      vmid           = 131
+      corecount      = 4
+      memsize        = 8192
+      vmip           = "192.168.56.31"
+      address        = "192.168.56.31/24"
+      gateway_ip     = "192.168.56.1"
+      network_device = "vmbr56"
+    }
+  }
 }

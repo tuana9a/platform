@@ -1,0 +1,16 @@
+- name: Install runc
+  become: true
+  shell: |
+    set -e
+
+    if [ ! -f "/opt/runc.amd64" ]; then
+      wget -q https://github.com/opencontainers/runc/releases/download/v1.1.13/runc.amd64 -O /opt/runc.amd64
+      install -m 755 /opt/runc.amd64 /usr/local/sbin/runc
+    fi
+  register: install_runc_output
+- name: Install runc [stdout]
+  debug:
+    msg: "{{ install_runc_output.stdout | split('\n') }}"
+- name: Install runc [stderr]
+  debug:
+    msg: "{{ install_runc_output.stderr | split('\n') }}"
