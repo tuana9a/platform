@@ -1,58 +1,5 @@
-resource "random_password" "vm_password" {
-  length           = 16
-  override_special = "_%@"
-  special          = true
-}
-
-locals {
-  template_vm_id = 1002
-  vms = {
-    122 = {
-      vmid      = 122
-      vmip      = "192.168.56.22"
-      corecount = 2
-      memsize   = 4096
-      disksize  = 20
-
-      template_vm_id = 1002
-    }
-    126 = {
-      vmid      = 126
-      vmip      = "192.168.56.26"
-      corecount = 4
-      memsize   = 8192
-
-      template_vm_id = 1002
-    }
-    128 = {
-      vmid      = 128
-      vmip      = "192.168.56.28"
-      corecount = 4
-      memsize   = 8192
-
-      template_vm_id = 1002
-    }
-    129 = {
-      vmid      = 129
-      vmip      = "192.168.56.29"
-      corecount = 4
-      memsize   = 8192
-
-      template_vm_id = 1002
-    }
-    130 = {
-      vmid      = 130
-      vmip      = "192.168.56.30"
-      corecount = 4
-      memsize   = 8192
-
-      template_vm_id = 1002
-    }
-  }
-}
-
-resource "proxmox_virtual_environment_vm" "cluster" {
-  for_each  = local.vms
+resource "proxmox_virtual_environment_vm" "cluster_imported" {
+  for_each  = local.vm_list_imported
   node_name = "xenomorph"
   vm_id     = each.value.vmid
   name      = "i-${each.value.vmid}"
@@ -82,9 +29,9 @@ resource "proxmox_virtual_environment_vm" "cluster" {
     size              = lookup(each.value, "disksize", 32)
     speed {
       read            = 20
-      read_burstable  = 30
+      read_burstable  = 50
       write           = 20
-      write_burstable = 30
+      write_burstable = 50
     }
     backup    = true
     replicate = true
