@@ -8,3 +8,4 @@
       when: not kubesetup_completed
     - import_tasks: ./tasks/kubesetup.yml
       when: not kubesetup_completed
+    - import_tasks: ./tasks/install_nfs_client.yml

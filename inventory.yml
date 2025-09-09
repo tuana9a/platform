@@ -15,12 +15,19 @@ k8s_cluster:
       ansible_user: u
       nodename: i-122
       vmid: 122
+      is_control_plane: true
       kubesetup_completed: true
+      kube_joined: true
     192.168.56.31: &i-131
       ansible_user: u
       nodename: i-131
       vmid: 131
+      is_control_plane: false
       kubesetup_completed: true
+      kube_joined: true
 k8s_control_plane:
+  hosts:
+    192.168.56.22: *i-122
+k8s_first_control_plane:
   hosts:
     192.168.56.22: *i-122

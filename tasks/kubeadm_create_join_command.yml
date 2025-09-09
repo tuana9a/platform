@@ -1,0 +1,10 @@
+- name: kubeadm create join command
+  become: true
+  shell: "kubeadm token create --print-join-command --ttl {{ join_token_duration | default('1h') }}"
+  register: create_join_command_output
+- name: kubeadm create join command [stdout]
+  debug:
+    msg: "{{ create_join_command_output.stdout | split('\n') }}"
+- name: kubeadm create join command [stderr]
+  debug:
+    msg: "{{ create_join_command_output.stderr | split('\n') }}"

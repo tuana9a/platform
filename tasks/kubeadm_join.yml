@@ -1,0 +1,11 @@
+- name: kubeadm join
+  become: true
+  shell: |
+    {{ join_command }} {{ '--control-plane' if is_control_plane else '' }}
+  register: kubeadm_join_output
+- name: kubeadm join [stdout]
+  debug:
+    msg: "{{ kubeadm_join_output.stdout | split('\n') }}"
+- name: kubeadm join [stderr]
+  debug:
+    msg: "{{ kubeadm_join_output.stderr | split('\n') }}"
