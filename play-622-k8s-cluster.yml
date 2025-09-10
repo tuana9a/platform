@@ -1,0 +1,34 @@
+- hosts: k8s_cluster
+  tasks:
+    - import_tasks: ./tasks/kubeinstall_runc.yml
+      when: not kubesetup_completed
+    - import_tasks: ./tasks/kubeinstall_cni.yml
+      when: not kubesetup_completed
+    - import_tasks: ./tasks/kubeinstall_containerd.yml
+      when: not kubesetup_completed
+    - import_tasks: ./tasks/kubesetup.yml
+      when: not kubesetup_completed
+    - import_tasks: ./tasks/install_nfs_client.yml
+    # - import_tasks: ./tasks/install_unzip.yml # install awscli requires unzip
+    #   when: is_control_plane
+    # - import_tasks: ./tasks/install_crontab.yml
+    #   when: is_control_plane
+    # - import_tasks: ./tasks/install_awscli.yml
+    #   when: is_control_plane
+    - import_tasks: ./tasks/install_etcd.yml
+      when: is_control_plane
+
+- hosts: k8s_first_control_plane
+  tasks:
+    - import_tasks: ./tasks/kubeadm_create_join_command.yml
+    - name: set join command
+      set_fact:
+        join_command: "{{ create_join_command_output.stdout | trim }}"
+
+- hosts: k8s_cluster
+  tasks:
+    - name: Copy facts
+      set_fact:
+        join_command: "{{ hostvars[groups['k8s_first_control_plane'][0]].join_command }}"
+    - import_tasks: ./tasks/kubeadm_join.yml
+      when: not kube_joined

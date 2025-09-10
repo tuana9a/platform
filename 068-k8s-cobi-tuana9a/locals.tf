@@ -10,14 +10,14 @@ locals {
 
       template_vm_id = 1002
     }
-    126 = {
-      vmid      = 126
-      vmip      = "192.168.56.26"
-      corecount = 4
-      memsize   = 8192
+    # 126 = {
+    #   vmid      = 126
+    #   vmip      = "192.168.56.26"
+    #   corecount = 4
+    #   memsize   = 8192
 
-      template_vm_id = 1002
-    }
+    #   template_vm_id = 1002
+    # }
     # 128 = {
     #   vmid      = 128
     #   vmip      = "192.168.56.28"
@@ -34,14 +34,14 @@ locals {
 
     #   template_vm_id = 1002
     # }
-    130 = {
-      vmid      = 130
-      vmip      = "192.168.56.30"
-      corecount = 4
-      memsize   = 8192
+    # 130 = {
+    #   vmid      = 130
+    #   vmip      = "192.168.56.30"
+    #   corecount = 4
+    #   memsize   = 8192
 
-      template_vm_id = 1002
-    }
+    #   template_vm_id = 1002
+    # }
   }
   vm_list = {
     131 = {
@@ -59,6 +59,15 @@ locals {
       memsize        = 8192
       vmip           = "192.168.56.32"
       address        = "192.168.56.32/24"
+      gateway_ip     = "192.168.56.1"
+      network_device = "vmbr56"
+    }
+    133 = {
+      vmid           = 133
+      corecount      = 4
+      memsize        = 8192
+      vmip           = "192.168.56.33"
+      address        = "192.168.56.33/24"
       gateway_ip     = "192.168.56.1"
       network_device = "vmbr56"
     }

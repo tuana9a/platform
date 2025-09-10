@@ -44,3 +44,31 @@ data:
 nodelocaldns: https://kubernetes.io/docs/tasks/administer-cluster/nodelocaldns
 
 etcd: https://etcd.io/docs/v3.5/tuning/
+
+# cleanup flannel
+
+https://stackoverflow.com/questions/46276796/kubernetes-cannot-cleanup-flannel
+
+```bash
+kubeadm reset
+```
+
+```bash
+rm -r /var/lib/cni/
+rm -r /run/flannel
+rm -r /etc/cni/
+```
+
+```bash
+ip link
+```
+
+```bash
+ip link delete cni0
+ip link delete flannel.1
+```
+
+```bash
+systemctl restart containerd
+systemctl restart kubelet
+```

@@ -32,6 +32,13 @@ k8s_cluster:
       is_control_plane: false
       kubesetup_completed: true
       kube_joined: true
+    192.168.56.33: &i-133
+      ansible_user: u
+      nodename: i-133
+      vmid: 133
+      is_control_plane: false
+      kubesetup_completed: true
+      kube_joined: true
 k8s_control_plane:
   hosts:
     192.168.56.22: *i-122
