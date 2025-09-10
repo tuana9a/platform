@@ -8,3 +8,6 @@
 - name: kubeadm create join command [stderr]
   debug:
     msg: "{{ create_join_command_output.stderr | split('\n') }}"
+- name: set join command
+  set_fact:
+    join_command: "{{ create_join_command_output.stdout | trim }}"

@@ -48,15 +48,57 @@ xenomorph:
       nginx:
         conf_d: xenomorph/nginx/conf.d/
         stream_conf_d: xenomorph/nginx/stream.conf.d/
+k8s_cluster_vars:
+  kube_pki: &kube_pki
+    - /etc/kubernetes/pki/ca.crt
+    - /etc/kubernetes/pki/ca.key
+    - /etc/kubernetes/pki/sa.key
+    - /etc/kubernetes/pki/sa.pub
+    - /etc/kubernetes/pki/front-proxy-ca.crt
+    - /etc/kubernetes/pki/front-proxy-ca.key
+    - /etc/kubernetes/pki/etcd/ca.crt
+    - /etc/kubernetes/pki/etcd/ca.key
+  kubevip: &kubevip
+    inf: eth0
+    vip: 192.168.56.21
 k8s_cluster:
   hosts:
-    192.168.56.22: &i-122
+    # 192.168.56.22: &i-122
+    #   ansible_user: u
+    #   nodename: i-122
+    #   vmid: 122
+    #   is_control_plane: true
+    #   kubesetup_completed: true
+    #   kube_joined: true
+    #   kube_pki: *kube_pki
+    #   kubevip: *kubevip
+    192.168.56.23: &i-123
       ansible_user: u
-      nodename: i-122
-      vmid: 122
+      nodename: i-123
+      vmid: 123
       is_control_plane: true
       kubesetup_completed: true
       kube_joined: true
+      kube_pki: *kube_pki
+      kubevip: *kubevip
+    192.168.56.24: &i-124
+      ansible_user: u
+      nodename: i-124
+      vmid: 124
+      is_control_plane: true
+      kubesetup_completed: true
+      kube_joined: true
+      kube_pki: *kube_pki
+      kubevip: *kubevip
+    192.168.56.25: &i-125
+      ansible_user: u
+      nodename: i-125
+      vmid: 125
+      is_control_plane: true
+      kubesetup_completed: false
+      kube_joined: false
+      kube_pki: *kube_pki
+      kubevip: *kubevip
     192.168.56.31: &i-131
       ansible_user: u
       nodename: i-131
@@ -80,7 +122,9 @@ k8s_cluster:
       kube_joined: true
 k8s_control_plane:
   hosts:
-    192.168.56.22: *i-122
+    # 192.168.56.22: *i-122
+    192.168.56.23: *i-123
 k8s_first_control_plane:
   hosts:
-    192.168.56.22: *i-122
+    # 192.168.56.22: *i-122
+    192.168.56.23: *i-123

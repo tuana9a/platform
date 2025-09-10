@@ -1,0 +1,22 @@
+- name: Ensure pki parent directories exist
+  become: true
+  file:
+    path: "{{ item.source | dirname }}"
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+  loop: "{{ slurp_kube_pki_results }}"
+  loop_control:
+    label: "{{ item.source }}"
+- name: Write pki file content
+  become: true
+  copy:
+    content: "{{ item.content | b64decode }}"
+    dest: "{{ item.source }}"
+    mode: "0644" # TODO: make file mode be an variable
+    owner: root
+    group: root
+  loop: "{{ slurp_kube_pki_results }}"
+  loop_control:
+    label: "{{ item.source }}"

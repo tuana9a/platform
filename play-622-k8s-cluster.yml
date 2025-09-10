@@ -9,26 +9,30 @@
     - import_tasks: ./tasks/kubesetup.yml
       when: not kubesetup_completed
     - import_tasks: ./tasks/install_nfs_client.yml
-    # - import_tasks: ./tasks/install_unzip.yml # install awscli requires unzip
-    #   when: is_control_plane
-    # - import_tasks: ./tasks/install_crontab.yml
-    #   when: is_control_plane
-    # - import_tasks: ./tasks/install_awscli.yml
-    #   when: is_control_plane
-    - import_tasks: ./tasks/install_etcd.yml
-      when: is_control_plane
 
 - hosts: k8s_first_control_plane
   tasks:
+    - import_tasks: ./tasks/kube_read_pki.yml
+      when: is_control_plane
     - import_tasks: ./tasks/kubeadm_create_join_command.yml
-    - name: set join command
-      set_fact:
-        join_command: "{{ create_join_command_output.stdout | trim }}"
+      when: is_control_plane
 
 - hosts: k8s_cluster
   tasks:
     - name: Copy facts
       set_fact:
         join_command: "{{ hostvars[groups['k8s_first_control_plane'][0]].join_command }}"
+        slurp_kube_pki_results: "{{ hostvars[groups['k8s_first_control_plane'][0]].slurp_kube_pki_results }}"
+    - import_tasks: ./tasks/kube_write_pki.yml # this task depends on kube_read_pki
+      when: not kube_joined and is_control_plane
     - import_tasks: ./tasks/kubeadm_join.yml
       when: not kube_joined
+    - name: kubevip
+      become: true
+      when: is_control_plane
+      ansible.builtin.template:
+        src: kubevip.yaml
+        dest: /etc/kubernetes/manifests/kubevip.yaml
+        owner: root
+        group: root
+        mode: "0644"

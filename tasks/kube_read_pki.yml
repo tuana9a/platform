@@ -1,0 +1,14 @@
+- name: Slurp kube pki files then store as facts
+  become: true
+  slurp:
+    src: "{{ item }}"
+  register: slurp_kube_pki
+  loop: "{{ kube_pki }}"
+  ignore_errors: false
+- name: Debug facts to verify
+  debug:
+    msg:
+      - "{{ slurp_kube_pki.results | length }}"
+- name: set kube pki facts
+  set_fact:
+    slurp_kube_pki_results: "{{ slurp_kube_pki.results }}"

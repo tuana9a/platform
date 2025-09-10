@@ -1,27 +1,32 @@
-- hosts: k8s_control_plane
+- hosts: k8s_cluster
   tasks:
     - name: Remove crontab cronjob
+      when: is_control_plane
       ansible.builtin.cron:
         name: "backup-kubernetes.sh"
         minute: "0"
         job: "/usr/local/bin/backup-kubernetes.sh >> /tmp/backup-kubernetes.log 2>&1"
         state: absent
     - name: Remove cron.d cronjob
+      when: is_control_plane
       become: true
       ansible.builtin.file:
         path: "/etc/cron.d/backup-kubernetes"
         state: absent
     - name: Remove backup-kubernetes.sh script
+      when: is_control_plane
       become: true
       ansible.builtin.file:
         path: /usr/local/bin/backup-kubernetes.sh
         state: absent
     - name: Remove backup-kubernetes.log
+      when: is_control_plane
       become: true
       ansible.builtin.file:
         path: /tmp/backup-kubernetes.log
         state: absent
     - name: Remove backup-kubernetes.log
+      when: is_control_plane
       become: true
       ansible.builtin.file:
         path: /snapshot.db
