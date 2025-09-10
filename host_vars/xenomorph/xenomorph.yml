@@ -1,4 +1,0 @@
-HOST_NAME: xenomorph
-nginx:
-  conf_d: xenomorph/nginx/conf.d/
-  stream_conf_d: xenomorph/nginx/stream.conf.d/
