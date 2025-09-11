@@ -120,10 +120,6 @@ k8s_cluster:
       is_control_plane: false
       kubesetup_completed: true
       kube_joined: true
-k8s_control_plane:
-  hosts:
-    # 192.168.56.22: *i-122
-    192.168.56.23: *i-123
 k8s_first_control_plane:
   hosts:
     # 192.168.56.22: *i-122

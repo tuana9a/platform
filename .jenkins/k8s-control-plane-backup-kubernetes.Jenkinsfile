@@ -31,19 +31,6 @@ spec:
           readOnly: true
         - name: workdir
           mountPath: "/workdir"
-    - name: kp
-      image: tuana9a/kp:main-9c68a63
-      command:
-        - /bin/sh
-      args:
-        - -c
-        - "sleep infinity"
-      volumeMounts:
-        - name: secrets
-          mountPath: "/var/secrets"
-          readOnly: true
-        - name: workdir
-          mountPath: "/workdir"
     - name: awscli
       image: amazon/aws-cli:2.18.0
       command:
@@ -92,30 +79,16 @@ spec:
                     sh 'date "+%H%M%S" > /workdir/hourminutesecond'
                     sh 'date +%s > /workdir/unixtimestamp'
                 }
-                echo "get-vm-data"
+                echo "inventory"
                 container('ubuntu') {
                     script {
                         inventory = readYaml file: "./inventory.yml"
-                        inventory["k8s_control_plane"]["hosts"].each { host, vars ->
+                        inventory["k8s_first_control_plane"]["hosts"].each { host, vars ->
                             def vm = [:]
                             vm["host"] = host
                             vm["vmid"] = vars["vmid"]
                             vm["nodename"] = vars["nodename"]
                             vms.add(vm)
-                        }
-                    }
-                }
-                echo "generate-ssh-key"
-                container('ubuntu') {
-                    sh 'ssh-keygen -t ecdsa -f /workdir/id_rsa && chmod 600 /workdir/id_rsa'
-                }
-                echo "jnject-ssh-key"
-                container('kp') {
-                    script {
-                        for (vm in vms) {
-                            def vmid = vm["vmid"]
-                            echo "Inject ssh auth key: ${vmid}"
-                            sh "/usr/local/bin/kp -c /var/secrets/kp.config.json authkey add --vmid ${vmid} -u root -k \"\$(cat /workdir/id_rsa.pub)\""
                         }
                     }
                 }
@@ -126,30 +99,19 @@ spec:
                             def vmid = vm["vmid"]
                             def host = vm["host"]
                             def nodename = vm["nodename"]
-                            sh "ssh -o StrictHostKeyChecking=accept-new -i /workdir/id_rsa root@${host} echo helloworld"
-                            sh "scp -i /workdir/id_rsa -r root@${host}:/etc/kubernetes/pki /workdir/pki-${nodename}"
-                            sh "scp -i /workdir/id_rsa -r root@${host}:/etc/kubernetes/manifests /workdir/manifests-${nodename}"
+                            sh "mkdir -p /workdir/k8s-backup-${nodename}"
+                            sh "cp /var/secrets/ci /workdir/ci && chmod 600 /workdir/ci"
+                            sh "ssh -o StrictHostKeyChecking=accept-new -i /workdir/ci root@${host} echo helloworld"
+                            sh "scp -i /workdir/ci -r root@${host}:/etc/kubernetes/pki /workdir/k8s-backup-${nodename}/pki"
+                            sh "scp -i /workdir/ci -r root@${host}:/etc/kubernetes/manifests /workdir/k8s-backup-${nodename}/manifests"
                         }
                     }
                 }
-            }
-        }
-        stage('debug') {
-            steps {
+                echo "list-files"
                 container('ubuntu') {
                     sh 'ls -lha /var/secrets/'
                     sh 'ls -lha /workdir/'
                     sh 'find /workdir/'
-                }
-                echo "view-ssh-keys"
-                container('kp') {
-                    script {
-                        for (vm in vms) {
-                            def vmid = vm["vmid"]
-                            echo "vmid: ${vmid}"
-                            sh "/usr/local/bin/kp -c /var/secrets/kp.config.json authkey view --vmid ${vmid} -u root" // username is hardcoded
-                        }
-                    }
                 }
                 echo "list-etcd-members"
                 container('ubuntu') {
@@ -160,9 +122,9 @@ spec:
                             def nodename = vm["nodename"]
                             echo "vmid: ${vmid}"
                             withEnv([
-                                "ETCDCTL_CACERT=/workdir/pki-${nodename}/etcd/ca.crt",
-                                "ETCDCTL_CERT=/workdir/pki-${nodename}/apiserver-etcd-client.crt",
-                                "ETCDCTL_KEY=/workdir/pki-${nodename}/apiserver-etcd-client.key",
+                                "ETCDCTL_CACERT=/workdir/k8s-backup-${nodename}/pki/etcd/ca.crt",
+                                "ETCDCTL_CERT=/workdir/k8s-backup-${nodename}/pki/apiserver-etcd-client.crt",
+                                "ETCDCTL_KEY=/workdir/k8s-backup-${nodename}/pki/apiserver-etcd-client.key",
                             ]) {
                                 sh "/usr/local/bin/etcdctl member list --endpoints=${host}:2379 -w=table"
                             }
@@ -173,7 +135,7 @@ spec:
         }
         stage('backup') {
             steps {
-                echo 'etcd-dump'
+                echo 'snapshot'
                 container('ubuntu') {
                     script {
                         for (vm in vms) {
@@ -182,13 +144,13 @@ spec:
                             def nodename = vm["nodename"]
                             echo "vmid: ${vmid}"
                             withEnv([
-                                "ETCDCTL_CACERT=/workdir/pki-${nodename}/etcd/ca.crt",
-                                "ETCDCTL_CERT=/workdir/pki-${nodename}/apiserver-etcd-client.crt",
-                                "ETCDCTL_KEY=/workdir/pki-${nodename}/apiserver-etcd-client.key",
+                                "ETCDCTL_CACERT=/workdir/k8s-backup-${nodename}/pki/etcd/ca.crt",
+                                "ETCDCTL_CERT=/workdir/k8s-backup-${nodename}/pki/apiserver-etcd-client.crt",
+                                "ETCDCTL_KEY=/workdir/k8s-backup-${nodename}/pki/apiserver-etcd-client.key",
                             ]) {
-                                sh "/usr/local/bin/etcdctl snapshot save --endpoints=${host}:2379 /workdir/snapshot-${nodename}.db"
+                                sh "/usr/local/bin/etcdctl snapshot save --endpoints=${host}:2379 /workdir/k8s-backup-${nodename}/snapshot.db"
                             }
-                            sh "/usr/local/bin/etcdutl snapshot status /workdir/snapshot-${nodename}.db -w=table"
+                            sh "/usr/local/bin/etcdutl snapshot status /workdir/k8s-backup-${nodename}/snapshot.db -w=table"
                         }
                     }
                     sh 'ls -lha /workdir/'
@@ -201,7 +163,7 @@ spec:
                             def host = vm["host"]
                             def nodename = vm["nodename"]
                             echo "vmid: ${vmid}"
-                            sh "tar -czvf /workdir/k8s-backup-${nodename}.tar.gz /workdir/snapshot-${nodename}.db /workdir/pki-${nodename} /workdir/manifests-${nodename}"
+                            sh "tar -czvf /workdir/k8s-backup-${nodename}.tar.gz /workdir/k8s-backup-${nodename}/"
                         }
                     }
                     sh 'ls -lha /workdir/'
@@ -230,18 +192,6 @@ spec:
             echo 'set-params'
             container('ubuntu') {
                 sh 'date +%s > /workdir/stop.time'
-            }
-            echo 'cleanup'
-            container('kp') {
-                script {
-                    for (vm in vms) {
-                        def vmid = vm["vmid"]
-                        echo "vmid ${vmid}: remove temp key"
-                        sh "/usr/local/bin/kp -c /var/secrets/kp.config.json authkey remove --vmid ${vmid} -u root -k \"\$(cat /workdir/id_rsa.pub)\""
-                        echo "vmid ${vmid}: verify"
-                        sh "/usr/local/bin/kp -c /var/secrets/kp.config.json authkey view --vmid ${vmid} -u root"
-                    }
-                }
             }
             echo 'notify'
             container('ubuntu') {
