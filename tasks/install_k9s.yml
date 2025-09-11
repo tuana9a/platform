@@ -1,6 +1,15 @@
 - name: Install k9s
   ansible.builtin.shell: |
+    set -e
     cd /tmp
-    wget https://github.com/derailed/k9s/releases/download/v0.32.4/k9s_Linux_amd64.tar.gz -O k9s.tar.gz
+    wget https://github.com/derailed/k9s/releases/download/v0.50.9/k9s_Linux_amd64.tar.gz -O k9s.tar.gz
     tar xzf k9s.tar.gz
     sudo install -o root -g root -m 0755 k9s /usr/local/bin/k9s
+    rm k9s.tar.gz k9s
+  register: install_k9s_output
+- name: Install k9s [stdout]
+  debug:
+    msg: "{{ install_k9s_output.stdout | split('\n') }}"
+- name: Install k9s [stderr]
+  debug:
+    msg: "{{ install_k9s_output.stderr | split('\n') }}"
