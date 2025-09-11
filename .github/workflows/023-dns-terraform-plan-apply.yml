@@ -49,6 +49,10 @@ jobs:
         name: add tfvars
         working-directory: "${{ env.WORKING_DIR }}"
         run: printf '${{ secrets.tfvars_023_dns }}' > hidden.auto.tfvars
+      - id: servers-yml
+        name: add servers.yml
+        working-directory: "${{ env.WORKING_DIR }}"
+        run: printf '${{ secrets.servers_yml_023_dns }}' > servers.yml
       - id: plan
         name: plan
         working-directory: "${{ env.WORKING_DIR }}"
