@@ -45,7 +45,7 @@ resource "proxmox_virtual_environment_vm" "cluster" {
     user_account {
       password = random_password.vm_password.result
       username = "u"
-      keys     = var.vm_authoried_keys
+      keys     = var.vm_authorized_keys
     }
   }
 
