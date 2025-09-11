@@ -1,24 +1,20 @@
 locals {
   servers = yamldecode(file(var.servers_file))
   apps = {
-    "argocd"           = local.servers.xenomorph.ip
-    "*.coder"          = local.servers.xenomorph.ip
-    "coder"            = local.servers.xenomorph.ip
-    "d9stbot"          = local.servers.xenomorph.ip
+    "argocd"           = local.servers.orisis.ip
+    "*.coder"          = local.servers.orisis.ip
+    "coder"            = local.servers.orisis.ip
+    "d9stbot"          = local.servers.orisis.ip
     "*.dev2"           = local.servers.xenomorph.ip
     "dev2"             = local.servers.xenomorph.ip
     "dkhptd-api"       = local.servers.xenomorph.ip
-    "grafana"          = local.servers.xenomorph.ip
-    "hcr"              = local.servers.xenomorph.ip
-    "jenkins"          = local.servers.xenomorph.ip
-    "paste.default.kn" = local.servers.xenomorph.ip
-    "paste.stuffs.kn"  = local.servers.xenomorph.ip
-    "paste"            = local.servers.xenomorph.ip
-    "pve-xeno"         = local.servers.xenomorph.ip
-    "t9stbot"          = local.servers.xenomorph.ip
-    "uuid.stuffs.kn"   = local.servers.xenomorph.ip
-    "vault"            = local.servers.xenomorph.ip
-    "ryuu"             = local.servers.xenomorph.ip
+    "grafana"          = local.servers.orisis.ip
+    "hcr"              = local.servers.orisis.ip
+    "jenkins"          = local.servers.orisis.ip
+    "paste"            = local.servers.orisis.ip
+    "t9stbot"          = local.servers.orisis.ip
+    "uuid.stuffs.kn"   = local.servers.orisis.ip
+    "vault"            = local.servers.orisis.ip
   }
   mx_cloudflare_routes = [
     {
