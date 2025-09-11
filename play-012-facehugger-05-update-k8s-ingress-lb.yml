@@ -16,10 +16,10 @@
     - name: Set servers
       set_fact:
         # LOL: thanks you gemini
-        servers: "{{ worker_nodes | json_query('resources[*].status.addresses') | json_query('[*].{hostname: [?type==`Hostname`].address | [0], ip: [?type==`InternalIP`].address | [0]}') }}"
+        upstream_servers: "{{ worker_nodes | json_query('resources[*].status.addresses') | json_query('[*].{hostname: [?type==`Hostname`].address | [0], ip: [?type==`InternalIP`].address | [0]}') }}"
     - name: Print servers
       debug:
-        var: servers
+        var: upstream_servers
 
     - name: Get ingress nginx svc
       vars:
@@ -52,26 +52,28 @@
       debug:
         msg: "{{ node_port_https }}"
 
-- hosts: xenomorph
+- hosts: facehugger
   tasks:
     - name: Copy facts
       set_fact:
-        servers: "{{ hostvars['localhost'].servers }}"
+        upstream_servers: "{{ hostvars['localhost'].upstream_servers }}"
         node_port_http: "{{ hostvars['localhost'].node_port_http }}"
         node_port_https: "{{ hostvars['localhost'].node_port_https }}"
     - name: Print haproxy.cfg
       debug:
-        msg: "{{ lookup('template', './templates/xenomorph/haproxy.cfg') | split('\n') }}"
+        msg: "{{ lookup('template', './templates/ingress-lb/haproxy.cfg') | split('\n') }}"
     - name: Confirm update
       pause:
         prompt: "Do you want to proceed with these servers? (yes/no)"
       register: confirm_update_result
     - name: Update haproxy cfg
+      become: true
       template:
-        src: "./templates/xenomorph/haproxy.cfg"
+        src: "./templates/ingress-lb/haproxy.cfg"
         dest: "/etc/haproxy/haproxy.cfg"
       when: confirm_update_result.user_input == 'yes'
     - name: Reload haproxy service
+      become: true
       ansible.builtin.service:
         name: haproxy
         state: reloaded

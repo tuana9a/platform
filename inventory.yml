@@ -128,3 +128,20 @@ k8s_first_control_plane:
   hosts:
     # 192.168.56.22: *i-122
     192.168.56.23: *i-123
+orisis:
+  hosts:
+    orisis.tuana9a.com:
+      ansible_user: root
+      HOST_NAME: orisis
+      upstream_servers:
+        - hostname: facehugger
+          ip: 10.5.115.5
+          http_port: 80
+          https_port: 443
+facehugger:
+  hosts:
+    192.168.56.12:
+      ansible_user: u
+      wireguard_client_items:
+        - file: facehugger/facehugger.conf
+          name: facehugger

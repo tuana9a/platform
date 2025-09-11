@@ -1,0 +1,21 @@
+- hosts: orisis
+  tasks:
+    - name: Print haproxy.cfg
+      debug:
+        msg: "{{ lookup('template', './templates/orisis/haproxy.cfg') | split('\n') }}"
+    - name: Confirm update
+      pause:
+        prompt: "Do you want to proceed with these servers? (yes/no)"
+      register: confirm_update_result
+    - name: Update haproxy cfg
+      become: true
+      template:
+        src: "./templates/orisis/haproxy.cfg"
+        dest: "/etc/haproxy/haproxy.cfg"
+      when: confirm_update_result.user_input == 'yes'
+    - name: Reload haproxy service
+      become: true
+      ansible.builtin.service:
+        name: haproxy
+        state: reloaded
+      when: confirm_update_result.user_input == 'yes'

@@ -6,7 +6,7 @@
     dest: "/etc/wireguard/{{ item.name }}.conf"
     mode: "0644"
 
-- name: Start + Enable wireguard service
+- name: Setup wireguard service
   loop: "{{ wireguard_client_items }}"
   become: true
   service:
