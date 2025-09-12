@@ -1,4 +1,4 @@
-host: "pve-xeno.tuana9a.com"
+host: "xeno.tuana9a.com"
 ingress:
   className: nginx
   annotations:

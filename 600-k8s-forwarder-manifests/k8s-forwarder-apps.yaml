@@ -9,7 +9,7 @@ spec:
   generators:
     - list:
         elements:
-          - name: pve-xeno-tuana9a-com
+          - name: xeno-tuana9a-com
           - name: dev2-tuana9a-com
           - name: wildcard-dev2-tuana9a-com
           - name: netchat-site
@@ -27,7 +27,7 @@ spec:
         helm:
           releaseName: "{{.name}}"
           valueFiles:
-            - values/{{.name}}.yaml
+            - "{{.name}}.values.yaml"
       destination:
         namespace: k8s-forwarder
         server: https://kubernetes.default.svc
