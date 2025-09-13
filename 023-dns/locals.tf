@@ -15,6 +15,7 @@ locals {
     "t9stbot"        = local.servers.orisis.ip
     "uuid.stuffs.kn" = local.servers.orisis.ip
     "vault"          = local.servers.orisis.ip
+    "xeno-web"       = local.servers.orisis.ip
   }
   mx_cloudflare_routes = [
     {

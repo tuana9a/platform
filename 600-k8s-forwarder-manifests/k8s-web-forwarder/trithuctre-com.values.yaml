@@ -1,9 +1,0 @@
-host: "trithuctre.com"
-ingress:
-  className: nginx
-  annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-production"
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-target:
-  ip: 192.168.56.1
-  port: 8080

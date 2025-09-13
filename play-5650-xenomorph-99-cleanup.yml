@@ -36,3 +36,9 @@
       ansible.builtin.file:
         path: "{{ lookup('env','HOME') }}/.kube"
         state: absent
+
+    - name: Stopped haproxy service
+      ansible.builtin.service:
+        name: haproxy
+        state: stopped
+        enabled: false
