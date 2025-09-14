@@ -95,8 +95,8 @@ k8s_cluster:
       nodename: i-125
       vmid: 125
       is_control_plane: true
-      kubesetup_completed: false
-      kube_joined: false
+      kubesetup_completed: true
+      kube_joined: true
       kube_pki: *kube_pki
       kubevip: *kubevip
     192.168.56.31: &i-131
