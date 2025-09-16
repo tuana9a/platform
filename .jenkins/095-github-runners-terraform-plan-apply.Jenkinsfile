@@ -45,12 +45,6 @@ spec:
         }
     }
     environment {
-        http_proxy = "http://proxy.vhost.vn:8080"
-        https_proxy = "http://proxy.vhost.vn:8080"
-        HTTP_PROXY = "http://proxy.vhost.vn:8080"
-        HTTPS_PROXY = "http://proxy.vhost.vn:8080"
-        no_proxy = "localhost,127.0.0.1,192.168.0.0/16,172.0.0.0/8,10.244.0.0/8,10.233.0.0/16"
-        NO_PROXY = "localhost,127.0.0.1,192.168.0.0/16,172.0.0.0/8,10.244.0.0/8,10.233.0.0/16"
         GOOGLE_APPLICATION_CREDENTIALS = "$WORKSPACE_TMP/application_default_credentials.json"
         PIPELINE_NAME = "095-github-runners"
         WORKING_DIR = "095-github-runners"
