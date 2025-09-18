@@ -9,7 +9,7 @@ spec:
   generators:
     - list:
         elements:
-          - name: xeno-web-tuana9a-com
+          - name: neomorph-tuana9a-com
           - name: dev2-tuana9a-com
           - name: wildcard-dev2-tuana9a-com
           - name: jnt724-dev-tuana9a-com
