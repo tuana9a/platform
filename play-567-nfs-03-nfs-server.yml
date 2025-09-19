@@ -1,4 +1,11 @@
 - hosts: nfs
   tasks:
-    - import_tasks: ./tasks/apt_update.yml
     - import_tasks: ./tasks/nfs_server.yml
+    - name: Ensure /exports/vdb/nfs567-csi/ directory exists
+      become: true
+      ansible.builtin.file:
+        path: /exports/vdb/nfs567-csi/
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"

@@ -9,8 +9,10 @@ nfs:
       parted:
         - dev_path: /dev/vdb
           mount_path: /exports/vdb/
-        # - dev_path: /dev/vdc
-        #   mount_path: /exports/vdc/
+          enabled: true
+        - dev_path: /dev/vdc
+          mount_path: /exports/vdc/
+          enabled: false
       NFS_DIR: "/exports/nfs-client"
       nfs_server_exports:
         - path: /exports/vdb/

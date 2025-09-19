@@ -1,9 +1,11 @@
 - hosts: nfs
   tasks:
+    - import_tasks: ./tasks/apt_update.yml
     - import_tasks: ./tasks/set_timezone.yml
     - import_tasks: ./tasks/set_hostname.yml
     - import_tasks: ./tasks/install_unzip.yml # required for install awscli
-    - import_tasks: ./tasks/install_awscli.yml
+    # - import_tasks: ./tasks/install_awscli.yml
     - import_tasks: ./tasks/install_node_exporter.yml
     - import_tasks: ./tasks/install_nfs_server.yml
     - import_tasks: ./tasks/install_parted.yml
+    - import_tasks: ./tasks/parted.yml

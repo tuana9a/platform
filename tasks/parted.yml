@@ -6,6 +6,7 @@
     device: "{{ item.dev_path }}"
     number: 1
     state: present
+  when: item.enabled
 
 - name: mkfs.ext4
   loop: "{{ parted }}"
@@ -13,6 +14,7 @@
   filesystem:
     fstype: ext4
     dev: "{{ item.dev_path }}1"
+  when: item.enabled
 
 - name: ensure mount_point
   loop: "{{ parted }}"
@@ -22,6 +24,7 @@
     group: root
     state: directory
     path: "{{ item.mount_path }}"
+  when: item.enabled
 
 - name: mount
   loop: "{{ parted }}"
@@ -32,3 +35,4 @@
     src: "{{ item.dev_path }}1"
     path: "{{ item.mount_path }}"
     state: mounted
+  when: item.enabled
