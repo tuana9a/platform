@@ -27,6 +27,8 @@ loki:
 deploymentMode: SingleBinary
 singleBinary:
   replicas: 1
+  persistence:
+    storageClass: nfs567
 
 # Cache config
 resultsCache:
@@ -39,7 +41,7 @@ chunksCache:
 minio:
   enabled: true
   persistence:
-    storageClass: nfs-vdb
+    storageClass: nfs567
     size: 10Gi
   resources:
     requests:

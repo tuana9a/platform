@@ -2,7 +2,7 @@ server:
   global:
     scrape_interval: 15s
   persistentVolume:
-    storageClass: nfs-vdb
+    storageClass: nfs567
     size: 15Gi
   resources:
     limits:
@@ -82,7 +82,7 @@ alertmanager:
     pullPolicy: IfNotPresent
     tag: "v0.28.0" # fix https://github.com/prometheus/alertmanager/pull/3728
   persistence:
-    storageClass: nfs-vdb
+    storageClass: nfs567
     size: 2Gi
   config:
     enabled: true
