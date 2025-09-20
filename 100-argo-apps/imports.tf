@@ -14,11 +14,6 @@ import {
 }
 
 import {
-  id = "apiVersion=argoproj.io/v1alpha1,kind=Application,namespace=argocd,name=512-hcr"
-  to = kubernetes_manifest.manifests["512-hcr.yaml"]
-}
-
-import {
   id = "apiVersion=argoproj.io/v1alpha1,kind=Application,namespace=argocd,name=513-paste"
   to = kubernetes_manifest.manifests["513-paste.yaml"]
 }

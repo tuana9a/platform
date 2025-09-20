@@ -11,7 +11,7 @@ spec:
           persistentVolumeClaim:
             claimName: hcr-workdir
       initContainers:
-        - name: git-clone
+        - name: repo
           image: alpine/git
           volumeMounts:
             - name: hcr-workdir
@@ -20,13 +20,14 @@ spec:
             - "/bin/sh"
             - "-c"
             - |
-              if [ ! -d "/app/hust-captcha-resolver" ]; then
-                mkdir -p /app/hust-captcha-resolver;
-              fi;
-              git clone https://github.com/tuana9a/hust-captcha-resolver /tmp/hust-captcha-resolver;
-              cp -r /tmp/hust-captcha-resolver/* /app/hust-captcha-resolver;
-              rm -r /tmp/hust-captcha-resolver
-        - name: download-weights
+              mkdir -p /app/hust-captcha-resolver
+              rm -r /tmp/dkhptd || echo "ok: /tmp/dkhptd not found"
+              git clone https://github.com/tuana9a/dkhptd /tmp/dkhptd
+              cp -r /tmp/dkhptd/hust-captcha-resolver/* /app/hust-captcha-resolver
+              rm -r /tmp/dkhptd
+              ls -lha /app/
+              ls -lha /app/hust-captcha-resolver/
+        - name: weights
           image: alpine/curl
           volumeMounts:
             - name: hcr-workdir
@@ -35,10 +36,10 @@ spec:
             - "/bin/sh"
             - "-c"
             - |
-              if [ ! -f "/app/hust-captcha-resolver/weights.pth" ]; then
-                curl -o /app/hust-captcha-resolver/weights.pth https://public.tuana9a.com/hust-captcha-resolver/weights-2021.04.05.pth;
-              fi;
-        - name: setup-venv
+              rm /app/hust-captcha-resolver/weights*.pth
+              curl -sSo /app/hust-captcha-resolver/weights-2021.04.05.pth https://public.tuana9a.com/hust-captcha-resolver/weights-2021.04.05.pth
+              ls -lha /app/hust-captcha-resolver/
+        - name: venv
           image: python:3.8-slim-bullseye
           workingDir: /app/hust-captcha-resolver
           volumeMounts:
@@ -48,10 +49,8 @@ spec:
             - "/bin/sh"
             - "-c"
             - |
-              if [ -d "/app/hust-captcha-resolver/.venv" ]; then
-                rm -r /app/hust-captcha-resolver/.venv
-              fi
-              python3 -m venv .venv && .venv/bin/pip install -r requirements.txt;
+              python3 -m venv .venv
+              .venv/bin/pip install -r requirements.txt
       containers:
         - name: dummy
           image: alpine
