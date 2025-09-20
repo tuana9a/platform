@@ -1,6 +1,6 @@
 persistence:
   enabled: true
-  storageClass: nfs-vdb
+  storageClass: nfs567
 controller:
   additionalPlugins: []
   installPlugins: []
