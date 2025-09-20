@@ -10,7 +10,7 @@ server:
   dataStorage:
     enabled: true
     size: 10Gi
-    storageClass: nfs-vdb
+    storageClass: nfs567
   affinity: ""
   ingress:
     enabled: true
