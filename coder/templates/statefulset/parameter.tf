@@ -48,6 +48,23 @@ data "coder_parameter" "memory" {
   }
 }
 
+data "coder_parameter" "home_persistent" {
+  name         = "home_persistent"
+  display_name = "home_persistent"
+  description  = "home dir persistent"
+  mutable      = true
+  type         = "string"
+  default      = "no"
+  option {
+    name  = "yes"
+    value = "yes"
+  }
+  option {
+    name  = "no"
+    value = "no"
+  }
+}
+
 data "coder_parameter" "home_disk_size" {
   name         = "home_disk_size"
   display_name = "Home disk size"
@@ -77,14 +94,14 @@ data "coder_parameter" "dockerd" {
   description  = "Docker in docker"
   mutable      = true
   type         = "string"
-  default      = "false"
+  default      = "no"
   option {
-    name  = "true"
-    value = "true"
+    name  = "yes"
+    value = "yes"
   }
   option {
-    name  = "false"
-    value = "false"
+    name  = "no"
+    value = "no"
   }
 }
 
@@ -94,21 +111,13 @@ data "coder_parameter" "dockerd_persistent" {
   description  = "Docker data persistent"
   mutable      = true
   type         = "string"
-  default      = "false"
+  default      = "no"
   option {
-    name  = "true"
-    value = "true"
+    name  = "yes"
+    value = "yes"
   }
   option {
-    name  = "false"
-    value = "false"
-  }
-}
-
-locals {
-  coder_parameter = {
-    dockerd = data.coder_parameter.dockerd.value == "true" ? [1] : []
-
-    dockerd_persistent = data.coder_parameter.dockerd.value == "true" && data.coder_parameter.dockerd_persistent.value == "true" ? [1] : []
+    name  = "no"
+    value = "no"
   }
 }

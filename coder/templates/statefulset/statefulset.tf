@@ -1,28 +1,28 @@
 resource "kubernetes_stateful_set" "main" {
-  count            = data.coder_workspace.me.start_count
+  count            = local.me.start_count
   wait_for_rollout = false
   metadata {
-    name      = "coder-${lower(data.coder_workspace.me.owner)}-${lower(data.coder_workspace.me.name)}"
+    name      = "coder-${lower(local.me.owner)}-${lower(local.me.name)}"
     namespace = var.namespace
     labels = {
       "app.kubernetes.io/name"     = "coder-workspace"
-      "app.kubernetes.io/instance" = "coder-workspace-${lower(data.coder_workspace.me.owner)}-${lower(data.coder_workspace.me.name)}"
+      "app.kubernetes.io/instance" = "coder-workspace-${lower(local.me.owner)}-${lower(local.me.name)}"
       "app.kubernetes.io/part-of"  = "coder"
       "com.coder.resource"         = "true"
-      "com.coder.workspace.id"     = data.coder_workspace.me.id
-      "com.coder.workspace.name"   = data.coder_workspace.me.name
-      "com.coder.user.id"          = data.coder_workspace.me.owner_id
-      "com.coder.user.username"    = data.coder_workspace.me.owner
+      "com.coder.workspace.id"     = local.me.id
+      "com.coder.workspace.name"   = local.me.name
+      "com.coder.user.id"          = local.me.owner_id
+      "com.coder.user.username"    = local.me.owner
     }
     annotations = {
-      "com.coder.user.email" = data.coder_workspace.me.owner_email
+      "com.coder.user.email" = local.me.owner_email
     }
   }
 
   spec {
     replicas = 1
 
-    service_name = data.coder_workspace.me.name
+    service_name = local.me.name
 
     selector {
       match_labels = {
@@ -75,21 +75,21 @@ resource "kubernetes_stateful_set" "main" {
             value = coder_agent.main.token
           }
           dynamic "env" {
-            for_each = local.coder_parameter.dockerd
+            for_each = local.dockerd_dynamic
             content {
               name  = "DOCKER_CERT_PATH"
               value = "/certs/client"
             }
           }
           dynamic "env" {
-            for_each = local.coder_parameter.dockerd
+            for_each = local.dockerd_dynamic
             content {
               name  = "DOCKER_TLS"
               value = "1"
             }
           }
           dynamic "env" {
-            for_each = local.coder_parameter.dockerd
+            for_each = local.dockerd_dynamic
             content {
               name  = "DOCKER_HOST"
               value = "tcp://localhost:2376" # seriously, don't ask
@@ -105,13 +105,16 @@ resource "kubernetes_stateful_set" "main" {
               "memory" = "${data.coder_parameter.memory.value}Gi"
             }
           }
-          volume_mount {
-            mount_path = "/home/coder"
-            name       = "home"
-            read_only  = false
+          dynamic "volume_mount" {
+            for_each = local.home_persistent_dynamic
+            content {
+              mount_path = "/home/coder"
+              name       = "home"
+              read_only  = false
+            }
           }
           dynamic "volume_mount" {
-            for_each = local.coder_parameter.dockerd
+            for_each = local.dockerd_dynamic
             content {
               name       = "docker-certs"
               sub_path   = "client"
@@ -122,7 +125,7 @@ resource "kubernetes_stateful_set" "main" {
         }
 
         dynamic "container" {
-          for_each = local.coder_parameter.dockerd
+          for_each = local.dockerd_dynamic
 
           content {
             name  = "docker"
@@ -146,25 +149,23 @@ resource "kubernetes_stateful_set" "main" {
               value = "/certs"
             }
             volume_mount {
-              mount_path = "/home/coder"
-              name       = "home"
-              read_only  = false
-            }
-            volume_mount {
               name       = "docker-certs"
               mount_path = "/certs"
               read_only  = false
             }
-            # volume_mount {
-            #   name       = "docker-data"
-            #   mount_path = "/var/lib/docker"
-            #   read_only  = false
-            # }
+            dynamic "volume_mount" {
+              for_each = local.dockerd_persistent_dynamic
+              content {
+                name       = "docker-data"
+                mount_path = "/var/lib/docker"
+                read_only  = false
+              }
+            }
           }
         }
 
         dynamic "volume" {
-          for_each = local.coder_parameter.dockerd
+          for_each = local.dockerd_dynamic
 
           content {
             name = "docker-certs"
@@ -195,31 +196,35 @@ resource "kubernetes_stateful_set" "main" {
       }
     }
 
-    volume_claim_template {
-      metadata {
-        name      = "home"
-        namespace = var.namespace
-        labels = {
-          "app.kubernetes.io/name"     = "coder-pvc"
-          "app.kubernetes.io/instance" = "coder-pvc-${lower(data.coder_workspace.me.owner)}-${lower(data.coder_workspace.me.name)}"
-          "app.kubernetes.io/part-of"  = "coder"
-          //Coder-specific labels.
-          "com.coder.resource"       = "true"
-          "com.coder.workspace.id"   = data.coder_workspace.me.id
-          "com.coder.workspace.name" = data.coder_workspace.me.name
-          "com.coder.user.id"        = data.coder_workspace.me.owner_id
-          "com.coder.user.username"  = data.coder_workspace.me.owner
+    dynamic "volume_claim_template" {
+      for_each = local.home_persistent_dynamic
+
+      content {
+        metadata {
+          name      = "home"
+          namespace = var.namespace
+          labels = {
+            "app.kubernetes.io/name"     = "coder-pvc"
+            "app.kubernetes.io/instance" = "coder-pvc-${lower(local.me.owner)}-${lower(local.me.name)}"
+            "app.kubernetes.io/part-of"  = "coder"
+            //Coder-specific labels.
+            "com.coder.resource"       = "true"
+            "com.coder.workspace.id"   = local.me.id
+            "com.coder.workspace.name" = local.me.name
+            "com.coder.user.id"        = local.me.owner_id
+            "com.coder.user.username"  = local.me.owner
+          }
+          annotations = {
+            "com.coder.user.email" = local.me.owner_email
+          }
         }
-        annotations = {
-          "com.coder.user.email" = data.coder_workspace.me.owner_email
-        }
-      }
-      spec {
-        access_modes       = ["ReadWriteOnce"]
-        storage_class_name = "nfs-vdb"
-        resources {
-          requests = {
-            storage = "${data.coder_parameter.home_disk_size.value}Gi"
+        spec {
+          access_modes       = ["ReadWriteOnce"]
+          storage_class_name = "nfs567"
+          resources {
+            requests = {
+              storage = "${data.coder_parameter.home_disk_size.value}Gi"
+            }
           }
         }
       }
@@ -227,7 +232,7 @@ resource "kubernetes_stateful_set" "main" {
 
     # https://github.com/docker/for-linux/issues/1172 Is your $HOME/.local/share/docker is on NFS? Then probably it does not work.
     dynamic "volume_claim_template" {
-      for_each = local.coder_parameter.dockerd_persistent
+      for_each = local.dockerd_persistent_dynamic
 
       content {
         metadata {
@@ -236,10 +241,10 @@ resource "kubernetes_stateful_set" "main" {
         }
         spec {
           access_modes       = ["ReadWriteOnce"]
-          storage_class_name = "nfs-vdb"
+          storage_class_name = "nfs567"
           resources {
             requests = {
-              storage = "32Gi"
+              storage = "20Gi"
             }
           }
         }
