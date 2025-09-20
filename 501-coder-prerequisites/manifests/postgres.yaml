@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:16
+          image: postgres:16.10
           envFrom:
             - secretRef:
                 name: postgres-env
@@ -43,7 +43,7 @@ spec:
       metadata:
         name: postgres-data
       spec:
-        storageClassName: nfs-vdb
+        storageClassName: nfs567
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
