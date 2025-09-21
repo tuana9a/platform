@@ -8,4 +8,24 @@ resource "helm_release" "prometheus" {
   version    = "25.20.1"
 
   values = [file("./values.yaml")]
+
+  set {
+    name  = "alertmanager.enabled"
+    value = "false"
+  }
+
+  set {
+    name  = "kube-state-metrics.enabled"
+    value = "false"
+  }
+
+  set {
+    name  = "prometheus-node-exporter.enabled"
+    value = "false"
+  }
+
+  set {
+    name  = "prometheus-pushgateway.enabled"
+    value = "false"
+  }
 }

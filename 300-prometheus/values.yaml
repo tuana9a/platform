@@ -76,25 +76,3 @@ serverFiles:
         annotations:
           summary: Kubernetes Deployment replicas mismatch (instance {{ $labels.instance }})
           description: "Deployment {{ $labels.namespace }}/{{ $labels.deployment }} replicas mismatch\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
-alertmanager:
-  image:
-    repository: quay.io/prometheus/alertmanager
-    pullPolicy: IfNotPresent
-    tag: "v0.28.0" # fix https://github.com/prometheus/alertmanager/pull/3728
-  persistence:
-    storageClass: nfs567
-    size: 2Gi
-  config:
-    enabled: true
-    route:
-      receiver: "discord"
-    receivers:
-      - name: "discord"
-        discord_configs:
-          - webhook_url_file: /etc/discord_webhook_url.txt
-  extraSecretMounts:
-    - name: discord-webhook-url
-      mountPath: /etc/discord_webhook_url.txt
-      subPath: discord_webhook_url.txt
-      secretName: alertmanager
-      readOnly: true
