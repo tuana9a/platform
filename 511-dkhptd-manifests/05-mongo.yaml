@@ -39,7 +39,7 @@ spec:
     - metadata:
         name: mongo-data
       spec:
-        storageClassName: nfs-vdb
+        storageClassName: nfs567
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
