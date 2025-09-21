@@ -1,12 +1,12 @@
 nfs:
   server: "192.168.56.7"
-  path: /exports/vdb/
-replicaCount: "3"
+  path: /exports/vdb/nfs-subdir-provisioner
 storageClass:
   create: "true"
   defaultClass: "false"
-  name: nfs-vdb
+  name: nfs-subdir-provisioner
   allowVolumeExpansion: "true"
   reclaimPolicy: Delete
   archiveOnDelete: "true"
   volumeBindingMode: Immediate
+replicaCount: "3"

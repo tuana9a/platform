@@ -9,3 +9,11 @@
         owner: root
         group: root
         mode: "0755"
+    - name: Ensure /exports/vdb/nfs-subdir-provisioner directory exists
+      become: true
+      ansible.builtin.file:
+        path: /exports/vdb/nfs-subdir-provisioner
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
