@@ -17,6 +17,7 @@ env:
   GCP_WORKLOAD_IDENTITY_POOL_PROVIDER: github-tuana9a
   PLAN_ARTIFACT_NAME: ${{ github.run_id }}-terraform-plan
   WORKING_DIR: 806-monitor-do/
+  VAULT_MISSING_FILES: https://vault.tuana9a.com/v1/kv/github.com/tuana9a/platform/806-monitor-do/terraform
 
 jobs:
   terraform-plan-apply:
@@ -45,10 +46,12 @@ jobs:
         name: init
         working-directory: "${{ env.WORKING_DIR }}"
         run: terraform init
-      - id: tfvars
-        name: add tfvars
+      - id: add-missing-files
+        name: add missing files
         working-directory: "${{ env.WORKING_DIR }}"
-        run: printf '${{ secrets.tfvars_806_monitor_do }}' > hidden.auto.tfvars
+        run: |
+          curl -s --header "X-Vault-Token: ${{ secrets.VAULT_TOKEN }}" --request GET ${{ env.VAULT_MISSING_FILES }} > vault_data.json
+          for x in $(jq -r '.data._files_' vault_data.json); do echo "=== $x ==="; jq -r '.data."'$x'"' vault_data.json > $x; done
       - id: plan
         name: plan
         working-directory: "${{ env.WORKING_DIR }}"
