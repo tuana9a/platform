@@ -16,8 +16,7 @@ env:
   GCP_WORKLOAD_IDENTITY_POOL: github
   GCP_WORKLOAD_IDENTITY_POOL_PROVIDER: github-tuana9a
   PLAN_ARTIFACT_NAME: ${{ github.run_id }}-${{ github.run_attempt }}-terraform-plan
-  WORKING_DIR: 023-dns/
-  VAULT_MISSING_FILES: https://vault.tuana9a.com/v1/kv/github.com/tuana9a/platform/023-dns/terraform
+  WORKING_DIR: 023-dns
 
 jobs:
   terraform-plan-apply:
@@ -50,7 +49,7 @@ jobs:
         name: add missing files
         working-directory: "${{ env.WORKING_DIR }}"
         run: |
-          curl -s --header "X-Vault-Token: ${{ secrets.VAULT_TOKEN }}" --request GET ${{ env.VAULT_MISSING_FILES }} > vault_data.json
+          curl -s --header "X-Vault-Token: ${{ secrets.VAULT_TOKEN }}" --request GET https://vault.tuana9a.com/v1/kv/github.com/tuana9a/platform/${{ env.WORKING_DIR }}/terraform > vault_data.json
           for x in $(jq -r '.data._files_' vault_data.json); do echo "=== $x ==="; jq -r '.data."'$x'"' vault_data.json > $x; done
       - id: plan
         name: plan
