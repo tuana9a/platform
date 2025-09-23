@@ -30,7 +30,7 @@ spec:
             - "sh"
             - "-c"
             - |
-              push_gateway_baseurl="http://prometheus-prometheus-pushgateway.prometheus.svc.cluster.local:9091";
+              push_gateway_baseurl="http://prometheus-pushgateway.prometheus.svc.cluster.local:9091";
               POD_NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace);
               function _exit() {
                 exit 0

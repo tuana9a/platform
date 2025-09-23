@@ -139,7 +139,7 @@ postgres_backup_duration{namespace="$POD_NAMESPACE"} $DURATION
 postgres_backup_unixtimestamp{namespace="$POD_NAMESPACE"} $(date +%s)
 EOF
                 cat /workdir/backup.metrics
-                push_gateway_baseurl="http://prometheus-prometheus-pushgateway.prometheus.svc.cluster.local:9091"
+                push_gateway_baseurl="http://prometheus-pushgateway.prometheus.svc.cluster.local:9091"
                 curl --data-binary "@/workdir/backup.metrics" $push_gateway_baseurl/metrics/job/postgres_backup_cronjob
                 '''
             }

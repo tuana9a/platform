@@ -207,7 +207,7 @@ spec:
                     curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\\"content\\":\\"${MSG}\\"}"
                     '''
                     sh '''
-                    push_gateway_baseurl="http://prometheus-prometheus-pushgateway.prometheus.svc.cluster.local:9091";
+                    push_gateway_baseurl="http://prometheus-pushgateway.prometheus.svc.cluster.local:9091";
                     POD_NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace);
                     cat << EOF | curl --noproxy '*' --data-binary @- $push_gateway_baseurl/metrics/job/k8s_backup_cronjob
 # TYPE k8s_backup_datehour gauge
