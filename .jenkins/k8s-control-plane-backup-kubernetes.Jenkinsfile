@@ -11,7 +11,7 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
-    - name: ubuntu
+    - name: etcd
       image: tuana9a/toolbox:etcd-3.5.15
       command:
         - sleep
@@ -53,7 +53,7 @@ spec:
     - name: workdir
       emptyDir: {}
 '''
-            defaultContainer 'ubuntu'
+            defaultContainer 'etcd'
             retries 2
         }
     }
@@ -66,7 +66,7 @@ spec:
         stage('Prepare') {
             steps {
                 echo "set-params"
-                container('ubuntu') {
+                container('etcd') {
                     sh 'echo 0 > /workdir/status'
                     sh 'date +%s > /workdir/start.time'
                     sh 'date "+%Y%m%d%H" > /workdir/datehour'
@@ -74,7 +74,7 @@ spec:
                     sh 'date +%s > /workdir/unixtimestamp'
                 }
                 echo "inventory"
-                container('ubuntu') {
+                container('etcd') {
                     script {
                         inventory = readYaml file: "./inventory.yml"
                         inventory["k8s_first_control_plane"]["hosts"].each { host, vars ->
@@ -87,14 +87,14 @@ spec:
                     }
                 }
                 echo "download-k8s-certs-and-manifests"
-                container('ubuntu') {
+                container('etcd') {
                     script {
+                        sh "cp /var/secrets/ci /workdir/ci && chmod 600 /workdir/ci"
                         for (vm in vms) {
                             def vmid = vm["vmid"]
                             def host = vm["host"]
                             def nodename = vm["nodename"]
                             sh "mkdir -p /workdir/k8s-backup-${nodename}"
-                            sh "cp /var/secrets/ci /workdir/ci && chmod 600 /workdir/ci"
                             sh "ssh -o StrictHostKeyChecking=accept-new -i /workdir/ci root@${host} echo helloworld"
                             sh "scp -i /workdir/ci -r root@${host}:/etc/kubernetes/pki /workdir/k8s-backup-${nodename}/pki"
                             sh "scp -i /workdir/ci -r root@${host}:/etc/kubernetes/manifests /workdir/k8s-backup-${nodename}/manifests"
@@ -102,13 +102,13 @@ spec:
                     }
                 }
                 echo "list-files"
-                container('ubuntu') {
+                container('etcd') {
                     sh 'ls -lha /var/secrets/'
                     sh 'ls -lha /workdir/'
                     sh 'find /workdir/'
                 }
                 echo "list-etcd-members"
-                container('ubuntu') {
+                container('etcd') {
                     script {
                         for (vm in vms) {
                             def vmid = vm["vmid"]
@@ -130,7 +130,7 @@ spec:
         stage('backup') {
             steps {
                 echo 'snapshot'
-                container('ubuntu') {
+                container('etcd') {
                     script {
                         for (vm in vms) {
                             def vmid = vm["vmid"]
@@ -150,7 +150,7 @@ spec:
                     sh 'ls -lha /workdir/'
                 }
                 echo 'zip'
-                container('ubuntu') {
+                container('etcd') {
                     script {
                         for (vm in vms) {
                             def vmid = vm["vmid"]
@@ -184,11 +184,11 @@ spec:
     post {
         always {
             echo 'set-params'
-            container('ubuntu') {
+            container('etcd') {
                 sh 'date +%s > /workdir/stop.time'
             }
             echo 'notify'
-            container('ubuntu') {
+            container('etcd') {
                 script {
                     sh '''
                     START_TIME=$(cat "/workdir/start.time")
