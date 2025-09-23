@@ -10,11 +10,9 @@ pipeline {
             yaml '''
 apiVersion: v1
 kind: Pod
-metadata:
-  namespace: dkhptd
 spec:
   containers:
-    - name: ubuntu
+    - name: etcd
       image: tuana9a/toolbox:etcd-3.5.15
       command:
         - sleep
@@ -26,27 +24,14 @@ spec:
           readOnly: true
         - name: workdir
           mountPath: "/workdir"
-    - name: kp
-      image: tuana9a/kp:main-9c68a63
-      command:
-        - /bin/sh
-      args:
-        - -c
-        - "sleep infinity"
-      volumeMounts:
-        - name: secrets
-          mountPath: "/var/secrets"
-          readOnly: true
-        - name: workdir
-          mountPath: "/workdir"
   volumes:
     - name: secrets
       secret:
-        secretName: backup-kubernetes
+        secretName: etcd-defrag
     - name: workdir
       emptyDir: {}
 '''
-            defaultContainer 'ubuntu'
+            defaultContainer 'etcd'
             retries 2
         }
     }
@@ -59,15 +44,18 @@ spec:
         stage('prepare') {
             steps {
                 echo "set-params"
-                container('ubuntu') {
+                container('etcd') {
                     sh 'echo 0 > /workdir/status'
                     sh 'date +%s > /workdir/start.time'
                 }
-                echo "get-vm-data"
-                container('ubuntu') {
+                echo "inventory"
+                container('etcd') {
                     script {
                         inventory = readYaml file: "./inventory.yml"
-                        inventory["k8s_control_plane"]["hosts"].each { host, vars ->
+                        inventory["k8s_cluster"]["hosts"].each { host, vars ->
+                            if (!vars["is_control_plane"]) {
+                                return
+                            }
                             def vm = [:]
                             vm["host"] = host
                             vm["vmid"] = vars["vmid"]
@@ -76,53 +64,27 @@ spec:
                         }
                     }
                 }
-                echo "generate-ssh-key"
-                container('ubuntu') {
-                    sh 'ssh-keygen -t ecdsa -f /workdir/id_rsa && chmod 600 /workdir/id_rsa'
-                }
-                echo "jnject-ssh-key"
-                container('kp') {
-                    script {
-                        for (vm in vms) {
-                            def vmid = vm["vmid"]
-                            echo "Inject ssh auth key: ${vmid}"
-                            sh "/usr/local/bin/kp -c /var/secrets/kp.config.json authkey add --vmid ${vmid} -u root -k \"\$(cat /workdir/id_rsa.pub)\""
-                        }
-                    }
-                }
                 echo "download-k8s-certs"
-                container('ubuntu') {
+                container('etcd') {
                     script {
+                        sh "cp /var/secrets/ci /workdir/ci && chmod 600 /workdir/ci"
                         for (vm in vms) {
                             def vmid = vm["vmid"]
                             def host = vm["host"]
                             def nodename = vm["nodename"]
-                            sh "ssh -o StrictHostKeyChecking=accept-new -i /workdir/id_rsa root@${host} echo helloworld"
-                            sh "scp -i /workdir/id_rsa -r root@${host}:/etc/kubernetes/pki /workdir/pki-${nodename}"
+                            sh "ssh -o StrictHostKeyChecking=accept-new -i /workdir/ci root@${host} echo helloworld"
+                            sh "scp -i /workdir/ci -r root@${host}:/etc/kubernetes/pki /workdir/pki-${nodename}"
                         }
                     }
                 }
-            }
-        }
-        stage('debug') {
-            steps {
-                container('ubuntu') {
+                echo "list-files"
+                container('etcd') {
                     sh 'ls -lha /var/secrets/'
                     sh 'ls -lha /workdir/'
                     sh 'find /workdir/'
                 }
-                echo "view-ssh-keys"
-                container('kp') {
-                    script {
-                        for (vm in vms) {
-                            def vmid = vm["vmid"]
-                            echo "vmid: ${vmid}"
-                            sh "/usr/local/bin/kp -c /var/secrets/kp.config.json authkey view --vmid ${vmid} -u root" // username is hardcoded
-                        }
-                    }
-                }
                 echo "list-etcd-members"
-                container('ubuntu') {
+                container('etcd') {
                     script {
                         for (vm in vms) {
                             def vmid = vm["vmid"]
@@ -143,7 +105,7 @@ spec:
         }
         stage('defrag') {
             steps {
-                container('ubuntu') {
+                container('etcd') {
                     script {
                         for (vm in vms) {
                             def vmid = vm["vmid"]
@@ -172,20 +134,8 @@ spec:
     post {
         always {
             echo 'set-params'
-            container('ubuntu') {
+            container('etcd') {
                 sh 'date +%s > /workdir/stop.time'
-            }
-            echo 'cleanup'
-            container('kp') {
-                script {
-                    for (vm in vms) {
-                        def vmid = vm["vmid"]
-                        echo "vmid ${vmid}: remove temp key"
-                        sh "/usr/local/bin/kp -c /var/secrets/kp.config.json authkey remove --vmid ${vmid} -u root -k \"\$(cat /workdir/id_rsa.pub)\""
-                        echo "vmid ${vmid}: verify"
-                        sh "/usr/local/bin/kp -c /var/secrets/kp.config.json authkey view --vmid ${vmid} -u root"
-                    }
-                }
             }
         }
     }
