@@ -13,7 +13,7 @@ data:
             branchSources {
               git {
                 // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
-                id('1')
+                id('23655449835313254696393304590131779054')
                 remote('https://github.com/tuana9a/platform.git')
                 includes('rock-n-roll')
               }
@@ -28,7 +28,7 @@ data:
             branchSources {
               git {
                 // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
-                id('2')
+                id('125764316729195362236712013194236041629')
                 remote('https://github.com/tuana9a/platform.git')
                 includes('rock-n-roll')
               }
@@ -39,11 +39,26 @@ data:
               }
             }
           }
+          multibranchPipelineJob('205-github-secrets-tuana9a-terraform-plan-apply') {
+            branchSources {
+              git {
+                // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
+                id('54588122666582021094461731606061353066')
+                remote('https://github.com/tuana9a/platform.git')
+                includes('rock-n-roll')
+              }
+            }
+            factory {
+              workflowBranchProjectFactory {
+                scriptPath('.jenkins/205-github-secrets-tuana9a-terraform-plan-apply.Jenkinsfile')
+              }
+            }
+          }
           multibranchPipelineJob('502-coder-postgres-backup') {
             branchSources {
               git {
                 // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
-                id('3')
+                id('252930337889061635601850178896970389690')
                 remote('https://github.com/tuana9a/platform.git')
                 includes('rock-n-roll')
               }
@@ -58,7 +73,7 @@ data:
             branchSources {
               git {
                 // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
-                id('4')
+                id('336533647514902334721546031747292855755')
                 remote('https://github.com/tuana9a/platform.git')
                 includes('rock-n-roll')
               }
@@ -73,7 +88,7 @@ data:
             branchSources {
               git {
                 // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
-                id('5')
+                id('284375195950460238746542673225028352947')
                 remote('https://github.com/tuana9a/platform.git')
                 includes('rock-n-roll')
               }
@@ -88,7 +103,7 @@ data:
             branchSources {
               git {
                 // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
-                id('6')
+                id('166727458453109288055129079832189105195')
                 remote('https://github.com/tuana9a/platform.git')
                 includes('rock-n-roll')
               }
@@ -103,7 +118,7 @@ data:
             branchSources {
               git {
                 // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
-                id('7')
+                id('163954511379159881132487778335510043698')
                 remote('https://github.com/tuana9a/platform.git')
                 includes('rock-n-roll')
               }
@@ -118,7 +133,7 @@ data:
             branchSources {
               git {
                 // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
-                id('8')
+                id('287402406923296937009564441310602818497')
                 remote('https://github.com/tuana9a/platform.git')
                 includes('rock-n-roll')
               }
@@ -133,7 +148,7 @@ data:
             branchSources {
               git {
                 // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
-                id('9')
+                id('12707736894140473154801792860916528374')
                 remote('https://github.com/tuana9a/platform.git')
                 includes('rock-n-roll')
               }
@@ -148,7 +163,7 @@ data:
             branchSources {
               git {
                 // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
-                id('10')
+                id('67757721893216528638919868102691056770')
                 remote('https://github.com/tuana9a/platform.git')
                 includes('rock-n-roll')
               }
@@ -163,7 +178,7 @@ data:
             branchSources {
               git {
                 // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
-                id('11')
+                id('60046855633295167470940976125235051245')
                 remote('https://github.com/tuana9a/platform.git')
                 includes('rock-n-roll')
               }
@@ -178,7 +193,7 @@ data:
             branchSources {
               git {
                 // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
-                id('12')
+                id('30604091230084558390226995134000180900')
                 remote('https://github.com/tuana9a/platform.git')
                 includes('rock-n-roll')
               }
