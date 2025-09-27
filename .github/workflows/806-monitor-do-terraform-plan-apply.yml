@@ -9,75 +9,15 @@ on:
     branches:
       - rock-n-roll
 
-env:
-  GCP_PROJECT_ID: tuana9a
-  GCP_PROJECT_ID_NUM: 474326114337
-  GCP_SERVICE_ACCOUNT: terraform-state-editor@tuana9a.iam.gserviceaccount.com
-  GCP_WORKLOAD_IDENTITY_POOL: github
-  GCP_WORKLOAD_IDENTITY_POOL_PROVIDER: github-tuana9a
-  PLAN_ARTIFACT_NAME: ${{ github.run_id }}-terraform-plan
-  WORKING_DIR: 806-monitor-do
-
 jobs:
-  terraform-plan-apply:
-    runs-on: ubuntu-latest
+  main:
     permissions:
       contents: read
       id-token: write
-    steps:
-      - uses: actions/checkout@v4
-      - id: set-env
-        name: set-env
-        run: |
-          workflow_name="${{ github.workflow }}"; echo $workflow_name
-          echo "workflow_name=$workflow_name" >> $GITHUB_OUTPUT
-          run_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"; echo $run_url
-          echo "run_url=$run_url" >> $GITHUB_OUTPUT
-      - uses: google-github-actions/auth@v2
-        with:
-          project_id: "${{ env.GCP_PROJECT_ID }}"
-          workload_identity_provider: "projects/${{ env.GCP_PROJECT_ID_NUM }}/locations/global/workloadIdentityPools/${{ env.GCP_WORKLOAD_IDENTITY_POOL }}/providers/${{ env.GCP_WORKLOAD_IDENTITY_POOL_PROVIDER }}"
-          service_account: "${{ env.GCP_SERVICE_ACCOUNT }}"
-      - uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: "1.7.1"
-      - id: init
-        name: init
-        working-directory: "${{ env.WORKING_DIR }}"
-        run: terraform init
-      - id: add-missing-files
-        name: add missing files
-        working-directory: "${{ env.WORKING_DIR }}"
-        run: |
-          curl -s --header "X-Vault-Token: ${{ secrets.VAULT_TOKEN }}" --request GET https://vault.tuana9a.com/v1/kv/github.com/tuana9a/platform/${{ env.WORKING_DIR }}/terraform > vault_data.json
-          for x in $(jq -r '.data._files_' vault_data.json); do echo "=== $x ==="; jq -r '.data."'$x'"' vault_data.json > $x; done
-      - id: plan
-        name: plan
-        working-directory: "${{ env.WORKING_DIR }}"
-        run: terraform plan -out=tfplan.out
-      - id: upload-plan
-        name: upload-plan
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.PLAN_ARTIFACT_NAME }}
-          path: "${{ env.WORKING_DIR }}/tfplan.out"
-      - id: apply
-        name: apply
-        working-directory: "${{ env.WORKING_DIR }}"
-        run: terraform apply -auto-approve tfplan.out
-      - id: status-ok
-        name: status-ok
-        run: echo 'status=1' >> $GITHUB_OUTPUT
-      - id: notify
-        name: notify
-        if: ${{ always() }}
-        run: |
-          workflow_name="${{ steps.set-env.outputs.workflow_name }}"
-          run_url="${{ steps.set-env.outputs.run_url }}"
-          status="${{ steps.status-ok.outputs.status }}"
-          case "$status" in
-            1) status_msg=":white_check_mark:" ;;
-            *) status_msg=":x:" ;;
-          esac
-          content="$status_msg \`$workflow_name\` $run_url"
-          curl -X POST ${{ secrets.DISCORD_WEBHOOK }} -H "Content-Type: application/json" -d "{\"content\":\"${content}\"}"
+    uses: ./.github/workflows/terraform-plan-apply-notify.yml
+    with:
+      WORKING_DIR: ${{ github.workflow }}
+      add-missing-files: true
+    secrets:
+      VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
