@@ -9,15 +9,6 @@ on:
     branches:
       - rock-n-roll
 
-env:
-  GCP_PROJECT_ID: tuana9a
-  GCP_PROJECT_ID_NUM: 474326114337
-  GCP_SERVICE_ACCOUNT: terraform-state-editor@tuana9a.iam.gserviceaccount.com
-  GCP_WORKLOAD_IDENTITY_POOL: github
-  GCP_WORKLOAD_IDENTITY_POOL_PROVIDER: github-tuana9a
-  PLAN_ARTIFACT_NAME: ${{ github.run_id }}-${{ github.run_attempt }}-terraform-plan
-  WORKING_DIR: 200-cert-manager/
-
 jobs:
   main:
     permissions:
