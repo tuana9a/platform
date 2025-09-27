@@ -28,16 +28,10 @@ spec:
       volumeMounts:
         - name: workdir
           mountPath: /workdir
-        - name: missing-files
-          mountPath: "/var/secrets"
-          readOnly: true
   restartPolicy: Never
   volumes:
     - name: workdir
       emptyDir: {}
-    - name: missing-files
-      secret:
-        secretName: 205-github-secrets-tuana9a-missing-files
 '''
             defaultContainer 'ubuntu'
             retries 2
@@ -58,7 +52,12 @@ spec:
                     sh 'ls -lha /workdir/'
                     sh 'cat /workdir/start.time'
                     dir("${env.WORKING_DIR}") {
-                        sh 'cp /var/secrets/* .'
+                        sh '''
+                        set +x
+                        apt install -y jq # TODO: install jq to base docker image
+                        curl -sSf -X GET https://vault.tuana9a.com/v1/kv/github.com/tuana9a/platform/$WORKING_DIR/terraform -H "X-Vault-Token: $VAULT_TOKEN" -o vault_data.json
+                        for x in $(jq -r '.data._files_' vault_data.json); do echo "=== $x ==="; jq -r '.data."'$x'"' vault_data.json > $x; done
+                        '''
                     }
                 }
             }
