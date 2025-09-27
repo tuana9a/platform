@@ -97,7 +97,7 @@ jobs:
       - id: tfinit
         name: tfinit
         working-directory: "${{ inputs.WORKING_DIR }}"
-        run: terraform init
+        run: terraform init -input=false
       - id: tfplan
         name: tfplan
         working-directory: "${{ inputs.WORKING_DIR }}"
