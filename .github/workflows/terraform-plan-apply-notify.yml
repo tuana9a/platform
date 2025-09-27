@@ -1,0 +1,103 @@
+name: terraform-plan-apply-notify
+
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        type: string
+        required: false
+        default: "ubuntu-24.04"
+      add-missing-files:
+        type: boolean
+        required: false
+        default: false
+      WORKING_DIR:
+        type: string
+        required: true
+      GCP_PROJECT_ID:
+        type: string
+        required: false
+        default: tuana9a
+      GCP_PROJECT_NUM:
+        type: number
+        required: false
+        default: 474326114337
+      GCP_SERVICE_ACCOUNT:
+        type: string
+        required: false
+        default: terraform-state-editor@tuana9a.iam.gserviceaccount.com
+      GCP_WORKLOAD_IDENTITY_POOL:
+        type: string
+        required: false
+        default: github
+      GCP_WORKLOAD_IDENTITY_POOL_PROVIDER:
+        type: string
+        required: false
+        default: github-tuana9a
+    secrets:
+      VAULT_TOKEN:
+        required: false
+      DISCORD_WEBHOOK:
+        required: true
+
+jobs:
+  terraform-plan-apply-notify:
+    runs-on: ${{ inputs.runs-on }}
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - id: set-env
+        name: set-env
+        run: |
+          run_name="${{ github.workflow }}"
+          run_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          echo "run_name=$run_name" >> $GITHUB_ENV
+          echo "run_url=$run_url" >> $GITHUB_ENV
+          echo $run_name
+          echo $run_url
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          project_id: "${{ inputs.GCP_PROJECT_ID }}"
+          workload_identity_provider: "projects/${{ inputs.GCP_PROJECT_NUM }}/locations/global/workloadIdentityPools/${{ inputs.GCP_WORKLOAD_IDENTITY_POOL }}/providers/${{ inputs.GCP_WORKLOAD_IDENTITY_POOL_PROVIDER }}"
+          service_account: "${{ inputs.GCP_SERVICE_ACCOUNT }}"
+      - uses: actions/setup-node@v4 # [/usr/bin/env: 'node' no such file or directory](https://github.com/hashicorp/setup-terraform/issues/84)
+        if: "${{ contains(inputs.runs-on, 'self-hosted') }}"
+        with:
+          node-version: "22"
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.7.1"
+      - id: add-missing-files
+        name: add missing files
+        if: "${{ inputs.add-missing-files }}"
+        working-directory: "${{ inputs.WORKING_DIR }}"
+        run: |
+          curl -sSf -X GET https://vault.tuana9a.com/v1/kv/github.com/tuana9a/platform/${{ inputs.WORKING_DIR }}/terraform -H "X-Vault-Token: ${{ secrets.VAULT_TOKEN }}" -o vault_data.json
+          for x in $(jq -r '.data._files_' vault_data.json); do echo "=== $x ==="; jq -r '.data."'$x'"' vault_data.json > $x; done
+      - id: tfinit
+        name: tfinit
+        working-directory: "${{ inputs.WORKING_DIR }}"
+        run: terraform init
+      - id: tfplan
+        name: tfplan
+        working-directory: "${{ inputs.WORKING_DIR }}"
+        run: terraform plan -input=false -out=tfplan.out
+      - id: tfapply
+        name: tfapply
+        working-directory: "${{ inputs.WORKING_DIR }}"
+        run: terraform apply -input=false -auto-approve tfplan.out
+      - id: ruok
+        name: ruok
+        run: echo 'ruok=yes' >> $GITHUB_ENV
+      - id: notify
+        name: notify
+        if: ${{ always() }}
+        run: |
+          case "$ruok" in
+            "yes") status=":white_check_mark:" ;;
+            *) status=":x:" ;;
+          esac
+          content="$status \`$run_name\` $run_url"
+          curl -sS -X POST ${{ secrets.DISCORD_WEBHOOK }} -H "Content-Type: application/json" -d "{\"content\":\"${content}\"}"
