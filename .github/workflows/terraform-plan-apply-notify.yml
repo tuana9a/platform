@@ -11,6 +11,10 @@ on:
         type: boolean
         required: false
         default: false
+      setup-aws:
+        type: boolean
+        required: false
+        default: false
       WORKING_DIR:
         type: string
         required: true
@@ -34,6 +38,14 @@ on:
         type: string
         required: false
         default: github-tuana9a
+      AWS_ASSUME_ROLE:
+        type: string
+        required: false
+        default: "error"
+      AWS_REGION:
+        type: string
+        required: false
+        default: ap-southeast-1
     secrets:
       VAULT_TOKEN:
         required: false
@@ -62,6 +74,12 @@ jobs:
           project_id: "${{ inputs.GCP_PROJECT_ID }}"
           workload_identity_provider: "projects/${{ inputs.GCP_PROJECT_NUM }}/locations/global/workloadIdentityPools/${{ inputs.GCP_WORKLOAD_IDENTITY_POOL }}/providers/${{ inputs.GCP_WORKLOAD_IDENTITY_POOL_PROVIDER }}"
           service_account: "${{ inputs.GCP_SERVICE_ACCOUNT }}"
+      - uses: aws-actions/configure-aws-credentials@v4
+        if: "${{ inputs.setup-aws }}"
+        with:
+          role-to-assume: "${{ inputs.AWS_ASSUME_ROLE }}"
+          aws-region: "${{ inputs.AWS_REGION }}"
+          retry-max-attempts: 3
       - uses: actions/setup-node@v4 # [/usr/bin/env: 'node' no such file or directory](https://github.com/hashicorp/setup-terraform/issues/84)
         if: "${{ contains(inputs.runs-on, 'self-hosted') }}"
         with:
