@@ -24,7 +24,7 @@ spec:
               fieldPath: metadata.namespace
       envFrom:
         - secretRef:
-            name: 205-github-secrets-tuana9a-env
+            name: 206-github-setup-env
       volumeMounts:
         - name: workdir
           mountPath: /workdir
@@ -39,7 +39,7 @@ spec:
     }
     environment {
         GOOGLE_APPLICATION_CREDENTIALS = "$WORKSPACE_TMP/application_default_credentials.json"
-        WORKING_DIR = "205-github-secrets-tuana9a"
+        WORKING_DIR = "206-github-setup"
     }
     stages {
         stage('prepare') {
