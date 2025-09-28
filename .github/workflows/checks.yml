@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: check-terraform-key
-        run: ./scripts/check_terraform_key.sh
+        run: ./check_terraform_key.sh
   check-terraform-fmt:
     runs-on: ubuntu-latest
     steps:
@@ -21,4 +21,4 @@ jobs:
         with:
           terraform_version: "1.7.1"
       - id: check-terraform-fmt
-        run: ./scripts/check_terraform_fmt.sh
+        run: ./check_terraform_fmt.sh

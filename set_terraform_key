@@ -3,7 +3,7 @@
 key=$(basename $PWD)
 
 if [ ! -f terraform.tf ]; then
-  echo "terraform.tf not found"
+  echo "terraform.tf not found (skipped)"
   echo "exit 0"
   exit 0
 fi
