@@ -24,21 +24,14 @@ spec:
               fieldPath: metadata.namespace
       envFrom:
         - secretRef:
-            name: 095-github-runners-terraform-plan-apply
+            name: 095-github-runners-env
       volumeMounts:
         - name: workdir
           mountPath: /workdir
-        - name: tfvars
-          mountPath: "/var/secrets"
-          readOnly: true
-
   restartPolicy: Never
   volumes:
     - name: workdir
       emptyDir: {}
-    - name: tfvars
-      secret:
-        secretName: 095-github-runners-terraform-plan-apply
 '''
             defaultContainer 'ubuntu'
             retries 2
@@ -52,12 +45,21 @@ spec:
     stages {
         stage('prepare') {
             steps {
-                echo 'set-params'
                 container('ubuntu') {
+                    echo 'set-params'
                     sh 'date +%s > /workdir/start.time'
                     sh 'echo 0 > /workdir/status'
                     sh 'ls -lha /workdir/'
                     sh 'cat /workdir/start.time'
+                    echo 'add-missing-files'
+                    dir("${env.WORKING_DIR}") {
+                        sh '''
+                        set +x
+                        apt install -y jq # TODO: install jq to base docker image
+                        curl -sSf -X GET https://vault.tuana9a.com/v1/kv/github.com/tuana9a/platform/$WORKING_DIR/terraform -H "X-Vault-Token: $VAULT_TOKEN" -o vault_data.json
+                        for x in $(jq -r '.data._files_' vault_data.json); do echo "=== $x ==="; jq -r '.data."'$x'"' vault_data.json > $x; done
+                        '''
+                    }
                 }
             }
         }
@@ -81,7 +83,6 @@ spec:
                         sh 'ls -lha $GOOGLE_APPLICATION_CREDENTIALS'
                         dir("${env.WORKING_DIR}") {
                             sh 'terraform init'
-                            sh 'cp /var/secrets/tfvars hidden.tmp.auto.tfvars'
                             sh 'terraform plan -out tfplan.out'
                             sh 'terraform apply -auto-approve tfplan.out'
                         }
