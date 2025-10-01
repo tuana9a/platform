@@ -144,6 +144,21 @@ data:
               }
             }
           }
+          multibranchPipelineJob('TerraformPlanApplyNotify') {
+            branchSources {
+              git {
+                // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
+                id('211093900555508930013598879081077991228')
+                remote('https://github.com/tuana9a/platform.git')
+                includes('rock-n-roll')
+              }
+            }
+            factory {
+              workflowBranchProjectFactory {
+                scriptPath('.jenkins/TerraformPlanApplyNotify.Jenkinsfile')
+              }
+            }
+          }
           multibranchPipelineJob('test-aws-oidc') {
             branchSources {
               git {
