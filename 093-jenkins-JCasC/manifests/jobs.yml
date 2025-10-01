@@ -9,6 +9,21 @@ data:
   jobs.yaml: |
     jobs:
       - script: |
+          multibranchPipelineJob('020-proxmox-cloudimg-neomorph-terraform-plan-apply') {
+            branchSources {
+              git {
+                // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
+                id('130816114943035757346497006192581719350')
+                remote('https://github.com/tuana9a/platform.git')
+                includes('rock-n-roll')
+              }
+            }
+            factory {
+              workflowBranchProjectFactory {
+                scriptPath('.jenkins/020-proxmox-cloudimg-neomorph-terraform-plan-apply.Jenkinsfile')
+              }
+            }
+          }
           multibranchPipelineJob('020-proxmox-cloud-img-terraform-plan-apply') {
             branchSources {
               git {
