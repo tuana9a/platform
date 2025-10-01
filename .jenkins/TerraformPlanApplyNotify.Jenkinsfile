@@ -28,13 +28,15 @@ pipeline {
     stages {
         stage('prepare') {
             steps {
+                script {
+                    currentBuild.displayName = "#${env.BUILD_NUMBER} - ${params.WORKINGDIR}"
+                }
                 container('terraform') {
                     echo 'set-params'
                     sh 'date +%s > /workdir/start.time'
                     sh 'echo "no" > /workdir/ruok'
                     echo 'add-missing-files'
                     dir(params.WORKINGDIR) {
-                        sh "apt install -y jq" // TODO: install jq to base docker image
                         sh 'set +x; curl -sSf -X GET https://vault.tuana9a.com/v1/kv/github.com/tuana9a/platform/' + params.WORKINGDIR + '/terraform -H "X-Vault-Token: $VAULT_TOKEN" -o vault_data.json'
                         sh '''
                         for x in $(jq -r '.data._files_' vault_data.json); do echo "=== $x ==="; jq -r '.data."'$x'"' vault_data.json > $x; done

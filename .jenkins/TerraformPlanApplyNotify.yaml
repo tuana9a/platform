@@ -4,7 +4,7 @@ spec:
   serviceAccountName: odin
   containers:
     - name: terraform
-      image: tuana9a/toolbox:terraform-1.7.1_gcloud-latest
+      image: tuana9a/toolbox:terraform-1.7.1-and-all
       command:
         - sleep
       args:
