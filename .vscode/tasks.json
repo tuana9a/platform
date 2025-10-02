@@ -8,48 +8,53 @@
             "type": "shell",
             "command": "terraform apply -input=false -auto-approve",
             "options": {
-                // This sets the current working directory for the task
                 "cwd": "${workspaceFolder}/vault-secrets.tmp/"
             },
             "group": "build",
             "presentation": {
                 "reveal": "always",
-                "panel": "new"
+                "panel": "shared"
             },
-            // This is useful if you want to use F1 to run the task
-            "problemMatcher": []
         },
         {
             "label": "generate jcasc jobs",
             "type": "shell",
             "command": "./generate_jcasc_pipeline.py .jenkins/*.Jenkinsfile > 093-jenkins-JCasC/manifests/jobs.yml",
             "options": {
-                // This sets the current working directory for the task
+                
                 "cwd": "${workspaceFolder}"
             },
             "group": "build",
             "presentation": {
                 "reveal": "always",
-                "panel": "new"
+                "panel": "shared"
             },
-            // This is useful if you want to use F1 to run the task
-            "problemMatcher": []
         },
         {
             "label": "test run many gh workflows",
             "type": "shell",
             "command": "./test_run_many_gh_workflows.sh",
             "options": {
-                // This sets the current working directory for the task
                 "cwd": "${workspaceFolder}/"
             },
             "group": "build",
             "presentation": {
                 "reveal": "always",
-                "panel": "new"
+                "panel": "shared"
             },
-            // This is useful if you want to use F1 to run the task
-            "problemMatcher": []
+        },
+        {
+            "label": "k9s",
+            "type": "shell",
+            "command": "k9s",
+            "options": {
+                "cwd": "${workspaceFolder}/"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
         },
     ]
 }
