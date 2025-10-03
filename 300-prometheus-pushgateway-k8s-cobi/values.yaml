@@ -1,0 +1,2 @@
+serviceAnnotations:
+  prometheus.io/probe: pushgateway # https://github.com/prometheus-community/helm-charts/blob/85072e80e520f561ce7c9214174b9997ccd5a3b7/charts/prometheus/values.yaml#L1100-L1102
