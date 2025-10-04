@@ -15,7 +15,7 @@ locals {
     "jenkins"        = local.servers.orisis.ip
     "paste"          = local.servers.orisis.ip
     "t9stbot"        = local.servers.orisis.ip
-    "uuid.stuffs.kn" = local.servers.orisis.ip
+    "*.stuffs.kn"    = local.servers.orisis.ip # knative serverless
     "vault"          = local.servers.orisis.ip
     "neomorph"       = local.servers.orisis.ip
   }

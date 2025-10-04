@@ -1,0 +1,37 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: tkb-parser
+  namespace: stuffs
+spec:
+  template:
+    spec:
+      containers:
+        - image: tuana9a/dkhptd-thoi-khoa-bieu-parser:2025.10.04.064315
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tkb-parser
+  namespace: stuffs
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m" # for upload tkb xlsx
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - tkb-parser.stuffs.kn.tuana9a.com
+      secretName: tkb-parser-stuffs-kn-tuana9a-com-tls
+  rules:
+    - host: tkb-parser.stuffs.kn.tuana9a.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: forward-kourier
+                port:
+                  number: 80

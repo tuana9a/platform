@@ -21,3 +21,4 @@ metadata:
 data:
   BIND: 0.0.0.0
   PORT: "8080"
+  TKB_PARSER_URL: https://tkb-parser.stuffs.kn.tuana9a.com
