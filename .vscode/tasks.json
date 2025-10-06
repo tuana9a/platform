@@ -17,6 +17,19 @@
             },
         },
         {
+            "label": "terraform apply dns",
+            "type": "shell",
+            "command": "terraform apply -input=false -auto-approve",
+            "options": {
+                "cwd": "${workspaceFolder}/023-dns/"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+        },
+        {
             "label": "generate jcasc jobs",
             "type": "shell",
             "command": "./generate_jcasc_pipeline.py .jenkins/*.Jenkinsfile > 093-jenkins-JCasC/manifests/jobs.yml",
