@@ -5,8 +5,8 @@ controller:
   additionalPlugins: []
   installPlugins: []
   image:
-    repository: tuana9a/jenkins
-    tag: "2.0.0"
+    repository: "jenkins/jenkins"
+    tag: "2.511"
   ingress:
     enabled: true
     hostName: jenkins.tuana9a.com
