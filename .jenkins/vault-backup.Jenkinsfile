@@ -55,42 +55,31 @@ spec:
             retries 2
         }
     }
+    environment {
+        VAULT_ADDR = "https://vault.tuana9a.com"
+    }
     stages {
         stage('prepare') {
             steps {
                 echo 'set-params'
                 container('ubuntu') {
                     sh 'date +%s > /workdir/start.time'
-                    sh 'echo 0 > /workdir/status'
-                    sh 'OBJECT_KEY=$(date +"%Y%m%d%H")-vault.snapshot.tar.gz && echo $OBJECT_KEY > /workdir/object_key.env'
-                }
-            }
-        }
-        stage('debug') {
-            steps {
-                container('ubuntu') {
-                    sh 'cat /workdir/start.time'
-                    sh 'ls -lha /workdir/'
+                    sh 'echo no > /workdir/ruok'
+                    sh 'OBJECT_KEY=$(date +"%Y%m%d%H")-vault.snapshot.tar.gz && echo $OBJECT_KEY > /workdir/object_key'
                 }
             }
         }
         stage('renew') {
             steps {
                 container('vault') {
-                    sh '''
-                    export VAULT_ADDR=http://vault-active.vault.svc.cluster.local:8200
-                    vault token renew > /dev/null
-                    '''
+                    sh 'vault token renew > /dev/null'
                 }
             }
         }
         stage('snap') {
             steps {
                 container('vault') {
-                    sh '''
-                    export VAULT_ADDR=http://vault-active.vault.svc.cluster.local:8200
-                    vault operator raft snapshot save /workdir/vault.snap
-                    '''
+                    sh 'vault operator raft snapshot save /workdir/vault.snap'
                 }
             }
         }
@@ -105,11 +94,11 @@ spec:
             steps {
                 container('awscli') {
                     sh '''
-                    OBJECT_KEY=$(cat /workdir/object_key.env)
+                    OBJECT_KEY=$(cat /workdir/object_key)
                     aws s3api --endpoint-url ${S3_ENDPOINT} put-object --bucket ${BUCKET_NAME} --key $OBJECT_KEY --body /workdir/vault.snap.tar.gz
-                    echo upload completed
                     '''
-                    sh 'echo 1 > /workdir/status'
+                    echo "upload completed"
+                    sh 'echo yes > /workdir/ruok'
                 }
             }
         }
@@ -127,9 +116,9 @@ spec:
                 START_TIME=$(cat "/workdir/start.time")
                 STOP_TIME=$(cat "/workdir/stop.time")
                 DURATION=$((STOP_TIME - START_TIME))
-                OBJECT_KEY=$(cat /workdir/object_key.env)
-                case "$(cat /workdir/status)" in
-                    1) status_msg=":white_check_mark:" ;;
+                OBJECT_KEY=$(cat /workdir/object_key)
+                case "$(cat /workdir/ruok)" in
+                    "yes") status_msg=":white_check_mark:" ;;
                     *) status_msg=":x:" ;;
                 esac
                 MSG="$status_msg \\`vault-backup\\` \\`$OBJECT_KEY\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\` $BUILD_URL"
