@@ -72,3 +72,61 @@ ip link delete flannel.1
 systemctl restart containerd
 systemctl restart kubelet
 ```
+
+# administration
+
+## remove control plane
+
+first remove etcd member
+
+
+```bash
+ssh i-123
+```
+
+```bash
+ETCDCTL_CACERT="/etc/kubernetes/pki/etcd/ca.crt"
+ETCDCTL_CERT="/etc/kubernetes/pki/apiserver-etcd-client.crt"
+ETCDCTL_KEY="/etc/kubernetes/pki/apiserver-etcd-client.key"
+host=192.168.56.23
+ETCDCTL_OPTS="--endpoints=$host:2379 --cacert=$ETCDCTL_CACERT --cert=$ETCDCTL_CERT --key=$ETCDCTL_KEY"
+```
+
+```bash
+ETCDCTL_API=3 etcdctl $ETCDCTL_OPTS member list
+```
+
+```txt
+213e14a22f76956b, started, i-123, https://192.168.56.23:2380, https://192.168.56.23:2379, false
+8e11ebdb35be1924, started, i-124, https://192.168.56.24:2380, https://192.168.56.24:2379, false
+99788e30c04d918b, started, i-125, https://192.168.56.25:2380, https://192.168.56.25:2379, false
+```
+
+remove by member id
+
+```bash
+ETCDCTL_API=3 etcdctl $ETCDCTL_OPTS member remove 99788e30c04d918b
+ETCDCTL_API=3 etcdctl $ETCDCTL_OPTS member remove 8e11ebdb35be1924
+```
+
+drain the node
+
+```bash
+kubectl drain --ignore-daemonsets --delete-emptydir-data --disable-eviction --force i-124
+kubectl drain --ignore-daemonsets --delete-emptydir-data --disable-eviction --force i-125
+```
+
+delete the node
+
+```bash
+kubectl delete node i-124
+kubectl delete node i-125
+```
+
+ssh i-124,i-125
+
+```bash
+kubeadm reset -f
+```
+
+remove the vm later

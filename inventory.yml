@@ -83,24 +83,24 @@ k8s_cluster:
       kube_joined: true
       kube_pki: *kube_pki
       kubevip: *kubevip
-    192.168.56.24: &i-124
-      ansible_user: u
-      nodename: i-124
-      vmid: 124
-      is_control_plane: true
-      kubesetup_completed: true
-      kube_joined: true
-      kube_pki: *kube_pki
-      kubevip: *kubevip
-    192.168.56.25: &i-125
-      ansible_user: u
-      nodename: i-125
-      vmid: 125
-      is_control_plane: true
-      kubesetup_completed: true
-      kube_joined: true
-      kube_pki: *kube_pki
-      kubevip: *kubevip
+    # 192.168.56.24: &i-124
+    #   ansible_user: u
+    #   nodename: i-124
+    #   vmid: 124
+    #   is_control_plane: true
+    #   kubesetup_completed: true
+    #   kube_joined: true
+    #   kube_pki: *kube_pki
+    #   kubevip: *kubevip
+    # 192.168.56.25: &i-125
+    #   ansible_user: u
+    #   nodename: i-125
+    #   vmid: 125
+    #   is_control_plane: true
+    #   kubesetup_completed: true
+    #   kube_joined: true
+    #   kube_pki: *kube_pki
+    #   kubevip: *kubevip
     192.168.56.31: &i-131
       ansible_user: u
       nodename: i-131
@@ -108,17 +108,24 @@ k8s_cluster:
       is_control_plane: false
       kubesetup_completed: true
       kube_joined: true
-    192.168.56.32: &i-132
-      ansible_user: u
-      nodename: i-132
-      vmid: 132
-      is_control_plane: false
-      kubesetup_completed: true
-      kube_joined: true
+    # 192.168.56.32: &i-132
+    #   ansible_user: u
+    #   nodename: i-132
+    #   vmid: 132
+    #   is_control_plane: false
+    #   kubesetup_completed: true
+    #   kube_joined: true
     192.168.56.33: &i-133
       ansible_user: u
       nodename: i-133
       vmid: 133
+      is_control_plane: false
+      kubesetup_completed: true
+      kube_joined: true
+    192.168.56.34: &i-134
+      ansible_user: u
+      nodename: i-134
+      vmid: 134
       is_control_plane: false
       kubesetup_completed: true
       kube_joined: true
