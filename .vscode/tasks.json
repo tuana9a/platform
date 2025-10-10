@@ -69,5 +69,19 @@
                 "panel": "shared"
             },
         },
+        {
+            "label": "terraform fmt all",
+            "type": "shell",
+            "command": "./terraform_fmt_all.sh",
+            "options": {
+                
+                "cwd": "${workspaceFolder}/"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+        },
     ]
 }
