@@ -13,6 +13,15 @@ server:
       memory: 1024Mi
 serverFiles:
   alerts:
+    node_exporter:
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes > 0.85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Memory Usage on {{ $labels.instance }}"
+          description: "Memory usage is above 85% for more than 5 minutes.\nCurrent Value: {{ $value | humanizePercentage }}"
     kubernetes:
       - alert: KubernetesNodeNotReady
         expr: kube_node_status_condition{condition="Ready",status="true"} == 0
