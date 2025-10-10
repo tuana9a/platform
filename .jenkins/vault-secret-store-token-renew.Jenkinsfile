@@ -40,21 +40,16 @@ spec:
             retries 2
         }
     }
+    environment {
+        VAULT_ADDR = "https://vault.tuana9a.com"
+    }
     stages {
         stage('prepare') {
             steps {
                 echo 'set-params'
                 container('ubuntu') {
                     sh 'date +%s > /workdir/start.time'
-                    sh 'echo 0 > /workdir/status'
-                }
-            }
-        }
-        stage('debug') {
-            steps {
-                container('ubuntu') {
-                    sh 'cat /workdir/start.time'
-                    sh 'ls -lha /workdir/'
+                    sh 'echo no > /workdir/ruok'
                 }
             }
         }
@@ -63,11 +58,9 @@ spec:
                 container('vault') {
                     sh '''
                     set +x
-                    export VAULT_ADDR=http://vault.vault.svc.cluster.local:8200
-                    export VAULT_TOKEN=$(cat /var/secrets/token)
-                    vault token renew > /dev/null
+                    VAULT_TOKEN=$(cat /var/secrets/token) vault token renew > /dev/null
                     '''
-                    sh 'echo 1 > /workdir/status'
+                    sh 'echo yes > /workdir/ruok'
                 }
             }
         }
@@ -85,8 +78,8 @@ spec:
                 START_TIME=$(cat "/workdir/start.time")
                 STOP_TIME=$(cat "/workdir/stop.time")
                 DURATION=$((STOP_TIME - START_TIME))
-                case "$(cat /workdir/status)" in
-                    1) status_msg=":white_check_mark:" ;;
+                case "$(cat /workdir/ruok)" in
+                    'yes') status_msg=":white_check_mark:" ;;
                     *) status_msg=":x:" ;;
                 esac
                 MSG="$status_msg \\`vault-secret-store-token-renew\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\` $BUILD_URL"
