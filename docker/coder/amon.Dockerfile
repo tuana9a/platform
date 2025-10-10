@@ -39,3 +39,7 @@ RUN curl -sL https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-c
 RUN wget https://github.com/digitalocean/doctl/releases/download/v1.124.0/doctl-1.124.0-linux-amd64.tar.gz -O /tmp/doctl.tar.gz \
   && tar xzf /tmp/doctl.tar.gz -C /tmp \
   && sudo mv /tmp/doctl /usr/local/bin/
+
+RUN wget https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -O /tmp/awscli.zip \
+  && unzip /tmp/awscli.zip -d /tmp/ \
+  && sudo /tmp/aws/install
