@@ -5,3 +5,4 @@
     - import_tasks: ./tasks/install_fail2ban.yml
     - import_tasks: ./tasks/install_wireguard.yml
     - import_tasks: ./tasks/wireguard_client.yml
+    - import_tasks: ./tasks/install_node_exporter.yml
