@@ -1,6 +1,11 @@
 localhost:
   hosts:
     127.0.0.1:
+tuana9a-dev2:
+  hosts:
+    192.168.56.209:
+      ansible_user: u
+      ansible_python_interpreter: /home/u/github.com/tuana9a/platform/.venv/bin/python
 nfs:
   hosts:
     192.168.56.7:
@@ -50,6 +55,10 @@ xenomorph:
       nginx:
         conf_d: xenomorph/nginx/conf.d/
         stream_conf_d: xenomorph/nginx/stream.conf.d/
+neomorph:
+  hosts:
+    192.168.1.112:
+      ansible_user: u
 k8s_cluster_vars:
   kube_pki: &kube_pki
     - /etc/kubernetes/pki/ca.crt

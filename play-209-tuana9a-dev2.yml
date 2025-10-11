@@ -1,0 +1,24 @@
+- hosts: tuana9a-dev2
+  tasks:
+    - import_tasks: ./tasks/install_docker.yml
+    - import_tasks: ./tasks/group_docker_add_current_user.yml
+    - import_tasks: ./tasks/install_node_exporter.yml
+    - import_tasks: ./tasks/install_openvpn.yml
+    - import_tasks: ./tasks/install_wireguard.yml
+
+    - import_tasks: ./tasks/install_tmux.yml
+    - import_tasks: ./tasks/install_tfenv.yml
+    - import_tasks: ./tasks/install_kubectl.yml
+    - import_tasks: ./tasks/install_argocd.yml
+    - import_tasks: ./tasks/install_gh.yml
+    - import_tasks: ./tasks/install_glab.yml
+    - import_tasks: ./tasks/install_k9s.yml
+    - import_tasks: ./tasks/install_zsh.yml
+    - import_tasks: ./tasks/install_oh_my_zsh.yml
+    - import_tasks: ./tasks/install_zoxide.yml
+    - import_tasks: ./tasks/install_zsh_autosuggestions.yml
+    - import_tasks: ./tasks/install_direnv.yml
+    - import_tasks: ./tasks/install_go.yml
+    - import_tasks: ./tasks/install_gcloud.yml
+    - import_tasks: ./tasks/install_awscli.yml
+    - import_tasks: ./tasks/install_jq.yml

@@ -32,6 +32,7 @@
   failed_when: checksum_result.rc != 0
 
 - name: Install kubectl binary
+  become: true
   ansible.builtin.copy:
     remote_src: true
     src: /tmp/kubectl

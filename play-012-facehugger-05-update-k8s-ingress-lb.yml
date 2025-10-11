@@ -1,5 +1,4 @@
-- hosts: localhost
-  connection: local
+- hosts: tuana9a-dev2
   vars:
     kubeconfig: "~/.kube/config"
   tasks:
@@ -56,9 +55,9 @@
   tasks:
     - name: Copy facts
       set_fact:
-        upstream_servers: "{{ hostvars['localhost'].upstream_servers }}"
-        node_port_http: "{{ hostvars['localhost'].node_port_http }}"
-        node_port_https: "{{ hostvars['localhost'].node_port_https }}"
+        upstream_servers: "{{ hostvars['192.168.56.209'].upstream_servers }}"
+        node_port_http: "{{ hostvars['192.168.56.209'].node_port_http }}"
+        node_port_https: "{{ hostvars['192.168.56.209'].node_port_https }}"
     - name: Print haproxy.cfg
       debug:
         msg: "{{ lookup('template', './templates/ingress-lb/haproxy.cfg') | split('\n') }}"

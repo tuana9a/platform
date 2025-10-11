@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/scrape: "true"
+  namespace: prometheus
+  name: neomorph-node-exporter
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - protocol: TCP
+      port: 9100
+      targetPort: 9100
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  namespace: prometheus
+  name: neomorph-node-exporter
+subsets:
+  - addresses:
+      - ip: 192.168.1.112
+    ports:
+      - port: 9100
+        protocol: TCP
