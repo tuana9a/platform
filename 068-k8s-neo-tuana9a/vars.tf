@@ -29,7 +29,6 @@ variable "pve_token_value" {
 variable "pve_ssh_username" {
   type      = string
   sensitive = true
-  default   = "root"
 }
 
 variable "pve_ssh_private_key" {
