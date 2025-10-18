@@ -17,6 +17,7 @@ locals {
     "t9stbot"      = local.servers.orisis.ip
     "*.stuffs.kn"  = local.servers.orisis.ip # knative serverless
     "vault"        = local.servers.orisis.ip
+    "typn"         = local.servers.xeno.ip
     "neomorph"     = local.servers.orisis.ip
   }
   mx_cloudflare_routes = [
