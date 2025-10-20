@@ -1,0 +1,114 @@
+name: docker-build-push
+
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        type: string
+        required: false
+        default: "ubuntu-24.04"
+      WORKING_DIR:
+        type: string
+        required: true
+      IMAGE_NAME:
+        type: string
+        required: true
+      push:
+        type: boolean
+        required: false
+        default: false
+      image-tags:
+        type: string
+        required: false
+        default: ""
+      tag-commithash:
+        type: boolean
+        required: false
+        default: false
+      tag-monthly:
+        type: boolean
+        required: false
+        default: false
+      tag-daily:
+        type: boolean
+        required: false
+        default: false
+      tag-secondly:
+        type: boolean
+        required: false
+        default: false
+    secrets:
+      DOCKER_HUB_USERNAME:
+        required: true
+      DOCKER_HUB_PASSWORD:
+        required: true
+      DISCORD_WEBHOOK:
+        required: true
+env:
+  IMAGE_TAGS: "${{ inputs.image-tags }}"
+
+jobs:
+  build-and-push:
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: buildx
+        uses: docker/setup-buildx-action@v3
+      - name: env
+        run: |
+          echo "run_name=${{ github.workflow }}" >> $GITHUB_ENV
+          echo "run_url=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >> $GITHUB_ENV
+          echo "FULL_COMMIT_HASH=${{ github.sha }}" >> "$GITHUB_ENV"
+          echo "SHORT_COMMIT_HASH=$(echo ${{ github.sha }} | cut -c1-7)" >> "$GITHUB_ENV"
+          echo TAG_MONTHLY=$(date +"%Y.%m") >> $GITHUB_ENV
+          echo TAG_DAILY=$(date +"%Y.%m.%d") >> $GITHUB_ENV
+          echo TAG_SECONDLY=$(date +"%Y.%m.%d.%H%M%S") >> $GITHUB_ENV
+          cat $GITHUB_ENV
+      - name: tag-commithash
+        run: |
+          echo IMAGE_TAGS="$IMAGE_TAGS,${{ inputs.IMAGE_NAME }}:git-$FULL_COMMIT_HASH,${{ inputs.IMAGE_NAME }}:git-$SHORT_COMMIT_HASH" >> $GITHUB_ENV
+        if: "${{ inputs.tag-commithash }}"
+      - name: tag-monthly
+        run: |
+          echo IMAGE_TAGS="$IMAGE_TAGS,${{ inputs.IMAGE_NAME }}:$TAG_MONTHLY" >> $GITHUB_ENV
+        if: "${{ inputs.tag-monthly }}"
+      - name: tag-secondly
+        run: |
+          echo IMAGE_TAGS="$IMAGE_TAGS,${{ inputs.IMAGE_NAME }}:$TAG_SECONDLY" >> $GITHUB_ENV
+        if: "${{ inputs.tag-secondly }}"
+      - name: tag-daily
+        run: |
+          echo IMAGE_TAGS="$IMAGE_TAGS,${{ inputs.IMAGE_NAME }}:$TAG_DAILY" >> $GITHUB_ENV
+        if: "${{ inputs.tag-daily }}"
+      - name: login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      - name: docker-build-push
+        uses: docker/build-push-action@v6
+        with:
+          context: "${{ inputs.WORKING_DIR }}"
+          file: "${{ inputs.WORKING_DIR }}/Dockerfile"
+          push: "${{ inputs.push }}"
+          tags: ${{ env.IMAGE_TAGS }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - id: ruok
+        run: echo 'ruok=yes' >> $GITHUB_ENV
+      - id: finally
+        name: finally
+        if: ${{ always() }}
+        run: |
+          case "$ruok" in
+            "yes") status=":white_check_mark:" ;;
+            *) status=":x:" ;;
+          esac
+          echo NOTI_MSG="$status \`$run_name\` \`${{ inputs.IMAGE_NAME }}\` \`${{ env.IMAGE_TAGS }}\` $run_url" > $GITHUB_ENV
+      - id: webhook
+        if: ${{ always() }}
+        uses: tuana9a/discord-webhook-action@v1
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
+          content: ${{ env.NOTI_MSG }}
