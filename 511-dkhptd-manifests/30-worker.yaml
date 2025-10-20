@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: dkhptd-worker
-          image: tuana9a/dkhptd-worker:2025.10.20.152306
+          image: tuana9a/dkhptd-worker:2025.10.20.152802
           command: ["node", "./dist/launch-worker-rabbitmq-v1.js"]
           envFrom:
             - configMapRef:
