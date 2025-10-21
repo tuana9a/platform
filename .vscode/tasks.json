@@ -30,11 +30,23 @@
             },
         },
         {
+            "label": "terraform apply github secrets",
+            "type": "shell",
+            "command": "terraform apply -input=false -auto-approve",
+            "options": {
+                "cwd": "${workspaceFolder}/205-github-secrets-tuana9a/"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+        },
+        {
             "label": "generate jcasc jobs",
             "type": "shell",
             "command": "./generate_jcasc_pipeline.py .jenkins/*.Jenkinsfile > 093-jenkins-JCasC/manifests/jobs.yml",
             "options": {
-                
                 "cwd": "${workspaceFolder}"
             },
             "group": "build",
@@ -74,7 +86,6 @@
             "type": "shell",
             "command": "./terraform_fmt_all.sh",
             "options": {
-                
                 "cwd": "${workspaceFolder}/"
             },
             "group": "build",
