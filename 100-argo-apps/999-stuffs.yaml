@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: 999-stuffs
+  namespace: argocd
+spec:
+  project: default
+  revisionHistoryLimit: 10
+  source:
+    path: 999-stuffs
+    repoURL: https://github.com/tuana9a/platform.git
+    targetRevision: rock-n-roll
+  destination:
+    namespace: stuffs
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
