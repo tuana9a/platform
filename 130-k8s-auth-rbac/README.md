@@ -1,6 +1,6 @@
 # oidc k8s authentication
 
-Install kubelogin <https://github.com/int128/kubelogin>
+Install kubelogin https://github.com/int128/kubelogin
 
 Add new user in `kubeconfig`
 
@@ -62,7 +62,7 @@ roleRef:
 
 # k8s-ingress-lb (deprecated)
 
-How-to: <https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/#normal-user>
+How-to: https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/#normal-user
 
 Generate client key+cert
 
