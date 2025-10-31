@@ -1,10 +1,9 @@
 resource "coderd_template" "statefulset" {
   name        = "statefulset"
-  description = "The main template for developing on k8s."
+  description = "A code-server running as statefulset"
   versions = [
     {
-      name        = "latest"
-      description = "The latest version of the template."
+      description = "A code-server running as statefulset"
       directory   = "./templates/statefulset"
       active      = true
       tf_vars = [{
