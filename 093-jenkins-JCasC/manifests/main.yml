@@ -6,13 +6,12 @@ metadata:
   labels:
     jenkins-jenkins-config: "true"
 data:
-  # https://github.com/jenkinsci/matrix-auth-plugin/blob/50ec01b320a33d7eb2d649bd40bcc97221f50a79/src/test/resources/org/jenkinsci/plugins/matrixauth/integrations/casc/configuration-as-code-v3.yml#L1
   auth.yaml: |
     jenkins:
       securityRealm:
         googleOAuth2:
-          clientId: "474326114337-pcipbac6h46bg87qg8jr9p757npg1j1a.apps.googleusercontent.com"
-          clientSecret: "${google-login-client-secret}" # https://github.com/jenkinsci/helm-charts/blob/018948716bf31ff168e54a62eba504712010eb21/charts/jenkins/templates/jenkins-controller-statefulset.yaml#L383
+          clientId: "${google-login-client-id}"
+          clientSecret: "${google-login-client-secret}"
       authorizationStrategy:
         projectMatrix:
           entries:

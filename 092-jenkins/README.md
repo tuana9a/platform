@@ -35,3 +35,7 @@ jenkins-plugin-cli --plugins google-login:109.v022b_cf87b_e5b_
 jenkins-plugin-cli --plugins dark-theme:524.vd675b_22b_30cb_
 jenkins-plugin-cli --plugins pipeline-graph-view:619.v92f3fcdc39db_
 ```
+
+# How I configured google-login
+
+see [093-jenkins-JCasC/README.md#how-i-config-google-login-and-found-the-way-to-inject-secrets-into-jcasc](../093-jenkins-JCasC/README.md#how-i-config-google-login-and-found-the-way-to-inject-secrets-into-jcasc)

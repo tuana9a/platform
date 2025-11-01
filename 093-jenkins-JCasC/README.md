@@ -2,6 +2,10 @@
 
 This is the JCasC folder inside jenkins master `/var/jenkins_home/casc_configs`
 
+## How to configure `authorizationStrategy`
+
+https://github.com/jenkinsci/matrix-auth-plugin/blob/50ec01b320a33d7eb2d649bd40bcc97221f50a79/src/test/resources/org/jenkinsci/plugins/matrixauth/integrations/casc/configuration-as-code-v3.yml#L1
+
 ## How I found the annotation for auto pickup the config map for jenkins JCasC
 
 I want to make the config auto reload to scan JCasC in configmap instead of puting it directly inside helm values file.
@@ -23,3 +27,34 @@ So taking a look into existing configmap that used by the sidecar I'm seeing
 ![img](imgs/findings-jenkins-autoreload-1.png)
 
 ![img](imgs/findings-jenkins-autoreload-2.png)
+
+## How I config google-login and found the way to inject secrets into JCasC
+
+JCasC secrets can be passed using variable
+
+https://github.com/jenkinsci/configuration-as-code-plugin/blob/d6a1291bcdfa50eab8f938ae9c33a3a8fbe5488a/docs/features/secrets.adoc#passing-secrets-through-variables
+
+JCasC secrets with Jenkins running in k8s can be taken from this path /run/secrets/${filename}, or overrided by `SECRETS` env variable
+
+https://github.com/jenkinsci/configuration-as-code-plugin/blob/d6a1291bcdfa50eab8f938ae9c33a3a8fbe5488a/docs/features/secrets.adoc#kubernetes-secrets
+
+![jcasc reading /run/secrets](./imgs/jcasc-reading-run-secrets.png)
+
+Example usage with k8s secrets
+
+https://github.com/jenkinsci/configuration-as-code-plugin/blob/d6a1291bcdfa50eab8f938ae9c33a3a8fbe5488a/docs/features/secrets.adoc#docker-secrets
+
+![jcasc passing k8s secrets](./imgs/jcasc-passing-k8s-secrets.png)
+
+Jenkins helm chart set `SECRETS` env at `/run/secrets/additional`
+
+https://github.com/jenkinsci/helm-charts/blob/018948716bf31ff168e54a62eba504712010eb21/charts/jenkins/templates/jenkins-controller-statefulset.yaml#L217
+
+is set up here
+
+https://github.com/jenkinsci/helm-charts/blob/018948716bf31ff168e54a62eba504712010eb21/charts/jenkins/templates/jenkins-controller-statefulset.yaml#L310
+
+and pattern is name `path: {{ tpl $value.name $ }}-{{ tpl $value.keyName $ }}`
+
+https://github.com/jenkinsci/helm-charts/blob/018948716bf31ff168e54a62eba504712010eb21/charts/jenkins/templates/jenkins-controller-statefulset.yaml#L383
+
