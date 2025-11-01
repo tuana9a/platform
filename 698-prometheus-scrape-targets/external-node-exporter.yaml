@@ -20,10 +20,12 @@ metadata:
   name: external-node-exporter
 subsets:
   - addresses:
-      - ip: "192.168.1.112"
-      - ip: "192.168.56.7"
-      - ip: "192.168.56.12"
-      - ip: "192.168.56.209"
+      - ip: "192.168.1.112" # neo
+      - ip: "192.168.56.7" # nfs
+      - ip: "192.168.56.12" # facehugger
+      - ip: "192.168.56.209" # dev2
+      - ip: "14.225.1.214" # orisis
+      - ip: "103.232.121.190" # xeno
     ports:
       - port: 9100
         protocol: TCP
