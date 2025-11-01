@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: 093-jenkins-jcasc # Application.argoproj.io "093-jenkins-JCasC" is invalid: metadata.name: Invalid value: "093-jenkins-JCasC": a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character (e.g. 'example.com', regex used for validation is '[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*')
+  namespace: argocd
+spec:
+  project: default
+  revisionHistoryLimit: 10
+  source:
+    path: 093-jenkins-JCasC/manifests
+    repoURL: https://github.com/tuana9a/platform.git
+    targetRevision: rock-n-roll
+  destination:
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
