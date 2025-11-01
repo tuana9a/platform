@@ -1,8 +1,6 @@
 locals {
   runner_profiles = {
     0 = {
-      min_runners = "1"
-      max_runners = "10"
     }
   }
 }
@@ -35,5 +33,5 @@ resource "helm_release" "gha_runner_scale_set_all" {
     type  = "string"
   }
 
-  values = [file("./autoscaling-${each.key}.yaml")]
+  values = [file("./profiles/${each.key}.yaml")]
 }
