@@ -3,3 +3,4 @@
     - import_tasks: ./tasks/install_htop.yml
     - import_tasks: ./tasks/install_haproxy.yml
     - import_tasks: ./tasks/install_fail2ban.yml
+    - import_tasks: ./tasks/install_node_exporter.yml
