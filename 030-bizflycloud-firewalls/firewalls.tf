@@ -10,6 +10,9 @@ resource "bizflycloud_firewall" "allow_ping" {
     port_range = ""
     protocol   = ""
   }
+  network_interfaces = [
+    local.servers.orisis.network_interfaces.0.id,
+  ]
 }
 
 resource "bizflycloud_firewall" "allow_ssh" {
@@ -24,6 +27,9 @@ resource "bizflycloud_firewall" "allow_ssh" {
     port_range = ""
     protocol   = ""
   }
+  network_interfaces = [
+    local.servers.orisis.network_interfaces.0.id,
+  ]
 }
 
 resource "bizflycloud_firewall" "allow_openvpn" {
@@ -52,6 +58,9 @@ resource "bizflycloud_firewall" "allow_http" {
     port_range = ""
     protocol   = ""
   }
+  network_interfaces = [
+    local.servers.orisis.network_interfaces.0.id,
+  ]
 }
 
 resource "bizflycloud_firewall" "allow_https" {
@@ -66,6 +75,9 @@ resource "bizflycloud_firewall" "allow_https" {
     port_range = ""
     protocol   = ""
   }
+  network_interfaces = [
+    local.servers.orisis.network_interfaces.0.id,
+  ]
 }
 
 resource "bizflycloud_firewall" "allow_wireguard" {
@@ -80,6 +92,9 @@ resource "bizflycloud_firewall" "allow_wireguard" {
     port_range = ""
     protocol   = ""
   }
+  network_interfaces = [
+    local.servers.orisis.network_interfaces.0.id,
+  ]
 }
 
 resource "bizflycloud_firewall" "allow_proxmox" {
@@ -94,4 +109,21 @@ resource "bizflycloud_firewall" "allow_proxmox" {
     port_range = ""
     protocol   = ""
   }
+}
+
+resource "bizflycloud_firewall" "allow_node_exporter" {
+  name = "allow_node_exporter"
+  ingress {
+    cidr       = "14.0.0.0/8"
+    port_range = "9100"
+    protocol   = "tcp"
+  }
+  egress {
+    cidr       = ""
+    port_range = ""
+    protocol   = ""
+  }
+  network_interfaces = [
+    local.servers.orisis.network_interfaces.0.id,
+  ]
 }
