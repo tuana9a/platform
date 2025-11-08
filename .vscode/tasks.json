@@ -17,6 +17,20 @@
             },
         },
         {
+            "label": "terraform apply all k8s secrets",
+            "type": "shell",
+            "command": "terraform apply -input=false -auto-approve",
+            "options": {
+                "cwd": "${workspaceFolder}/k8s-secrets.tmp/"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+                
+            },
+        },
+        {
             "label": "terraform apply dns",
             "type": "shell",
             "command": "terraform apply -input=false -auto-approve",
