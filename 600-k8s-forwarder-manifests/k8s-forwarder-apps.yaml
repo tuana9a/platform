@@ -20,14 +20,17 @@ spec:
     spec:
       project: default
       revisionHistoryLimit: 10
-      source:
-        repoURL: https://github.com/tuana9a/platform.git
-        path: 600-k8s-forwarder-manifests/k8s-web-forwarder
-        targetRevision: rock-n-roll
-        helm:
-          releaseName: "{{.name}}"
-          valueFiles:
-            - "{{.name}}.values.yaml"
+      sources:
+        - repoURL: https://github.com/tuana9a/platform.git
+          targetRevision: rock-n-roll
+          ref: platform
+        - repoURL: https://tuana9a.github.io/helm-charts
+          chart: k8s-web-forwarder
+          targetRevision: "0.1.0"
+          helm:
+            releaseName: "{{.name}}"
+            valueFiles:
+              - "$platform/600-k8s-forwarder-manifests/values/{{.name}}.yaml"
       destination:
         namespace: k8s-forwarder
         server: https://kubernetes.default.svc
