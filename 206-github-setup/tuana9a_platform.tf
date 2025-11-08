@@ -1,9 +1,13 @@
-data "github_repository" "platform" {
-  name = "platform"
+resource "github_repository" "platform" {
+  name          = "platform"
+  has_downloads = false
+  has_issues    = true
+  has_projects  = false
+  has_wiki      = false
 }
 
 resource "github_repository_ruleset" "platform_main" {
-  repository  = data.github_repository.platform.name
+  repository  = github_repository.platform.name
   name        = "main"
   target      = "branch"
   enforcement = "active"
@@ -44,7 +48,7 @@ resource "github_repository_ruleset" "platform_main" {
 }
 
 resource "github_repository_ruleset" "platform_rock-n-roll" {
-  repository  = data.github_repository.platform.name
+  repository  = github_repository.platform.name
   name        = "rock-n-roll"
   target      = "branch"
   enforcement = "active"
@@ -85,7 +89,7 @@ resource "github_repository_ruleset" "platform_rock-n-roll" {
 }
 
 resource "github_repository_webhook" "platform" {
-  repository = data.github_repository.platform.name
+  repository = github_repository.platform.name
 
   configuration {
     url          = "https://jenkins.tuana9a.com/github-webhook/"
