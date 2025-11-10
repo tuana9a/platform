@@ -1,5 +1,5 @@
 - name: Upload .conf file
-  loop: "{{ wireguard_client_items }}"
+  loop: "{{ wireguard_clients }}"
   become: true
   copy:
     src: "{{ item.file }}"
@@ -7,7 +7,7 @@
     mode: "0644"
 
 - name: Setup wireguard service
-  loop: "{{ wireguard_client_items }}"
+  loop: "{{ wireguard_clients }}"
   become: true
   service:
     name: "wg-quick@{{ item.name }}"

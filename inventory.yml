@@ -59,19 +59,6 @@ neomorph:
   hosts:
     192.168.1.112:
       ansible_user: u
-k8s_cluster_vars:
-  kube_pki: &kube_pki
-    - /etc/kubernetes/pki/ca.crt
-    - /etc/kubernetes/pki/ca.key
-    - /etc/kubernetes/pki/sa.key
-    - /etc/kubernetes/pki/sa.pub
-    - /etc/kubernetes/pki/front-proxy-ca.crt
-    - /etc/kubernetes/pki/front-proxy-ca.key
-    - /etc/kubernetes/pki/etcd/ca.crt
-    - /etc/kubernetes/pki/etcd/ca.key
-  kubevip: &kubevip
-    inf: eth0
-    vip: 192.168.56.21
 k8s_cluster:
   hosts:
     # 192.168.56.22: &i-122
@@ -90,8 +77,18 @@ k8s_cluster:
       is_control_plane: true
       kubesetup_completed: true
       kube_joined: true
-      kube_pki: *kube_pki
-      kubevip: *kubevip
+      kube_pki: &kube_pki
+        - /etc/kubernetes/pki/ca.crt
+        - /etc/kubernetes/pki/ca.key
+        - /etc/kubernetes/pki/sa.key
+        - /etc/kubernetes/pki/sa.pub
+        - /etc/kubernetes/pki/front-proxy-ca.crt
+        - /etc/kubernetes/pki/front-proxy-ca.key
+        - /etc/kubernetes/pki/etcd/ca.crt
+        - /etc/kubernetes/pki/etcd/ca.key
+      kubevip: &kubevip
+        inf: eth0
+        vip: 192.168.56.21
     # 192.168.56.24: &i-124
     #   ansible_user: u
     #   nodename: i-124
@@ -117,6 +114,11 @@ k8s_cluster:
       is_control_plane: false
       kubesetup_completed: true
       kube_joined: true
+      wireguard_clients:
+        - file: k8s-cobi-5.conf
+          name: k8s-cobi-5
+      wireguard_heartbeats: &wireguard_heartbeats
+        - "10.5.115.1"
     # 192.168.56.32: &i-132
     #   ansible_user: u
     #   nodename: i-132
@@ -131,6 +133,10 @@ k8s_cluster:
       is_control_plane: false
       kubesetup_completed: true
       kube_joined: true
+      wireguard_clients:
+        - file: k8s-cobi-6.conf
+          name: k8s-cobi-6
+      wireguard_heartbeats: *wireguard_heartbeats
     192.168.56.34: &i-134
       ansible_user: u
       nodename: i-134
@@ -138,6 +144,10 @@ k8s_cluster:
       is_control_plane: false
       kubesetup_completed: true
       kube_joined: true
+      wireguard_clients:
+        - file: k8s-cobi-7.conf
+          name: k8s-cobi-7
+      wireguard_heartbeats: *wireguard_heartbeats
 k8s_first_control_plane:
   hosts:
     # 192.168.56.22: *i-122
@@ -147,15 +157,26 @@ orisis:
     orisis.tuana9a.com:
       ansible_user: root
       HOST_NAME: orisis
+      haproxy_stats_enabled: false
       upstream_servers:
-        - hostname: facehugger
-          ip: 10.5.115.5
-          http_port: 80
-          https_port: 443
+        - hostname: k8s-cobi-5
+          ip: 10.5.115.25
+          http_port: 30080
+          https_port: 30443
+        - hostname: k8s-cobi-6
+          ip: 10.5.115.26
+          http_port: 30080
+          https_port: 30443
+        - hostname: k8s-cobi-7
+          ip: 10.5.115.27
+          http_port: 30080
+          https_port: 30443
 facehugger:
   hosts:
     192.168.56.12:
       ansible_user: u
-      wireguard_client_items:
+      wireguard_clients:
         - file: facehugger/facehugger.conf
           name: facehugger
+      wireguard_heartbeats:
+        - "10.5.115.1"

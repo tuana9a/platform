@@ -1,0 +1,3 @@
+{% for ip in wireguard_heartbeats %}
+*/1 * * * * root /bin/ping -c 3 -W 3 {{ ip }} > /dev/null 2>&1
+{% endfor %}

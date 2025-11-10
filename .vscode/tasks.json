@@ -108,5 +108,19 @@
                 "panel": "shared"
             },
         },
+        {
+            "label": "terraform apply bizflycloud firewalls",
+            "type": "shell",
+            "command": "terraform apply -input=false -auto-approve",
+            "options": {
+                "cwd": "${workspaceFolder}/030-bizflycloud-firewalls/"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+                
+            },
+        },
     ]
 }

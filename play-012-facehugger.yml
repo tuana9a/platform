@@ -4,5 +4,7 @@
     - import_tasks: ./tasks/install_haproxy.yml
     - import_tasks: ./tasks/install_fail2ban.yml
     - import_tasks: ./tasks/install_wireguard.yml
+    - import_tasks: ./tasks/install_cron.yml
     - import_tasks: ./tasks/wireguard_client.yml
+    - import_tasks: ./tasks/wireguard_heartbeat.yml
     - import_tasks: ./tasks/install_node_exporter.yml

@@ -4,7 +4,5 @@
     #   when: is_control_plane
     # - import_tasks: ./tasks/install_awscli.yml
     #   when: is_control_plane
-    # - import_tasks: ./tasks/install_crontab.yml
-    #   when: is_control_plane
     - import_tasks: ./tasks/install_etcd.yml
       when: is_control_plane

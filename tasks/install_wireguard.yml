@@ -1,4 +1,4 @@
-- name: Install wireguard package
+- name: Install wireguard and dependencies
   apt:
     name:
       - wireguard
