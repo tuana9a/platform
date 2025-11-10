@@ -171,12 +171,3 @@ orisis:
           ip: 10.5.115.27
           http_port: 30080
           https_port: 30443
-facehugger:
-  hosts:
-    192.168.56.12:
-      ansible_user: u
-      wireguard_clients:
-        - file: facehugger/facehugger.conf
-          name: facehugger
-      wireguard_heartbeats:
-        - "10.5.115.1"
