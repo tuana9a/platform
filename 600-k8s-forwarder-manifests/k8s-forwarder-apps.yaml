@@ -7,14 +7,14 @@ spec:
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
   generators:
-    - list:
-        elements:
-          - name: neomorph-tuana9a-com
-          - name: dev2-tuana9a-com
-          - name: wildcard-dev2-tuana9a-com
+    - git:
+        repoURL: https://github.com/tuana9a/platform.git
+        revision: rock-n-roll
+        directories:
+          - path: 601-k8s-forwarders/*
   template:
     metadata:
-      name: "600-k8s-forwarder-{{.name}}"
+      name: "600-k8s-forwarder-{{.path.basename}}"
     spec:
       project: default
       revisionHistoryLimit: 10
@@ -26,9 +26,9 @@ spec:
           chart: k8s-web-forwarder
           targetRevision: "0.1.0"
           helm:
-            releaseName: "{{.name}}"
+            releaseName: "{{.path.basename}}"
             valueFiles:
-              - "$platform/600-k8s-forwarder-manifests/values/{{.name}}.yaml"
+              - "$platform/601-k8s-forwarders/{{.path.basename}}/values.yaml"
       destination:
         namespace: k8s-forwarder
         server: https://kubernetes.default.svc

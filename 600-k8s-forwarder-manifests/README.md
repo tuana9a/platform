@@ -1,3 +1,7 @@
-# README
+# k8s forwarder
 
-files used to be managed by argocd, but for learning writing my first helm chart, I make it into helm chart and now they are stored in [`650-k8s-web-forwarder`](../650-k8s-web-forwarder/)
+Using k8s as first layer of receiving internet traffic then forward it to internal services
+
+Benefit
+- ingress (ssl termination)
+- cert-manager manage ssl
