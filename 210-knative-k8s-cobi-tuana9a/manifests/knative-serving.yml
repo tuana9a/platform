@@ -23,7 +23,7 @@ spec:
         - container: controller
           requests:
             cpu: 10m
-            memory: 50Mi
+            memory: 100Mi
           limits:
             cpu: 100m
             memory: 100Mi
@@ -31,8 +31,8 @@ spec:
       resources:
         - container: webhook
           requests:
-            cpu: 50m
-            memory: 50Mi
+            cpu: 10m
+            memory: 100Mi
           limits:
             cpu: 100m
             memory: 100Mi
@@ -40,8 +40,8 @@ spec:
       resources:
         - container: activator
           requests:
-            cpu: 50m
-            memory: 50Mi
+            cpu: 10m
+            memory: 100Mi
           limits:
             cpu: 100m
             memory: 100Mi
@@ -50,7 +50,7 @@ spec:
         - container: autoscaler
           requests:
             cpu: 10m
-            memory: 50Mi
+            memory: 100Mi
           limits:
             cpu: 100m
             memory: 100Mi
@@ -59,7 +59,25 @@ spec:
         - container: autoscaler-hpa
           requests:
             cpu: 10m
-            memory: 30Mi
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+    - name: net-kourier-controller
+      resources:
+        - container: controller
+          requests:
+            cpu: 10m
+            memory: 150Mi
+          limits:
+            cpu: 100m
+            memory: 150Mi
+    - name: 3scale-kourier-gateway
+      resources:
+        - container: kourier-gateway
+          requests:
+            cpu: 10m
+            memory: 100Mi
           limits:
             cpu: 100m
             memory: 100Mi
