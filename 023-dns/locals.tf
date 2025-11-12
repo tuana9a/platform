@@ -7,8 +7,6 @@ locals {
     "d9stbot"      = local.servers.orisis.ip
     "*.dev2"       = local.servers.orisis.ip
     "dev2"         = local.servers.orisis.ip
-    "*.jnt724-dev" = local.servers.orisis.ip
-    "jnt724-dev"   = local.servers.orisis.ip
     "dkhptd-api"   = local.servers.orisis.ip
     "grafana"      = local.servers.orisis.ip
     "hcr"          = local.servers.orisis.ip
