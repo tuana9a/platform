@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: 210-knative-k8s-cobi-tuana9a
+  namespace: argocd
+spec:
+  project: default
+  revisionHistoryLimit: 10
+  source:
+    path: 210-knative-k8s-cobi-tuana9a/manifests
+    repoURL: https://github.com/tuana9a/platform.git
+    targetRevision: rock-n-roll
+  destination:
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    syncOptions:
+      - RespectIgnoreDifferences=true
+    # automated:
+    #   prune: true
+    #   selfHeal: true
+  ignoreDifferences:
+    - group: "rbac.authorization.k8s.io"
+      kind: "*"
