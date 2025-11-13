@@ -2,14 +2,8 @@
 
 <https://knative.dev/docs/install/operator/knative-with-operators/>
 
-NOTE: this stack is now managed by argocd, just install the operator and skip following commands
-
 ```bash
 wget https://github.com/knative/operator/releases/download/knative-v1.14.4/operator.yaml -O operator.yaml
-```
-
-```bash
-kubectl apply -f operator.yaml
 ```
 
 # enable volume if needed
