@@ -21,7 +21,7 @@
             "type": "shell",
             "command": "terraform apply -input=false -auto-approve",
             "options": {
-                "cwd": "${workspaceFolder}/k8s-secrets.tmp/"
+                "cwd": "${workspaceFolder}/k8s-secrets/"
             },
             "group": "build",
             "presentation": {
