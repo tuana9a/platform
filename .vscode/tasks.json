@@ -8,7 +8,7 @@
             "type": "shell",
             "command": "terraform apply -input=false -auto-approve",
             "options": {
-                "cwd": "${workspaceFolder}/vault-secrets.tmp/"
+                "cwd": "${workspaceFolder}/vault-secrets/"
             },
             "group": "build",
             "presentation": {
