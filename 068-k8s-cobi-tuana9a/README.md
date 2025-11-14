@@ -73,6 +73,14 @@ systemctl restart containerd
 systemctl restart kubelet
 ```
 
+# unknown systemd-resolved uninstalled, resolvconf installed
+
+somehow systemd-resolved got uninstalled, need to install systemd-resolved again
+
+and uninstall, purge resolvconf
+
+LOL
+
 # administration
 
 ## remove control plane
