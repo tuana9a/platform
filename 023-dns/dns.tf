@@ -7,22 +7,10 @@ resource "cloudflare_record" "OSSRH_88779" {
   proxied = false
 }
 
-resource "cloudflare_record" "servers" {
-  for_each = local.servers
+module "dns_records" {
+  for_each = local.records
+  source   = "./modules/dns_records"
   zone_id  = data.cloudflare_zone.tuana9a_com.id
   name     = each.key
-  content  = sensitive(each.value.ip)
-  type     = "A"
-  ttl      = 60
-  proxied  = false
-}
-
-resource "cloudflare_record" "apps" {
-  for_each = local.apps
-  zone_id  = data.cloudflare_zone.tuana9a_com.id
-  name     = each.key
-  content  = sensitive(each.value)
-  type     = "A"
-  ttl      = 60
-  proxied  = false
+  records  = each.value
 }

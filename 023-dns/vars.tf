@@ -3,6 +3,6 @@ variable "cloudflare_api_token" {
   sensitive = true
 }
 
-variable "servers_file" {
+variable "dns_records_file" {
   type = string
 }
