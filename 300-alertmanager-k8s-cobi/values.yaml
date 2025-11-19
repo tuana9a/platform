@@ -8,14 +8,23 @@ persistence:
 config:
   enabled: true
   route:
-    receiver: "discord"
+    receiver: "telegram"
   receivers:
     - name: "discord"
       discord_configs:
         - webhook_url_file: /etc/discord_webhook_url.txt
+    - name: "telegram"
+      telegram_configs:
+        - bot_token_file: /etc/telegram_bot_token.txt
+          chat_id: -1002044103252 # 9Alerts
 extraSecretMounts:
   - name: discord-webhook-url
     mountPath: /etc/discord_webhook_url.txt
     subPath: discord_webhook_url.txt
+    secretName: alertmanager
+    readOnly: true
+  - name: telegram-bot-token
+    mountPath: /etc/telegram_bot_token.txt
+    subPath: telegram_bot_token.txt
     secretName: alertmanager
     readOnly: true
