@@ -79,6 +79,19 @@ data "coder_parameter" "home_disk_size" {
   }
 }
 
+data "coder_parameter" "home_storage_class" {
+  name         = "home_storage_class"
+  display_name = "home storage class"
+  description  = "home storage class"
+  mutable      = false
+  type         = "string"
+  default      = "nfs567"
+  option {
+    name  = "nfs567"
+    value = "nfs567"
+  }
+}
+
 data "coder_parameter" "image_tag" {
   name         = "image_tag"
   display_name = "Image tag"
@@ -86,38 +99,4 @@ data "coder_parameter" "image_tag" {
   default      = "base"
   icon         = "/icon/docker.png"
   mutable      = true
-}
-
-data "coder_parameter" "dockerd" {
-  name         = "dockerd"
-  display_name = "dockerd"
-  description  = "Docker in docker"
-  mutable      = true
-  type         = "string"
-  default      = "no"
-  option {
-    name  = "yes"
-    value = "yes"
-  }
-  option {
-    name  = "no"
-    value = "no"
-  }
-}
-
-data "coder_parameter" "dockerd_persistent" {
-  name         = "dockerd_persistent"
-  display_name = "dockerd_persistent"
-  description  = "Docker data persistent"
-  mutable      = true
-  type         = "string"
-  default      = "no"
-  option {
-    name  = "yes"
-    value = "yes"
-  }
-  option {
-    name  = "no"
-    value = "no"
-  }
 }

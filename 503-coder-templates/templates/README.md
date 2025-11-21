@@ -14,4 +14,4 @@ coder template push
 
 ## known issues
 
-Mount docker data over nfs will not work, See <https://github.com/docker/for-linux/issues/1172#issuecomment-771647647>
+Mount docker data over nfs will not work, See https://github.com/docker/for-linux/issues/1172#issuecomment-771647647
