@@ -1,7 +1,6 @@
 - hosts: neomorph
   tasks:
     - import_tasks: ./tasks/apt_update.yml
-    - import_tasks: ./tasks/install_sudo.yml
     - import_tasks: ./tasks/install_tmux.yml
     - import_tasks: ./tasks/install_ufw.yml
     - import_tasks: ./tasks/install_vim.yml
