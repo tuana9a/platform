@@ -1,0 +1,22 @@
+name: "docker-build-push-coder-amon"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  main:
+    uses: ./.github/workflows/docker-build-push.yml
+    with:
+      WORKING_DIR: docker/coder
+      DOCKERFILE_NAME: amon.Dockerfile
+      IMAGE_NAME: tuana9a/coder
+      IMAGE_TAG_PREFIX: amon-
+      tag-commithash: false
+      tag-monthly: true
+      tag-daily: true
+      tag-secondly: true
+      push: true
+    secrets:
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+      DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
