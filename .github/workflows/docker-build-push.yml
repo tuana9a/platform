@@ -75,7 +75,7 @@ jobs:
           cat $GITHUB_ENV
       - name: tag-latest
         run: |
-          echo IMAGE_TAGS=${{ inputs.IMAGE_NAME }}:${{ inputs.IMAGE_TAG_PREFIX }}latest
+          echo IMAGE_TAGS=${{ inputs.IMAGE_NAME }}:${{ inputs.IMAGE_TAG_PREFIX }}latest >> $GITHUB_ENV
       - name: tag-commithash
         run: |
           echo IMAGE_TAGS="$IMAGE_TAGS,${{ inputs.IMAGE_NAME }}:${{ inputs.IMAGE_TAG_PREFIX }}git-$FULL_COMMIT_HASH,${{ inputs.IMAGE_NAME }}:git-$SHORT_COMMIT_HASH" >> $GITHUB_ENV
