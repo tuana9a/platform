@@ -1,5 +1,10 @@
-FROM codercom/enterprise-minimal:ubuntu-20240909
+FROM codercom/enterprise-minimal:ubuntu-20251117
 
 USER coder
 
-RUN sudo apt update -y && sudo apt install -y tmux direnv jq dnsutils net-tools iputils-ping telnet zsh && sudo usermod -s /bin/zsh coder
+RUN sudo apt update -y
+
+RUN sudo apt install -y \
+  openssh-client
+
+RUN sudo apt install -y zsh && sudo usermod -s /bin/zsh coder

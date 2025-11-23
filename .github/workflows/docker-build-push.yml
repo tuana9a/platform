@@ -10,9 +10,17 @@ on:
       WORKING_DIR:
         type: string
         required: true
+      DOCKERFILE_NAME:
+        type: string
+        required: false
+        default: Dockerfile
       IMAGE_NAME:
         type: string
         required: true
+      IMAGE_TAG_PREFIX:
+        type: string
+        required: false
+        default: ""
       push:
         type: boolean
         required: false
@@ -67,19 +75,19 @@ jobs:
           cat $GITHUB_ENV
       - name: tag-commithash
         run: |
-          echo IMAGE_TAGS="$IMAGE_TAGS,${{ inputs.IMAGE_NAME }}:git-$FULL_COMMIT_HASH,${{ inputs.IMAGE_NAME }}:git-$SHORT_COMMIT_HASH" >> $GITHUB_ENV
+          echo IMAGE_TAGS="$IMAGE_TAGS,${{ inputs.IMAGE_NAME }}:${{ inputs.IMAGE_TAG_PREFIX }}git-$FULL_COMMIT_HASH,${{ inputs.IMAGE_NAME }}:git-$SHORT_COMMIT_HASH" >> $GITHUB_ENV
         if: "${{ inputs.tag-commithash }}"
       - name: tag-monthly
         run: |
-          echo IMAGE_TAGS="$IMAGE_TAGS,${{ inputs.IMAGE_NAME }}:$TAG_MONTHLY" >> $GITHUB_ENV
+          echo IMAGE_TAGS="$IMAGE_TAGS,${{ inputs.IMAGE_NAME }}:${{ inputs.IMAGE_TAG_PREFIX }}$TAG_MONTHLY" >> $GITHUB_ENV
         if: "${{ inputs.tag-monthly }}"
       - name: tag-secondly
         run: |
-          echo IMAGE_TAGS="$IMAGE_TAGS,${{ inputs.IMAGE_NAME }}:$TAG_SECONDLY" >> $GITHUB_ENV
+          echo IMAGE_TAGS="$IMAGE_TAGS,${{ inputs.IMAGE_NAME }}:${{ inputs.IMAGE_TAG_PREFIX }}$TAG_SECONDLY" >> $GITHUB_ENV
         if: "${{ inputs.tag-secondly }}"
       - name: tag-daily
         run: |
-          echo IMAGE_TAGS="$IMAGE_TAGS,${{ inputs.IMAGE_NAME }}:$TAG_DAILY" >> $GITHUB_ENV
+          echo IMAGE_TAGS="$IMAGE_TAGS,${{ inputs.IMAGE_NAME }}:${{ inputs.IMAGE_TAG_PREFIX }}$TAG_DAILY" >> $GITHUB_ENV
         if: "${{ inputs.tag-daily }}"
       - name: login
         uses: docker/login-action@v3
@@ -90,7 +98,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: "${{ inputs.WORKING_DIR }}"
-          file: "${{ inputs.WORKING_DIR }}/Dockerfile"
+          file: "${{ inputs.WORKING_DIR }}/${{ inputs.DOCKERFILE_NAME }}"
           push: "${{ inputs.push }}"
           tags: ${{ env.IMAGE_TAGS }}
           cache-from: type=gha
