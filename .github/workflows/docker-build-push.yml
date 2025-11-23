@@ -73,6 +73,9 @@ jobs:
           echo TAG_DAILY=$(date +"%Y.%m.%d") >> $GITHUB_ENV
           echo TAG_SECONDLY=$(date +"%Y.%m.%d.%H%M%S") >> $GITHUB_ENV
           cat $GITHUB_ENV
+      - name: tag-latest
+        run: |
+          echo IMAGE_TAGS=${{ inputs.IMAGE_NAME }}:${{ inputs.IMAGE_TAG_PREFIX }}latest
       - name: tag-commithash
         run: |
           echo IMAGE_TAGS="$IMAGE_TAGS,${{ inputs.IMAGE_NAME }}:${{ inputs.IMAGE_TAG_PREFIX }}git-$FULL_COMMIT_HASH,${{ inputs.IMAGE_NAME }}:git-$SHORT_COMMIT_HASH" >> $GITHUB_ENV
