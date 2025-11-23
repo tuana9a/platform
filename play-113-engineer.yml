@@ -1,0 +1,11 @@
+- hosts: engineer
+  tasks:
+    - import_tasks: ./tasks/apt_update.yml
+    - import_tasks: ./tasks/install_tmux.yml
+    - import_tasks: ./tasks/install_ufw.yml
+    - import_tasks: ./tasks/install_vim.yml
+    - import_tasks: ./tasks/install_htop.yml
+    - import_tasks: ./tasks/install_unzip.yml
+    - import_tasks: ./tasks/install_libguestfs_tools.yml
+    - import_tasks: ./tasks/install_fail2ban.yml
+    - import_tasks: ./tasks/install_node_exporter.yml

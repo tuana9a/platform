@@ -59,6 +59,10 @@ neomorph:
   hosts:
     192.168.1.112:
       ansible_user: u
+engineer:
+  hosts:
+    192.168.1.113:
+      ansible_user: u
 k8s_cluster:
   hosts:
     # 192.168.56.22: &i-122
