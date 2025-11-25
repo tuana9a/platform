@@ -22,6 +22,16 @@ serverFiles:
         annotations:
           summary: "High Memory Usage on {{ $labels.instance }}"
           description: "Memory usage is above 85% for more than 5 minutes.\nCurrent Value: {{ $value | humanizePercentage }}"
+
+      - alert: HostHighCpuLoad
+        expr: 1 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m]))) > .80
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: Host high CPU load (instance {{ $labels.instance }})
+          description: "CPU load is > 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
     kubernetes:
       - alert: KubernetesNodeNotReady
         expr: kube_node_status_condition{condition="Ready",status="true"} == 0
