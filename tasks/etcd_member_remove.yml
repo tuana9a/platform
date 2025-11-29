@@ -1,0 +1,36 @@
+- name: Get etcd member list as JSON
+  become: true
+  command: "/usr/local/bin/etcdctl member list -w json"
+  register: etcd_members_raw
+  environment: &etcd_env
+    ETCDCTL_API: "3"
+    ETCDCTL_CACERT: "/etc/kubernetes/pki/etcd/ca.crt"
+    ETCDCTL_CERT: "/etc/kubernetes/pki/apiserver-etcd-client.crt"
+    ETCDCTL_KEY: "/etc/kubernetes/pki/apiserver-etcd-client.key"
+
+- name: Parse etcd member list
+  set_fact:
+    etcd_members: "{{ etcd_members_raw.stdout | from_json | community.general.json_query('members') }}"
+
+- name: "[DEBUG] print etcd members"
+  debug:
+    msg: "{{ etcd_members }}"
+
+- name: Extract member ID for target name
+  set_fact:
+    member_id_int: >-
+      {{ etcd_members
+        | community.general.json_query('[?name==`' + k8s_node_name + '`].ID')
+        | first
+        | default('')
+      }}
+
+- name: "[DEBUG] print member id"
+  debug:
+    msg: "{{ member_id_int }}"
+
+- name: Remove etcd member by ID
+  become: true
+  command: "/usr/local/bin/etcdctl member remove {{ '%x' % (member_id_int | int) }}" # need to convert id int to hex
+  when: member_id_int
+  environment: *etcd_env

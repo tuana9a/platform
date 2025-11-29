@@ -63,24 +63,9 @@ engineer:
   hosts:
     192.168.1.113:
       ansible_user: u
-k8s_cluster:
+__k8s_cluster_vars:
   hosts:
-    # 192.168.56.22: &i-122
-    #   ansible_user: u
-    #   nodename: i-122
-    #   vmid: 122
-    #   is_control_plane: true
-    #   kubesetup_completed: true
-    #   kube_joined: true
-    #   kube_pki: *kube_pki
-    #   kubevip: *kubevip
-    192.168.56.23: &i-123
-      ansible_user: u
-      nodename: i-123
-      vmid: 123
-      is_control_plane: true
-      kubesetup_completed: true
-      kube_joined: true
+    localhost:
       kube_pki: &kube_pki
         - /etc/kubernetes/pki/ca.crt
         - /etc/kubernetes/pki/ca.key
@@ -93,24 +78,47 @@ k8s_cluster:
       kubevip: &kubevip
         inf: eth0
         vip: 192.168.56.21
-    # 192.168.56.24: &i-124
-    #   ansible_user: u
-    #   nodename: i-124
-    #   vmid: 124
-    #   is_control_plane: true
-    #   kubesetup_completed: true
-    #   kube_joined: true
-    #   kube_pki: *kube_pki
-    #   kubevip: *kubevip
-    # 192.168.56.25: &i-125
-    #   ansible_user: u
-    #   nodename: i-125
-    #   vmid: 125
-    #   is_control_plane: true
-    #   kubesetup_completed: true
-    #   kube_joined: true
-    #   kube_pki: *kube_pki
-    #   kubevip: *kubevip
+      wireguard_heartbeats: &wireguard_heartbeats
+        - "10.5.115.1"
+k8s_cluster:
+  hosts:
+    192.168.56.22: &i-122
+      ansible_user: u
+      nodename: i-122
+      vmid: 122
+      is_control_plane: true
+      kubesetup_completed: true
+      kube_joined: true
+      kube_pki: *kube_pki
+      kubevip: *kubevip
+    192.168.56.23: &i-123
+      ansible_user: u
+      nodename: i-123
+      vmid: 123
+      is_control_plane: true
+      kubesetup_completed: true
+      kube_joined: true
+      kube_pki: *kube_pki
+      kubevip: *kubevip
+      goodbye: true
+    192.168.56.24: &i-124
+      ansible_user: u
+      nodename: i-124
+      vmid: 124
+      is_control_plane: true
+      kubesetup_completed: true
+      kube_joined: true
+      kube_pki: *kube_pki
+      kubevip: *kubevip
+    192.168.56.25: &i-125
+      ansible_user: u
+      nodename: i-125
+      vmid: 125
+      is_control_plane: true
+      kubesetup_completed: true
+      kube_joined: true
+      kube_pki: *kube_pki
+      kubevip: *kubevip
     192.168.56.31: &i-131
       ansible_user: u
       nodename: i-131
@@ -121,15 +129,15 @@ k8s_cluster:
       wireguard_clients:
         - file: k8s-cobi-5.conf
           name: k8s-cobi-5
-      wireguard_heartbeats: &wireguard_heartbeats
-        - "10.5.115.1"
-    # 192.168.56.32: &i-132
-    #   ansible_user: u
-    #   nodename: i-132
-    #   vmid: 132
-    #   is_control_plane: false
-    #   kubesetup_completed: true
-    #   kube_joined: true
+      wireguard_heartbeats: *wireguard_heartbeats
+      goodbye: true
+    192.168.56.32: &i-132
+      ansible_user: u
+      nodename: i-132
+      vmid: 132
+      is_control_plane: false
+      kubesetup_completed: false
+      kube_joined: false
     192.168.56.33: &i-133
       ansible_user: u
       nodename: i-133
@@ -152,10 +160,15 @@ k8s_cluster:
         - file: k8s-cobi-7.conf
           name: k8s-cobi-7
       wireguard_heartbeats: *wireguard_heartbeats
-k8s_first_control_plane:
+k8s_cluster_primary_master:
   hosts:
-    # 192.168.56.22: *i-122
-    192.168.56.23: *i-123
+    192.168.56.22:
+      <<: *i-122
+      goodbye_nodes:
+        - name: i-123
+          is_control_plane: true
+        - name: i-131
+    # 192.168.56.23: *i-123
 orisis:
   hosts:
     orisis.tuana9a.com:

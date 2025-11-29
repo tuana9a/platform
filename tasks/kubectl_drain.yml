@@ -1,0 +1,22 @@
+- name: drain kubernetes node
+  become: true
+  ansible.builtin.command: >
+    kubectl drain
+    --ignore-daemonsets
+    --delete-emptydir-data
+    --disable-eviction
+    --force
+    {{ k8s_node_name }}
+  register: k8s_drain_result
+  environment:
+    KUBECONFIG: "{{ k8s_drain.kubeconfig | default('/etc/kubernetes/admin.conf') }}"
+  changed_when: k8s_drain_result.rc == 0
+  failed_when: k8s_drain_result.rc != 0
+
+- name: drain kubernetes node [stdout]
+  debug:
+    msg: "{{ k8s_drain_result.stdout | split('\n') }}"
+
+- name: drain kubernetes node [stderr]
+  debug:
+    msg: "{{ k8s_drain_result.stderr | split('\n') }}"

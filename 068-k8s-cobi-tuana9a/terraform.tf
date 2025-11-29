@@ -31,6 +31,7 @@ provider "proxmox" {
   insecure  = var.pve_insecure
 
   ssh {
+    # required for setup vm from cloud image
     agent       = true
     username    = var.pve_ssh_username
     private_key = var.pve_ssh_private_key

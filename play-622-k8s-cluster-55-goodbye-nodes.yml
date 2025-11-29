@@ -1,0 +1,22 @@
+- hosts: k8s_cluster_primary_master
+  tasks:
+    - include_tasks: ./tasks/kubectl_drain.yml
+      loop: "{{ goodbye_nodes }}"
+      vars:
+        k8s_node_name: "{{ item.name }}"
+
+    - include_tasks: ./tasks/etcd_member_remove.yml
+      loop: "{{ goodbye_nodes }}"
+      vars:
+        k8s_node_name: "{{ item.name }}"
+      when: "{{ item.is_control_plane | default(false) }}"
+
+    - include_tasks: ./tasks/kubectl_delete_node.yml
+      loop: "{{ goodbye_nodes }}"
+      vars:
+        k8s_node_name: "{{ item.name }}"
+
+- hosts: k8s_cluster
+  tasks:
+    - import_tasks: ./tasks/kubeadm_reset.yml
+      when: goodbye | default(false)
