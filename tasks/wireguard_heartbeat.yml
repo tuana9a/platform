@@ -1,3 +1,9 @@
+# Note: The 'wireguard_heartbeats' variable must be defined
+# as an array in your playbook or inventory, e.g.:
+# wireguard_heartbeats:
+#   - 10.0.0.2
+#   - 10.0.0.3
+#   - 10.0.0.4
 - name: /etc/cron.d/wireguard_heartbeats
   become: true
   ansible.builtin.template:
@@ -8,9 +14,3 @@
     group: root
     mode: "0644"
     backup: yes
-  # Note: The 'wireguard_heartbeats' variable must be defined
-  # as an array in your playbook or inventory, e.g.:
-  # wireguard_heartbeats:
-  #   - 10.0.0.2
-  #   - 10.0.0.3
-  #   - 10.0.0.4

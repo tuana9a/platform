@@ -31,6 +31,17 @@ locals {
         network_device = "vmbr0"
         pve_node       = "engineer"
       }
+      i-131 = {
+        vmid           = 131
+        corecount      = 4
+        memsize        = 12288
+        vmip           = "192.168.56.31"
+        address        = "192.168.56.31/24"
+        gateway_ip     = "192.168.56.1"
+        network_device = "vmbr0"
+        pve_node       = "neomorph"
+        cloudimg       = "debian-12-generic-amd64-20251129-2311"
+      }
       i-132 = {
         vmid           = 132
         corecount      = 4
@@ -40,6 +51,16 @@ locals {
         gateway_ip     = "192.168.56.1"
         network_device = "vmbr0"
         pve_node       = "engineer"
+      }
+      i-134 = {
+        vmid           = 134
+        corecount      = 4
+        memsize        = 12288
+        vmip           = "192.168.56.34"
+        address        = "192.168.56.34/24"
+        gateway_ip     = "192.168.56.1"
+        network_device = "vmbr0"
+        pve_node       = "neomorph"
       }
     }
   }
@@ -71,7 +92,7 @@ resource "proxmox_virtual_environment_vm" "cluster" {
 
   disk {
     datastore_id = "local"
-    file_id      = "local:iso/debian-12-generic-amd64-20250814-2204.img"
+    file_id      = "local:iso/${lookup(each.value, "cloudimg", "debian-12-generic-amd64-20250814-2204")}.img"
     interface    = "scsi0"
     size         = lookup(each.value, "disksize", 32)
     speed {

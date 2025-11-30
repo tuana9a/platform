@@ -91,16 +91,16 @@ k8s_cluster:
       kube_joined: true
       kube_pki: *kube_pki
       kubevip: *kubevip
-    192.168.56.23: &i-123
-      ansible_user: u
-      nodename: i-123
-      vmid: 123
-      is_control_plane: true
-      kubesetup_completed: true
-      kube_joined: true
-      kube_pki: *kube_pki
-      kubevip: *kubevip
-      goodbye: true
+    # 192.168.56.23: &i-123
+    #   ansible_user: u
+    #   nodename: i-123
+    #   vmid: 123
+    #   is_control_plane: true
+    #   kubesetup_completed: true
+    #   kube_joined: true
+    #   kube_pki: *kube_pki
+    #   kubevip: *kubevip
+    #   goodbye: true
     192.168.56.24: &i-124
       ansible_user: u
       nodename: i-124
@@ -130,25 +130,30 @@ k8s_cluster:
         - file: k8s-cobi-5.conf
           name: k8s-cobi-5
       wireguard_heartbeats: *wireguard_heartbeats
-      goodbye: true
+      goodbye: false
     192.168.56.32: &i-132
       ansible_user: u
       nodename: i-132
       vmid: 132
       is_control_plane: false
-      kubesetup_completed: false
-      kube_joined: false
-    192.168.56.33: &i-133
-      ansible_user: u
-      nodename: i-133
-      vmid: 133
-      is_control_plane: false
       kubesetup_completed: true
       kube_joined: true
       wireguard_clients:
-        - file: k8s-cobi-6.conf
-          name: k8s-cobi-6
+        - file: k8s-cobi-7.conf
+          name: k8s-cobi-7
       wireguard_heartbeats: *wireguard_heartbeats
+    # 192.168.56.33: &i-133
+    #   ansible_user: u
+    #   nodename: i-133
+    #   vmid: 133
+    #   is_control_plane: false
+    #   kubesetup_completed: true
+    #   kube_joined: true
+    #   wireguard_clients:
+    #     - file: k8s-cobi-6.conf
+    #       name: k8s-cobi-6
+    #   wireguard_heartbeats: *wireguard_heartbeats
+    #   goodbye: true
     192.168.56.34: &i-134
       ansible_user: u
       nodename: i-134
@@ -157,24 +162,25 @@ k8s_cluster:
       kubesetup_completed: true
       kube_joined: true
       wireguard_clients:
-        - file: k8s-cobi-7.conf
-          name: k8s-cobi-7
+        - file: k8s-cobi-6.conf
+          name: k8s-cobi-6
       wireguard_heartbeats: *wireguard_heartbeats
 k8s_cluster_primary_master:
   hosts:
     192.168.56.22:
       <<: *i-122
       goodbye_nodes:
-        - name: i-123
-          is_control_plane: true
-        - name: i-131
+        # - name: i-123
+        #   is_control_plane: true
+        # - name: i-131
+        - name: i-133
     # 192.168.56.23: *i-123
 orisis:
   hosts:
     orisis.tuana9a.com:
       ansible_user: root
       HOST_NAME: orisis
-      haproxy_stats_enabled: false
+      haproxy_stats_enabled: true
       upstream_servers:
         - hostname: k8s-cobi-5
           ip: 10.5.115.25
