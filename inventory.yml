@@ -78,8 +78,6 @@ __k8s_cluster_vars:
       kubevip: &kubevip
         inf: eth0
         vip: 192.168.56.21
-      wireguard_heartbeats: &wireguard_heartbeats
-        - "10.5.115.1"
 k8s_cluster:
   hosts:
     192.168.56.22: &i-122
@@ -129,7 +127,6 @@ k8s_cluster:
       wireguard_clients:
         - file: k8s-cobi-5.conf
           name: k8s-cobi-5
-      wireguard_heartbeats: *wireguard_heartbeats
       goodbye: false
     192.168.56.32: &i-132
       ansible_user: u
@@ -141,7 +138,6 @@ k8s_cluster:
       wireguard_clients:
         - file: k8s-cobi-7.conf
           name: k8s-cobi-7
-      wireguard_heartbeats: *wireguard_heartbeats
     # 192.168.56.33: &i-133
     #   ansible_user: u
     #   nodename: i-133
@@ -152,7 +148,6 @@ k8s_cluster:
     #   wireguard_clients:
     #     - file: k8s-cobi-6.conf
     #       name: k8s-cobi-6
-    #   wireguard_heartbeats: *wireguard_heartbeats
     #   goodbye: true
     192.168.56.34: &i-134
       ansible_user: u
@@ -164,7 +159,6 @@ k8s_cluster:
       wireguard_clients:
         - file: k8s-cobi-6.conf
           name: k8s-cobi-6
-      wireguard_heartbeats: *wireguard_heartbeats
 k8s_cluster_primary_master:
   hosts:
     192.168.56.22:

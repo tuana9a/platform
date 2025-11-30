@@ -31,3 +31,8 @@
       ansible.builtin.file:
         path: /snapshot.db
         state: absent
+    - name: Remove wireguard heartbeat cron file
+      become: true
+      file:
+        path: /etc/cron.d/wireguard_heartbeats
+        state: absent

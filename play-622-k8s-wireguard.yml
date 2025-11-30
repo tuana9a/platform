@@ -4,7 +4,3 @@
       when: wireguard_clients is defined
     - import_tasks: ./tasks/wireguard_client.yml
       when: wireguard_clients is defined
-    - import_tasks: ./tasks/install_cron.yml
-      when: wireguard_heartbeats is defined
-    - import_tasks: ./tasks/wireguard_heartbeat.yml
-      when: wireguard_heartbeats is defined
