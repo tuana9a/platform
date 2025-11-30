@@ -167,7 +167,7 @@ k8s_cluster_primary_master:
         # - name: i-123
         #   is_control_plane: true
         # - name: i-131
-        - name: i-133
+        # - name: i-133
     # 192.168.56.23: *i-123
 orisis:
   hosts:
