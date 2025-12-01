@@ -1,64 +1,39 @@
-- name: Install temporary resolv.conf
+- name: Create resolved.conf with DNS + domains
   become: true
   copy:
-    dest: /etc/resolv.conf
+    dest: /etc/systemd/resolved.conf
     content: |
-      nameserver 1.1.1.1
-      nameserver 8.8.8.8
-      search local
-    force: true
-
-- name: Ensure systemd-resolved is installed
-  become: true
-  package:
-    name: systemd-resolved
-    state: present
-
-- name: Ensure /etc/resolv.conf symlink points to systemd-resolved
-  become: true
-  file:
-    path: /etc/resolv.conf
-    src: /run/systemd/resolve/resolv.conf
-    state: link
-    force: true
-
-- name: Configure systemd-resolved DNS
-  become: true
-  block:
-    - name: Create resolved.conf with DNS + domains
-      copy:
-        dest: /etc/systemd/resolved.conf
-        content: |
-          [Resolve]
-          DNS=
-          Domains=
-          DNSSEC=no
-        owner: root
-        group: root
-        mode: "0644"
-
-# WARN: TODO: this is not working as expected
-- name: Configure systemd network file for eth0
-  become: true
-  copy:
-    dest: /etc/systemd/network/eth0.network
+      [Resolve]
+      DNS=
+      Domains=
+      DNSSEC=no
     owner: root
     group: root
     mode: "0644"
-    content: |
-      [Match]
-      Name=eth0
 
-      [Network]
-      DHCP=ipv4
-      DNS=8.8.8.8 8.8.4.4
-
-      [DHCPv4]
-      UseDNS=no
-
-- name: Enable and start systemd-resolved
+- name: Copy the DNS configuration script to the target host
   become: true
-  systemd:
+  ansible.builtin.copy:
+    src: files/set_dns_eth0.sh
+    dest: /usr/local/bin/set_dns_eth0.sh
+    mode: "0755" # Makes the script executable
+
+- name: Copy the systemd service unit file
+  become: true
+  ansible.builtin.copy:
+    src: files/set-dns-eth0.service
+    dest: /etc/systemd/system/set-dns-eth0.service
+
+- name: Enable and start the custom DNS service
+  become: true
+  ansible.builtin.systemd_service:
+    name: set-dns-eth0.service
+    state: started # Start the service immediately
+    enabled: true # Ensure it starts on boot
+    daemon_reload: true # Reload daemon before starting, in case the copy task ran first
+
+- name: Restart systemd-resolved
+  become: true
+  ansible.builtin.systemd_service:
     name: systemd-resolved
-    enabled: true
     state: restarted
