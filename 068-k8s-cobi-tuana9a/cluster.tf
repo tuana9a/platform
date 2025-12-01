@@ -52,6 +52,17 @@ locals {
         network_device = "vmbr0"
         pve_node       = "engineer"
       }
+      i-133 = {
+        vmid           = 133
+        corecount      = 4
+        memsize        = 12288
+        vmip           = "192.168.56.33"
+        address        = "192.168.56.33/24"
+        gateway_ip     = "192.168.56.1"
+        network_device = "vmbr0"
+        pve_node       = "engineer"
+        cloudimg       = "debian-12-generic-amd64-20251129-2311"
+      }
       i-134 = {
         vmid           = 134
         corecount      = 4
