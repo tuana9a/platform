@@ -47,14 +47,6 @@ nfs:
             - "*tmp*"
             - "Python-*"
             - "amazon-corretto-*"
-xenomorph:
-  hosts:
-    xenomorph.tuana9a.com:
-      ansible_user: root
-      HOST_NAME: xenomorph
-      nginx:
-        conf_d: xenomorph/nginx/conf.d/
-        stream_conf_d: xenomorph/nginx/stream.conf.d/
 neomorph:
   hosts:
     192.168.1.112:

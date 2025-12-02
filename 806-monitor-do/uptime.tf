@@ -18,11 +18,6 @@ locals {
     #   target  = "https://coder.tuana9a.com"
     #   regions = ["eu_west", "se_asia"]
     # }
-    # xenomorph_tuana9a_com = {
-    #   name   = "xenomorph.tuana9a.com"
-    #   type   = "ping"
-    #   target = "xenomorph.tuana9a.com"
-    # }
     # dev2_tuana9a_com = {
     #   name    = "dev2.tuana9a.com"
     #   type    = "https"

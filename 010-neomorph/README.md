@@ -4,8 +4,6 @@ It's a `Mini PC AMD R7 5825u GMKtec M5 Plus`
 
 <https://pve.proxmox.com/wiki/Install_Proxmox_VE_on_Debian_12_Bookworm>
 
-Previous generation [010-xenomorph/README.md](../010-xenomorph/README.md)
-
 # [`/etc/network/interfaces`](./interfaces)
 
 # debug iptables with NAT setup
