@@ -1,5 +1,17 @@
 - hosts: k8s_cluster
   tasks:
+    # # /usr/bin/wg-quick: line 32: resolvconf: command not found
+    # # resolvconf package is conflicting with existing systemd-resolved so DO NOT install package resolvconf
+    # # instead create a symlink
+    # # [UPDATE] we don't set dns so, installing resolvconf is not required
+    # - name: Create resolvconf symlink to resolvectl
+    #   ansible.builtin.file:
+    #     src: /usr/bin/resolvectl
+    #     dest: /usr/local/bin/resolvconf
+    #     owner: root
+    #     group: root
+    #     state: link
+    #     force: true
     - import_tasks: ./tasks/install_wireguard.yml
       when: wireguard_clients is defined
     - import_tasks: ./tasks/wireguard_client.yml

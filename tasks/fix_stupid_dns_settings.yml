@@ -37,3 +37,4 @@
   ansible.builtin.systemd_service:
     name: systemd-resolved
     state: restarted
+    enabled: true
