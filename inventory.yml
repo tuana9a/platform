@@ -196,7 +196,7 @@ orisis:
     orisis.tuana9a.com:
       ansible_user: root
       HOST_NAME: orisis
-      haproxy_stats_enabled: true
+      haproxy_stats_enabled: false
       upstream_servers:
         - hostname: k8s-cobi-5
           ip: 10.5.115.25
