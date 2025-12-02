@@ -47,14 +47,33 @@ nfs:
             - "*tmp*"
             - "Python-*"
             - "amazon-corretto-*"
+__proxmox_common_vars:
+  hosts:
+    localhost:
+      ufw_rules: &proxmox_ufw_rules
+        - name: "Allow SSH (Limit)"
+          rule: limit
+          port: "22" # SSH
+          proto: tcp
+        - name: "Allow Proxmox Web UI"
+          rule: allow
+          port: "8006" # Proxmox Web
+          proto: tcp
+        - name: "Allow node-exporter"
+          rule: allow
+          port: "9100" # node-exporter
+          proto: tcp
+          from_ip: "192.168.56.0/24"
 neomorph:
   hosts:
-    192.168.1.112:
+    192.168.56.112:
       ansible_user: u
+      ufw_rules: *proxmox_ufw_rules
 engineer:
   hosts:
-    192.168.1.113:
+    192.168.56.113:
       ansible_user: u
+      ufw_rules: *proxmox_ufw_rules
 __k8s_cluster_vars:
   hosts:
     localhost:

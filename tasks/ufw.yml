@@ -1,0 +1,10 @@
+- name: Apply ufw firewall rules
+  become: true
+  loop: "{{ ufw_rules }}"
+  community.general.ufw:
+    rule: "{{ item.rule }}"
+    from_ip: "{{ item.from_ip | default('any') }}"
+    port: "{{ item.port }}"
+    proto: "{{ item.proto }}"
+    comment: "{{ item.name }}"
+    state: enabled

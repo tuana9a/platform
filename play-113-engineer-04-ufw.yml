@@ -1,0 +1,3 @@
+- hosts: engineer
+  tasks:
+    - import_tasks: ./tasks/ufw.yml
