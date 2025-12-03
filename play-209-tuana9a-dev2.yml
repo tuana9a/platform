@@ -5,7 +5,6 @@
     - import_tasks: ./tasks/install_node_exporter.yml
     - import_tasks: ./tasks/install_openvpn.yml
     - import_tasks: ./tasks/install_wireguard.yml
-
     - import_tasks: ./tasks/install_tmux.yml
     - import_tasks: ./tasks/install_tfenv.yml
     - import_tasks: ./tasks/install_kubectl.yml

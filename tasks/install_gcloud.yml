@@ -1,19 +1,19 @@
-- name: sudo apt-get install apt-transport-https ca-certificates gnupg curl
+- name: install necessary gcloud packages
   shell: |
     sudo apt-get install apt-transport-https ca-certificates gnupg curl
 
-- name: curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/cloud.google.gpg
+- name: add gcloud apt key
   shell: |
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/cloud.google.gpg
 
-- name: echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+- name: add gcloud sdk to apt source list
   shell: |
-    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
 
-- name: sudo apt-get update -y && sudo apt-get install -y google-cloud-cli
+- name: install gcloud cli
   ansible.builtin.shell: |
     sudo apt-get update -y && sudo apt-get install -y google-cloud-cli
 
-- name: sudo apt-get install -y google-cloud-cli-gke-gcloud-auth-plugin
+- name: install gcloud cli plugin
   shell: |
     sudo apt-get install -y google-cloud-cli-gke-gcloud-auth-plugin
