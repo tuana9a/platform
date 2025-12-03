@@ -16,10 +16,6 @@ terraform {
       source  = "hashicorp/random"
       version = "3.7.2"
     }
-    vault = {
-      source  = "hashicorp/vault"
-      version = "4.4.0"
-    }
   }
 }
 
@@ -35,11 +31,4 @@ provider "coderd" {
 }
 
 provider "random" {
-}
-
-provider "vault" {
-  address = "https://vault.tuana9a.com"
-  token   = var.vault_token
-
-  skip_child_token = true
 }

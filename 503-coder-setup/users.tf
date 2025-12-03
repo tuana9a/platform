@@ -1,9 +1,5 @@
-data "vault_kv_secret" "users" {
-  path = "kv/coder/users"
-}
-
 locals {
-  users = yamldecode(data.vault_kv_secret.users.data.users)
+  users = var.coder_users
 }
 
 resource "coderd_user" "all" {
