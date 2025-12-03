@@ -3,8 +3,6 @@ variable "gitlab_token" {
   sensitive = true
 }
 
-variable "vault_token" {
-  type        = string
-  sensitive   = true
-  description = "secret-operator vault token"
+variable "repo_secrets_file" {
+  type = string
 }
