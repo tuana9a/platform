@@ -8,7 +8,7 @@ variable "cloudflare_api_token" {
   sensitive = true
 }
 
-variable "vault_token" {
-  type      = string
+variable "email_routes" {
+  type      = map(any)
   sensitive = true
 }
