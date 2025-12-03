@@ -3,7 +3,7 @@ resource "gitlab_project_variable" "secrets" {
 
   project   = var.repo_name
   key       = each.key
-  value     = each.value
+  value     = var.repo_secrets[each.key]
   protected = false
-  masked    = true
+  masked    = false
 }

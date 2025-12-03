@@ -3,5 +3,5 @@ resource "github_actions_secret" "secrets" {
 
   repository      = var.repo_name
   secret_name     = each.key
-  plaintext_value = each.value
+  plaintext_value = var.repo_secrets[each.key]
 }
