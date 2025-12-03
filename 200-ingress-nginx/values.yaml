@@ -8,9 +8,30 @@ controller:
     #   external-dns.alpha.kubernetes.io/hostname: ingress-nginx.svc.k8s-internal.tuana9a.com
   autoscaling:
     enabled: true
+    minReplicas: 3
   resources:
     limits:
       memory: 300Mi
     requests:
       cpu: 100m
       memory: 250Mi
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                    - '{{ include "ingress-nginx.name" . }}'
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                    - "{{ .Release.Name }}"
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                    - controller
+            topologyKey: kubernetes.io/hostname
