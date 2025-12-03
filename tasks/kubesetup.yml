@@ -1,8 +1,8 @@
 # prerequisite: Setup container runtime https://kubernetes.io/docs/setup/production-environment/container-runtimes/
-- name: kubesetup
+- name: load modules
   become: true
   shell: |
-    set -e
+    set -ex
 
     cat <<EOF | tee /etc/modules-load.d/k8s.conf
     overlay
@@ -11,6 +11,20 @@
 
     modprobe overlay
     modprobe br_netfilter
+  register: kubesetup_load_modules_result
+
+- name: load modules [stdout]
+  debug:
+    msg: "{{ kubesetup_load_modules_result.stdout | split('\n') }}"
+
+- name: load modules [stderr]
+  debug:
+    msg: "{{ kubesetup_load_modules_result.stderr | split('\n') }}"
+
+- name: enable sysctl
+  become: true
+  shell: |
+    set -ex
 
     # Sysctl params required by kube, params persist across reboots
     cat <<EOF | tee /etc/sysctl.d/k8s.conf
@@ -21,6 +35,20 @@
 
     # Apply sysctl params without reboot
     sysctl --system
+  register: kubesetup_enable_sysctl_result
+
+- name: enable sysctl [stdout]
+  debug:
+    msg: "{{ kubesetup_enable_sysctl_result.stdout | split('\n') }}"
+
+- name: enable sysctl [stderr]
+  debug:
+    msg: "{{ kubesetup_enable_sysctl_result.stderr | split('\n') }}"
+
+- name: install kubernetes
+  become: true
+  shell: |
+    set -ex
 
     # k8s Prerequisites
     apt install -y gnupg2
@@ -41,16 +69,17 @@
 
     # Verify
     kubelet --version
+  register: install_kubernetes_result
 
-  register: kubesetup_output
-- name: kubesetup [stdout]
+- name: install kubernetes [stdout]
   debug:
-    msg: "{{ kubesetup_output.stdout | split('\n') }}"
-- name: kubesetup [stderr]
-  debug:
-    msg: "{{ kubesetup_output.stderr | split('\n') }}"
+    msg: "{{ install_kubernetes_result.stdout | split('\n') }}"
 
-- name: systemctl daemon-reload, restart kubelet
+- name: install kubernetes [stderr]
+  debug:
+    msg: "{{ install_kubernetes_result.stderr | split('\n') }}"
+
+- name: setup kubelet systemd service
   become: true
   ansible.builtin.systemd_service:
     name: kubelet

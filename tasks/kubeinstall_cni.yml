@@ -1,18 +1,22 @@
-- name: Install cni
+- name: Download CNI plugins archive
   become: true
-  shell: |
-    set -e
+  ansible.builtin.get_url:
+    url: "https://github.com/containernetworking/plugins/releases/download/v1.5.1/cni-plugins-linux-amd64-v1.5.1.tgz"
+    dest: "/opt/cni-plugins-linux-amd64-v1.5.1.tgz"
+    mode: "0644"
 
-    if [ ! -f "/opt/cni-plugins-linux-amd64-v1.5.1.tgz" ]; then
-      wget -q https://github.com/containernetworking/plugins/releases/download/v1.5.1/cni-plugins-linux-amd64-v1.5.1.tgz -O /opt/cni-plugins-linux-amd64-v1.5.1.tgz
-    fi
+- name: Create CNI bin directory
+  become: true
+  ansible.builtin.file:
+    path: "/opt/cni/bin"
+    state: directory
+    mode: "0755"
 
-    mkdir -p /opt/cni/bin
-    tar Cxzvf /opt/cni/bin /opt/cni-plugins-linux-amd64-v1.5.1.tgz
-  register: install_cni_output
-- name: Install cni [stdout]
-  debug:
-    msg: "{{ install_cni_output.stdout | split('\n') }}"
-- name: Install cni [stderr]
-  debug:
-    msg: "{{ install_cni_output.stderr | split('\n') }}"
+- name: Extract CNI plugins
+  become: true
+  ansible.builtin.unarchive:
+    src: "/opt/cni-plugins-linux-amd64-v1.5.1.tgz"
+    dest: "/opt/cni/bin"
+    remote_src: yes
+    # Optimization: prevents re-extracting if a common CNI binary (like 'bridge') already exists
+    creates: "/opt/cni/bin/bridge"

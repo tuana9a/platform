@@ -1,16 +1,17 @@
-- name: Install runc
+- name: Download runc binary to cache location
   become: true
-  shell: |
-    set -e
+  ansible.builtin.get_url:
+    url: "https://github.com/opencontainers/runc/releases/download/v1.1.13/runc.amd64"
+    dest: "/opt/runc.amd64"
+    mode: "0644"
+    # Optional: Add checksum='sha256:...' for security and to prevent re-downloads if file content matches
 
-    if [ ! -f "/opt/runc.amd64" ]; then
-      wget -q https://github.com/opencontainers/runc/releases/download/v1.1.13/runc.amd64 -O /opt/runc.amd64
-      install -m 755 /opt/runc.amd64 /usr/local/sbin/runc
-    fi
-  register: install_runc_output
-- name: Install runc [stdout]
-  debug:
-    msg: "{{ install_runc_output.stdout | split('\n') }}"
-- name: Install runc [stderr]
-  debug:
-    msg: "{{ install_runc_output.stderr | split('\n') }}"
+- name: Install runc to final destination
+  become: true
+  ansible.builtin.copy:
+    src: "/opt/runc.amd64"
+    dest: "/usr/local/sbin/runc"
+    remote_src: yes
+    mode: "0755"
+    owner: root
+    group: root

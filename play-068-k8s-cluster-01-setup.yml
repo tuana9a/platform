@@ -1,11 +1,8 @@
 - hosts: k8s_cluster
   tasks:
     - import_tasks: ./tasks/kubeinstall_runc.yml
-      when: not kubesetup_completed
     - import_tasks: ./tasks/kubeinstall_cni.yml
-      when: not kubesetup_completed
     - import_tasks: ./tasks/kubeinstall_containerd.yml
-      when: not kubesetup_completed
     - import_tasks: ./tasks/kubesetup.yml
       when: not kubesetup_completed
     - import_tasks: ./tasks/install_nfs_client.yml
@@ -19,11 +16,11 @@
 
 - hosts: k8s_cluster
   tasks:
-    - name: Copy facts
+    - name: copy facts
       set_fact:
         join_command: "{{ hostvars[groups['k8s_cluster_primary_master'][0]].join_command }}"
         slurp_kube_pki_results: "{{ hostvars[groups['k8s_cluster_primary_master'][0]].slurp_kube_pki_results }}"
-    - import_tasks: ./tasks/kube_write_pki.yml # this task depends on kube_read_pki
+    - import_tasks: ./tasks/kube_write_pki.yml
       when: not kube_joined and is_control_plane
     - import_tasks: ./tasks/kubeadm_join.yml
       when: not kube_joined
