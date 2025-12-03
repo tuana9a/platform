@@ -6,5 +6,5 @@ resource "cloudflare_record" "records" {
   type     = lookup(each.value, "type", "A")
   ttl      = lookup(each.value, "ttl", 60)
   proxied  = lookup(each.value, "proxied", false)
-  comment = "${timestamp()} terraform://023-dns"
+  comment  = "023-dns"
 }
