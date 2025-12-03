@@ -11,12 +11,15 @@ resource "proxmox_virtual_environment_file" "ubuntu22-20250725" {
 
 locals {
   debian12_daily_versions = ["20250814-2204", "20251129-2311"]
+  ubuntu22_daily_versions = ["20251125"]
   pve_nodes = {
     neomorph = {
       debian12_daily_versions = local.debian12_daily_versions
+      ubuntu22_daily_versions = local.ubuntu22_daily_versions
     }
     engineer = {
       debian12_daily_versions = local.debian12_daily_versions
+      ubuntu22_daily_versions = local.ubuntu22_daily_versions
     }
   }
 }
@@ -27,4 +30,5 @@ module "pve-node-cloudimg" {
 
   pve_node_name           = each.key
   debian12_daily_versions = lookup(each.value, "debian12_daily_versions", [])
+  ubuntu22_daily_versions = lookup(each.value, "ubuntu22_daily_versions", [])
 }
