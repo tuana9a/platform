@@ -3,11 +3,11 @@ global:
 
 configs:
   params:
-    server.insecure: true
+    server.insecure: false
 
 server:
   ingress:
-    enabled: true
+    enabled: false
     ingressClassName: nginx
     annotations:
       cert-manager.io/cluster-issuer: "letsencrypt-production"
