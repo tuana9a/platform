@@ -100,16 +100,16 @@ k8s_cluster:
       kube_joined: true
       kube_pki: *kube_pki
       kubevip: *kubevip
-    # 192.168.56.23: &i-123
-    #   ansible_user: u
-    #   nodename: i-123
-    #   vmid: 123
-    #   is_control_plane: true
-    #   kubesetup_completed: true
-    #   kube_joined: true
-    #   kube_pki: *kube_pki
-    #   kubevip: *kubevip
-    #   goodbye: true
+    192.168.56.23: &i-123
+      ansible_user: u
+      nodename: i-123
+      vmid: 123
+      is_control_plane: true
+      kubesetup_completed: true
+      kube_joined: true
+      kube_pki: *kube_pki
+      kubevip: *kubevip
+      goodbye: false
     192.168.56.24: &i-124
       ansible_user: u
       nodename: i-124
@@ -128,6 +128,7 @@ k8s_cluster:
       kube_joined: true
       kube_pki: *kube_pki
       kubevip: *kubevip
+      goodbye: true
     192.168.56.31: &i-131
       ansible_user: u
       nodename: i-131
@@ -167,7 +168,7 @@ k8s_cluster:
       wireguard_clients:
         - file: i-133.conf
           name: i-133
-      goodbye: false
+      goodbye: true
     192.168.56.34: &i-134
       ansible_user: u
       nodename: i-134
@@ -188,6 +189,8 @@ k8s_cluster_primary_master:
       <<: *i-122
       goodbye_nodes:
         # - name: i-123
+        #   is_control_plane: true
+        # - name: i-125
         #   is_control_plane: true
         # - name: i-131
         # - name: i-133

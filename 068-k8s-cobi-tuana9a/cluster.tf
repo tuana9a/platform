@@ -11,6 +11,17 @@ locals {
         network_device = "vmbr0"
         pve_node       = "neomorph"
       }
+      i-123 = {
+        vmid           = 123
+        corecount      = 2
+        memsize        = 4096
+        vmip           = "192.168.56.23"
+        address        = "192.168.56.23/24"
+        gateway_ip     = "192.168.56.1"
+        network_device = "vmbr0"
+        pve_node       = "neomorph"
+        cloudimg       = "debian-12-generic-amd64-20251129-2311"
+      }
       i-124 = {
         vmid           = 124
         corecount      = 2
@@ -21,16 +32,16 @@ locals {
         network_device = "vmbr0"
         pve_node       = "engineer"
       }
-      i-125 = {
-        vmid           = 125
-        corecount      = 2
-        memsize        = 4096
-        vmip           = "192.168.56.25"
-        address        = "192.168.56.25/24"
-        gateway_ip     = "192.168.56.1"
-        network_device = "vmbr0"
-        pve_node       = "engineer"
-      }
+      # i-125 = {
+      #   vmid           = 125
+      #   corecount      = 2
+      #   memsize        = 4096
+      #   vmip           = "192.168.56.25"
+      #   address        = "192.168.56.25/24"
+      #   gateway_ip     = "192.168.56.1"
+      #   network_device = "vmbr0"
+      #   pve_node       = "engineer"
+      # }
       i-131 = {
         vmid           = 131
         corecount      = 4
@@ -52,17 +63,17 @@ locals {
         network_device = "vmbr0"
         pve_node       = "engineer"
       }
-      i-133 = {
-        vmid           = 133
-        corecount      = 4
-        memsize        = 12288
-        vmip           = "192.168.56.33"
-        address        = "192.168.56.33/24"
-        gateway_ip     = "192.168.56.1"
-        network_device = "vmbr0"
-        pve_node       = "engineer"
-        cloudimg       = "debian-12-generic-amd64-20251129-2311"
-      }
+      # i-133 = {
+      #   vmid           = 133
+      #   corecount      = 4
+      #   memsize        = 12288
+      #   vmip           = "192.168.56.33"
+      #   address        = "192.168.56.33/24"
+      #   gateway_ip     = "192.168.56.1"
+      #   network_device = "vmbr0"
+      #   pve_node       = "engineer"
+      #   cloudimg       = "debian-12-generic-amd64-20251129-2311"
+      # }
       i-134 = {
         vmid           = 134
         corecount      = 4
