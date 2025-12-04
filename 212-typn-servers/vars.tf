@@ -37,12 +37,12 @@ variable "pve_ssh_private_key" {
   default   = ""
 }
 
-variable "pve_node_name" {
+variable "pve_ssh_node_name" {
   type      = string
   sensitive = false
 }
 
-variable "pve_node_ip" {
+variable "pve_ssh_node_ip" {
   type      = string
   sensitive = true
 }
