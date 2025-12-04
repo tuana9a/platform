@@ -4,3 +4,8 @@ config:
       # server returned HTTP status 401 Unauthorized (401): no org id
       # https://github.com/grafana/loki/issues/7081
       tenant_id: 1
+  snippets:
+    extraRelabelConfigs:
+      - source_labels: [namespace]
+        regex: "promtail"
+        action: drop
