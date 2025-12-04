@@ -3,7 +3,7 @@ global:
 
 configs:
   params:
-    server.insecure: false
+    server.insecure: true
 
 server:
   ingress:
