@@ -1,10 +1,9 @@
 #!/bin/bash
 
-key=$(basename $PWD)
+key=$(basename "$(pwd)")
 
 if [ ! -f terraform.tf ]; then
-  echo "terraform.tf not found (skipped)"
-  echo "exit 0"
+  echo "skipped (terraform.tf not found)"
   exit 0
 fi
 
