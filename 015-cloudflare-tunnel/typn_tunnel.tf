@@ -10,9 +10,9 @@ resource "cloudflare_zero_trust_tunnel_cloudflared" "typn_tunnel" {
   tunnel_secret = base64encode(random_password.typn_tunnel.result)
 }
 
-resource "cloudflare_dns_record" "c-typn_tuana9a_com" {
+resource "cloudflare_dns_record" "c-ratatouille_tuana9a_com" {
   zone_id = data.cloudflare_zone.tuana9a_com.id
-  name    = "c-typn"
+  name    = "c-ratatouille"
   content = "${cloudflare_zero_trust_tunnel_cloudflared.typn_tunnel.id}.cfargotunnel.com"
   type    = "CNAME"
   ttl     = 1
@@ -26,7 +26,7 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "typn_tunnel" {
   config = {
     ingress = [
       {
-        hostname = cloudflare_dns_record.c-typn_tuana9a_com.name
+        hostname = cloudflare_dns_record.c-ratatouille_tuana9a_com.name
         service  = "http://127.0.0.1:8080"
         origin_request = {
           bastion_mode             = false
