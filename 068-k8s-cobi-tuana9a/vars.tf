@@ -32,6 +32,16 @@ variable "pve_ssh_username" {
   default   = "root"
 }
 
+variable "pve_ssh_node_name" {
+  type      = string
+  sensitive = false
+}
+
+variable "pve_ssh_node_ip" {
+  type      = string
+  sensitive = true
+}
+
 variable "pve_ssh_private_key" {
   type      = string
   sensitive = true

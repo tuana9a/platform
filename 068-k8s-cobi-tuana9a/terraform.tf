@@ -35,6 +35,10 @@ provider "proxmox" {
     agent       = true
     username    = var.pve_ssh_username
     private_key = var.pve_ssh_private_key
+    node {
+      name    = var.pve_ssh_node_name
+      address = var.pve_ssh_node_ip
+    }
   }
 }
 

@@ -73,20 +73,11 @@ systemctl restart containerd
 systemctl restart kubelet
 ```
 
-# unknown systemd-resolved uninstalled, resolvconf installed
-
-somehow systemd-resolved got uninstalled, need to install systemd-resolved again
-
-and uninstall, purge resolvconf
-
-LOL
-
-# administration
+# node management
 
 ## remove control plane
 
-first remove etcd member
-
+remove etcd member
 
 ```bash
 ssh i-123
@@ -114,27 +105,26 @@ remove by member id
 
 ```bash
 ETCDCTL_API=3 etcdctl $ETCDCTL_OPTS member remove 99788e30c04d918b
-ETCDCTL_API=3 etcdctl $ETCDCTL_OPTS member remove 8e11ebdb35be1924
 ```
 
 drain the node
 
 ```bash
-kubectl drain --ignore-daemonsets --delete-emptydir-data --disable-eviction --force i-124
 kubectl drain --ignore-daemonsets --delete-emptydir-data --disable-eviction --force i-125
 ```
 
 delete the node
 
 ```bash
-kubectl delete node i-124
 kubectl delete node i-125
 ```
 
-ssh i-124,i-125
+kubeadm reset
+
+ssh into i-125
 
 ```bash
 kubeadm reset -f
 ```
 
-remove the vm later
+destroy the vm
