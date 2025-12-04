@@ -68,11 +68,13 @@ neomorph:
   hosts:
     192.168.56.112:
       ansible_user: u
+      ufw_state: "enabled"
       ufw_rules: *proxmox_ufw_rules
 engineer:
   hosts:
     192.168.56.113:
       ansible_user: u
+      ufw_state: "disabled"
       ufw_rules: *proxmox_ufw_rules
 __k8s_cluster_vars:
   hosts:

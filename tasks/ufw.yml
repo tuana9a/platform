@@ -7,4 +7,10 @@
     port: "{{ item.port }}"
     proto: "{{ item.proto }}"
     comment: "{{ item.name }}"
-    state: enabled
+    delete: "{{ item.delete | default(false) }}"
+  when: "ufw_state == 'enabled'"
+
+- name: Enable/Disable ufw
+  become: true
+  community.general.ufw:
+    state: "{{ ufw_state }}"
