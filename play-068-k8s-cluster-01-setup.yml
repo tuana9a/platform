@@ -1,8 +1,14 @@
 - hosts: k8s_cluster
   tasks:
+    # when we upgrade the k8s, updating runc, cni, containerd could be included
+    # in the upgrade, so adding a condition to skip these installations for old
+    # worker is necessary
     - import_tasks: ./tasks/kubeinstall_runc.yml
+      when: not kubesetup_completed
     - import_tasks: ./tasks/kubeinstall_cni.yml
+      when: not kubesetup_completed
     - import_tasks: ./tasks/kubeinstall_containerd.yml
+      when: not kubesetup_completed
     - import_tasks: ./tasks/kubesetup.yml
       when: not kubesetup_completed
     - import_tasks: ./tasks/install_nfs_client.yml
