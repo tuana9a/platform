@@ -1,6 +1,3 @@
-localhost:
-  hosts:
-    127.0.0.1:
 tuana9a-dev2:
   hosts:
     192.168.56.209:
@@ -47,9 +44,11 @@ nfs:
             - "*tmp*"
             - "Python-*"
             - "amazon-corretto-*"
-__proxmox_common_vars:
+neomorph:
   hosts:
-    localhost:
+    192.168.56.112:
+      ansible_user: u
+      ufw_state: "enabled"
       ufw_rules: &proxmox_ufw_rules
         - name: "Allow SSH (Limit)"
           rule: limit
@@ -64,21 +63,21 @@ __proxmox_common_vars:
           port: "9100" # node-exporter
           proto: tcp
           from_ip: "192.168.56.0/24"
-neomorph:
-  hosts:
-    192.168.56.112:
-      ansible_user: u
-      ufw_state: "enabled"
-      ufw_rules: *proxmox_ufw_rules
 engineer:
   hosts:
     192.168.56.113:
       ansible_user: u
       ufw_state: "disabled"
       ufw_rules: *proxmox_ufw_rules
-__k8s_cluster_vars:
+k8s_cluster:
   hosts:
-    localhost:
+    192.168.56.22: &i-122
+      ansible_user: u
+      nodename: i-122
+      vmid: 122
+      is_control_plane: true
+      kubesetup_completed: true
+      kube_joined: true
       kube_pki: &kube_pki
         - /etc/kubernetes/pki/ca.crt
         - /etc/kubernetes/pki/ca.key
@@ -91,17 +90,6 @@ __k8s_cluster_vars:
       kubevip: &kubevip
         inf: eth0
         vip: 192.168.56.21
-k8s_cluster:
-  hosts:
-    192.168.56.22: &i-122
-      ansible_user: u
-      nodename: i-122
-      vmid: 122
-      is_control_plane: true
-      kubesetup_completed: true
-      kube_joined: true
-      kube_pki: *kube_pki
-      kubevip: *kubevip
     192.168.56.23: &i-123
       ansible_user: u
       nodename: i-123
