@@ -1,0 +1,9 @@
+- name: add authorized_keys
+  loop: "{{ authorized_keys }}"
+  when: "authorized_keys is defined"
+  become: true
+  ansible.posix.authorized_key:
+    user: "{{ item.user | default(ansible_user) }}"
+    state: "{{ item.state | default('present') }}"
+    key: "{{ item.key }}"
+    comment: "{{ item.comment | default('') }}"

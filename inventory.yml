@@ -3,6 +3,9 @@ tuana9a-dev2:
     192.168.56.209:
       ansible_user: u
       ansible_python_interpreter: /home/u/github.com/tuana9a/platform/.venv/bin/python
+      authorized_keys:
+        - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEu+yuCFcAO331i+S6902+7WJHmnhponellNnhk45QF2"
+          comment: "tuana9a@tuana9a-mac-air-m2.local"
 nfs:
   hosts:
     192.168.56.7:
@@ -90,6 +93,10 @@ k8s_cluster:
       kubevip: &kubevip
         inf: eth0
         vip: 192.168.56.21
+      authorized_keys: &k8s_control_plane_authorized_keys
+        - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN6bF/SOzb1XD4qo0LaZ5PVa1sCijDyQS/8oHZe9x6R5"
+          comment: "ci"
+          user: root
     192.168.56.23: &i-123
       ansible_user: u
       nodename: i-123
@@ -100,6 +107,7 @@ k8s_cluster:
       kube_pki: *kube_pki
       kubevip: *kubevip
       goodbye: false
+      authorized_keys: *k8s_control_plane_authorized_keys
     192.168.56.24: &i-124
       ansible_user: u
       nodename: i-124
@@ -109,6 +117,7 @@ k8s_cluster:
       kube_joined: true
       kube_pki: *kube_pki
       kubevip: *kubevip
+      authorized_keys: *k8s_control_plane_authorized_keys
     192.168.56.25: &i-125
       ansible_user: u
       nodename: i-125
@@ -119,6 +128,7 @@ k8s_cluster:
       kube_pki: *kube_pki
       kubevip: *kubevip
       goodbye: true
+      authorized_keys: *k8s_control_plane_authorized_keys
     192.168.56.31: &i-131
       ansible_user: u
       nodename: i-131

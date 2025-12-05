@@ -6,6 +6,7 @@
     - import_tasks: ./tasks/kubesetup.yml
       when: not kubesetup_completed
     - import_tasks: ./tasks/install_nfs_client.yml
+    - import_tasks: ./tasks/authorized_keys.yml
 
 - hosts: k8s_cluster_primary_master
   tasks:
