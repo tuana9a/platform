@@ -1,5 +1,14 @@
 - hosts: k8s_cluster
   tasks:
+    - name: Check for kubesetup completion flag
+      ansible.builtin.stat:
+        path: /opt/kubesetup_completed
+      register: kubesetup_flag
+
+    - name: Set completion variable based on file existence
+      ansible.builtin.set_fact:
+        kubesetup_completed: "{{ kubesetup_flag.stat.exists }}"
+
     # when we upgrade the k8s, updating runc, cni, containerd could be included
     # in the upgrade, so adding a condition to skip these installations for old
     # worker is necessary
@@ -11,6 +20,13 @@
       when: not kubesetup_completed
     - import_tasks: ./tasks/kubesetup.yml
       when: not kubesetup_completed
+
+    - name: Mark kubesetup as completed
+      become: yes
+      ansible.builtin.copy:
+        dest: /opt/kubesetup_completed
+        content: "1"
+
     - import_tasks: ./tasks/install_nfs_client.yml
     - import_tasks: ./tasks/authorized_keys.yml
 
@@ -27,10 +43,21 @@
       set_fact:
         join_command: "{{ hostvars[groups['k8s_cluster_primary_master'][0]].join_command }}"
         slurp_kube_pki_results: "{{ hostvars[groups['k8s_cluster_primary_master'][0]].slurp_kube_pki_results }}"
+
+    - name: Check for kube joined completion flag
+      ansible.builtin.stat:
+        path: /opt/kubejoined_completed
+      register: kubejoined_flag
+
+    - name: Set completion variable based on file existence
+      ansible.builtin.set_fact:
+        kube_joined: "{{ kubejoined_flag.stat.exists }}"
+
     - import_tasks: ./tasks/kube_write_pki.yml
       when: not kube_joined and is_control_plane
     - import_tasks: ./tasks/kubeadm_join.yml
       when: not kube_joined
+
     - name: kubevip
       become: true
       when: is_control_plane
@@ -40,3 +67,9 @@
         owner: root
         group: root
         mode: "0644"
+
+    - name: Mark kube joined as completed
+      become: yes
+      ansible.builtin.copy:
+        dest: /opt/kubejoined_completed
+        content: "1"
