@@ -11,19 +11,19 @@ spec:
         - container: eventing-controller
           requests:
             cpu: 10m
-            memory: 100M
+            memory: 250M
           limits:
             cpu: 100m
-            memory: 100M
+            memory: 250M
     - name: eventing-webhook
       resources:
         - container: eventing-webhook
           requests:
             cpu: 10m
-            memory: 150M
+            memory: 250M
           limits:
             cpu: 100m
-            memory: 150M
+            memory: 250M
     - name: kafka-controller
       resources:
         - container: controller
