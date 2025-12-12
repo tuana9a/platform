@@ -154,7 +154,7 @@ k8s_cluster:
       wireguard_clients:
         - file: i-133.conf
           name: i-133
-      goodbye: true
+      goodbye: false
     192.168.56.34: &i-134
       ansible_user: u
       nodename: i-134
