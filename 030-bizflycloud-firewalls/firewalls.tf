@@ -35,7 +35,7 @@ resource "bizflycloud_firewall" "allow_ssh" {
 resource "bizflycloud_firewall" "allow_openvpn" {
   name = "allow_openvpn"
   ingress {
-    cidr       = "0.0.0.0/0"
+    cidr       = "14.0.0.0/0"
     port_range = "1194"
     protocol   = "udp"
   }
@@ -100,7 +100,7 @@ resource "bizflycloud_firewall" "allow_wireguard" {
 resource "bizflycloud_firewall" "allow_proxmox" {
   name = "allow_proxmox"
   ingress {
-    cidr       = "0.0.0.0/0"
+    cidr       = "14.0.0.0/0"
     port_range = "8006"
     protocol   = "tcp"
   }
