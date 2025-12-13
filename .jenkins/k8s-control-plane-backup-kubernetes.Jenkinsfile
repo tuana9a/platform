@@ -198,14 +198,19 @@ spec:
                     echo $DURATION > /workdir/duration.time
                     echo $DURATION_PRETTY > /workdir/duration_pretty.txt
                     '''
-                    sh '''
-                    case "$(cat /workdir/status)" in
-                        1) status_msg=":white_check_mark:" ;;
-                        *) status_msg=":x:" ;;
-                    esac
-                    MSG="$status_msg \\`backup-kubernetes\\` \\`$(cat /workdir/duration_pretty.txt)\\` $BUILD_URL"
-                    curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\\"content\\":\\"${MSG}\\"}"
-                    '''
+
+                    for (vm in vms) {
+                        def nodename = vm["nodename"]
+                        sh '''
+                        case "$(cat /workdir/status)" in
+                            1) status_msg=":white_check_mark:" ;;
+                            *) status_msg=":x:" ;;
+                        esac
+                        MSG="$status_msg \\`backup-kubernetes\\` ''' + "\\`\$(cat /workdir/datehour)-k8s-backup-${nodename}.tar.gz\\`" + ''' \\`$(cat /workdir/duration_pretty.txt)\\` $BUILD_URL"
+                        curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\\"content\\":\\"${MSG}\\"}"
+                        '''
+                    }
+
                     sh '''
                     push_gateway_baseurl="http://prometheus-pushgateway.prometheus.svc.cluster.local:9091";
                     POD_NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace);
