@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: dkhptd-api-gateway
 spec:
-  replicas: 3
+  replicas: 0
   selector:
     matchLabels:
       app: dkhptd-api-gateway
