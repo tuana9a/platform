@@ -18,7 +18,7 @@ resource "bizflycloud_firewall" "allow_ping" {
 resource "bizflycloud_firewall" "allow_ssh" {
   name = "allow_ssh"
   ingress {
-    cidr       = "0.0.0.0/0"
+    cidr       = "14.0.0.0/0"
     port_range = "22"
     protocol   = "tcp"
   }
