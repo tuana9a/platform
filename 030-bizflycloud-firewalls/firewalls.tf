@@ -10,13 +10,12 @@ resource "bizflycloud_firewall" "orisis" {
   # allow_ping
   ingress {
     cidr       = "0.0.0.0/0"
-    port_range = ""
     protocol   = "icmp"
   }
 
   # allow_ssh
   ingress {
-    cidr       = "14.0.0.0/8"
+    cidr       = "0.0.0.0/0"
     port_range = "22"
     protocol   = "tcp"
   }
@@ -51,7 +50,7 @@ resource "bizflycloud_firewall" "orisis" {
 
   # allow_proxmox
   ingress {
-    cidr       = "14.0.0.0/0"
+    cidr       = "14.0.0.0/8"
     port_range = "8006"
     protocol   = "tcp"
   }
