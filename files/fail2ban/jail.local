@@ -1,0 +1,8 @@
+[sshd]
+enabled = true
+mode = aggressive
+backend = systemd
+maxretry = 5
+bantime = 60 # 1 minutes
+bantime.increment = true
+bantime.multipliers = 1 5 60 1440 43200 525600
