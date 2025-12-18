@@ -7,7 +7,7 @@ spec:
   template:
     spec:
       containers:
-        - image: tuana9a/uuid:git-8386fdd0bf27daa0359e5bfbf044521f0b2c0d79
+        - image: tuana9a/uuid:git-af287c15e3b164a81fcf36e6a679c12d190d4cbe # break: migrate to golang
           env:
             - name: BIND
               value: "0.0.0.0"
