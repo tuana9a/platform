@@ -18,6 +18,7 @@ RUN sudo apt install -y \
   wget \
   vim
 
-RUN sudo apt install -y zsh && sudo usermod -s /bin/zsh coder
+RUN sudo apt install -y zsh \
+  && sudo usermod -s /bin/zsh coder
 
 RUN sudo apt install -y direnv
