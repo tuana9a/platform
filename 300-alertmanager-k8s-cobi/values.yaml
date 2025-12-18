@@ -13,7 +13,7 @@ config:
     - name: "telegram"
       telegram_configs:
         - bot_token_file: /etc/telegram_bot_token.txt
-          chat_id: -1002044103252 # 9Alerts
+          chat_id: -1002012523352 # t9st group
 extraSecretMounts:
   - name: telegram-bot-token
     mountPath: /etc/telegram_bot_token.txt
