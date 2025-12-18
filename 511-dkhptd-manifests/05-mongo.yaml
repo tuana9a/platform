@@ -1,3 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-conf
+  namespace: dkhptd
+data:
+  mongod.conf: |
+    # configmap/mongo-conf
+    net:
+      port: 27017
+      bindIp: 0.0.0.0
+    security:
+      authorization: disabled
+    storage:
+      wiredTiger:
+        engineConfig:
+          cacheSizeGB: 2
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -34,7 +52,7 @@ spec:
       volumes:
         - name: mongo-config
           configMap:
-            name: dkhptd-mongo-conf
+            name: mongo-conf
   volumeClaimTemplates:
     - metadata:
         name: mongo-data

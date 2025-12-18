@@ -1,26 +1,50 @@
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: api-gateway
+spec:
+  refreshInterval: "15s"
+  secretStoreRef:
+    name: vault-tuana9a-com
+    kind: ClusterSecretStore
+  target:
+    name: api-gateway
+  dataFrom:
+    - extract:
+        key: dkhptd/api-gateway/env
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-gateway
+  namespace: dkhptd
+data:
+  BIND: 0.0.0.0
+  PORT: "8080"
+  TKB_PARSER_URL: https://tkb-parser.stuffs.kn.tuana9a.com
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dkhptd-api-gateway
+  name: api-gateway
 spec:
   replicas: 0
   selector:
     matchLabels:
-      app: dkhptd-api-gateway
+      app: api-gateway
   template:
     metadata:
       labels:
-        app: dkhptd-api-gateway
+        app: api-gateway
     spec:
       containers:
-        - name: dkhptd-api-gateway
+        - name: api-gateway
           image: tuana9a/dkhptd-api-gateway:2025.10.20.235208
           envFrom:
             - configMapRef:
-                name: dkhptd-api-gateway
+                name: api-gateway
             - secretRef:
-                name: dkhptd-api-gateway
+                name: api-gateway
           resources:
             requests:
               memory: "50Mi"
@@ -31,12 +55,12 @@ spec:
 # apiVersion: autoscaling/v2
 # kind: HorizontalPodAutoscaler
 # metadata:
-#   name: dkhptd-api-gateway
+#   name: api-gateway
 # spec:
 #   scaleTargetRef:
 #     apiVersion: apps/v1
 #     kind: Deployment
-#     name: dkhptd-api-gateway
+#     name: api-gateway
 #   minReplicas: 1
 #   maxReplicas: 5
 #   metrics:
@@ -50,10 +74,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: dkhptd-api-gateway
+  name: api-gateway
 spec:
   selector:
-    app: dkhptd-api-gateway
+    app: api-gateway
   type: ClusterIP
   ports:
     - port: 8080
@@ -81,6 +105,6 @@ spec:
             path: "/"
             backend:
               service:
-                name: dkhptd-api-gateway
+                name: api-gateway
                 port:
                   number: 8080
