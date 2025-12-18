@@ -5,6 +5,8 @@ USER coder
 RUN sudo apt update -y
 
 RUN sudo apt install -y \
-  openssh-client
+  openssh-client \
+  vim
 
-RUN sudo apt install -y zsh && sudo usermod -s /bin/zsh coder
+RUN sudo apt install -y zsh \
+  && sudo usermod -s /bin/zsh coder
