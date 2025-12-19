@@ -115,6 +115,9 @@ data:
             }
           }
           multibranchPipelineJob('511-dkhptd-mongo-backup') {
+            configure {
+              it / disabled << 'true'
+            }
             branchSources {
               git {
                 // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
