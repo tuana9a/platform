@@ -23,13 +23,55 @@ coder:
           - watch
   # WARN: those two envs are hard coded, can not move it to configmap need to specify it right here
   env:
+    - name: CODER_PG_CONNECTION_URL
+      valueFrom:
+        secretKeyRef:
+          name: coder-env
+          key: CODER_PG_CONNECTION_URL
+
+    - name: CODER_OIDC_ALLOW_SIGNUPS
+      value: "false"
+
+    - name: CODER_OIDC_AUTH_URL_PARAMS
+      value: '{"access_type": "offline", "prompt": "consent"}'
+
+    - name: CODER_OIDC_CLIENT_ID
+      valueFrom:
+        secretKeyRef:
+          name: coder-env
+          key: CODER_OIDC_CLIENT_ID
+    - name: CODER_OIDC_CLIENT_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: coder-env
+          key: CODER_OIDC_CLIENT_SECRET
+
+    - name: CODER_OIDC_EMAIL_DOMAIN
+      value: "gmail.com"
+
+    - name: CODER_OIDC_ICON_URL
+      value: "/icon/google.svg"
+
+    - name: CODER_OIDC_ISSUER_URL
+      value: "https://accounts.google.com"
+
+    - name: CODER_OIDC_SCOPES
+      value: "openid,profile,email"
+
+    - name: CODER_OIDC_SIGN_IN_TEXT
+      value: "Sign in with Google"
+
+    - name: CODER_PROMETHEUS_ADDRESS
+      value: "0.0.0.0:2112"
+
     - name: CODER_ACCESS_URL
       value: "https://coder.tuana9a.com"
+
     - name: CODER_WILDCARD_ACCESS_URL
       value: "*.coder.tuana9a.com"
-  envFrom:
-    - secretRef:
-        name: coder-env
+
+    - name: CODER_TELEMETRY_ENABLE
+      value: "false"
   service:
     enable: true
     type: ClusterIP
@@ -50,5 +92,5 @@ coder:
       cpu: 1000m
       memory: 2048Mi
     requests:
-      cpu: 500m
-      memory: 1024Mi
+      cpu: 100m
+      memory: 2048Mi
