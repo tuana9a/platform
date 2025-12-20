@@ -1,9 +1,9 @@
 resource "coderd_template" "statefulset" {
   name        = "statefulset"
-  description = "A code-server running as statefulset"
+  description = "Running statefulset code-server"
   versions = [
     {
-      description = "A code-server running as statefulset"
+      description = "Running statefulset code-server"
       directory   = "./templates/statefulset"
       active      = true
       tf_vars = [{
