@@ -85,10 +85,10 @@ data "coder_parameter" "home_storage_class" {
   description  = "home storage class"
   mutable      = false
   type         = "string"
-  default      = "nfs567"
+  default      = "proxmox-data-xfs"
   option {
-    name  = "nfs567"
-    value = "nfs567"
+    name  = "proxmox-data-xfs"
+    value = "proxmox-data-xfs"
   }
 }
 
