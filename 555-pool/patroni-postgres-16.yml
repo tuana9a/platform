@@ -102,13 +102,15 @@ spec:
               value: "0.0.0.0:8008"
       terminationGracePeriodSeconds: 0
   volumeClaimTemplates:
-    - metadata:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
         labels:
           application: spilo
           spilo-cluster: *cluster_name
         name: pgdata
       spec:
-        storageClassName: nfs567
+        storageClassName: proxmox-data-xfs
         accessModes:
           - ReadWriteOnce
         resources:
