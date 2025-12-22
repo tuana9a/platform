@@ -178,6 +178,35 @@ k8s_cluster_operations:
         #   is_control_plane: true
         # - name: i-131
         # - name: i-133
+      node_labels: # cd 068-k8s-cobi-tuana9a && terraform output -raw proxmox_csi_node_labels_help
+        - "labels":
+            - "topology.kubernetes.io/region=alien"
+            - "topology.kubernetes.io/zone=neomorph"
+          "nodename": "i-122"
+        - "labels":
+            - "topology.kubernetes.io/region=alien"
+            - "topology.kubernetes.io/zone=neomorph"
+          "nodename": "i-123"
+        - "labels":
+            - "topology.kubernetes.io/region=alien"
+            - "topology.kubernetes.io/zone=engineer"
+          "nodename": "i-124"
+        - "labels":
+            - "topology.kubernetes.io/region=alien"
+            - "topology.kubernetes.io/zone=neomorph"
+          "nodename": "i-131"
+        - "labels":
+            - "topology.kubernetes.io/region=alien"
+            - "topology.kubernetes.io/zone=engineer"
+          "nodename": "i-132"
+        - "labels":
+            - "topology.kubernetes.io/region=alien"
+            - "topology.kubernetes.io/zone=engineer"
+          "nodename": "i-133"
+        - "labels":
+            - "topology.kubernetes.io/region=alien"
+            - "topology.kubernetes.io/zone=neomorph"
+          "nodename": "i-134"
 orisis:
   hosts:
     orisis.tuana9a.com:

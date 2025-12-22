@@ -1,0 +1,15 @@
+config:
+  clusters:
+    - url: "${pve_url}" # ex: 'https://cluster-api-1.exmple.com:8006/api2/json'
+      insecure: ${pve_insecure}
+      token_id: "${pve_token_id}" # ex: 'kubernetes-csi@pve!csi'
+      token_secret: "${pve_token_secret}"
+      region: "${pve_cluster_name}" # cluster name
+
+storageClass:
+  - name: proxmox-data-xfs
+    storage: data
+    reclaimPolicy: Delete
+    fstype: xfs
+    annotations:
+      storageclass.kubernetes.io/is-default-class: "true"

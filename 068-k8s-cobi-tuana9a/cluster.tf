@@ -166,3 +166,21 @@ resource "proxmox_virtual_environment_vm" "cluster" {
     ignore_changes = [initialization]
   }
 }
+
+/*
+https://github.com/sergelogvinov/proxmox-csi-plugin/blob/main/docs/install.md#prepare-kubernetes-cluster
+
+Proxmox CSI Plugin relies on the well-known Kubernetes topology node labels to define the disk location.
+  topology.kubernetes.io/region - Cluster name, the name must be the same as in cloud config region name
+  topology.kubernetes.io/zone - Proxmox node name
+
+*/
+output "proxmox_csi_node_labels_help" {
+  value = yamlencode([for key, node in local.cluster.nodes : ({
+    nodename = key
+    labels = [
+      "topology.kubernetes.io/region=alien",
+      "topology.kubernetes.io/zone=${node.pve_node}",
+    ]
+  })])
+}

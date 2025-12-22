@@ -22,7 +22,7 @@
       when: not kubesetup_completed
 
     - name: Mark kubesetup as completed
-      become: yes
+      become: true
       ansible.builtin.copy:
         dest: /opt/kubesetup_completed
         content: "1"
@@ -69,7 +69,16 @@
         mode: "0644"
 
     - name: Mark kube joined as completed
-      become: yes
+      become: true
       ansible.builtin.copy:
         dest: /opt/kubejoined_completed
         content: "1"
+
+- hosts: k8s_cluster_operations
+  tasks:
+    - include_tasks: ./tasks/kubectl_label_node.yml
+      when: is_control_plane
+      loop: "{{ node_labels }}"
+      vars:
+        node_name: "{{ item.nodename }}"
+        label_pairs: "{{ item.labels }}"
