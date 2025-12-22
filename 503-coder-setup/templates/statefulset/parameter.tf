@@ -48,6 +48,7 @@ data "coder_parameter" "home_persistent" {
   name         = "home_persistent"
   display_name = "Home dir persistent"
   description  = "Whether home dir is persistent or ephemeral"
+  icon         = "/icon/database.svg"
   mutable      = true
   type         = "string"
   default      = "no"
@@ -66,7 +67,7 @@ data "coder_parameter" "home_disk_size" {
   display_name = "Home disk size"
   description  = "The size of the home disk in GB"
   type         = "number"
-  icon         = "/emojis/1f4be.png"
+  icon         = "/icon/database.svg"
   mutable      = false
   default      = "10"
   validation {
@@ -79,6 +80,7 @@ data "coder_parameter" "home_storage_class" {
   name         = "home_storage_class"
   display_name = "Home storage class"
   description  = "home storage class"
+  icon         = "/icon/database.svg"
   mutable      = false
   type         = "string"
   default      = "proxmox-data-xfs"
@@ -92,7 +94,7 @@ data "coder_parameter" "image_tag" {
   name         = "image_tag"
   display_name = "Image tag"
   description  = "Docker image tuana9a/coder tag"
-  default      = "base"
+  default      = "minimal-2025.12.22"
   icon         = "/icon/docker.png"
   mutable      = true
 }
