@@ -9,8 +9,8 @@ server:
       enabled: true
   dataStorage:
     enabled: true
-    size: 10Gi
-    storageClass: nfs567
+    size: 5Gi
+    storageClass: proxmox-data-xfs
   affinity: ""
   ingress:
     enabled: true
