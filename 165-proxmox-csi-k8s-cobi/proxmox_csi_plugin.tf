@@ -32,6 +32,8 @@ resource "proxmox_virtual_environment_user_token" "kubernetes_csi" {
   expiration_date = time_offset.three_months_from_now.rfc3339
   token_name      = "kubernetes-csi"
   user_id         = proxmox_virtual_environment_user.kubernetes_csi.user_id
+
+  privileges_separation = false
 }
 
 resource "helm_release" "proxmox_csi_plugin" {
@@ -49,6 +51,7 @@ resource "helm_release" "proxmox_csi_plugin" {
     pve_insecure     = var.proxmox_csi_pve_insecure
     pve_cluster_name = var.proxmox_csi_cluster_name
     pve_token_id     = proxmox_virtual_environment_user_token.kubernetes_csi.id
-    pve_token_secret = proxmox_virtual_environment_user_token.kubernetes_csi.value
+    pve_token_secret = split("=", proxmox_virtual_environment_user_token.kubernetes_csi.value)[1]
+    pve_storage_id   = "local"
   })]
 }

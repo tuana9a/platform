@@ -8,7 +8,7 @@ config:
 
 storageClass:
   - name: proxmox-data-xfs
-    storage: data
+    storage: "${pve_storage_id}" # ex: local
     reclaimPolicy: Delete
     fstype: xfs
     annotations:
