@@ -2,38 +2,7 @@ pipeline {
     options { buildDiscarder(logRotator(numToKeepStr: '3')) }
     agent {
         kubernetes {
-            yaml '''
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-    - name: ubuntu
-      image: tuana9a/ubuntu:git-1d3169e
-      command: ["sleep", "infinity"]
-      volumeMounts:
-        - name: secrets
-          mountPath: "/var/secrets"
-          readOnly: true
-        - name: workdir
-          mountPath: "/workdir"
-    - name: vault
-      image: hashicorp/vault:1.17.2
-      command: ["sleep", "infinity"]
-      volumeMounts:
-        - name: secrets
-          mountPath: "/var/secrets"
-          readOnly: true
-        - name: workdir
-          mountPath: "/workdir"
-  volumes:
-    - name: secrets
-      secret:
-        secretName: vault-unseal-keys
-    - name: workdir
-      emptyDir: {}
-'''
-            defaultContainer 'ubuntu'
-            retries 2
+            yamlFile '.jenkins/vault-unseal.yaml'
         }
     }
     stages {
@@ -58,22 +27,41 @@ spec:
         stage('unseal') {
             steps {
                 container('vault') {
-                    sh '''
-                    set +x
-                    for instanceId in $(seq 0 2); do
-                        export VAULT_ADDR=http://vault-$instanceId.vault-internal.vault.svc.cluster.local:8200
-                        echo "VAULT_ADDR=$VAULT_ADDR"
-                        is_sealed=$(vault status | grep -i sealed | awk '{print $2}')
-                        if [ "$is_sealed" = "false" ]; then
-                            echo "vault is unsealed. Exiting..."
-                            continue
-                        fi
-                        echo "vault is sealed. Unsealing..."
-                        vault operator unseal $(cat /var/secrets/unseal_key_0)
-                        vault operator unseal $(cat /var/secrets/unseal_key_1)
-                        vault operator unseal $(cat /var/secrets/unseal_key_2)
-                    done
-                    '''
+                    script {
+                        // Define the list of items to parallelize over
+                        def pods = ["vault-0", "vault-1", "vault-2"]
+
+                        // Create a map of parallel tasks
+                        def tasks = pods.collectEntries { pod ->
+                            // Alias the loop variable to avoid closure binding issues
+                            def currentPod = pod
+
+                            // Map key is the branch name, value is the closure
+                            ["unseal ${pod}": {
+                                stage("unseal ${pod}") {
+                                    // Agent for the parallel task
+                                    container('vault') { 
+                                        sh '''
+                                        set +x
+                                        export VAULT_ADDR=http://''' + pod + '''.vault-internal.vault.svc.cluster.local:8200
+                                        echo "VAULT_ADDR=$VAULT_ADDR"
+                                        is_sealed=$(vault status | grep -i sealed | awk '{print $2}')
+                                        if [ "$is_sealed" = "false" ]; then
+                                            echo "vault is unsealed. Exiting..."
+                                            continue
+                                        fi
+                                        echo "vault is sealed. Unsealing..."
+                                        vault operator unseal $(cat /var/secrets/unseal_key_0)
+                                        vault operator unseal $(cat /var/secrets/unseal_key_1)
+                                        vault operator unseal $(cat /var/secrets/unseal_key_2)
+                                        '''
+                                    }
+                                }
+                            }]
+                        }
+                        // Execute the tasks in parallel
+                        parallel tasks
+                    }
                     sh 'echo 1 > /workdir/status'
                     sh 'date +%s > /workdir/stop.time'
                 }
