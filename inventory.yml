@@ -167,7 +167,7 @@ k8s_cluster:
           state: stopped
         - file: i-134.conf
           name: i-134
-k8s_cluster_primary_master:
+k8s_cluster_operations:
   hosts:
     192.168.56.22:
       <<: *i-122

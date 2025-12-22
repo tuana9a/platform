@@ -1,4 +1,4 @@
-- hosts: k8s_cluster_primary_master
+- hosts: k8s_cluster_operations
   tasks:
     - include_tasks: ./tasks/kubectl_drain.yml
       loop: "{{ goodbye_nodes }}"

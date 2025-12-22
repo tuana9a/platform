@@ -30,7 +30,7 @@
     - import_tasks: ./tasks/install_nfs_client.yml
     - import_tasks: ./tasks/authorized_keys.yml
 
-- hosts: k8s_cluster_primary_master
+- hosts: k8s_cluster_operations
   tasks:
     - import_tasks: ./tasks/kube_read_pki.yml
       when: is_control_plane
@@ -41,8 +41,8 @@
   tasks:
     - name: copy facts
       set_fact:
-        join_command: "{{ hostvars[groups['k8s_cluster_primary_master'][0]].join_command }}"
-        slurp_kube_pki_results: "{{ hostvars[groups['k8s_cluster_primary_master'][0]].slurp_kube_pki_results }}"
+        join_command: "{{ hostvars[groups['k8s_cluster_operations'][0]].join_command }}"
+        slurp_kube_pki_results: "{{ hostvars[groups['k8s_cluster_operations'][0]].slurp_kube_pki_results }}"
 
     - name: Check for kube joined completion flag
       ansible.builtin.stat:
