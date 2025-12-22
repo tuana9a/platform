@@ -1,5 +1,5 @@
 variable "pve_insecure" {
-  type = string
+  type = bool
 }
 
 variable "pve_endpoint" {
