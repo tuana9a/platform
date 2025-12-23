@@ -3,7 +3,7 @@ server:
     scrape_interval: 10s
   persistentVolume:
     storageClass: proxmox-data-xfs
-    size: 15Gi
+    size: 50Gi
   resources:
     limits:
       cpu: 500m
