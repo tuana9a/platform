@@ -3,8 +3,8 @@ image:
   pullPolicy: IfNotPresent
   tag: "v0.28.0" # fix https://github.com/prometheus/alertmanager/pull/3728
 persistence:
-  storageClass: nfs567
-  size: 2Gi
+  storageClass: proxmox-data-xfs
+  size: 5Gi
 config:
   enabled: true
   route:
