@@ -37,7 +37,7 @@ spec:
         fsGroup: 999 # postres
       containers:
         - name: *cluster_name
-          image: tuana9a/patroni-postgres-16
+          image: tuana9a/patroni-postgres-16:2025.12.19.083041
           imagePullPolicy: IfNotPresent
           readinessProbe:
             httpGet:
