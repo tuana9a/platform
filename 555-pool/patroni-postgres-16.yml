@@ -35,6 +35,24 @@ spec:
       serviceAccountName: patroni-postgres-16
       securityContext:
         fsGroup: 999 # postres
+      initContainers:
+        - name: fix-permissions
+          image: busybox
+          # Use chmod 700 to restrict access to the owner only
+          command:
+            - "sh"
+            - "-c"
+            - |
+              DIR="/home/postgres/pgdata/pgroot/data"
+              if [ -d "$DIR" ]; then
+                echo "Directory $DIR exists. Setting permissions..."
+                chmod 700 "$DIR"
+              else
+                echo "Directory $DIR does not exist yet. Skipping..."
+              fi
+          volumeMounts:
+            - name: pgdata
+              mountPath: /home/postgres/pgdata
       containers:
         - name: *cluster_name
           image: tuana9a/patroni-postgres-16:2025.12.19.083041
