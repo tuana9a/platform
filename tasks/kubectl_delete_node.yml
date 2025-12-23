@@ -2,16 +2,16 @@
   become: true
   ansible.builtin.command: >
     kubectl delete node {{ k8s_node_name }}
-  register: k8s_delete_node_result
+  register: kubectl_delete_node_result
   environment:
-    KUBECONFIG: "{{ k8s_delete.kubeconfig | default('/etc/kubernetes/admin.conf') }}"
-  changed_when: k8s_delete_node_result.rc == 0
-  failed_when: k8s_delete_node_result.rc != 0
+    KUBECONFIG: "{{ kubeconfig | default('/etc/kubernetes/admin.conf') }}"
+  changed_when: kubectl_delete_node_result.rc == 0
+  failed_when: kubectl_delete_node_result.rc != 0
 
 - name: delete kubernetes node [stdout]
   debug:
-    msg: "{{ k8s_delete_node_result.stdout | split('\n') }}"
+    msg: "{{ kubectl_delete_node_result.stdout | split('\n') }}"
 
 - name: delete kubernetes node [stderr]
   debug:
-    msg: "{{ k8s_delete_node_result.stderr | split('\n') }}"
+    msg: "{{ kubectl_delete_node_result.stderr | split('\n') }}"
