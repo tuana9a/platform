@@ -28,7 +28,8 @@ deploymentMode: SingleBinary
 singleBinary:
   replicas: 1
   persistence:
-    storageClass: nfs567
+    storageClass: proxmox-data-xfs
+  size: 15Gi
 
 # Cache config
 resultsCache:
@@ -41,8 +42,8 @@ chunksCache:
 minio:
   enabled: true
   persistence:
-    storageClass: nfs567
-    size: 10Gi
+    storageClass: proxmox-data-xfs
+    size: 25Gi
   resources:
     requests:
       cpu: 100m
