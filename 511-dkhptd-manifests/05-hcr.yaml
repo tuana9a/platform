@@ -3,12 +3,70 @@ kind: PersistentVolumeClaim
 metadata:
   name: hcr-workdir
 spec:
-  storageClassName: nfs567
+  storageClassName: proxmox-data-xfs
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
-      storage: 6Gi
+      storage: 5Gi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hcr-workdir-setup
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      volumes:
+        - name: hcr-workdir
+          persistentVolumeClaim:
+            claimName: hcr-workdir
+      initContainers:
+        - name: repo
+          image: alpine/git
+          volumeMounts:
+            - name: hcr-workdir
+              mountPath: /app
+          command:
+            - "/bin/sh"
+            - "-c"
+            - |
+              mkdir -p /app/hust-captcha-resolver
+              rm -r /tmp/dkhptd || echo "ok: /tmp/dkhptd not found"
+              git clone https://github.com/tuana9a/dkhptd /tmp/dkhptd
+              cp -r /tmp/dkhptd/hust-captcha-resolver/* /app/hust-captcha-resolver
+              rm -r /tmp/dkhptd
+              ls -lha /app/
+              ls -lha /app/hust-captcha-resolver/
+        - name: weights
+          image: alpine/curl
+          volumeMounts:
+            - name: hcr-workdir
+              mountPath: /app
+          command:
+            - "/bin/sh"
+            - "-c"
+            - |
+              rm /app/hust-captcha-resolver/weights*.pth
+              curl -sSo /app/hust-captcha-resolver/weights-2021.04.05.pth https://public.tuana9a.com/hust-captcha-resolver/weights-2021.04.05.pth
+              ls -lha /app/hust-captcha-resolver/
+        - name: venv
+          image: python:3.8-slim-bullseye
+          workingDir: /app/hust-captcha-resolver
+          volumeMounts:
+            - name: hcr-workdir
+              mountPath: /app
+          command:
+            - "/bin/sh"
+            - "-c"
+            - |
+              python3 -m venv .venv
+              .venv/bin/pip install -r requirements.txt
+      containers:
+        - name: dummy
+          image: alpine
+          command: ["echo", "done"]
 ---
 apiVersion: apps/v1
 kind: Deployment
