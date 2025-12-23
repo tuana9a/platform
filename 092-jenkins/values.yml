@@ -1,12 +1,13 @@
 persistence:
   enabled: true
-  storageClass: nfs567
+  storageClass: proxmox-data-xfs
+  size: "15Gi"
 controller:
   additionalPlugins: []
   installPlugins: []
   image:
-    repository: "jenkins/jenkins"
-    tag: "2.511"
+    repository: "tuana9a/jenkins"
+    tag: "2025.12.23.123913"
   ingress:
     enabled: true
     hostName: jenkins.tuana9a.com
