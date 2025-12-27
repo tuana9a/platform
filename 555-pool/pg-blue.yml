@@ -1,0 +1,313 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pg-blue-config-overwrite
+data:
+  # https://github.com/tuana9a/docker-images/blob/643e2db3acb656f3a2c666c461ddf4430bf759b0/patroni-postgres/16/patroni.yml.tmpl
+  patroni.yml.tmpl: |
+    bootstrap:
+      dcs:
+        postgresql:
+          use_pg_rewind: true
+          pg_hba:
+          - host all all 0.0.0.0/0 md5
+          - host replication ${PATRONI_REPLICATION_USERNAME} ${PATRONI_KUBERNETES_POD_IP}/16 md5
+          - host replication ${PATRONI_REPLICATION_USERNAME} 127.0.0.1/32 md5
+        standby_cluster:
+          host: pg-purple.pool.svc.cluster.local
+          port: 5432
+          primary_slot_name: standbyme
+          create_replica_methods:
+          - basebackup
+      initdb:
+      - auth-host: md5
+      - auth-local: trust
+      - encoding: UTF8
+      - locale: en_US.UTF-8
+      - data-checksums
+    restapi:
+      connect_address: '${PATRONI_KUBERNETES_POD_IP}:8008'
+    postgresql:
+      connect_address: '${PATRONI_KUBERNETES_POD_IP}:5432'
+      authentication:
+        superuser:
+          password: '${PATRONI_SUPERUSER_PASSWORD}'
+        replication:
+          password: '${PATRONI_REPLICATION_PASSWORD}'
+---
+# headless service to avoid deletion of pg-blue-config endpoint
+apiVersion: v1
+kind: Service
+metadata:
+  name: pg-blue-config
+  labels:
+    application: patroni
+    cluster-name: pg-blue
+spec:
+  clusterIP: None
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: &cluster_name pg-blue
+  labels:
+    application: patroni
+    cluster-name: *cluster_name
+spec:
+  replicas: 3
+  serviceName: *cluster_name
+  selector:
+    matchLabels:
+      application: patroni
+      cluster-name: *cluster_name
+  template:
+    metadata:
+      labels:
+        application: patroni
+        cluster-name: *cluster_name
+    spec:
+      serviceAccountName: pg-blue
+      securityContext:
+        fsGroup: 999 # postres
+      initContainers:
+        - name: fix-permissions
+          image: busybox
+          # Use chmod 700 to restrict access to the owner only
+          command:
+            - "sh"
+            - "-c"
+            - |
+              DIR="/home/postgres/pgdata/pgroot/data"
+              if [ -d "$DIR" ]; then
+                echo "Directory $DIR exists. Setting permissions..."
+                chmod 700 "$DIR"
+              else
+                echo "Directory $DIR does not exist yet. Skipping..."
+              fi
+          volumeMounts:
+            - name: pgdata
+              mountPath: /home/postgres/pgdata
+      containers:
+        - name: *cluster_name
+          image: tuana9a/patroni-postgres-16:git-490a2d680b9cea9aa205bea8f1d71cd6799e783f # support patroni.yml overwrite
+          imagePullPolicy: IfNotPresent
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /readiness
+              port: 8008
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          ports:
+            - containerPort: 8008
+              protocol: TCP
+            - containerPort: 5432
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /home/postgres/pgdata
+              name: pgdata
+            - name: pg-blue-config-overwrite
+              mountPath: "/home/postgres/patroni.yml.tmpl"
+              subPath: "patroni.yml.tmpl"
+          env:
+            - name: PATRONI_KUBERNETES_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: PATRONI_KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: PATRONI_KUBERNETES_BYPASS_API_SERVICE
+              value: "true"
+            - name: PATRONI_KUBERNETES_USE_ENDPOINTS
+              value: "true"
+            - name: PATRONI_KUBERNETES_LABELS
+              value: "{application: patroni, cluster-name: pg-blue}"
+            - name: PATRONI_SUPERUSER_USERNAME
+              value: postgres
+            - name: PATRONI_SUPERUSER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: *cluster_name
+                  key: superuser-password
+            - name: PATRONI_REPLICATION_USERNAME
+              value: standby
+            - name: PATRONI_REPLICATION_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: *cluster_name
+                  key: replication-password
+            - name: PATRONI_SCOPE
+              value: *cluster_name
+            - name: PATRONI_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: PATRONI_POSTGRESQL_DATA_DIR
+              value: /home/postgres/pgdata/pgroot/data
+            - name: PATRONI_POSTGRESQL_PGPASS
+              value: /tmp/pgpass
+            - name: PATRONI_POSTGRESQL_LISTEN
+              value: "0.0.0.0:5432"
+            - name: PATRONI_RESTAPI_LISTEN
+              value: "0.0.0.0:8008"
+      volumes:
+        - name: pg-blue-config-overwrite
+          configMap:
+            name: pg-blue-config-overwrite
+      terminationGracePeriodSeconds: 0
+  volumeClaimTemplates:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        labels:
+          application: spilo
+          spilo-cluster: *cluster_name
+        name: pgdata
+      spec:
+        storageClassName: proxmox-data-xfs
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
+
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: &cluster_name pg-blue
+  labels:
+    application: patroni
+    cluster-name: *cluster_name
+subsets: []
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: &cluster_name pg-blue
+  labels:
+    application: patroni
+    cluster-name: *cluster_name
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5432
+      targetPort: 5432
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pg-blue-repl
+  labels:
+    application: patroni
+    cluster-name: &cluster_name pg-blue
+    role: replica
+spec:
+  type: ClusterIP
+  selector:
+    application: patroni
+    cluster-name: *cluster_name
+    role: replica
+  ports:
+    - port: 5432
+      targetPort: 5432
+
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: pg-blue
+spec:
+  refreshInterval: "15s"
+  secretStoreRef:
+    name: vault-tuana9a-com
+    kind: ClusterSecretStore
+  target:
+    name: pg-blue
+  dataFrom:
+    - extract:
+        key: pg-blue/credentials
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pg-blue
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pg-blue
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - create
+      - get
+      - list
+      - patch
+      - update
+      - watch
+      # delete and deletecollection are required only for 'patronictl remove'
+      - delete
+      - deletecollection
+  - apiGroups:
+      - ""
+    resources:
+      - endpoints
+    verbs:
+      - get
+      - patch
+      - update
+      # the following three privileges are necessary only when using endpoints
+      - create
+      - list
+      - watch
+      # delete and deletecollection are required only for for 'patronictl remove'
+      - delete
+      - deletecollection
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  # The following privilege is only necessary for creation of headless service
+  # for pg-blue-config endpoint, in order to prevent cleaning it up by the
+  # k8s master. You can avoid giving this privilege by explicitly creating the
+  # service like it is done in this manifest (lines 2..10)
+  - apiGroups:
+      - ""
+    resources:
+      - services
+    verbs:
+      - create
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pg-blue
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: pg-blue
+subjects:
+  - kind: ServiceAccount
+    name: pg-blue
