@@ -18,6 +18,15 @@ server:
 serverFiles:
   alerts:
     node_exporter:
+      - alert: InstanceDown
+        expr: up == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Instance {{ $labels.instance }} down"
+          description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 5 minutes."
+
       - alert: HostOutOfMemory
         expr: (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes < .10)
         for: 2m
