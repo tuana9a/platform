@@ -12,6 +12,12 @@ https://coder.com/docs/v2/latest/install/offline
 kubectl run --rm -it pg-tmp --image=postgres:16 bash
 ```
 
+```bash
+export PGPASSWORD=$(cat .pgpass)
+
+psql -h $pg_host -U $pg_user
+```
+
 ```sql
 CREATE USER coder WITH PASSWORD 'your_password_here';
 CREATE DATABASE coder OWNER coder;
