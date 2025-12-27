@@ -22,7 +22,6 @@ subsets:
   - addresses:
       - ip: "192.168.56.112" # neomorph
       - ip: "192.168.56.113" # engineer
-      - ip: "192.168.56.7" # nfs
       - ip: "192.168.56.209" # dev2
       - ip: "14.225.1.214" # orisis
     ports:

@@ -27,7 +27,6 @@
         dest: /opt/kubesetup_completed
         content: "1"
 
-    - import_tasks: ./tasks/install_nfs_client.yml
     - import_tasks: ./tasks/authorized_keys.yml
 
 - hosts: k8s_cluster_operations
