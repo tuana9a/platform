@@ -154,4 +154,3 @@ override.tf.json
 # @tuana9a
 *tmp*
 *.env
-.vscode/settings.json
