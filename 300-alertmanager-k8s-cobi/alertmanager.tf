@@ -5,7 +5,7 @@ resource "helm_release" "alertmanager" {
 
   repository = "https://prometheus-community.github.io/helm-charts"
   chart      = "alertmanager"
-  version    = "1.26.0"
+  version    = "1.30.0"
 
   values = [file("./values.yaml")]
 }

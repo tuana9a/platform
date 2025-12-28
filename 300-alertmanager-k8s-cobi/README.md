@@ -8,3 +8,9 @@ alertname=test-alert-$uid
 kubectl -n prometheus run $alertname --rm -i --tty --restart='Never' --image=alpine/curl -- curl -H 'Content-Type: application/json' -d '[{"labels":{"alertname":"'$alertname'"},"annotations":{"alertname":"'$alertname'"}}]' http://alertmanager:9093/api/v2/alerts
 echo $alertname
 ```
+
+# known-issues
+
+There is an error with `webhook_discord_url` with version `< 0.28`
+
+https://github.com/prometheus/alertmanager/pull/3728
