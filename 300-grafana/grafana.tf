@@ -9,3 +9,8 @@ resource "helm_release" "grafana" {
 
   values = [file("./values.yaml")]
 }
+
+resource "kubernetes_manifest" "datasources" {
+  manifest   = yamldecode(file("./datasources.yaml"))
+  depends_on = [helm_release.grafana]
+}
