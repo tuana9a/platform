@@ -1,0 +1,22 @@
+name: "086-kured-k8s-cobi"
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "086-kured-k8s-cobi/**"
+      - ".github/workflows/086-kured-k8s-cobi-terraform-plan-apply*"
+    branches:
+      - rock-n-roll
+
+jobs:
+  main:
+    permissions:
+      contents: read
+      id-token: write
+    uses: ./.github/workflows/terraform-plan-apply-notify.yml
+    with:
+      runs-on: self-hosted-0
+      WORKING_DIR: ${{ github.workflow }}
+    secrets:
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
