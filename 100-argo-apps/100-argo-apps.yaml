@@ -7,7 +7,7 @@ spec:
   project: default
   revisionHistoryLimit: 10
   source:
-    path: 100-argo-apps/manifests
+    path: 100-argo-apps
     repoURL: https://github.com/tuana9a/platform.git
     targetRevision: rock-n-roll
   destination:

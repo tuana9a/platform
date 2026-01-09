@@ -7,7 +7,7 @@ spec:
   project: default
   revisionHistoryLimit: 10
   source:
-    path: 130-k8s-auth-rbac/manifests
+    path: 130-k8s-auth-rbac
     repoURL: https://github.com/tuana9a/platform.git
     targetRevision: rock-n-roll
   destination:
