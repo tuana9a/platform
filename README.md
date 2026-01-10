@@ -55,6 +55,8 @@ graph TB
     200-ingress-nginx --> 195-vault[vault]
     200-cert-manager --> 195-vault
     165-proxmox-csi --> 195-vault
+
+    090-argocd --> 555-pool[pool]
 ```
 
 ```mermaid
