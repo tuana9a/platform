@@ -3,17 +3,12 @@ kind: Pod
 spec:
   serviceAccountName: odin
   containers:
-    - name: terraform
-      image: tuana9a/toolbox:terraform-1.7.1-and-all
+    - name: main
+      image: tuana9a/terraform-plan-apply-notify:2026.01
       command:
         - sleep
       args:
         - infinity
-      env:
-        - name: POD_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
       envFrom:
         - secretRef:
             name: terraform-plan-apply-notify
