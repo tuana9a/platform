@@ -166,6 +166,34 @@ k8s_cluster_operations:
             - "topology.kubernetes.io/region=alien"
             - "topology.kubernetes.io/zone=neomorph"
           "nodename": "i-134"
+k8s_cluster_upgrade_batch_1:
+  hosts:
+    192.168.56.22:
+      <<: *i-122
+k8s_cluster_upgrade_batch_2:
+  hosts:
+    192.168.56.23:
+      <<: *i-123
+k8s_cluster_upgrade_batch_3:
+  hosts:
+    192.168.56.24:
+      <<: *i-124
+k8s_cluster_upgrade_batch_4:
+  hosts:
+    192.168.56.31:
+      <<: *i-131
+k8s_cluster_upgrade_batch_5:
+  hosts:
+    192.168.56.32:
+      <<: *i-132
+k8s_cluster_upgrade_batch_6:
+  hosts:
+    192.168.56.33:
+      <<: *i-133
+k8s_cluster_upgrade_batch_7:
+  hosts:
+    192.168.56.34:
+      <<: *i-134
 orisis:
   hosts:
     orisis.tuana9a.com:

@@ -1,0 +1,7 @@
+- shell: |
+    set -xeu
+    sudo kubeadm upgrade plan
+  register: kubeadm_upgrade_plan
+
+- debug:
+    msg: "{{ kubeadm_upgrade_plan.stdout_lines }}"

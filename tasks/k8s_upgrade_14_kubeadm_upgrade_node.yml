@@ -1,0 +1,7 @@
+- name: apply upgrades
+  shell: |
+    set -xeu
+    sudo kubeadm upgrade node
+  register: apply_upgrade
+- debug:
+    msg: "{{ apply_upgrade.stdout_lines }}"

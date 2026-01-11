@@ -1,0 +1,3 @@
+- hosts: k8s_cluster
+  tasks:
+    - include_tasks: ./tasks/k8s_upgrade_prechecks.yml

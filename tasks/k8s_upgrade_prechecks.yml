@@ -1,0 +1,6 @@
+- ansible.builtin.slurp:
+    src: /etc/apt/sources.list.d/kubernetes.list
+  register: apt_source_kubernetes
+
+- debug:
+    msg: "{{ apt_source_kubernetes.content | b64decode | split('\n') }}"
