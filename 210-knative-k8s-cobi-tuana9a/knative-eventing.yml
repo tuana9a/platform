@@ -10,6 +10,9 @@ metadata:
   namespace: knative-eventing # this namespace is hardcoded afaik
 spec:
   version: "1.14.2"
+  podDisruptionBudgets:
+    - name: eventing-webhook
+      minAvailable: 0
   workloads:
     - name: eventing-controller
       resources:

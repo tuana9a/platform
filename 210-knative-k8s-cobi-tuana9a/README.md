@@ -19,3 +19,7 @@ get namespaces except knative
 ```bash
 kubectl get ns -o jsonpath='{.items[*].metadata.name}' | sed 's/ /\n/g' | grep -v knative
 ```
+
+# Refs
+
+https://knative.dev/docs/install/operator/configuring-eventing-cr/
