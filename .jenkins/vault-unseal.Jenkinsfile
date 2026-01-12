@@ -48,7 +48,7 @@ pipeline {
                                         is_sealed=$(vault status | grep -i sealed | awk '{print $2}')
                                         if [ "$is_sealed" = "false" ]; then
                                             echo "vault is unsealed. Exiting..."
-                                            continue
+                                            exit 0
                                         fi
                                         echo "vault is sealed. Unsealing..."
                                         vault operator unseal $(cat /var/secrets/unseal_key_0)
