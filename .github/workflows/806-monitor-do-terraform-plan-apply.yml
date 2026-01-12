@@ -20,4 +20,5 @@ jobs:
       add-missing-files: true
     secrets:
       VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
-      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}

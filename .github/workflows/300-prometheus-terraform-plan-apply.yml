@@ -19,4 +19,5 @@ jobs:
       runs-on: self-hosted-0
       WORKING_DIR: ${{ github.workflow }}
     secrets:
-      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
