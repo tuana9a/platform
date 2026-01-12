@@ -57,36 +57,6 @@ data:
               }
             }
           }
-          multibranchPipelineJob('205-github-secrets-tuana9a-terraform-plan-apply') {
-            branchSources {
-              git {
-                // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
-                id('54588122666582021094461731606061353066')
-                remote('https://github.com/tuana9a/platform.git')
-                includes('rock-n-roll')
-              }
-            }
-            factory {
-              workflowBranchProjectFactory {
-                scriptPath('.jenkins/205-github-secrets-tuana9a-terraform-plan-apply.Jenkinsfile')
-              }
-            }
-          }
-          multibranchPipelineJob('205-gitlab-secrets-tuana9a-terraform-plan-apply') {
-            branchSources {
-              git {
-                // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
-                id('180832320729465635056487008805451517960')
-                remote('https://github.com/tuana9a/platform.git')
-                includes('rock-n-roll')
-              }
-            }
-            factory {
-              workflowBranchProjectFactory {
-                scriptPath('.jenkins/205-gitlab-secrets-tuana9a-terraform-plan-apply.Jenkinsfile')
-              }
-            }
-          }
           multibranchPipelineJob('206-github-setup-terraform-plan-apply') {
             branchSources {
               git {
