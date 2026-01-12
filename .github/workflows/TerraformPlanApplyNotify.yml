@@ -128,15 +128,8 @@ jobs:
           esac
           echo NOTI_MSG="$status $run_name $run_url" > $GITHUB_ENV
 
-      - name: notify-discord
-        if: ${{ env.DISCORD_WEBHOOK != '' }}
-        uses: tuana9a/discord-webhook-action@v1
-        with:
-          webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
-          content: ${{ env.NOTI_MSG }}
-
-      - name: notify-telegram
-        if: ${{ env.TELEGRAM_BOT_TOKEN != '' }}
+      - name: notify
+        if: ${{ always() }}
         run: |
           curl -X POST "https://api.telegram.org/bot${{ env.TELEGRAM_BOT_TOKEN }}/sendMessage" \
             -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
