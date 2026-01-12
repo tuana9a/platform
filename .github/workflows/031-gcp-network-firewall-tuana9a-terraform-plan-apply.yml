@@ -14,7 +14,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    uses: ./.github/workflows/terraform-plan-apply-notify.yml
+    uses: ./.github/workflows/TerraformPlanApplyNotify.yml
     with:
       WORKING_DIR: ${{ github.workflow }}
       GCP_SERVICE_ACCOUNT: terraform-compute-admin@tuana9a.iam.gserviceaccount.com
