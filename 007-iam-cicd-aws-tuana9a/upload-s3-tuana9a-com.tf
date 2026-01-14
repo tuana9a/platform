@@ -1,7 +1,3 @@
-data "aws_iam_openid_connect_provider" "github" {
-  url = "https://token.actions.githubusercontent.com"
-}
-
 # https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services#configuring-the-role-and-trust-policy
 
 resource "aws_iam_role" "upload_s3_tuana9a_com" {
@@ -38,7 +34,6 @@ resource "aws_iam_role_policy" "upload_s3_tuana9a_com" {
 
 data "aws_iam_policy_document" "upload_s3_tuana9a_com" {
   statement {
-    sid    = "AllowS3Upload"
     effect = "Allow"
     actions = [
       "s3:PutObject",
@@ -47,7 +42,6 @@ data "aws_iam_policy_document" "upload_s3_tuana9a_com" {
     resources = ["arn:aws:s3:::tuana9a.com/*"]
   }
   statement {
-    sid       = "AllowBucketListing"
     effect    = "Allow"
     actions   = ["s3:ListBucket", ]
     resources = ["arn:aws:s3:::tuana9a.com"]
