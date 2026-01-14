@@ -1,6 +1,17 @@
 loki:
+  storage:
+    bucketNames:
+      chunks: ${s3_chunks_bucket_name}
+  storage_config:
+    # tsdb_shipper:
+    #   active_index_directory: /loki/index
+    #   cache_location: /loki/index_cache
+    #   cache_ttl: 24h         # Can be increased for faster performance over longer query periods, uses more disk space
+    aws:
+      s3: s3://${s3_access_key}:${s3_secret_access_key_uri_encoded}@${s3_region}
+      bucketnames: ${s3_bucket_names}
   commonConfig:
-    replication_factor: 1 # Default is 3, required as SingleBinary
+    replication_factor: 1 # required as SingleBinary, default is 3
   schemaConfig:
     configs:
       - from: 2024-04-01
@@ -10,6 +21,10 @@ loki:
         index:
           prefix: loki_index_
           period: 24h
+  rulerConfig:
+    storage:
+      s3:
+        bucketnames: ${s3_ruler_bucket_name}
   ingester:
     chunk_encoding: snappy
   tracing:
@@ -22,8 +37,9 @@ loki:
     delete_request_store: filesystem
   limits_config:
     max_label_names_per_series: 20
-    retention_period: 168h # 7 days
+    retention_period: 720h # 30 days
 
+# Deployment mode
 deploymentMode: SingleBinary
 singleBinary:
   replicas: 1
@@ -31,23 +47,16 @@ singleBinary:
     storageClass: proxmox-data-xfs
   size: 15Gi
 
+# Disable minio for using aws S3
+minio:
+  enabled: false
+
 # Cache config
 resultsCache:
   allocatedMemory: 2000
 
 chunksCache:
   allocatedMemory: 2000
-
-# Enable minio for storage
-minio:
-  enabled: true
-  persistence:
-    storageClass: proxmox-data-xfs
-    size: 25Gi
-  resources:
-    requests:
-      cpu: 100m
-      memory: 512Mi
 
 # Zero out replica counts of other deployment modes
 backend:
