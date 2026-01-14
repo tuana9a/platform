@@ -44,12 +44,12 @@ data "aws_iam_policy_document" "upload_s3_tuana9a_com" {
       "s3:PutObject",
       "s3:PutObjectAcl",
     ]
-    resources = ["arn:aws:s3:::${aws_s3_bucket.tuana9a_com.bucket}/*"]
+    resources = ["arn:aws:s3:::tuana9a.com/*"]
   }
   statement {
     sid       = "AllowBucketListing"
     effect    = "Allow"
     actions   = ["s3:ListBucket", ]
-    resources = ["arn:aws:s3:::${aws_s3_bucket.tuana9a_com.bucket}"]
+    resources = ["arn:aws:s3:::tuana9a.com"]
   }
 }

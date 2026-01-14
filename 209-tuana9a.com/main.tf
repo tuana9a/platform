@@ -1,9 +1,9 @@
 resource "aws_s3_bucket" "tuana9a_com" {
-  bucket = local.my_domain
+  bucket = "tuana9a.com"
 }
 
 resource "aws_acm_certificate" "tuana9a_com" {
-  domain_name       = local.my_domain
+  domain_name       = "tuana9a.com"
   validation_method = "DNS"
 
   /*
@@ -28,20 +28,20 @@ resource "aws_cloudfront_distribution" "tuana9a_com" {
   origin {
     domain_name              = aws_s3_bucket.tuana9a_com.bucket_regional_domain_name
     origin_access_control_id = aws_cloudfront_origin_access_control.tuana9a_com.id
-    origin_id                = local.my_domain
+    origin_id                = "tuana9a.com"
   }
 
   enabled             = true
   is_ipv6_enabled     = true
-  comment             = "CDN for ${local.my_domain}"
+  comment             = "CDN for tuana9a.com"
   default_root_object = "index.html"
 
-  aliases = ["${local.my_domain}"]
+  aliases = ["tuana9a.com"]
 
   default_cache_behavior {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = local.my_domain
+    target_origin_id = "tuana9a.com"
 
     forwarded_values {
       query_string = false
@@ -102,14 +102,4 @@ data "aws_iam_policy_document" "tuana9a_com_bucket_policy" {
 resource "aws_s3_bucket_policy" "tuana9a_com" {
   bucket = aws_s3_bucket.tuana9a_com.bucket
   policy = data.aws_iam_policy_document.tuana9a_com_bucket_policy.json
-}
-
-resource "cloudflare_dns_record" "tuana9a_com" {
-  zone_id = data.cloudflare_zone.tuana9a_com.zone_id
-  name    = "@"
-  ttl     = 3600
-  type    = "CNAME"
-  comment = "CDN for the tuana9a.com"
-  content = aws_cloudfront_distribution.tuana9a_com.domain_name
-  proxied = false
 }
