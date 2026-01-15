@@ -24,4 +24,7 @@ provider "google" {
 
 provider "aws" {
   region = "ap-southeast-1"
+  assume_role {
+    role_arn = "arn:aws:iam::445567113688:role/OrganizationAccountAccessRole" # t9st
+  }
 }
