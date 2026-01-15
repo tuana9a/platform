@@ -1,3 +1,11 @@
+resource "aws_s3_bucket" "loki_chunks_k8s_cobi_tuana9a" {
+  bucket = "loki-chunks-k8s-cobi-tuana9a"
+}
+
+resource "aws_s3_bucket" "loki_ruler_k8s_cobi_tuana9a" {
+  bucket = "loki-ruler-k8s-cobi-tuana9a"
+}
+
 resource "aws_iam_user" "loki_k8s_cobi_tuana9a" {
   name = "loki-k8s-cobi-tuana9a"
 }
@@ -6,8 +14,8 @@ resource "aws_iam_access_key" "loki_k8s_cobi_tuana9a" {
   user = aws_iam_user.loki_k8s_cobi_tuana9a.name
 }
 
-resource "aws_iam_policy" "loki_k8s_cobi_tuana9a_policy" {
-  name        = "LokiK8sCobiTuana9a"
+resource "aws_iam_policy" "loki_k8s_cobi_tuana9a" {
+  name        = "loki-k8s-cobi-tuana9a"
   description = "Loki's things"
 
   policy = jsonencode({
@@ -35,5 +43,5 @@ resource "aws_iam_policy" "loki_k8s_cobi_tuana9a_policy" {
 
 resource "aws_iam_user_policy_attachment" "loki_k8s_cobi_tuana9a" {
   user       = aws_iam_user.loki_k8s_cobi_tuana9a.name
-  policy_arn = aws_iam_policy.loki_k8s_cobi_tuana9a_policy.arn
+  policy_arn = aws_iam_policy.loki_k8s_cobi_tuana9a.arn
 }

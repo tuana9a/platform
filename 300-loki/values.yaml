@@ -2,13 +2,10 @@ loki:
   storage:
     bucketNames:
       chunks: ${s3_chunks_bucket_name}
+      ruler: ${s3_ruler_bucket_name}
   storage_config:
-    # tsdb_shipper:
-    #   active_index_directory: /loki/index
-    #   cache_location: /loki/index_cache
-    #   cache_ttl: 24h         # Can be increased for faster performance over longer query periods, uses more disk space
     aws:
-      s3: s3://${s3_access_key}:${s3_secret_access_key_uri_encoded}@${s3_region}
+      s3: s3://${s3_access_key_id}:${s3_secret_access_key_uri_encoded}@${s3_region}
       bucketnames: ${s3_bucket_names}
   commonConfig:
     replication_factor: 1 # required as SingleBinary, default is 3
@@ -21,10 +18,6 @@ loki:
         index:
           prefix: loki_index_
           period: 24h
-  rulerConfig:
-    storage:
-      s3:
-        bucketnames: ${s3_ruler_bucket_name}
   ingester:
     chunk_encoding: snappy
   tracing:
@@ -45,7 +38,7 @@ singleBinary:
   replicas: 1
   persistence:
     storageClass: proxmox-data-xfs
-  size: 15Gi
+    size: 10Gi
 
 # Disable minio for using aws S3
 minio:

@@ -50,6 +50,10 @@ data "aws_iam_policy_document" "i_300_loki" {
       "iam:GetPolicy",
       "iam:ListPolicies",
       "iam:GetPolicyVersion",
+      "iam:DetachUserPolicy",
+      "iam:ListPolicyVersions",
+      "iam:AttachUserPolicy",
+      "iam:DeletePolicy",
     ]
     resources = ["*"]
   }
