@@ -1,6 +1,6 @@
 - name: change package repository
   shell: |
-    echo -n "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v{{ kubernetes_version_major }}/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+    echo -n "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v{{ kubernetes_major_version }}/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
   register: change_package_repository
 - debug:
     msg: "{{ change_package_repository.stdout | split('\n') }}"

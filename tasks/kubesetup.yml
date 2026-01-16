@@ -53,18 +53,18 @@
     # k8s Prerequisites
     apt install -y gnupg2
 
-    kubernetes_version_major="1.31"
-    kubernetes_version_minor="1.31.12"
+    kubernetes_major_version="{{ kubernetes_major_version }}"
+    kubernetes_minor_version="{{ kubernetes_minor_version }}"
 
     # Add the repository for k8s
     install -m 0755 -d /etc/apt/keyrings
-    curl -fsSL https://pkgs.k8s.io/core:/stable:/v$kubernetes_version_major/deb/Release.key | gpg --yes --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-    echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v$kubernetes_version_major/deb/ /" | tee /etc/apt/sources.list.d/kubernetes.list
+    curl -fsSL https://pkgs.k8s.io/core:/stable:/v$kubernetes_major_version/deb/Release.key | gpg --yes --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v$kubernetes_major_version/deb/ /" | tee /etc/apt/sources.list.d/kubernetes.list
 
     # Install k8s dependencies
     apt-get update
     apt-mark unhold kubelet kubeadm kubectl
-    apt install -y kubelet="$kubernetes_version_minor-*" kubeadm="$kubernetes_version_minor-*" kubectl="$kubernetes_version_minor-*"
+    apt install -y kubelet="$kubernetes_minor_version-*" kubeadm="$kubernetes_minor_version-*" kubectl="$kubernetes_minor_version-*"
     apt-mark hold kubelet kubeadm kubectl
 
     # Verify

@@ -54,6 +54,8 @@ k8s_cluster:
         - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN6bF/SOzb1XD4qo0LaZ5PVa1sCijDyQS/8oHZe9x6R5"
           comment: "ci"
           user: root
+      kubernetes_major_version: &k8s-cobi-major-version "1.32"
+      kubernetes_minor_version: &k8s-cobi-minor-version "1.32.11"
     192.168.56.23: &i-123
       ansible_user: u
       nodename: i-123
@@ -63,6 +65,8 @@ k8s_cluster:
       kubevip: *kubevip
       goodbye: false
       authorized_keys: *k8s_control_plane_authorized_keys
+      kubernetes_major_version: *k8s-cobi-major-version
+      kubernetes_minor_version: *k8s-cobi-minor-version
     192.168.56.24: &i-124
       ansible_user: u
       nodename: i-124
@@ -71,6 +75,8 @@ k8s_cluster:
       kube_pki: *kube_pki
       kubevip: *kubevip
       authorized_keys: *k8s_control_plane_authorized_keys
+      kubernetes_major_version: *k8s-cobi-major-version
+      kubernetes_minor_version: *k8s-cobi-minor-version
     192.168.56.25: &i-125
       ansible_user: u
       nodename: i-125
@@ -80,6 +86,8 @@ k8s_cluster:
       kubevip: *kubevip
       goodbye: true
       authorized_keys: *k8s_control_plane_authorized_keys
+      kubernetes_major_version: *k8s-cobi-major-version
+      kubernetes_minor_version: *k8s-cobi-minor-version
     192.168.56.31: &i-131
       ansible_user: u
       nodename: i-131
@@ -93,6 +101,8 @@ k8s_cluster:
         - file: i-131.conf
           name: i-131
       goodbye: false
+      kubernetes_major_version: *k8s-cobi-major-version
+      kubernetes_minor_version: *k8s-cobi-minor-version
     192.168.56.32: &i-132
       ansible_user: u
       nodename: i-132
@@ -105,6 +115,8 @@ k8s_cluster:
           state: stopped
         - file: i-132.conf
           name: i-132
+      kubernetes_major_version: *k8s-cobi-major-version
+      kubernetes_minor_version: *k8s-cobi-minor-version
     192.168.56.33: &i-133
       ansible_user: u
       nodename: i-133
@@ -114,6 +126,8 @@ k8s_cluster:
         - file: i-133.conf
           name: i-133
       goodbye: false
+      kubernetes_major_version: *k8s-cobi-major-version
+      kubernetes_minor_version: *k8s-cobi-minor-version
     192.168.56.34: &i-134
       ansible_user: u
       nodename: i-134
@@ -126,6 +140,8 @@ k8s_cluster:
           state: stopped
         - file: i-134.conf
           name: i-134
+      kubernetes_major_version: *k8s-cobi-major-version
+      kubernetes_minor_version: *k8s-cobi-minor-version
 k8s_cluster_operations:
   hosts:
     192.168.56.22:
@@ -137,6 +153,7 @@ k8s_cluster_operations:
         #   is_control_plane: true
         # - name: i-131
         # - name: i-133
+        # - name: i-135
       node_labels: # cd 068-k8s-cobi-tuana9a && terraform output -raw proxmox_csi_node_labels_help
         - "labels":
             - "topology.kubernetes.io/region=alien"

@@ -1,7 +1,4 @@
 - hosts: k8s_cluster_upgrade_batch_4
-  vars:
-    kubernetes_version_major: &kubernetes_version_major "1.32"
-    kubernetes_version_minor: &kubernetes_version_minor "1.32.11"
   tasks:
     - include_tasks: ./tasks/k8s_upgrade_04_update_packages.yml
     - include_tasks: ./tasks/k8s_upgrade_06_upgrade_kubeadm_package.yml

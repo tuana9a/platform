@@ -2,7 +2,7 @@
   shell: |
     set -xeu
     sudo apt-mark unhold kubeadm
-    sudo apt-get update && sudo apt-get install -y kubeadm='{{ kubernetes_version_minor }}-*'
+    sudo apt-get update && sudo apt-get install -y kubeadm='{{ kubernetes_minor_version }}-*'
     sudo apt-mark hold kubeadm
     kubeadm version
   register: upgrade_kubeadm
