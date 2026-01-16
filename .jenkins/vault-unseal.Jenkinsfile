@@ -2,7 +2,7 @@ pipeline {
     options { buildDiscarder(logRotator(numToKeepStr: '3')) }
     agent {
         kubernetes {
-            yamlFile '.jenkins/vault-unseal.yaml'
+            yamlFile '.jenkins/vault-unseal.yml'
         }
     }
     stages {

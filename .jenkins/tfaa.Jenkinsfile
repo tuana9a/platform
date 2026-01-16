@@ -5,7 +5,7 @@ pipeline {
     // }
     agent {
         kubernetes {
-            yamlFile '.jenkins/TerraformPlanApplyNotify.yaml'
+            yamlFile '.jenkins/tfaa.yml'
             defaultContainer 'main'
         }
     }
