@@ -3,60 +3,7 @@ pipeline {
     triggers { cron('0 0 * * *') }
     agent {
         kubernetes {
-            yaml '''
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-    - name: ubuntu
-      image: tuana9a/ubuntu:git-1d3169e
-      command:
-        - sleep
-      args:
-        - infinity
-      env:
-        - name: POD_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-      envFrom:
-        - secretRef:
-            name: 502-coder-postgres-backup-env
-      volumeMounts:
-        - name: workdir
-          mountPath: /workdir
-
-    - name: postgres
-      image: postgres:16
-      command:
-        - sleep
-      args:
-        - infinity
-      volumeMounts:
-        - name: workdir
-          mountPath: /workdir
-      envFrom:
-        - secretRef:
-            name: 502-coder-postgres-backup-env
-
-    - name: awscli
-      image: amazon/aws-cli:2.18.0
-      command:
-        - sleep
-      args:
-        - infinity
-      envFrom:
-        - secretRef:
-            name: 502-coder-postgres-backup-env
-      volumeMounts:
-        - name: workdir
-          mountPath: /workdir
-
-  restartPolicy: Never
-  volumes:
-    - name: workdir
-      emptyDir: {}
-'''
+            yamlFile '.jenkins/backup-coder-postgres.yml'
             defaultContainer 'ubuntu'
             retries 2
         }
@@ -122,11 +69,14 @@ spec:
                 DURATION=$((STOP_TIME - START_TIME))
                 OBJECT_KEY=$(cat /workdir/object_key.env)
                 case "$(cat /workdir/status)" in
-                    1) status_msg=":white_check_mark:" ;;
-                    *) status_msg=":x:" ;;
+                    1) status_msg="ok" ;;
+                    *) status_msg="fuck" ;;
                 esac
-                MSG="$status_msg \\`backup-postgres\\` \\`coder\\` \\`$OBJECT_KEY\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\` $BUILD_URL"
-                curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\\"content\\":\\"${MSG}\\"}"
+                MSG="$status_msg backup-coder-postgres $OBJECT_KEY $(($DURATION / 60))m$(($DURATION % 60))s $BUILD_URL"
+                set +x
+                curl -sS -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
+                    -d chat_id="$TELEGRAM_CHAT_ID" \
+                    -d text="$MSG"
                 '''
                 sh '''
                 START_TIME=$(cat "/workdir/start.time")
@@ -140,7 +90,7 @@ postgres_backup_unixtimestamp{namespace="$POD_NAMESPACE"} $(date +%s)
 EOF
                 cat /workdir/backup.metrics
                 push_gateway_baseurl="http://prometheus-pushgateway.prometheus.svc.cluster.local:9091"
-                curl --data-binary "@/workdir/backup.metrics" $push_gateway_baseurl/metrics/job/postgres_backup_cronjob
+                curl -sS --data-binary "@/workdir/backup.metrics" $push_gateway_baseurl/metrics/job/postgres_backup_cronjob
                 '''
             }
         }
