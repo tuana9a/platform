@@ -6,53 +6,7 @@ pipeline {
     triggers { cron('0 0 * * *') }
     agent {
         kubernetes {
-            yaml '''
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-    - name: etcd
-      image: tuana9a/toolbox:etcd-3.5.15
-      command:
-        - sleep
-      args:
-        - infinity
-      env:
-        - name: POD_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-      envFrom:
-        - secretRef:
-            name: backup-kubernetes-env
-      volumeMounts:
-        - name: secrets
-          mountPath: "/var/secrets"
-          readOnly: true
-        - name: workdir
-          mountPath: "/workdir"
-    - name: awscli
-      image: amazon/aws-cli:2.18.0
-      command:
-        - sleep
-      args:
-        - infinity
-      envFrom:
-        - secretRef:
-            name: backup-kubernetes-env
-      volumeMounts:
-        - name: workdir
-          mountPath: /workdir
-  volumes:
-    - name: secrets
-      secret:
-        secretName: backup-kubernetes
-    - name: secrets-env
-      secret:
-        secretName: backup-kubernetes-env
-    - name: workdir
-      emptyDir: {}
-'''
+            yamlFile '.jenkins/backup-kubernetes.yml'
             defaultContainer 'etcd'
             retries 2
         }
@@ -86,18 +40,18 @@ spec:
                         }
                     }
                 }
-                echo "download-k8s-certs-and-manifests"
+                echo "download-k8s-files"
                 container('etcd') {
                     script {
-                        sh "cp /var/secrets/ci /workdir/ci && chmod 600 /workdir/ci"
+                        sh "cp /var/secrets/ci /workdir/id_rsa && chmod 600 /workdir/id_rsa"
                         for (vm in vms) {
                             def vmid = vm["vmid"]
                             def host = vm["host"]
                             def nodename = vm["nodename"]
                             sh "mkdir -p /workdir/k8s-backup-${nodename}"
-                            sh "ssh -o StrictHostKeyChecking=accept-new -i /workdir/ci root@${host} echo helloworld"
-                            sh "scp -i /workdir/ci -r root@${host}:/etc/kubernetes/pki /workdir/k8s-backup-${nodename}/pki"
-                            sh "scp -i /workdir/ci -r root@${host}:/etc/kubernetes/manifests /workdir/k8s-backup-${nodename}/manifests"
+                            sh "ssh -o StrictHostKeyChecking=accept-new -i /workdir/id_rsa root@${host} echo helloworld"
+                            sh "scp -i /workdir/id_rsa -r root@${host}:/etc/kubernetes/pki /workdir/k8s-backup-${nodename}/pki"
+                            sh "scp -i /workdir/id_rsa -r root@${host}:/etc/kubernetes/manifests /workdir/k8s-backup-${nodename}/manifests"
                         }
                     }
                 }
@@ -167,7 +121,17 @@ spec:
                     script {
                         for (vm in vms) {
                             def nodename = vm["nodename"]
-                            sh "aws s3api --endpoint-url \$S3_ENDPOINT put-object --bucket \$BUCKET_NAME --key \$(cat /workdir/datehour)-k8s-backup-${nodename}.tar.gz --body /workdir/k8s-backup-${nodename}.tar.gz"
+                            sh '''
+                            set +x
+                            export CLOUDFLARE_ACCOUNT_ID="$(cat /var/secrets/CLOUDFLARE_ACCOUNT_ID)"
+                            export S3_ENDPOINT="$(cat /var/secrets/S3_ENDPOINT)"
+                            export BUCKET_NAME="$(cat /var/secrets/BUCKET_NAME)"
+                            export AWS_ACCESS_KEY_ID="$(cat /var/secrets/AWS_ACCESS_KEY_ID)"
+                            export AWS_SECRET_ACCESS_KEY="$(cat /var/secrets/AWS_SECRET_ACCESS_KEY)"
+                            export AWS_DEFAULT_REGION="auto"
+                            set -x
+                            aws s3api --endpoint-url $S3_ENDPOINT put-object --bucket $BUCKET_NAME --key $(cat /workdir/datehour)-k8s-backup-''' + nodename + '''.tar.gz --body /workdir/k8s-backup-''' + nodename + '''.tar.gz
+                            '''
                         }
                     }
                     echo 'upload completed'
@@ -203,18 +167,21 @@ spec:
                         def nodename = vm["nodename"]
                         sh '''
                         case "$(cat /workdir/status)" in
-                            1) status_msg=":white_check_mark:" ;;
-                            *) status_msg=":x:" ;;
+                            1) status_msg="ok" ;;
+                            *) status_msg="fuck" ;;
                         esac
-                        MSG="$status_msg \\`backup-kubernetes\\` ''' + "\\`\$(cat /workdir/datehour)-k8s-backup-${nodename}.tar.gz\\`" + ''' \\`$(cat /workdir/duration_pretty.txt)\\` $BUILD_URL"
-                        curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\\"content\\":\\"${MSG}\\"}"
+                        MSG="$status_msg backup-kubernetes $(cat /workdir/datehour)-k8s-backup-''' + nodename + '''.tar.gz $(cat /workdir/duration_pretty.txt) $BUILD_URL"
+                        set +x
+                        curl -sS -X POST "https://api.telegram.org/bot$(cat /var/secrets/TELEGRAM_BOT_TOKEN)/sendMessage" \
+                            -d chat_id="$(cat /var/secrets/TELEGRAM_CHAT_ID)" \
+                            -d text="$MSG"
                         '''
                     }
 
                     sh '''
                     push_gateway_baseurl="http://prometheus-pushgateway.prometheus.svc.cluster.local:9091";
                     POD_NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace);
-                    cat << EOF | curl --noproxy '*' --data-binary @- $push_gateway_baseurl/metrics/job/k8s_backup_cronjob
+                    cat << EOF | curl -sS --noproxy '*' --data-binary @- $push_gateway_baseurl/metrics/job/k8s_backup_cronjob
 # TYPE k8s_backup_datehour gauge
 k8s_backup_datehour{namespace="$POD_NAMESPACE"} $(cat /workdir/datehour)
 # TYPE k8s_backup_duration gauge
