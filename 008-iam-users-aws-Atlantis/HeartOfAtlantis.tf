@@ -28,7 +28,7 @@ resource "aws_iam_user_policy_attachment" "HeartOfAtlantis" {
 }
 
 output "HeartOfAtlantisCreds" {
-  value = <<EOT
+  value     = <<EOT
 aws_access_key_id     = ${aws_iam_access_key.HeartOfAtlantis.id}
 aws_secret_access_key = ${aws_iam_access_key.HeartOfAtlantis.secret}
 EOT
