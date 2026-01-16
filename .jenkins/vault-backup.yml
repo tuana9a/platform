@@ -7,7 +7,7 @@ spec:
       command: ["sleep", "infinity"]
       envFrom:
         - secretRef:
-            name: vault-unseal-keys
+            name: vault-backup
       volumeMounts:
         - name: secrets
           mountPath: "/var/secrets"
@@ -19,16 +19,28 @@ spec:
       command: ["sleep", "infinity"]
       envFrom:
         - secretRef:
-            name: vault-unseal-keys
+            name: vault-backup
       volumeMounts:
         - name: secrets
           mountPath: "/var/secrets"
           readOnly: true
         - name: workdir
           mountPath: "/workdir"
+    - name: awscli
+      image: amazon/aws-cli:2.18.0
+      command:
+        - sleep
+      args:
+        - infinity
+      envFrom:
+        - secretRef:
+            name: vault-backup
+      volumeMounts:
+        - name: workdir
+          mountPath: /workdir
   volumes:
     - name: secrets
       secret:
-        secretName: vault-unseal-keys
+        secretName: vault-backup
     - name: workdir
       emptyDir: {}

@@ -3,54 +3,7 @@ pipeline {
     triggers { cron('0 0 * * *') }
     agent {
         kubernetes {
-            yaml '''
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-    - name: ubuntu
-      image: tuana9a/ubuntu:git-1d3169e
-      command: ["sleep", "infinity"]
-      envFrom:
-        - secretRef:
-            name: vault-backup
-      volumeMounts:
-        - name: secrets
-          mountPath: "/var/secrets"
-          readOnly: true
-        - name: workdir
-          mountPath: "/workdir"
-    - name: vault
-      image: hashicorp/vault:1.17.2
-      command: ["sleep", "infinity"]
-      envFrom:
-        - secretRef:
-            name: vault-backup
-      volumeMounts:
-        - name: secrets
-          mountPath: "/var/secrets"
-          readOnly: true
-        - name: workdir
-          mountPath: "/workdir"
-    - name: awscli
-      image: amazon/aws-cli:2.18.0
-      command:
-        - sleep
-      args:
-        - infinity
-      envFrom:
-        - secretRef:
-            name: vault-backup
-      volumeMounts:
-        - name: workdir
-          mountPath: /workdir
-  volumes:
-    - name: secrets
-      secret:
-        secretName: vault-backup
-    - name: workdir
-      emptyDir: {}
-'''
+            yamlFile '.jenkins/vault-backup.yml'
             defaultContainer 'ubuntu'
             retries 2
         }
@@ -118,13 +71,13 @@ spec:
                 DURATION=$((STOP_TIME - START_TIME))
                 OBJECT_KEY=$(cat /workdir/object_key)
                 case "$(cat /workdir/ruok)" in
-                    "yes") status_msg=":white_check_mark:" ;;
-                    *) status_msg=":x:" ;;
+                    "yes") status_msg="ok" ;;
+                    *) status_msg="fuck" ;;
                 esac
-                MSG="$status_msg \\`vault-backup\\` \\`$OBJECT_KEY\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\` $BUILD_URL"
-                if [ -f /var/secrets/DISCORD_WEBHOOK ]; then
-                    curl -X POST "$(cat /var/secrets/DISCORD_WEBHOOK)" -H "Content-Type: application/json" -d "{\\"content\\":\\"${MSG}\\"}";
-                fi
+                MSG="$status_msg vault-backup $OBJECT_KEY $(($DURATION / 60))m$(($DURATION % 60))s $BUILD_URL"
+                curl -sS -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
+                    -d chat_id="$TELEGRAM_CHAT_ID" \
+                    -d text="$MSG"
                 '''
             }
         }

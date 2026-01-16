@@ -81,13 +81,13 @@ pipeline {
                 STOP_TIME=$(cat "/workdir/stop.time")
                 DURATION=$((STOP_TIME - START_TIME))
                 case "$(cat /workdir/status)" in
-                    1) status_msg=":white_check_mark:" ;;
-                    *) status_msg=":x:" ;;
+                    1) status_msg="ok" ;;
+                    *) status_msg="fuck" ;;
                 esac
-                MSG="$status_msg \\`vault-unseal\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\` $BUILD_URL"
-                if [ -f /var/secrets/DISCORD_WEBHOOK ]; then
-                    curl -sS -X POST "$(cat /var/secrets/DISCORD_WEBHOOK)" -H "Content-Type: application/json" -d "{\\"content\\":\\"${MSG}\\"}";
-                fi
+                MSG="$status_msg vault-unseal $(($DURATION / 60))m$(($DURATION % 60))s $BUILD_URL"
+                curl -sS -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
+                    -d chat_id="$TELEGRAM_CHAT_ID" \
+                    -d text="$MSG"
                 '''
             }
         }

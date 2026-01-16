@@ -3,39 +3,7 @@ pipeline {
     triggers { cron('0 0 * * *') }
     agent {
         kubernetes {
-            yaml '''
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-    - name: ubuntu
-      image: tuana9a/ubuntu:git-1d3169e
-      command: ["sleep", "infinity"]
-      volumeMounts:
-        - name: workdir
-          mountPath: "/workdir"
-        - name: secrets
-          mountPath: "/var/secrets"
-          readOnly: true
-    - name: vault
-      image: hashicorp/vault:1.17.2
-      command: ["sleep", "infinity"]
-      envFrom:
-        - secretRef:
-            name: vault-secret-store-token-renew
-      volumeMounts:
-        - name: workdir
-          mountPath: "/workdir"
-        - name: secrets
-          mountPath: "/var/secrets"
-          readOnly: true
-  volumes:
-    - name: workdir
-      emptyDir: {}
-    - name: secrets
-      secret:
-        secretName: vault-secret-store-token-renew
-'''
+            yamlFile '.jenkins/vault-secret-store-token-renew.yml'
             defaultContainer 'ubuntu'
             retries 2
         }
@@ -79,13 +47,13 @@ spec:
                 STOP_TIME=$(cat "/workdir/stop.time")
                 DURATION=$((STOP_TIME - START_TIME))
                 case "$(cat /workdir/ruok)" in
-                    'yes') status_msg=":white_check_mark:" ;;
-                    *) status_msg=":x:" ;;
+                    'yes') status_msg="ok" ;;
+                    *) status_msg="fuck" ;;
                 esac
-                MSG="$status_msg \\`vault-secret-store-token-renew\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\` $BUILD_URL"
-                if [ -f /var/secrets/DISCORD_WEBHOOK ]; then
-                    curl -X POST "$(cat /var/secrets/DISCORD_WEBHOOK)" -H "Content-Type: application/json" -d "{\\"content\\":\\"${MSG}\\"}";
-                fi
+                MSG="$status_msg vault-secret-store-token-renew $(($DURATION / 60))m$(($DURATION % 60))s $BUILD_URL"
+                curl -sS -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
+                    -d chat_id="$TELEGRAM_CHAT_ID" \
+                    -d text="$MSG"
                 '''
             }
         }
