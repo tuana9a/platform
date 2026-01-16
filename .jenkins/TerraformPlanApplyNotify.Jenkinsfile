@@ -84,11 +84,14 @@ pipeline {
                 STOP_TIME=$(cat "/workdir/stop.time")
                 DURATION=$((STOP_TIME - START_TIME))
                 case "$(cat /workdir/ruok)" in
-                    "yes") status=":white_check_mark:" ;;
-                    *) status=":x:" ;;
+                    "yes") status="ok" ;;
+                    *) status="fuck" ;;
                 esac
-                MSG="$status \\`$WORKINGDIR\\` \\`$(($DURATION / 60))m$(($DURATION % 60))s\\` $BUILD_URL"
-                curl -X POST "${DISCORD_WEBHOOK}" -H "Content-Type: application/json" -d "{\\"content\\":\\"${MSG}\\"}"
+                MSG="$status $WORKINGDIR $(($DURATION / 60))m$(($DURATION % 60))s $BUILD_URL"
+                set +x
+                curl -sS -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
+                    -d chat_id="$TELEGRAM_CHAT_ID" \
+                    -d text="$MSG"
                 '''
             }
         }
