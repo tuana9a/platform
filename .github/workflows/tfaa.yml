@@ -1,4 +1,4 @@
-name: terraform-plan-apply-notify
+name: tfaa
 
 on:
   workflow_call:
@@ -8,10 +8,6 @@ on:
         required: false
         default: "ubuntu-24.04"
       add-missing-files:
-        type: boolean
-        required: false
-        default: false
-      setup-aws:
         type: boolean
         required: false
         default: false
@@ -41,7 +37,7 @@ on:
       AWS_ASSUME_ROLE:
         type: string
         required: false
-        default: "error"
+        default: "nope"
       AWS_REGION:
         type: string
         required: false
@@ -62,7 +58,7 @@ env:
   TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
 jobs:
-  terraform-plan-apply-notify:
+  tfaa:
     runs-on: ${{ inputs.runs-on }}
     permissions:
       contents: read
@@ -84,7 +80,7 @@ jobs:
           workload_identity_provider: "projects/${{ inputs.GCP_PROJECT_NUM }}/locations/global/workloadIdentityPools/${{ inputs.GCP_WORKLOAD_IDENTITY_POOL }}/providers/${{ inputs.GCP_WORKLOAD_IDENTITY_POOL_PROVIDER }}"
           service_account: "${{ inputs.GCP_SERVICE_ACCOUNT }}"
       - uses: aws-actions/configure-aws-credentials@v4
-        if: "${{ inputs.setup-aws }}"
+        if: "${{ inputs.AWS_ASSUME_ROLE != 'nope' }}"
         with:
           role-to-assume: "${{ inputs.AWS_ASSUME_ROLE }}"
           aws-region: "${{ inputs.AWS_REGION }}"
@@ -131,6 +127,6 @@ jobs:
       - name: notify
         if: ${{ always() }}
         run: |
-          curl -X POST "https://api.telegram.org/bot${{ env.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+          curl -sS -X POST "https://api.telegram.org/bot${{ env.TELEGRAM_BOT_TOKEN }}/sendMessage" \
             -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
             -d text="${NOTI_MSG}"
