@@ -5,7 +5,7 @@ resource "helm_release" "grafana" {
 
   repository = "https://grafana.github.io/helm-charts"
   chart      = "grafana"
-  version    = "8.6.4"
+  version    = "10.5.8"
 
   values = [file("./values.yaml")]
 }
