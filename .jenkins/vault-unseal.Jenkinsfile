@@ -1,5 +1,6 @@
 pipeline {
-    options { buildDiscarder(logRotator(numToKeepStr: '3')) }
+    options { buildDiscarder(logRotator(daysToKeepStr: '7')) }
+    triggers { cron('*/5 * * * *') }
     agent {
         kubernetes {
             yamlFile '.jenkins/vault-unseal.yml'
@@ -12,6 +13,7 @@ pipeline {
                 container('ubuntu') {
                     sh 'date +%s > /workdir/start.time'
                     sh 'echo 0 > /workdir/status'
+                    sh 'echo no > /workdir/action'
                 }
             }
         }
@@ -54,6 +56,7 @@ pipeline {
                                         vault operator unseal $(cat /var/secrets/unseal_key_0)
                                         vault operator unseal $(cat /var/secrets/unseal_key_1)
                                         vault operator unseal $(cat /var/secrets/unseal_key_2)
+                                        echo yes > /workdir/action
                                         '''
                                     }
                                 }
@@ -77,6 +80,13 @@ pipeline {
         always {
             container('ubuntu') {
                 sh '''
+                case "$(cat /workdir/action)" in
+                    "no")
+                        echo "all vault instances are unsealed"
+                        exit 0
+                        ;;
+                    *) ;;
+                esac
                 START_TIME=$(cat "/workdir/start.time")
                 STOP_TIME=$(cat "/workdir/stop.time")
                 DURATION=$((STOP_TIME - START_TIME))
