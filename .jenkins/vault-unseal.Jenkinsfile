@@ -1,5 +1,5 @@
 pipeline {
-    options { buildDiscarder(logRotator(daysToKeepStr: '7')) }
+    options { buildDiscarder(logRotator(numToKeepStr: '7')) }
     triggers { cron('*/5 * * * *') }
     agent {
         kubernetes {
