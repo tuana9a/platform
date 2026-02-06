@@ -11,4 +11,4 @@ spec:
     repoURL: https://github.com/tuana9a/platform.git
     targetRevision: rock-n-roll
   destination:
-    server: https://kubernetes.default.svc.cluster.local
+    server: https://kubernetes.default.svc
