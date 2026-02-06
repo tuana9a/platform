@@ -31,7 +31,7 @@ spec:
               - "$platform/601-k8s-forwarders/{{.path.basename}}/values.yaml"
       destination:
         namespace: k8s-forwarder
-        server: https://kubernetes.default.svc
+        server: https://kubernetes.default.svc.cluster.local
       syncPolicy:
         automated:
           prune: true

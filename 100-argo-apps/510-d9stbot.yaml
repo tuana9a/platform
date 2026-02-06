@@ -12,7 +12,7 @@ spec:
     targetRevision: rock-n-roll
   destination:
     namespace: d9stbot
-    server: https://kubernetes.default.svc
+    server: https://kubernetes.default.svc.cluster.local
   syncPolicy:
     automated:
       prune: true
