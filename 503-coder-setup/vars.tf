@@ -3,7 +3,7 @@ variable "coder_token" {
   sensitive = true
 }
 
-variable "coder_users" {
-  type      = map(any)
+variable "vault_token" {
+  type      = string
   sensitive = true
 }

@@ -12,6 +12,10 @@ terraform {
       source  = "coder/coderd"
       version = "0.0.11"
     }
+    vault = {
+      source  = "hashicorp/vault"
+      version = "4.4.0"
+    }
     random = {
       source  = "hashicorp/random"
       version = "3.7.2"
@@ -28,6 +32,13 @@ provider "google" {
 provider "coderd" {
   url   = "https://coder.tuana9a.com"
   token = var.coder_token
+}
+
+provider "vault" {
+  address = "https://vault.tuana9a.com"
+  token   = var.vault_token
+
+  skip_child_token = true
 }
 
 provider "random" {

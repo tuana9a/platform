@@ -44,3 +44,12 @@ path "sys/storage/raft/snapshot" {
 }
 EOT
 }
+
+resource "vault_policy" "coder_tuana9a_com_setup" {
+  name   = "coder-tuana9a-com-setup"
+  policy = <<EOT
+path "kv/coder.tuana9a.com/users/*" {
+  capabilities = ["read"]
+}
+EOT
+}
