@@ -7,7 +7,7 @@ on:
         type: string
         required: false
         default: "ubuntu-24.04"
-      add-missing-files:
+      download-secret-files:
         type: boolean
         required: false
         default: false
@@ -92,9 +92,9 @@ jobs:
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.7.1"
-      - id: add-missing-files
+      - id: download-secret-files
         name: add missing files
-        if: "${{ inputs.add-missing-files }}"
+        if: "${{ inputs.download-secret-files }}"
         working-directory: "${{ inputs.WORKING_DIR }}"
         run: |
           curl -sSf -X GET https://vault.tuana9a.com/v1/kv/github.com/tuana9a/platform/${{ inputs.WORKING_DIR }}/terraform -H "X-Vault-Token: ${{ secrets.VAULT_TOKEN }}" -o vault_data.json

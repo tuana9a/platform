@@ -18,7 +18,7 @@ jobs:
     with:
       runs-on: self-hosted-0
       WORKING_DIR: ${{ github.workflow }}
-      add-missing-files: true
+      download-secret-files: true
     secrets:
       VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}

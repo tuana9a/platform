@@ -48,7 +48,7 @@ jobs:
         name: init
         working-directory: "${{ env.WORKING_DIR }}"
         run: terraform init
-      - id: add-missing-files
+      - id: download-secret-files
         name: add missing files
         working-directory: "${{ env.WORKING_DIR }}"
         run: |
