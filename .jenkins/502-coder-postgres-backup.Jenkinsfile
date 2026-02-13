@@ -1,6 +1,6 @@
 pipeline {
     options { buildDiscarder(logRotator(numToKeepStr: '14')) }
-    triggers { cron('0 0 * * *') }
+    triggers { cron('0 17 * * *') }
     agent {
         kubernetes {
             yamlFile '.jenkins/backup-coder-postgres.yml'
