@@ -1,0 +1,3 @@
+# argo apps
+
+first `kubectl apply -f manifests/5070-argo-apps.yaml` then see argo self watch itself.

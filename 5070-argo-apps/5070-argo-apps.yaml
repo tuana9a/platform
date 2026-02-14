@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: 100-argo-apps
+  name: 5070-argo-apps
   namespace: argocd
 spec:
   project: default
   revisionHistoryLimit: 10
   source:
-    path: 100-argo-apps
+    path: 5070-argo-apps
     repoURL: https://github.com/tuana9a/platform.git
     targetRevision: rock-n-roll
   destination:
