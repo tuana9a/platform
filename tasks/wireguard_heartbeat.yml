@@ -1,5 +1,4 @@
-# Note: The 'wireguard_heartbeats' variable must be defined
-# as an array in your playbook or inventory, e.g.:
+# Note: The var 'wireguard_heartbeats' must be defined as an array like:
 # wireguard_heartbeats:
 #   - 10.0.0.2
 #   - 10.0.0.3

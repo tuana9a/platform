@@ -77,17 +77,17 @@ k8s_cluster:
       authorized_keys: *k8s_control_plane_authorized_keys
       kubernetes_major_version: *k8s-cobi-major-version
       kubernetes_minor_version: *k8s-cobi-minor-version
-    192.168.56.25: &i-125
-      ansible_user: u
-      nodename: i-125
-      vmid: 125
-      is_control_plane: true
-      kube_pki: *kube_pki
-      kubevip: *kubevip
-      goodbye: true
-      authorized_keys: *k8s_control_plane_authorized_keys
-      kubernetes_major_version: *k8s-cobi-major-version
-      kubernetes_minor_version: *k8s-cobi-minor-version
+    # 192.168.56.25: &i-125
+    #   ansible_user: u
+    #   nodename: i-125
+    #   vmid: 125
+    #   is_control_plane: true
+    #   kube_pki: *kube_pki
+    #   kubevip: *kubevip
+    #   goodbye: true
+    #   authorized_keys: *k8s_control_plane_authorized_keys
+    #   kubernetes_major_version: *k8s-cobi-major-version
+    #   kubernetes_minor_version: *k8s-cobi-minor-version
     192.168.56.31: &i-131
       ansible_user: u
       nodename: i-131
@@ -142,6 +142,17 @@ k8s_cluster:
           name: i-134
       kubernetes_major_version: *k8s-cobi-major-version
       kubernetes_minor_version: *k8s-cobi-minor-version
+    # 192.168.56.35: &i-135
+    #   ansible_user: u
+    #   nodename: i-135
+    #   vmid: 135
+    #   is_control_plane: false
+    #   goodbye: true
+    #   wireguard_clients:
+    #     - file: i-135.conf
+    #       name: i-135
+    #   kubernetes_major_version: *k8s-cobi-major-version
+    #   kubernetes_minor_version: *k8s-cobi-minor-version
 k8s_cluster_operations:
   hosts:
     192.168.56.22:
@@ -149,12 +160,13 @@ k8s_cluster_operations:
       goodbye_nodes:
         # - name: i-123
         #   is_control_plane: true
-        # - name: i-125
-        #   is_control_plane: true
+        - name: i-125
+          is_control_plane: true
         # - name: i-131
         # - name: i-133
-        # - name: i-135
-      node_labels: # cd 068-k8s-cobi-tuana9a && terraform output -raw proxmox_csi_node_labels_help
+        - name: i-135
+      node_labels:
+        # cd 068-k8s-cobi-tuana9a && terraform output -raw proxmox_csi_node_labels_help
         - "labels":
             - "topology.kubernetes.io/region=alien"
             - "topology.kubernetes.io/zone=neomorph"

@@ -1,3 +1,0 @@
-- hosts: k8s_cluster
-  tasks:
-    - import_tasks: ./tasks/fix_dns_conflict_resolvconf_systemd-resovled.yml

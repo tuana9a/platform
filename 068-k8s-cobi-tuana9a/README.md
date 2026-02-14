@@ -128,3 +128,7 @@ kubeadm reset -f
 ```
 
 destroy the vm
+
+# conflicting dns with wireguard client
+
+wireguard client set dns server on startup, It will maybe overwrite existing dns servers, so I disabled the dns of wireguard client config.

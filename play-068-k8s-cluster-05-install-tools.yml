@@ -1,8 +1,0 @@
-- hosts: k8s_cluster
-  tasks:
-    # - import_tasks: ./tasks/install_unzip.yml # install awscli requires unzip
-    #   when: is_control_plane
-    # - import_tasks: ./tasks/install_awscli.yml
-    #   when: is_control_plane
-    - import_tasks: ./tasks/install_etcd.yml
-      when: is_control_plane

@@ -1,3 +1,6 @@
+# ----------------------
+# | install kubernetes |
+# ----------------------
 - hosts: k8s_cluster
   tasks:
     - name: Check for kubesetup completion flag
@@ -12,11 +15,11 @@
     # when we upgrade the k8s, updating runc, cni, containerd could be included
     # in the upgrade, so adding a condition to skip these installations for old
     # worker is necessary
-    - import_tasks: ./tasks/kubeinstall_runc.yml
+    - import_tasks: ./tasks/install_runc.yml
       when: not kubesetup_completed
-    - import_tasks: ./tasks/kubeinstall_cni.yml
+    - import_tasks: ./tasks/install_cni.yml
       when: not kubesetup_completed
-    - import_tasks: ./tasks/kubeinstall_containerd.yml
+    - import_tasks: ./tasks/install_containerd.yml
       when: not kubesetup_completed
     - import_tasks: ./tasks/kubesetup.yml
       when: not kubesetup_completed
@@ -27,7 +30,7 @@
         dest: /opt/kubesetup_completed
         content: "1"
 
-    - import_tasks: ./tasks/authorized_keys.yml
+    - import_tasks: ../tasks/authorized_keys.yml
 
 - hosts: k8s_cluster_operations
   tasks:
@@ -36,6 +39,9 @@
     - import_tasks: ./tasks/kubeadm_create_join_command.yml
       when: is_control_plane
 
+# ----------------
+# | join cluster |
+# ----------------
 - hosts: k8s_cluster
   tasks:
     - name: copy facts
@@ -72,6 +78,18 @@
       ansible.builtin.copy:
         dest: /opt/kubejoined_completed
         content: "1"
+
+# ----------------
+# | other stuffs |
+# ----------------
+- hosts: k8s_cluster
+  tasks:
+    - import_tasks: ./tasks/install_etcdcli.yml
+      when: is_control_plane
+    - import_tasks: ./tasks/install_wireguard.yml
+      when: wireguard_clients is defined
+    - import_tasks: ./tasks/wireguard_client.yml
+      when: wireguard_clients is defined
 
 - hosts: k8s_cluster_operations
   tasks:

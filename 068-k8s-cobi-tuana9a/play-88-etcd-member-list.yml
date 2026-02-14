@@ -1,0 +1,12 @@
+- hosts: k8s_cluster_operations
+  tasks:
+    - become: true
+      command: "/usr/local/bin/etcdctl member list -w table"
+      register: result
+      environment: &etcd_env
+        ETCDCTL_API: "3"
+        ETCDCTL_CACERT: "/etc/kubernetes/pki/etcd/ca.crt"
+        ETCDCTL_CERT: "/etc/kubernetes/pki/apiserver-etcd-client.crt"
+        ETCDCTL_KEY: "/etc/kubernetes/pki/apiserver-etcd-client.key"
+    - debug:
+        msg: "{{ result.stdout | split('\n') }}"
