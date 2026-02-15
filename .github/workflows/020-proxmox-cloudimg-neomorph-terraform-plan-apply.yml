@@ -1,0 +1,25 @@
+name: "020-proxmox-cloudimg-neomorph"
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "020-proxmox-cloudimg-neomorph/**"
+      - ".github/workflows/020-proxmox-cloudimg-neomorph-terraform-plan-apply*"
+    branches:
+      - rock-n-roll
+
+jobs:
+  main:
+    permissions:
+      contents: read
+      id-token: write
+    uses: ./.github/workflows/tfaa.yml
+    with:
+      runs-on: self-hosted-0
+      WORKING_DIR: ${{ github.workflow }}
+      download-secret-files: true
+    secrets:
+      VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
