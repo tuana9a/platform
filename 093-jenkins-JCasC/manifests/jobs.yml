@@ -10,6 +10,9 @@ data:
     jobs:
       - script: |
           multibranchPipelineJob('020-proxmox-cloudimg-neomorph-terraform-plan-apply') {
+            configure {
+              it / disabled << 'true'
+            }
             branchSources {
               git {
                 // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
