@@ -1,3 +1,13 @@
+locals {
+  cloudflare_account_id = var.cloudflare_account_id
+}
+
+data "cloudflare_zone" "tuana9a_com" {
+  filter = {
+    name = "tuana9a.com"
+  }
+}
+
 resource "random_password" "dev2_tunnel" {
   length  = 32
   special = false
