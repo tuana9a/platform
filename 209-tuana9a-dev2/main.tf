@@ -5,7 +5,7 @@ resource "random_password" "vm_password" {
 }
 
 resource "proxmox_virtual_environment_vm" "tuana9a_dev2" {
-  node_name = "neomorph"
+  node_name = "engineer"
   vm_id     = 209
   name      = "tuana9a-dev2"
   tags      = ["terraform", "ubuntu"]
