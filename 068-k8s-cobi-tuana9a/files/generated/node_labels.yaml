@@ -1,0 +1,28 @@
+- "labels":
+  - "topology.kubernetes.io/region=alien"
+  - "topology.kubernetes.io/zone=neomorph"
+  "nodename": "i-122"
+- "labels":
+  - "topology.kubernetes.io/region=alien"
+  - "topology.kubernetes.io/zone=neomorph"
+  "nodename": "i-123"
+- "labels":
+  - "topology.kubernetes.io/region=alien"
+  - "topology.kubernetes.io/zone=engineer"
+  "nodename": "i-124"
+- "labels":
+  - "topology.kubernetes.io/region=alien"
+  - "topology.kubernetes.io/zone=neomorph"
+  "nodename": "i-131"
+- "labels":
+  - "topology.kubernetes.io/region=alien"
+  - "topology.kubernetes.io/zone=engineer"
+  "nodename": "i-132"
+- "labels":
+  - "topology.kubernetes.io/region=alien"
+  - "topology.kubernetes.io/zone=engineer"
+  "nodename": "i-133"
+- "labels":
+  - "topology.kubernetes.io/region=alien"
+  - "topology.kubernetes.io/zone=neomorph"
+  "nodename": "i-134"

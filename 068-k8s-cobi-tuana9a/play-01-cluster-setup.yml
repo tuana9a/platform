@@ -95,7 +95,7 @@
   tasks:
     - include_tasks: ./tasks/kubectl_label_node.yml
       when: is_control_plane
-      loop: "{{ node_labels }}"
+      loop: "{{ lookup('file', 'files/generated/node_labels.yaml') | from_yaml }}"
       vars:
         node_name: "{{ item.nodename }}"
         label_pairs: "{{ item.labels }}"
