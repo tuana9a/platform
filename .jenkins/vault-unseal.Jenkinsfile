@@ -1,6 +1,6 @@
 pipeline {
     options { buildDiscarder(logRotator(numToKeepStr: '7')) }
-    triggers { cron('*/5 * * * *') }
+    // triggers { cron('*/5 * * * *') }
     agent {
         kubernetes {
             yamlFile '.jenkins/vault-unseal.yml'
