@@ -12,12 +12,12 @@ locals {
     #   type   = "https"
     #   target = "https://dkhptd-api.tuana9a.com/api/term-ids"
     # }
-    # coder_tuana9a_com = {
-    #   name    = "coder.tuana9a.com"
-    #   type    = "https"
-    #   target  = "https://coder.tuana9a.com"
-    #   regions = ["eu_west", "se_asia"]
-    # }
+    coder_tuana9a_com = {
+      name    = "coder.tuana9a.com"
+      type    = "https"
+      target  = "https://coder.tuana9a.com"
+      regions = ["eu_west", "se_asia"]
+    }
     # dev2_tuana9a_com = {
     #   name    = "dev2.tuana9a.com"
     #   type    = "https"
