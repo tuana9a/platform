@@ -23,6 +23,11 @@
       when: not kubesetup_completed
     - import_tasks: ./tasks/kubesetup.yml
       when: not kubesetup_completed
+    - name: Remove the CNI binaries directory # fixing cilium agent don't have permission to write into these folder
+      ansible.builtin.file:
+        path: /opt/cni/bin/
+        state: absent
+      become: true
 
     - name: Mark kubesetup as completed
       become: true

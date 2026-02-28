@@ -9,7 +9,8 @@ locals {
         address        = "192.168.56.22/24"
         gateway_ip     = "192.168.56.1"
         network_device = "vmbr0"
-        pve_node       = "neomorph"
+        pve_node       = "engineer"
+        cloudimg       = "debian-12-generic-amd64-20251129-2311.img"
       }
       i-123 = {
         vmid           = 123
@@ -19,8 +20,8 @@ locals {
         address        = "192.168.56.23/24"
         gateway_ip     = "192.168.56.1"
         network_device = "vmbr0"
-        pve_node       = "neomorph"
-        cloudimg       = "debian-12-generic-amd64-20251129-2311"
+        pve_node       = "engineer"
+        cloudimg       = "debian-12-generic-amd64-20251129-2311.img"
       }
       i-124 = {
         vmid           = 124
@@ -31,6 +32,7 @@ locals {
         gateway_ip     = "192.168.56.1"
         network_device = "vmbr0"
         pve_node       = "engineer"
+        cloudimg       = "debian-12-generic-amd64-20251129-2311.img"
       }
       # i-125 = {
       #   vmid           = 125
@@ -41,6 +43,29 @@ locals {
       #   gateway_ip     = "192.168.56.1"
       #   network_device = "vmbr0"
       #   pve_node       = "engineer"
+      #   cloudimg       = "debian-12-generic-amd64-20250814-2204.img"
+      # }
+      # i-126 = {
+      #   vmid           = 126
+      #   corecount      = 2
+      #   memsize        = 4096
+      #   vmip           = "192.168.56.26"
+      #   address        = "192.168.56.26/24"
+      #   gateway_ip     = "192.168.56.1"
+      #   network_device = "vmbr0"
+      #   pve_node       = "engineer"
+      #   cloudimg       = "debian-12-generic-amd64-20250814-2204.img"
+      # }
+      # i-127 = {
+      #   vmid           = 127
+      #   corecount      = 2
+      #   memsize        = 4096
+      #   vmip           = "192.168.56.27"
+      #   address        = "192.168.56.27/24"
+      #   gateway_ip     = "192.168.56.1"
+      #   network_device = "vmbr0"
+      #   pve_node       = "engineer"
+      #   cloudimg       = "debian-12-generic-amd64-20250814-2204.img"
       # }
       i-131 = {
         vmid           = 131
@@ -51,7 +76,7 @@ locals {
         gateway_ip     = "192.168.56.1"
         network_device = "vmbr0"
         pve_node       = "neomorph"
-        cloudimg       = "debian-12-generic-amd64-20251129-2311"
+        cloudimg       = "debian-12-generic-amd64-20251129-2311.img"
       }
       i-132 = {
         vmid           = 132
@@ -61,7 +86,8 @@ locals {
         address        = "192.168.56.32/24"
         gateway_ip     = "192.168.56.1"
         network_device = "vmbr0"
-        pve_node       = "engineer"
+        pve_node       = "neomorph"
+        cloudimg       = "debian-12-generic-amd64-20251129-2311.img"
       }
       i-133 = {
         vmid           = 133
@@ -71,19 +97,52 @@ locals {
         address        = "192.168.56.33/24"
         gateway_ip     = "192.168.56.1"
         network_device = "vmbr0"
-        pve_node       = "engineer"
-        cloudimg       = "debian-12-generic-amd64-20251129-2311"
-      }
-      i-134 = {
-        vmid           = 134
-        corecount      = 4
-        memsize        = 12288
-        vmip           = "192.168.56.34"
-        address        = "192.168.56.34/24"
-        gateway_ip     = "192.168.56.1"
-        network_device = "vmbr0"
         pve_node       = "neomorph"
+        cloudimg       = "debian-12-generic-amd64-20251129-2311.img"
       }
+      # i-134 = {
+      #   vmid           = 134
+      #   corecount      = 4
+      #   memsize        = 12288
+      #   vmip           = "192.168.56.34"
+      #   address        = "192.168.56.34/24"
+      #   gateway_ip     = "192.168.56.1"
+      #   network_device = "vmbr0"
+      #   pve_node       = "neomorph"
+      # }
+      # i-135 = {
+      #   vmid           = 135
+      #   corecount      = 4
+      #   memsize        = 12288
+      #   vmip           = "192.168.56.35"
+      #   address        = "192.168.56.35/24"
+      #   gateway_ip     = "192.168.56.1"
+      #   network_device = "vmbr0"
+      #   pve_node       = "neomorph"
+      #   cloudimg       = "debian-12-generic-amd64-20250814-2204.img"
+      # }
+      # i-136 = {
+      #   vmid           = 136
+      #   corecount      = 4
+      #   memsize        = 12288
+      #   vmip           = "192.168.56.36"
+      #   address        = "192.168.56.36/24"
+      #   gateway_ip     = "192.168.56.1"
+      #   network_device = "vmbr0"
+      #   pve_node       = "neomorph"
+      #   cloudimg       = "debian-12-generic-amd64-20250814-2204.img"
+      # }
+      # i-137 = {
+      #   vmid           = 137
+      #   corecount      = 4
+      #   memsize        = 12288
+      #   vmip           = "192.168.56.37"
+      #   address        = "192.168.56.37/24"
+      #   gateway_ip     = "192.168.56.1"
+      #   network_device = "vmbr0"
+      #   pve_node       = "neomorph"
+      #   cloudimg       = "debian-12-generic-amd64-20250814-2204.img"
+      # }
     }
   }
 }
@@ -114,7 +173,7 @@ resource "proxmox_virtual_environment_vm" "cluster" {
 
   disk {
     datastore_id = "local"
-    file_id      = "local:iso/${lookup(each.value, "cloudimg", "debian-12-generic-amd64-20250814-2204")}.img"
+    file_id      = "local:iso/${each.value.cloudimg}"
     interface    = "scsi0"
     size         = lookup(each.value, "disksize", 32)
     speed {

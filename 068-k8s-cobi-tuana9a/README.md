@@ -1,5 +1,12 @@
 # k8s-cobi-tuana9a
 
+```bash
+kubeadm init \
+  --control-plane-endpoint='192.168.56.21' \
+  --pod-network-cidr='10.244.0.0/16' \
+  --service-cidr='10.233.0.0/16'
+```
+
 # oidc - Login with Google
 
 add two keys to kube-apiserver flags
@@ -132,3 +139,9 @@ destroy the vm
 # conflicting dns with wireguard client
 
 wireguard client set dns server on startup, It will maybe overwrite existing dns servers, so I disabled the dns of wireguard client config.
+
+## Migration from flannel to calico
+
+Issues:
+
+after uninstalling flannel spegel stop working, calico is fail to pull images -> cni fail

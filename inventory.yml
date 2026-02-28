@@ -10,7 +10,7 @@ neomorph:
   hosts:
     192.168.56.112:
       ansible_user: u
-      ufw_state: "enabled"
+      ufw_state: "disabled"
       ufw_rules: &proxmox_ufw_rules
         - name: "Allow SSH (Limit)"
           rule: limit
@@ -31,13 +31,9 @@ engineer:
       ansible_user: u
       ufw_state: "disabled"
       ufw_rules: *proxmox_ufw_rules
-k8s_cluster:
+__k8s_cluster: # NOTE: trick for storing common variables
   hosts:
-    192.168.56.22: &i-122
-      ansible_user: u
-      nodename: i-122
-      vmid: 122
-      is_control_plane: true
+    localhost:
       kube_pki: &kube_pki
         - /etc/kubernetes/pki/ca.crt
         - /etc/kubernetes/pki/ca.key
@@ -56,6 +52,20 @@ k8s_cluster:
           user: root
       kubernetes_major_version: &k8s-cobi-major-version "1.32"
       kubernetes_minor_version: &k8s-cobi-minor-version "1.32.11"
+k8s_cluster:
+  hosts:
+    # --- CONTROL PLANE ---
+    192.168.56.22: &i-122
+      ansible_user: u
+      nodename: i-122
+      vmid: 122
+      is_control_plane: true
+      kube_pki: *kube_pki
+      kubevip: *kubevip
+      goodbye: false
+      authorized_keys: *k8s_control_plane_authorized_keys
+      kubernetes_major_version: *k8s-cobi-major-version
+      kubernetes_minor_version: *k8s-cobi-minor-version
     192.168.56.23: &i-123
       ansible_user: u
       nodename: i-123
@@ -74,6 +84,7 @@ k8s_cluster:
       is_control_plane: true
       kube_pki: *kube_pki
       kubevip: *kubevip
+      goodbye: false
       authorized_keys: *k8s_control_plane_authorized_keys
       kubernetes_major_version: *k8s-cobi-major-version
       kubernetes_minor_version: *k8s-cobi-minor-version
@@ -88,16 +99,36 @@ k8s_cluster:
     #   authorized_keys: *k8s_control_plane_authorized_keys
     #   kubernetes_major_version: *k8s-cobi-major-version
     #   kubernetes_minor_version: *k8s-cobi-minor-version
+    # 192.168.56.26: &i-126
+    #   ansible_user: u
+    #   nodename: i-126
+    #   vmid: 126
+    #   is_control_plane: true
+    #   kube_pki: *kube_pki
+    #   kubevip: *kubevip
+    #   goodbye: true
+    #   authorized_keys: *k8s_control_plane_authorized_keys
+    #   kubernetes_major_version: *k8s-cobi-major-version
+    #   kubernetes_minor_version: *k8s-cobi-minor-version
+    # 192.168.56.27: &i-127
+    #   ansible_user: u
+    #   nodename: i-127
+    #   vmid: 127
+    #   is_control_plane: true
+    #   kube_pki: *kube_pki
+    #   kubevip: *kubevip
+    #   goodbye: true
+    #   authorized_keys: *k8s_control_plane_authorized_keys
+    #   kubernetes_major_version: *k8s-cobi-major-version
+    #   kubernetes_minor_version: *k8s-cobi-minor-version
+
+    # --- DATA PLANE ---
     192.168.56.31: &i-131
       ansible_user: u
       nodename: i-131
       vmid: 131
       is_control_plane: false
       wireguard_clients:
-        - file: k8s-cobi-5.conf
-          name: k8s-cobi-5
-          enabled: false
-          state: stopped
         - file: i-131.conf
           name: i-131
       goodbye: false
@@ -108,11 +139,8 @@ k8s_cluster:
       nodename: i-132
       vmid: 132
       is_control_plane: false
+      goodbye: false
       wireguard_clients:
-        - file: k8s-cobi-7.conf
-          name: k8s-cobi-7
-          enabled: false
-          state: stopped
         - file: i-132.conf
           name: i-132
       kubernetes_major_version: *k8s-cobi-major-version
@@ -128,20 +156,21 @@ k8s_cluster:
       goodbye: false
       kubernetes_major_version: *k8s-cobi-major-version
       kubernetes_minor_version: *k8s-cobi-minor-version
-    192.168.56.34: &i-134
-      ansible_user: u
-      nodename: i-134
-      vmid: 134
-      is_control_plane: false
-      wireguard_clients:
-        - file: k8s-cobi-6.conf
-          name: k8s-cobi-6
-          enabled: false
-          state: stopped
-        - file: i-134.conf
-          name: i-134
-      kubernetes_major_version: *k8s-cobi-major-version
-      kubernetes_minor_version: *k8s-cobi-minor-version
+    # 192.168.56.34: &i-134
+    #   ansible_user: u
+    #   nodename: i-134
+    #   vmid: 134
+    #   is_control_plane: false
+    #   wireguard_clients:
+    #     - file: k8s-cobi-6.conf
+    #       name: k8s-cobi-6
+    #       enabled: false
+    #       state: stopped
+    #     - file: i-134.conf
+    #       name: i-134
+    #   goodbye: true
+    #   kubernetes_major_version: *k8s-cobi-major-version
+    #   kubernetes_minor_version: *k8s-cobi-minor-version
     # 192.168.56.35: &i-135
     #   ansible_user: u
     #   nodename: i-135
@@ -153,46 +182,60 @@ k8s_cluster:
     #       name: i-135
     #   kubernetes_major_version: *k8s-cobi-major-version
     #   kubernetes_minor_version: *k8s-cobi-minor-version
+    # 192.168.56.36: &i-136
+    #   ansible_user: u
+    #   nodename: i-136
+    #   vmid: 136
+    #   is_control_plane: false
+    #   goodbye: true
+    #   wireguard_clients:
+    #     - file: i-136.conf
+    #       name: i-136
+    #   kubernetes_major_version: *k8s-cobi-major-version
+    #   kubernetes_minor_version: *k8s-cobi-minor-version
+    # 192.168.56.37: &i-137
+    #   ansible_user: u
+    #   nodename: i-137
+    #   vmid: 137
+    #   is_control_plane: false
+    #   goodbye: true
+    #   wireguard_clients:
+    #     - file: i-137.conf
+    #       name: i-137
+    #   kubernetes_major_version: *k8s-cobi-major-version
+    #   kubernetes_minor_version: *k8s-cobi-minor-version
 k8s_cluster_operations:
   hosts:
     192.168.56.22:
       <<: *i-122
-      goodbye_nodes:
-        # - name: i-123
-        #   is_control_plane: true
-        - name: i-125
-          is_control_plane: true
-        # - name: i-131
-        # - name: i-133
-        - name: i-135
-k8s_cluster_upgrade_batch_1:
-  hosts:
-    192.168.56.22:
-      <<: *i-122
-k8s_cluster_upgrade_batch_2:
-  hosts:
-    192.168.56.23:
-      <<: *i-123
-k8s_cluster_upgrade_batch_3:
-  hosts:
-    192.168.56.24:
-      <<: *i-124
-k8s_cluster_upgrade_batch_4:
-  hosts:
-    192.168.56.31:
-      <<: *i-131
-k8s_cluster_upgrade_batch_5:
-  hosts:
-    192.168.56.32:
-      <<: *i-132
-k8s_cluster_upgrade_batch_6:
-  hosts:
-    192.168.56.33:
-      <<: *i-133
-k8s_cluster_upgrade_batch_7:
-  hosts:
-    192.168.56.34:
-      <<: *i-134
+# k8s_cluster_upgrade_batch_1:
+#   hosts:
+#     192.168.56.22:
+#       <<: *i-122
+# k8s_cluster_upgrade_batch_2:
+#   hosts:
+#     192.168.56.23:
+#       <<: *i-123
+# k8s_cluster_upgrade_batch_3:
+#   hosts:
+#     192.168.56.24:
+#       <<: *i-124
+# k8s_cluster_upgrade_batch_4:
+#   hosts:
+#     192.168.56.31:
+#       <<: *i-131
+# k8s_cluster_upgrade_batch_5:
+#   hosts:
+#     192.168.56.32:
+#       <<: *i-132
+# k8s_cluster_upgrade_batch_6:
+#   hosts:
+#     192.168.56.33:
+#       <<: *i-133
+# k8s_cluster_upgrade_batch_7:
+#   hosts:
+#     192.168.56.34:
+#       <<: *i-134
 orisis:
   hosts:
     orisis.tuana9a.com:

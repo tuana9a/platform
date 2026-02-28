@@ -42,3 +42,7 @@ target     prot opt source               destination
 KUBE-MARK-MASQ  all  --  10.244.9.102         anywhere             /* grafana/grafana:service */
 DNAT       tcp  --  anywhere             anywhere             /* grafana/grafana:service */ tcp to:10.244.9.102:3000
 ```
+
+## Cleanup flannel
+
+See [../068-k8s-cobi-tuana9a/README.md#cleanup-flannel](../068-k8s-cobi-tuana9a/README.md#cleanup-flannel)
