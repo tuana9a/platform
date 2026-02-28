@@ -18,6 +18,4 @@ jobs:
     with:
       WORKING_DIR: ${{ github.workflow }}
       GCP_SERVICE_ACCOUNT: terraform-network-admin@tuana9a.iam.gserviceaccount.com
-    secrets:
-      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+    secrets: inherit

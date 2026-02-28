@@ -18,6 +18,4 @@ jobs:
     with:
       WORKING_DIR: ${{ github.workflow }}
       AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/terraform-ecr-admin
-    secrets:
-      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+    secrets: inherit
