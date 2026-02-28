@@ -22,3 +22,7 @@
   - "topology.kubernetes.io/region=alien"
   - "topology.kubernetes.io/zone=neomorph"
   "nodename": "i-133"
+- "labels":
+  - "topology.kubernetes.io/region=alien"
+  - "topology.kubernetes.io/zone=neomorph"
+  "nodename": "i-134"

@@ -23,10 +23,13 @@
       when: not kubesetup_completed
     - import_tasks: ./tasks/kubesetup.yml
       when: not kubesetup_completed
-    - name: Remove the CNI binaries directory # fixing cilium agent don't have permission to write into these folder
+    - name: Ensure /opt/cni/bin folder permissions # fixing cilium agent don't have permission to write into these folder
       ansible.builtin.file:
         path: /opt/cni/bin/
-        state: absent
+        owner: root
+        group: root
+        mode: '0755'
+        state: directory
       become: true
 
     - name: Mark kubesetup as completed
@@ -98,6 +101,7 @@
 
 - hosts: k8s_cluster_operations
   tasks:
+    # NOTE: this label steps is important for csi-proxmox plugin working correctly
     - include_tasks: ./tasks/kubectl_label_node.yml
       when: is_control_plane
       loop: "{{ lookup('file', 'files/generated/node_labels.yaml') | from_yaml }}"

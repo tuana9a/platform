@@ -9,10 +9,8 @@
   changed_when: kubectl_label_node_result.rc != 0 or "labeled" in kubectl_label_node_result.stdout
   failed_when: kubectl_label_node_result.rc != 0
 
-- name: kubectl label node [stdout]
+- name: kubectl label node result
   debug:
-    msg: "{{ kubectl_label_node_result.stdout | split('\n') }}"
-
-- name: kubectl label node [stderr]
-  debug:
-    msg: "{{ kubectl_label_node_result.stderr | split('\n') }}"
+    msg:
+      stdout: "{{ kubectl_label_node_result.stdout | split('\n') }}"
+      stderr: "{{ kubectl_label_node_result.stderr | split('\n') }}"

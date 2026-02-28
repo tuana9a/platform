@@ -156,21 +156,17 @@ k8s_cluster:
       goodbye: false
       kubernetes_major_version: *k8s-cobi-major-version
       kubernetes_minor_version: *k8s-cobi-minor-version
-    # 192.168.56.34: &i-134
-    #   ansible_user: u
-    #   nodename: i-134
-    #   vmid: 134
-    #   is_control_plane: false
-    #   wireguard_clients:
-    #     - file: k8s-cobi-6.conf
-    #       name: k8s-cobi-6
-    #       enabled: false
-    #       state: stopped
-    #     - file: i-134.conf
-    #       name: i-134
-    #   goodbye: true
-    #   kubernetes_major_version: *k8s-cobi-major-version
-    #   kubernetes_minor_version: *k8s-cobi-minor-version
+    192.168.56.34: &i-134
+      ansible_user: u
+      nodename: i-134
+      vmid: 134
+      is_control_plane: false
+      wireguard_clients:
+        - file: i-134.conf
+          name: i-134
+      goodbye: false
+      kubernetes_major_version: *k8s-cobi-major-version
+      kubernetes_minor_version: *k8s-cobi-minor-version
     # 192.168.56.35: &i-135
     #   ansible_user: u
     #   nodename: i-135

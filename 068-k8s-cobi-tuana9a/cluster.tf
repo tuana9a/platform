@@ -100,16 +100,17 @@ locals {
         pve_node       = "neomorph"
         cloudimg       = "debian-12-generic-amd64-20251129-2311.img"
       }
-      # i-134 = {
-      #   vmid           = 134
-      #   corecount      = 4
-      #   memsize        = 12288
-      #   vmip           = "192.168.56.34"
-      #   address        = "192.168.56.34/24"
-      #   gateway_ip     = "192.168.56.1"
-      #   network_device = "vmbr0"
-      #   pve_node       = "neomorph"
-      # }
+      i-134 = {
+        vmid           = 134
+        corecount      = 4
+        memsize        = 12288
+        vmip           = "192.168.56.34"
+        address        = "192.168.56.34/24"
+        gateway_ip     = "192.168.56.1"
+        network_device = "vmbr0"
+        pve_node       = "neomorph"
+        cloudimg       = "debian-12-generic-amd64-20251129-2311.img"
+      }
       # i-135 = {
       #   vmid           = 135
       #   corecount      = 4
