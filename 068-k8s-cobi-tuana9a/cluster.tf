@@ -120,7 +120,7 @@ locals {
       #   gateway_ip     = "192.168.56.1"
       #   network_device = "vmbr0"
       #   pve_node       = "neomorph"
-      #   cloudimg       = "debian-12-generic-amd64-20250814-2204.img"
+      #   cloudimg       = "debian-12-generic-amd64-20251129-2311.img"
       # }
       # i-136 = {
       #   vmid           = 136

@@ -8,9 +8,11 @@
 - name: Create CNI bin directory
   become: true
   ansible.builtin.file:
-    path: "/opt/cni/bin"
+    path: /opt/cni/bin/
+    owner: root
+    group: root
+    mode: '0755'
     state: directory
-    mode: "0755"
 
 - name: Extract CNI plugins
   become: true
@@ -18,5 +20,8 @@
     src: "/opt/cni-plugins-linux-amd64-v1.5.1.tgz"
     dest: "/opt/cni/bin"
     remote_src: yes
+    # ensure file permissions is correct (the tar extraction does preserve destination folder permisisons)
+    owner: root
+    group: root
     # Optimization: prevents re-extracting if a common CNI binary (like 'bridge') already exists
     creates: "/opt/cni/bin/bridge"

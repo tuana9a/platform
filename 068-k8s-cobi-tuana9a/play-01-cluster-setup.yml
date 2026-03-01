@@ -23,15 +23,6 @@
       when: not kubesetup_completed
     - import_tasks: ./tasks/kubesetup.yml
       when: not kubesetup_completed
-    - name: Ensure /opt/cni/bin folder permissions # fixing cilium agent don't have permission to write into these folder
-      ansible.builtin.file:
-        path: /opt/cni/bin/
-        owner: root
-        group: root
-        mode: '0755'
-        state: directory
-      become: true
-
     - name: Mark kubesetup as completed
       become: true
       ansible.builtin.copy:
