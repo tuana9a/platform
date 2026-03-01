@@ -55,43 +55,10 @@ __k8s_cluster: # NOTE: trick for storing common variables
 k8s_cluster:
   hosts:
     # --- CONTROL PLANE ---
-    192.168.56.22: &i-122
-      ansible_user: u
-      nodename: i-122
-      vmid: 122
-      is_control_plane: true
-      kube_pki: *kube_pki
-      kubevip: *kubevip
-      goodbye: false
-      authorized_keys: *k8s_control_plane_authorized_keys
-      kubernetes_major_version: *k8s-cobi-major-version
-      kubernetes_minor_version: *k8s-cobi-minor-version
-    192.168.56.23: &i-123
-      ansible_user: u
-      nodename: i-123
-      vmid: 123
-      is_control_plane: true
-      kube_pki: *kube_pki
-      kubevip: *kubevip
-      goodbye: false
-      authorized_keys: *k8s_control_plane_authorized_keys
-      kubernetes_major_version: *k8s-cobi-major-version
-      kubernetes_minor_version: *k8s-cobi-minor-version
-    192.168.56.24: &i-124
-      ansible_user: u
-      nodename: i-124
-      vmid: 124
-      is_control_plane: true
-      kube_pki: *kube_pki
-      kubevip: *kubevip
-      goodbye: false
-      authorized_keys: *k8s_control_plane_authorized_keys
-      kubernetes_major_version: *k8s-cobi-major-version
-      kubernetes_minor_version: *k8s-cobi-minor-version
-    # 192.168.56.25: &i-125
+    # 192.168.56.22: &i-122
     #   ansible_user: u
-    #   nodename: i-125
-    #   vmid: 125
+    #   nodename: i-122
+    #   vmid: 122
     #   is_control_plane: true
     #   kube_pki: *kube_pki
     #   kubevip: *kubevip
@@ -99,10 +66,10 @@ k8s_cluster:
     #   authorized_keys: *k8s_control_plane_authorized_keys
     #   kubernetes_major_version: *k8s-cobi-major-version
     #   kubernetes_minor_version: *k8s-cobi-minor-version
-    # 192.168.56.26: &i-126
+    # 192.168.56.23: &i-123
     #   ansible_user: u
-    #   nodename: i-126
-    #   vmid: 126
+    #   nodename: i-123
+    #   vmid: 123
     #   is_control_plane: true
     #   kube_pki: *kube_pki
     #   kubevip: *kubevip
@@ -110,10 +77,10 @@ k8s_cluster:
     #   authorized_keys: *k8s_control_plane_authorized_keys
     #   kubernetes_major_version: *k8s-cobi-major-version
     #   kubernetes_minor_version: *k8s-cobi-minor-version
-    # 192.168.56.27: &i-127
+    # 192.168.56.24: &i-124
     #   ansible_user: u
-    #   nodename: i-127
-    #   vmid: 127
+    #   nodename: i-124
+    #   vmid: 124
     #   is_control_plane: true
     #   kube_pki: *kube_pki
     #   kubevip: *kubevip
@@ -121,6 +88,39 @@ k8s_cluster:
     #   authorized_keys: *k8s_control_plane_authorized_keys
     #   kubernetes_major_version: *k8s-cobi-major-version
     #   kubernetes_minor_version: *k8s-cobi-minor-version
+    192.168.56.25: &i-125
+      ansible_user: u
+      nodename: i-125
+      vmid: 125
+      is_control_plane: true
+      kube_pki: *kube_pki
+      kubevip: *kubevip
+      goodbye: false
+      authorized_keys: *k8s_control_plane_authorized_keys
+      kubernetes_major_version: *k8s-cobi-major-version
+      kubernetes_minor_version: *k8s-cobi-minor-version
+    192.168.56.26: &i-126
+      ansible_user: u
+      nodename: i-126
+      vmid: 126
+      is_control_plane: true
+      kube_pki: *kube_pki
+      kubevip: *kubevip
+      goodbye: false
+      authorized_keys: *k8s_control_plane_authorized_keys
+      kubernetes_major_version: *k8s-cobi-major-version
+      kubernetes_minor_version: *k8s-cobi-minor-version
+    192.168.56.27: &i-127
+      ansible_user: u
+      nodename: i-127
+      vmid: 127
+      is_control_plane: true
+      kube_pki: *kube_pki
+      kubevip: *kubevip
+      goodbye: false
+      authorized_keys: *k8s_control_plane_authorized_keys
+      kubernetes_major_version: *k8s-cobi-major-version
+      kubernetes_minor_version: *k8s-cobi-minor-version
 
     # --- DATA PLANE ---
     192.168.56.31: &i-131
@@ -202,8 +202,8 @@ k8s_cluster:
     #   kubernetes_minor_version: *k8s-cobi-minor-version
 k8s_cluster_operations:
   hosts:
-    192.168.56.22:
-      <<: *i-122
+    192.168.56.25:
+      <<: *i-125
 # k8s_cluster_upgrade_batch_1:
 #   hosts:
 #     192.168.56.22:
