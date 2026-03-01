@@ -19,6 +19,4 @@ jobs:
       runs-on: self-hosted-0
       WORKING_DIR: ${{ github.workflow }}
       AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/i-300-loki
-    secrets:
-      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+    secrets: inherit
