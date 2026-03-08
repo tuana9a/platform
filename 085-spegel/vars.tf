@@ -3,12 +3,8 @@ variable "cluster_ca_certificate_b64" {
   sensitive = true
 }
 
-variable "client_certificate_b64" {
-  type      = string
-  sensitive = true
-}
-
-variable "client_key_b64" {
+# k8s service account token
+variable "token" {
   type      = string
   sensitive = true
 }
