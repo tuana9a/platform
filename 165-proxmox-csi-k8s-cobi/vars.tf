@@ -1,3 +1,4 @@
+# proxmox variables
 variable "pve_insecure" {
   type = bool
 }
@@ -39,7 +40,13 @@ variable "proxmox_csi_pve_insecure" {
   type = bool
 }
 
-variable "kubeconfig" {
-  type    = string
-  default = "~/.kube/config"
+# k8s authentication variables
+variable "cluster_ca_certificate_b64" {
+  type      = string
+  sensitive = true
+}
+
+variable "token" {
+  type      = string
+  sensitive = true
 }
