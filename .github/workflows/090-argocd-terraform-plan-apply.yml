@@ -18,4 +18,5 @@ jobs:
     with:
       runs-on: self-hosted-0
       WORKING_DIR: ${{ github.workflow }}
+      download-secret-files: true
     secrets: inherit
