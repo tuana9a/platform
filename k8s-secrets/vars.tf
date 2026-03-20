@@ -1,4 +1,4 @@
-variable "all_secrets_file" {
+variable "secret_dir" {
   type      = string
   sensitive = false
 }

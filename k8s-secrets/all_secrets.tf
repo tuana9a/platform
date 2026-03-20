@@ -1,5 +1,5 @@
 locals {
-  all_secrets = yamldecode(file(var.all_secrets_file))
+  all_secrets = merge([for x in fileset(path.cwd, "${var.secret_dir}/*.yml") : yamldecode(file(x))]...)
 }
 
 module "all_secrets" {
