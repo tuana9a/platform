@@ -48,3 +48,50 @@ ctx=gke_tuana9a_asia-southeast1-a_zero
 kubectl config use-context $ctx
 argocd cluster add $ctx
 ```
+
+# add new argo project
+
+```yml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: new-project
+  namespace: argocd
+spec:
+  sourceRepos:
+    - "*"
+  destinations:
+    - namespace: "*"
+      server: "*"
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+```
+
+# add digital ocean cluster or any k8s cluster
+
+using service account token as authentication method
+
+```yml
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: argocd
+  name: doks-singapore-cluster-creds
+  labels:
+    argocd.argoproj.io/secret-type: cluster
+type: Opaque
+stringData:
+  name: aca68611-bb11-4a69-a2bb-6029f12a6817.k8s.ondigitalocean.com
+  server: https://aca68611-bb11-4a69-a2bb-6029f12a6817.k8s.ondigitalocean.com
+  # kubectl -n default create token zeus --duration 30d
+  config: |
+    {
+      "bearerToken": "<kubectl -n default create token zeus --duration=43200m>",
+      "tlsClientConfig": {
+        "insecure": false,
+        "caData": "<base64 cluster ca certificate>"
+      }
+    }
+```
+
