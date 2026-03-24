@@ -24,7 +24,7 @@ resource "proxmox_virtual_environment_user" "kubernetes_csi" {
 }
 
 resource "time_offset" "three_months_from_now" {
-  offset_months = 3
+  offset_months = 9
 }
 
 resource "proxmox_virtual_environment_user_token" "kubernetes_csi" {
