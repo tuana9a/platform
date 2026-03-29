@@ -1,9 +1,5 @@
-data "cloudflare_zone" "tuana9a_com" {
-  name = "tuana9a.com"
-}
-
 locals {
-  records = yamldecode(file(var.dns_records_file))
+  records = yamldecode(file("./dns.yml"))
   mx_cloudflare_routes = [
     {
       target   = "route1.mx.cloudflare.net.",
