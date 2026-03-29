@@ -1,0 +1,98 @@
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: bm-utils
+spec:
+  refreshInterval: "15s"
+  secretStoreRef:
+    name: vault-tuana9a-com
+    kind: ClusterSecretStore
+  target:
+    name: bm-utils
+  dataFrom:
+    - extract:
+        key: bm-utils
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bm-utils
+data:
+  PORT: "5000"
+  BASE_URL: https://utils.bm.tuana9a.com
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bm-utils
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bm-utils
+  template:
+    metadata:
+      labels:
+        app: bm-utils
+    spec:
+      containers:
+        - name: bm-utils
+          image: tuana9a/bm-utils:git-77c3a16a87eaa9d12ca0d93fced654e12fc3f5ce
+          envFrom:
+            - configMapRef:
+                name: bm-utils
+          resources:
+            requests:
+              memory: "50Mi"
+              cpu: "50m"
+            limits:
+              memory: "100Mi"
+          volumeMounts:
+            - name: bm-utils
+              mountPath: "/app/config.tmp.yml"
+              subPath: "config.tmp.yml"
+      volumes:
+        - name: bm-utils
+          secret:
+            secretName: bm-utils
+            items:
+              - key: "config.tmp.yml"
+                path: "config.tmp.yml"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bm-utils
+spec:
+  selector:
+    app: bm-utils
+  type: ClusterIP
+  ports:
+    - port: 5000
+      targetPort: 5000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bm-utils
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m" # max upload size
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - utils.bm.tuana9a.com
+      secretName: utils-bm-tuana9a-com-tls
+  rules:
+    - host: utils.bm.tuana9a.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: bm-utils
+                port:
+                  number: 5000
