@@ -2,9 +2,12 @@
   become: true
   environment:
     KUBECONFIG: "{{ kubeconfig | default('/etc/kubernetes/admin.conf') }}"
-  ansible.builtin.command:
-    # TODO: maye we need to add '--overwrite'
-    cmd: "kubectl label node {{ node_name }} {% for item in label_pairs %} {{ item }}{% endfor %}"
+  # TODO: may we need to add '--overwrite' ?
+  ansible.builtin.shell: |
+    set -xe
+    {% for nodename in kube_node_labels %}
+    kubectl label node {{ nodename }} {% for label in kube_node_labels[nodename] %} {{ label }}{% endfor %};
+    {% endfor %}
   register: kubectl_label_node_result
   changed_when: kubectl_label_node_result.rc != 0 or "labeled" in kubectl_label_node_result.stdout
   failed_when: kubectl_label_node_result.rc != 0

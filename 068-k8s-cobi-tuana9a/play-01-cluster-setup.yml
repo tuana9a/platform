@@ -86,10 +86,21 @@
       when: wireguard_clients is defined
     - import_tasks: ./tasks/wireguard_client.yml
       when: wireguard_clients is defined
-    # NOTE: this label steps is important for csi-proxmox plugin working correctly
-    - include_tasks: ./tasks/kubectl_label_node.yml
+
+    # NOTE: kubectl label node (required for csi-proxmox plugin working correctly)
+    # https://github.com/sergelogvinov/proxmox-csi-plugin/blob/main/docs/install.md#prepare-kubernetes-cluster
+    # Proxmox CSI Plugin relies on the well-known Kubernetes topology node labels to define the disk location.
+    #   topology.kubernetes.io/region - Cluster name, the name must be the same as in cloud config region name
+    #   topology.kubernetes.io/zone - Proxmox node name
+    - set_fact:
+        kube_node_labels_str: |
+          {% for host in groups['k8s_cluster'] %}
+          {{ hostvars[host].nodename }}:
+            - "topology.kubernetes.io/region={{ hostvars[host].pve_cluster }}"
+            - "topology.kubernetes.io/zone={{ hostvars[host].pve_node }}"
+          {% endfor %}
       when: "('control-plane' in roles) and ('cluster-operations' in roles)"
-      loop: "{{ lookup('file', 'files/generated/node_labels.yaml') | from_yaml }}"
+    - include_tasks: ./tasks/kubectl_label_node.yml
       vars:
-        node_name: "{{ item.nodename }}"
-        label_pairs: "{{ item.labels }}"
+        kube_node_labels: "{{ kube_node_labels_str | from_yaml }}"
+      when: "('control-plane' in roles) and ('cluster-operations' in roles)"

@@ -71,6 +71,7 @@ k8s_cluster:
       pve_network_device: "vmbr0"
       gateway_ip: *gateway_ip
       pve_node: "engineer"
+      pve_cluster: "alien"
       cluster_operations_host: *cluster_operations_host
       kube_pki: *kube_pki
       kubevip: *kubevip
@@ -90,6 +91,7 @@ k8s_cluster:
       pve_network_device: "vmbr0"
       gateway_ip: *gateway_ip
       pve_node: "engineer"
+      pve_cluster: "alien"
       cluster_operations_host: *cluster_operations_host
       kube_pki: *kube_pki
       kubevip: *kubevip
@@ -109,6 +111,7 @@ k8s_cluster:
       pve_network_device: "vmbr0"
       gateway_ip: *gateway_ip
       pve_node: "engineer"
+      pve_cluster: "alien"
       cluster_operations_host: *cluster_operations_host
       kube_pki: *kube_pki
       kubevip: *kubevip
@@ -130,6 +133,7 @@ k8s_cluster:
       pve_network_device: "vmbr0"
       gateway_ip: *gateway_ip
       pve_node: "neomorph"
+      pve_cluster: "alien"
       cluster_operations_host: *cluster_operations_host
       wireguard_clients:
         - file: i-131.conf
@@ -149,6 +153,7 @@ k8s_cluster:
       pve_network_device: "vmbr0"
       gateway_ip: *gateway_ip
       pve_node: "neomorph"
+      pve_cluster: "alien"
       cluster_operations_host: *cluster_operations_host
       goodbye: false
       wireguard_clients:
@@ -168,6 +173,7 @@ k8s_cluster:
       pve_network_device: "vmbr0"
       gateway_ip: *gateway_ip
       pve_node: "neomorph"
+      pve_cluster: "alien"
       cluster_operations_host: *cluster_operations_host
       wireguard_clients:
         - file: i-133.conf
@@ -187,6 +193,7 @@ k8s_cluster:
       pve_network_device: "vmbr0"
       gateway_ip: *gateway_ip
       pve_node: "neomorph"
+      pve_cluster: "alien"
       cluster_operations_host: *cluster_operations_host
       wireguard_clients:
         - file: i-134.conf
