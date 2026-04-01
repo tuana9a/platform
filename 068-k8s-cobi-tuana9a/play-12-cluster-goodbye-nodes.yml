@@ -1,44 +1,44 @@
 - hosts: k8s_cluster
   tasks:
-    - name: Prepare list of nodes where goodbye is true
+    - name: Set goodbye_hosts
       set_fact:
-        goodbye_nodes_str: >-
-          {% set nodes = [] %}
-          {% for host in hostvars %}
-            {% if hostvars[host].goodbye | default(false) == true %}
-              {% set _ = nodes.append({
-                'nodename': hostvars[host].nodename,
-                'is_control_plane': hostvars[host].is_control_plane
-              }) %}
-            {% endif %}
-          {% endfor %}
-          {{ nodes }}
-      when: "('control-plane' in roles) and ('cluster-operations' in roles)"
+        goodbye_hosts: "{{ lookup('file', 'files/goodbye_hosts.yml') | from_yaml }}"
 
-    - name: (STUPID) Convert string to object
-      when: "('control-plane' in roles) and ('cluster-operations' in roles)"
+    - name: Set goodbye_nodes_str
       set_fact:
-        goodbye_nodes: "{{ goodbye_nodes_str | trim }}"
+        goodbye_nodes_str: |
+          {% for host in goodbye_hosts %}
+          - nodename: "{{ hostvars[host].nodename }}"
+            is_control_plane: "{{ 'control-plane' in hostvars[host].roles }}"
+          {% endfor %}
+
+    - name: Set goodbye_nodes
+      set_fact:
+        goodbye_nodes: "{{ goodbye_nodes_str | from_yaml }}"
 
     - include_tasks: ./tasks/kubectl_drain.yml
+      when: "('control-plane' in roles) and ('cluster-operations' in roles)"
       loop: "{{ goodbye_nodes }}"
       vars:
         k8s_node_name: "{{ item.nodename }}"
-      when: "('control-plane' in roles) and ('cluster-operations' in roles)"
 
     - include_tasks: ./tasks/etcd_member_remove.yml
+      when: "{{ ('control-plane' in roles) and ('cluster-operations' in roles) and (item.is_control_plane) }}"
       loop: "{{ goodbye_nodes }}"
       vars:
         k8s_node_name: "{{ item.nodename }}"
-      when: "{{ ('control-plane' in roles) and ('cluster-operations' in roles) and (item.is_control_plane | default(false)) }}"
 
     - include_tasks: ./tasks/kubectl_delete_node.yml
+      when: "('control-plane' in roles) and ('cluster-operations' in roles)"
       loop: "{{ goodbye_nodes }}"
       vars:
         k8s_node_name: "{{ item.nodename }}"
-      when: "('control-plane' in roles) and ('cluster-operations' in roles)"
 
-- hosts: k8s_cluster
-  tasks:
     - import_tasks: ./tasks/kubeadm_reset.yml
-      when: "goodbye | default(false)"
+      when: "inventory_hostname in goodbye_hosts"
+
+    - name: Mark as kube orphaned
+      become: true
+      ansible.builtin.copy:
+        dest: /opt/kube_orphaned
+        content: "yes"

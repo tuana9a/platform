@@ -32,7 +32,6 @@ k8s_cluster:
     #   is_control_plane: true
     #   kube_pki: *kube_pki
     #   kubevip: *kubevip
-    #   goodbye: true
     #   authorized_keys: *authorized_keys
     #   kubernetes_major_version: *kubernetes_major_version
     #   kubernetes_minor_version: *kubernetes_minor_version
@@ -43,7 +42,6 @@ k8s_cluster:
     #   is_control_plane: true
     #   kube_pki: *kube_pki
     #   kubevip: *kubevip
-    #   goodbye: true
     #   authorized_keys: *authorized_keys
     #   kubernetes_major_version: *kubernetes_major_version
     #   kubernetes_minor_version: *kubernetes_minor_version
@@ -54,7 +52,6 @@ k8s_cluster:
     #   is_control_plane: true
     #   kube_pki: *kube_pki
     #   kubevip: *kubevip
-    #   goodbye: true
     #   authorized_keys: *authorized_keys
     #   kubernetes_major_version: *kubernetes_major_version
     #   kubernetes_minor_version: *kubernetes_minor_version
@@ -75,7 +72,6 @@ k8s_cluster:
       cluster_operations_host: *cluster_operations_host
       kube_pki: *kube_pki
       kubevip: *kubevip
-      goodbye: false
       authorized_keys: *authorized_keys
       kubernetes_major_version: *kubernetes_major_version
       kubernetes_minor_version: *kubernetes_minor_version
@@ -95,7 +91,6 @@ k8s_cluster:
       cluster_operations_host: *cluster_operations_host
       kube_pki: *kube_pki
       kubevip: *kubevip
-      goodbye: false
       authorized_keys: *authorized_keys
       kubernetes_major_version: *kubernetes_major_version
       kubernetes_minor_version: *kubernetes_minor_version
@@ -115,32 +110,30 @@ k8s_cluster:
       cluster_operations_host: *cluster_operations_host
       kube_pki: *kube_pki
       kubevip: *kubevip
-      goodbye: false
       authorized_keys: *authorized_keys
       kubernetes_major_version: *kubernetes_major_version
       kubernetes_minor_version: *kubernetes_minor_version
 
     # --- DATA PLANE ---
-    192.168.56.31: &i-131
-      ansible_user: u
-      nodename: i-131
-      vmid: 131
-      roles:
-        - data-plane
-      cloudimg: *cloudimg
-      corecount: 4
-      memsize: 12288
-      pve_network_device: "vmbr0"
-      gateway_ip: *gateway_ip
-      pve_node: "neomorph"
-      pve_cluster: "alien"
-      cluster_operations_host: *cluster_operations_host
-      wireguard_clients:
-        - file: i-131.conf
-          name: i-131
-      goodbye: false
-      kubernetes_major_version: *kubernetes_major_version
-      kubernetes_minor_version: *kubernetes_minor_version
+    # 192.168.56.31: &i-131
+    #   ansible_user: u
+    #   nodename: i-131
+    #   vmid: 131
+    #   roles:
+    #     - data-plane
+    #   cloudimg: *cloudimg
+    #   corecount: 4
+    #   memsize: 12288
+    #   pve_network_device: "vmbr0"
+    #   gateway_ip: *gateway_ip
+    #   pve_node: "neomorph"
+    #   pve_cluster: "alien"
+    #   cluster_operations_host: *cluster_operations_host
+    #   wireguard_clients:
+    #     - file: i-131.conf
+    #       name: i-131
+    #   kubernetes_major_version: *kubernetes_major_version
+    #   kubernetes_minor_version: *kubernetes_minor_version
     192.168.56.32: &i-132
       ansible_user: u
       nodename: i-132
@@ -155,7 +148,6 @@ k8s_cluster:
       pve_node: "neomorph"
       pve_cluster: "alien"
       cluster_operations_host: *cluster_operations_host
-      goodbye: false
       wireguard_clients:
         - file: i-132.conf
           name: i-132
@@ -178,7 +170,6 @@ k8s_cluster:
       wireguard_clients:
         - file: i-133.conf
           name: i-133
-      goodbye: false
       kubernetes_major_version: *kubernetes_major_version
       kubernetes_minor_version: *kubernetes_minor_version
     192.168.56.34: &i-134
@@ -198,7 +189,6 @@ k8s_cluster:
       wireguard_clients:
         - file: i-134.conf
           name: i-134
-      goodbye: false
       kubernetes_major_version: *kubernetes_major_version
       kubernetes_minor_version: *kubernetes_minor_version
     # 192.168.56.35: &i-135
@@ -206,7 +196,6 @@ k8s_cluster:
     #   nodename: i-135
     #   vmid: 135
     #   is_control_plane: false
-    #   goodbye: true
     #   wireguard_clients:
     #     - file: i-135.conf
     #       name: i-135
@@ -217,7 +206,6 @@ k8s_cluster:
     #   nodename: i-136
     #   vmid: 136
     #   is_control_plane: false
-    #   goodbye: true
     #   wireguard_clients:
     #     - file: i-136.conf
     #       name: i-136
@@ -228,7 +216,6 @@ k8s_cluster:
     #   nodename: i-137
     #   vmid: 137
     #   is_control_plane: false
-    #   goodbye: true
     #   wireguard_clients:
     #     - file: i-137.conf
     #       name: i-137

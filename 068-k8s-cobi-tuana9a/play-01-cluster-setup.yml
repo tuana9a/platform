@@ -27,7 +27,7 @@
       become: true
       ansible.builtin.copy:
         dest: /opt/kubesetup_completed
-        content: "1"
+        content: "yes"
 
     - import_tasks: ./tasks/authorized_keys.yml
 
@@ -73,7 +73,7 @@
       become: true
       ansible.builtin.copy:
         dest: /opt/kubejoined_completed
-        content: "1"
+        content: "yes"
 
 # ----------------
 # | other stuffs |
