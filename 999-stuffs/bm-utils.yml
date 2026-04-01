@@ -21,9 +21,11 @@ spec:
       labels:
         app: bm-utils
     spec:
+      securityContext:
+        fsGroup: 101 # uid=100(appuser) gid=101(appgroup) groups=101(appgroup)
       containers:
         - name: bm-utils
-          image: tuana9a/bm-utils:git-03f3441cfac0aeb7e631a0acbe73292c955420ab
+          image: tuana9a/bm-utils:git-53e85cadb08af433841f24e75124eb00254c5a8c
           envFrom:
             - configMapRef:
                 name: bm-utils
