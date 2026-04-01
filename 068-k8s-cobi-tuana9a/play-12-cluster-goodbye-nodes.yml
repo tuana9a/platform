@@ -1,4 +1,4 @@
-- hosts: k8s_cluster_operations
+- hosts: k8s_cluster
   tasks:
     - name: Prepare list of nodes where goodbye is true
       set_fact:
@@ -13,8 +13,10 @@
             {% endif %}
           {% endfor %}
           {{ nodes }}
+      when: "('control-plane' in roles) and ('cluster-operations' in roles)"
 
     - name: (STUPID) Convert string to object
+      when: "('control-plane' in roles) and ('cluster-operations' in roles)"
       set_fact:
         goodbye_nodes: "{{ goodbye_nodes_str | trim }}"
 
@@ -22,19 +24,21 @@
       loop: "{{ goodbye_nodes }}"
       vars:
         k8s_node_name: "{{ item.nodename }}"
+      when: "('control-plane' in roles) and ('cluster-operations' in roles)"
 
     - include_tasks: ./tasks/etcd_member_remove.yml
       loop: "{{ goodbye_nodes }}"
       vars:
         k8s_node_name: "{{ item.nodename }}"
-      when: "{{ item.is_control_plane | default(false) }}"
+      when: "{{ ('control-plane' in roles) and ('cluster-operations' in roles) and (item.is_control_plane | default(false)) }}"
 
     - include_tasks: ./tasks/kubectl_delete_node.yml
       loop: "{{ goodbye_nodes }}"
       vars:
         k8s_node_name: "{{ item.nodename }}"
+      when: "('control-plane' in roles) and ('cluster-operations' in roles)"
 
 - hosts: k8s_cluster
   tasks:
     - import_tasks: ./tasks/kubeadm_reset.yml
-      when: goodbye | default(false)
+      when: "goodbye | default(false)"

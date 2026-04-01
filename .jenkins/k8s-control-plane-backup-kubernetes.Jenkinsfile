@@ -31,12 +31,14 @@ pipeline {
                 container('etcd') {
                     script {
                         inventory = readYaml file: "./inventory.yml"
-                        inventory["k8s_cluster_operations"]["hosts"].each { host, vars ->
-                            def vm = [:]
-                            vm["host"] = host
-                            vm["vmid"] = vars["vmid"]
-                            vm["nodename"] = vars["nodename"]
-                            vms.add(vm)
+                        inventory["k8s_cluster"]["hosts"].each { host, vars ->
+                            if (vm["roles"].contains("control-plane")) {
+                                def vm = [:]
+                                vm["host"] = host
+                                vm["vmid"] = vars["vmid"]
+                                vm["nodename"] = vars["nodename"]
+                                vms.add(vm)
+                            }
                         }
                     }
                 }

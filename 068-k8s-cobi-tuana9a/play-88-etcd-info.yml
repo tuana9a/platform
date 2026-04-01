@@ -1,4 +1,4 @@
-- hosts: k8s_cluster_operations
+- hosts: k8s_cluster
   tasks:
     - become: true
       command: "/usr/local/bin/etcdctl endpoint status --cluster -w table"
@@ -8,12 +8,18 @@
         ETCDCTL_CACERT: "/etc/kubernetes/pki/etcd/ca.crt"
         ETCDCTL_CERT: "/etc/kubernetes/pki/apiserver-etcd-client.crt"
         ETCDCTL_KEY: "/etc/kubernetes/pki/apiserver-etcd-client.key"
+      when: "('control-plane' in roles) and ('cluster-operations' in roles)"
+
     - debug:
         msg: "{{ endpoint_status.stdout | split('\n') }}"
+      when: "('control-plane' in roles) and ('cluster-operations' in roles)"
 
     - become: true
       command: "/usr/local/bin/etcdctl member list -w table"
       register: member_list
       environment: *etcd_env
+      when: "('control-plane' in roles) and ('cluster-operations' in roles)"
+
     - debug:
         msg: "{{ member_list.stdout | split('\n') }}"
+      when: "('control-plane' in roles) and ('cluster-operations' in roles)"
