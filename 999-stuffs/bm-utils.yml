@@ -37,7 +37,7 @@ spec:
     spec:
       containers:
         - name: bm-utils
-          image: tuana9a/bm-utils:git-addd93925a230bf1a4fe05332033eae1f2e3b965
+          image: tuana9a/bm-utils:git-f8df80b495d6f2e0bfb332c57934a5c69164448c
           envFrom:
             - configMapRef:
                 name: bm-utils
