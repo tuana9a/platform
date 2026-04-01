@@ -13,12 +13,12 @@ DO_NOT_USE: # NOTE: storing common variables
       kubevip: &kubevip
         inf: eth0
         vip: 192.168.56.21
-      authorized_keys: &k8s_control_plane_authorized_keys
+      authorized_keys: &authorized_keys
         - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN6bF/SOzb1XD4qo0LaZ5PVa1sCijDyQS/8oHZe9x6R5"
           comment: "ci"
           user: root
-      kubernetes_major_version: &k8s-cobi-major-version "1.32"
-      kubernetes_minor_version: &k8s-cobi-minor-version "1.32.11"
+      kubernetes_major_version: &kubernetes_major_version "1.32"
+      kubernetes_minor_version: &kubernetes_minor_version "1.32.11"
       cluster_operations_host: &cluster_operations_host 192.168.56.25
       gateway_ip: &gateway_ip 192.168.56.1
       cloudimg: &cloudimg debian-12-generic-amd64-20251129-2311.img
@@ -33,9 +33,9 @@ k8s_cluster:
     #   kube_pki: *kube_pki
     #   kubevip: *kubevip
     #   goodbye: true
-    #   authorized_keys: *k8s_control_plane_authorized_keys
-    #   kubernetes_major_version: *k8s-cobi-major-version
-    #   kubernetes_minor_version: *k8s-cobi-minor-version
+    #   authorized_keys: *authorized_keys
+    #   kubernetes_major_version: *kubernetes_major_version
+    #   kubernetes_minor_version: *kubernetes_minor_version
     # 192.168.56.23: &i-123
     #   ansible_user: u
     #   nodename: i-123
@@ -44,9 +44,9 @@ k8s_cluster:
     #   kube_pki: *kube_pki
     #   kubevip: *kubevip
     #   goodbye: true
-    #   authorized_keys: *k8s_control_plane_authorized_keys
-    #   kubernetes_major_version: *k8s-cobi-major-version
-    #   kubernetes_minor_version: *k8s-cobi-minor-version
+    #   authorized_keys: *authorized_keys
+    #   kubernetes_major_version: *kubernetes_major_version
+    #   kubernetes_minor_version: *kubernetes_minor_version
     # 192.168.56.24: &i-124
     #   ansible_user: u
     #   nodename: i-124
@@ -55,9 +55,9 @@ k8s_cluster:
     #   kube_pki: *kube_pki
     #   kubevip: *kubevip
     #   goodbye: true
-    #   authorized_keys: *k8s_control_plane_authorized_keys
-    #   kubernetes_major_version: *k8s-cobi-major-version
-    #   kubernetes_minor_version: *k8s-cobi-minor-version
+    #   authorized_keys: *authorized_keys
+    #   kubernetes_major_version: *kubernetes_major_version
+    #   kubernetes_minor_version: *kubernetes_minor_version
     192.168.56.25: &i-125
       ansible_user: u
       nodename: i-125
@@ -76,9 +76,9 @@ k8s_cluster:
       kube_pki: *kube_pki
       kubevip: *kubevip
       goodbye: false
-      authorized_keys: *k8s_control_plane_authorized_keys
-      kubernetes_major_version: *k8s-cobi-major-version
-      kubernetes_minor_version: *k8s-cobi-minor-version
+      authorized_keys: *authorized_keys
+      kubernetes_major_version: *kubernetes_major_version
+      kubernetes_minor_version: *kubernetes_minor_version
     192.168.56.26: &i-126
       ansible_user: u
       nodename: i-126
@@ -96,9 +96,9 @@ k8s_cluster:
       kube_pki: *kube_pki
       kubevip: *kubevip
       goodbye: false
-      authorized_keys: *k8s_control_plane_authorized_keys
-      kubernetes_major_version: *k8s-cobi-major-version
-      kubernetes_minor_version: *k8s-cobi-minor-version
+      authorized_keys: *authorized_keys
+      kubernetes_major_version: *kubernetes_major_version
+      kubernetes_minor_version: *kubernetes_minor_version
     192.168.56.27: &i-127
       ansible_user: u
       nodename: i-127
@@ -116,9 +116,9 @@ k8s_cluster:
       kube_pki: *kube_pki
       kubevip: *kubevip
       goodbye: false
-      authorized_keys: *k8s_control_plane_authorized_keys
-      kubernetes_major_version: *k8s-cobi-major-version
-      kubernetes_minor_version: *k8s-cobi-minor-version
+      authorized_keys: *authorized_keys
+      kubernetes_major_version: *kubernetes_major_version
+      kubernetes_minor_version: *kubernetes_minor_version
 
     # --- DATA PLANE ---
     192.168.56.31: &i-131
@@ -139,8 +139,8 @@ k8s_cluster:
         - file: i-131.conf
           name: i-131
       goodbye: false
-      kubernetes_major_version: *k8s-cobi-major-version
-      kubernetes_minor_version: *k8s-cobi-minor-version
+      kubernetes_major_version: *kubernetes_major_version
+      kubernetes_minor_version: *kubernetes_minor_version
     192.168.56.32: &i-132
       ansible_user: u
       nodename: i-132
@@ -159,8 +159,8 @@ k8s_cluster:
       wireguard_clients:
         - file: i-132.conf
           name: i-132
-      kubernetes_major_version: *k8s-cobi-major-version
-      kubernetes_minor_version: *k8s-cobi-minor-version
+      kubernetes_major_version: *kubernetes_major_version
+      kubernetes_minor_version: *kubernetes_minor_version
     192.168.56.33: &i-133
       ansible_user: u
       nodename: i-133
@@ -179,8 +179,8 @@ k8s_cluster:
         - file: i-133.conf
           name: i-133
       goodbye: false
-      kubernetes_major_version: *k8s-cobi-major-version
-      kubernetes_minor_version: *k8s-cobi-minor-version
+      kubernetes_major_version: *kubernetes_major_version
+      kubernetes_minor_version: *kubernetes_minor_version
     192.168.56.34: &i-134
       ansible_user: u
       nodename: i-134
@@ -199,8 +199,8 @@ k8s_cluster:
         - file: i-134.conf
           name: i-134
       goodbye: false
-      kubernetes_major_version: *k8s-cobi-major-version
-      kubernetes_minor_version: *k8s-cobi-minor-version
+      kubernetes_major_version: *kubernetes_major_version
+      kubernetes_minor_version: *kubernetes_minor_version
     # 192.168.56.35: &i-135
     #   ansible_user: u
     #   nodename: i-135
@@ -210,8 +210,8 @@ k8s_cluster:
     #   wireguard_clients:
     #     - file: i-135.conf
     #       name: i-135
-    #   kubernetes_major_version: *k8s-cobi-major-version
-    #   kubernetes_minor_version: *k8s-cobi-minor-version
+    #   kubernetes_major_version: *kubernetes_major_version
+    #   kubernetes_minor_version: *kubernetes_minor_version
     # 192.168.56.36: &i-136
     #   ansible_user: u
     #   nodename: i-136
@@ -221,8 +221,8 @@ k8s_cluster:
     #   wireguard_clients:
     #     - file: i-136.conf
     #       name: i-136
-    #   kubernetes_major_version: *k8s-cobi-major-version
-    #   kubernetes_minor_version: *k8s-cobi-minor-version
+    #   kubernetes_major_version: *kubernetes_major_version
+    #   kubernetes_minor_version: *kubernetes_minor_version
     # 192.168.56.37: &i-137
     #   ansible_user: u
     #   nodename: i-137
@@ -232,5 +232,5 @@ k8s_cluster:
     #   wireguard_clients:
     #     - file: i-137.conf
     #       name: i-137
-    #   kubernetes_major_version: *k8s-cobi-major-version
-    #   kubernetes_minor_version: *k8s-cobi-minor-version
+    #   kubernetes_major_version: *kubernetes_major_version
+    #   kubernetes_minor_version: *kubernetes_minor_version
