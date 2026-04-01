@@ -20,6 +20,8 @@ DO_NOT_USE: # NOTE: storing common variables
       kubernetes_major_version: &k8s-cobi-major-version "1.32"
       kubernetes_minor_version: &k8s-cobi-minor-version "1.32.11"
       cluster_operations_host: &cluster_operations_host 192.168.56.25
+      gateway_ip: &gateway_ip 192.168.56.1
+      cloudimg: &cloudimg debian-12-generic-amd64-20251129-2311.img
 k8s_cluster:
   hosts:
     # --- CONTROL PLANE ---
@@ -63,6 +65,12 @@ k8s_cluster:
       roles:
         - control-plane
         - cluster-operations
+      cloudimg: *cloudimg
+      corecount: 2
+      memsize: 6144
+      pve_network_device: "vmbr0"
+      gateway_ip: *gateway_ip
+      pve_node: "engineer"
       cluster_operations_host: *cluster_operations_host
       kube_pki: *kube_pki
       kubevip: *kubevip
@@ -76,6 +84,12 @@ k8s_cluster:
       vmid: 126
       roles:
         - control-plane
+      cloudimg: *cloudimg
+      corecount: 2
+      memsize: 6144
+      pve_network_device: "vmbr0"
+      gateway_ip: *gateway_ip
+      pve_node: "engineer"
       cluster_operations_host: *cluster_operations_host
       kube_pki: *kube_pki
       kubevip: *kubevip
@@ -89,6 +103,12 @@ k8s_cluster:
       vmid: 127
       roles:
         - control-plane
+      cloudimg: *cloudimg
+      corecount: 2
+      memsize: 6144
+      pve_network_device: "vmbr0"
+      gateway_ip: *gateway_ip
+      pve_node: "engineer"
       cluster_operations_host: *cluster_operations_host
       kube_pki: *kube_pki
       kubevip: *kubevip
@@ -104,6 +124,12 @@ k8s_cluster:
       vmid: 131
       roles:
         - data-plane
+      cloudimg: *cloudimg
+      corecount: 4
+      memsize: 12288
+      pve_network_device: "vmbr0"
+      gateway_ip: *gateway_ip
+      pve_node: "neomorph"
       cluster_operations_host: *cluster_operations_host
       wireguard_clients:
         - file: i-131.conf
@@ -117,6 +143,12 @@ k8s_cluster:
       vmid: 132
       roles:
         - data-plane
+      cloudimg: *cloudimg
+      corecount: 4
+      memsize: 12288
+      pve_network_device: "vmbr0"
+      gateway_ip: *gateway_ip
+      pve_node: "neomorph"
       cluster_operations_host: *cluster_operations_host
       goodbye: false
       wireguard_clients:
@@ -130,6 +162,12 @@ k8s_cluster:
       vmid: 133
       roles:
         - data-plane
+      cloudimg: *cloudimg
+      corecount: 4
+      memsize: 12288
+      pve_network_device: "vmbr0"
+      gateway_ip: *gateway_ip
+      pve_node: "neomorph"
       cluster_operations_host: *cluster_operations_host
       wireguard_clients:
         - file: i-133.conf
@@ -143,6 +181,12 @@ k8s_cluster:
       vmid: 134
       roles:
         - data-plane
+      cloudimg: *cloudimg
+      corecount: 4
+      memsize: 12288
+      pve_network_device: "vmbr0"
+      gateway_ip: *gateway_ip
+      pve_node: "neomorph"
       cluster_operations_host: *cluster_operations_host
       wireguard_clients:
         - file: i-134.conf
