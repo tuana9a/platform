@@ -34,3 +34,5 @@ argocd:
   - content: *orisis-ip
 grpc.argocd:
   - content: *orisis-ip
+grafana:
+  - content: *orisis-ip
