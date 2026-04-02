@@ -1,3 +1,18 @@
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: bm-utils
+spec:
+  refreshInterval: "15s"
+  secretStoreRef:
+    name: vault-tuana9a-com
+    kind: ClusterSecretStore
+  target:
+    name: bm-utils
+  dataFrom:
+    - extract:
+        key: bm-utils
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -25,9 +40,11 @@ spec:
         fsGroup: 101 # uid=100(appuser) gid=101(appgroup) groups=101(appgroup)
       containers:
         - name: bm-utils
-          image: tuana9a/bm-utils:git-fcb00c507c6b7f5332755ff4b9e7e0f4a9e2fda3
+          image: tuana9a/bm-utils:git-03eb5c64f7aaf2586c291bf846162012132dfcea
           envFrom:
             - configMapRef:
+                name: bm-utils
+            - secretRef:
                 name: bm-utils
           resources:
             requests:
