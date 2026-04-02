@@ -25,7 +25,7 @@ spec:
         fsGroup: 101 # uid=100(appuser) gid=101(appgroup) groups=101(appgroup)
       containers:
         - name: bm-utils
-          image: tuana9a/bm-utils:git-0c159d4ac8e2022fc61d438c7eaf6f0918ed2183
+          image: tuana9a/bm-utils:git-093901c54121dc5006e80db8aef528ea5b86d967
           envFrom:
             - configMapRef:
                 name: bm-utils
