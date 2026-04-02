@@ -30,3 +30,7 @@ utils.bm:
   - content: *orisis-ip
 "*.stuffs.kn":
   - content: *orisis-ip
+argocd:
+  - content: *orisis-ip
+grpc.argocd:
+  - content: *orisis-ip
