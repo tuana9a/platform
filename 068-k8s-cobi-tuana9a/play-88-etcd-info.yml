@@ -1,5 +1,13 @@
 - hosts: k8s_cluster
   tasks:
+    - name: init some vars
+      set_fact:
+        is_control_plane: "{{ 'control-plane' in roles }}"
+        is_cluster_ops_host: "{{ inventory_hostname == cluster_ops.host }}"
+
+    - debug:
+        msg: "{{ is_cluster_ops_host }}"
+
     - become: true
       command: "/usr/local/bin/etcdctl endpoint status --cluster -w table"
       register: endpoint_status
@@ -8,18 +16,18 @@
         ETCDCTL_CACERT: "/etc/kubernetes/pki/etcd/ca.crt"
         ETCDCTL_CERT: "/etc/kubernetes/pki/apiserver-etcd-client.crt"
         ETCDCTL_KEY: "/etc/kubernetes/pki/apiserver-etcd-client.key"
-      when: "('control-plane' in roles) and ('cluster-operations' in roles)"
+      when: "is_control_plane and is_cluster_ops_host"
 
     - debug:
         msg: "{{ endpoint_status.stdout | split('\n') }}"
-      when: "('control-plane' in roles) and ('cluster-operations' in roles)"
+      when: "is_control_plane and is_cluster_ops_host"
 
     - become: true
       command: "/usr/local/bin/etcdctl member list -w table"
       register: member_list
       environment: *etcd_env
-      when: "('control-plane' in roles) and ('cluster-operations' in roles)"
+      when: "is_control_plane and is_cluster_ops_host"
 
     - debug:
         msg: "{{ member_list.stdout | split('\n') }}"
-      when: "('control-plane' in roles) and ('cluster-operations' in roles)"
+      when: "is_control_plane and is_cluster_ops_host"

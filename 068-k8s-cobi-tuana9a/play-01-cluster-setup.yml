@@ -1,8 +1,14 @@
-# ----------------------
-# | install kubernetes |
-# ----------------------
 - hosts: k8s_cluster
   tasks:
+    - name: init some vars
+      set_fact:
+        is_control_plane: "{{ 'control-plane' in roles }}"
+        is_cluster_ops_host: "{{ inventory_hostname == cluster_ops.host }}"
+
+    # ----------------------
+    # | install kubernetes |
+    # ----------------------
+
     - name: Check for kubesetup completion flag
       ansible.builtin.stat:
         path: /opt/kubesetup_completed
@@ -31,19 +37,20 @@
 
     - import_tasks: ./tasks/authorized_keys.yml
 
-# ----------------
-# | join cluster |
-# ----------------
-- hosts: k8s_cluster
-  tasks:
+    # ----------------
+    # | join cluster |
+    # ----------------
+
     - import_tasks: ./tasks/kube_read_pki.yml
-      when: "('control-plane' in roles) and ('cluster-operations' in roles)"
+      when: "is_control_plane and is_cluster_ops_host"
+
     - import_tasks: ./tasks/kubeadm_create_join_command.yml
-      when: "('control-plane' in roles) and ('cluster-operations' in roles)"
+      when: "is_control_plane and is_cluster_ops_host"
+
     - name: copy facts
       set_fact:
-        join_command: "{{ hostvars[cluster_operations_host].join_command }}"
-        slurp_kube_pki_results: "{{ hostvars[cluster_operations_host].slurp_kube_pki_results }}"
+        join_command: "{{ hostvars[cluster_ops.host].join_command }}"
+        slurp_kube_pki_results: "{{ hostvars[cluster_ops.host].slurp_kube_pki_results }}"
 
     - name: Check for kube joined completion flag
       ansible.builtin.stat:
@@ -55,13 +62,13 @@
         kube_joined: "{{ kubejoined_flag.stat.exists }}"
 
     - import_tasks: ./tasks/kube_write_pki.yml
-      when: not kube_joined and ('control-plane' in roles)
+      when: not kube_joined and is_control_plane
     - import_tasks: ./tasks/kubeadm_join.yml
       when: not kube_joined
 
     - name: kubevip
       become: true
-      when: "'control-plane' in roles"
+      when: "is_control_plane"
       ansible.builtin.template:
         src: kubevip.yaml
         dest: /etc/kubernetes/manifests/kubevip.yaml
@@ -75,13 +82,8 @@
         dest: /opt/kubejoined_completed
         content: "yes"
 
-# ----------------
-# | other stuffs |
-# ----------------
-- hosts: k8s_cluster
-  tasks:
     - import_tasks: ./tasks/install_etcdcli.yml
-      when: "'control-plane' in roles"
+      when: "is_control_plane"
     - import_tasks: ./tasks/install_wireguard.yml
       when: wireguard_clients is defined
     - import_tasks: ./tasks/wireguard_client.yml
@@ -99,8 +101,8 @@
             - "topology.kubernetes.io/region={{ hostvars[host].pve_cluster }}"
             - "topology.kubernetes.io/zone={{ hostvars[host].pve_node }}"
           {% endfor %}
-      when: "('control-plane' in roles) and ('cluster-operations' in roles)"
+      when: "is_control_plane and is_cluster_ops_host"
     - include_tasks: ./tasks/kubectl_label_node.yml
       vars:
         kube_node_labels: "{{ kube_node_labels_str | from_yaml }}"
-      when: "('control-plane' in roles) and ('cluster-operations' in roles)"
+      when: "is_control_plane and is_cluster_ops_host"

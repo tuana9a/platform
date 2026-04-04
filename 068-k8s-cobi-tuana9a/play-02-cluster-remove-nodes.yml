@@ -1,0 +1,46 @@
+- hosts: k8s_cluster
+  tasks:
+    - name: init some vars
+      set_fact:
+        is_control_plane: "{{ 'control-plane' in roles }}"
+        is_cluster_ops_host: "{{ inventory_hostname == cluster_ops.host }}"
+        remove_hosts: "{{ cluster_ops['remove_hosts'] }}"
+
+    - name: Set remove_nodes_str
+      set_fact:
+        remove_nodes_str: |
+          {% for host in remove_hosts %}
+          - nodename: "{{ hostvars[host].nodename }}"
+            is_control_plane: "{{ 'control-plane' in hostvars[host].roles }}"
+          {% endfor %}
+
+    - name: Set remove_nodes
+      set_fact:
+        remove_nodes: "{{ remove_nodes_str | from_yaml }}"
+
+    - include_tasks: ./tasks/kubectl_drain.yml
+      when: "is_control_plane and is_cluster_ops_host"
+      loop: "{{ remove_nodes }}"
+      vars:
+        k8s_node_name: "{{ item.nodename }}"
+
+    - include_tasks: ./tasks/etcd_member_remove.yml
+      when: "{{ is_control_plane and is_cluster_ops_host and (item.is_control_plane) }}"
+      loop: "{{ remove_nodes }}"
+      vars:
+        k8s_node_name: "{{ item.nodename }}"
+
+    - include_tasks: ./tasks/kubectl_delete_node.yml
+      when: "is_control_plane and is_cluster_ops_host"
+      loop: "{{ remove_nodes }}"
+      vars:
+        k8s_node_name: "{{ item.nodename }}"
+
+    - import_tasks: ./tasks/kubeadm_reset.yml
+      when: "inventory_hostname in remove_hosts"
+
+    - name: Mark as kube orphaned
+      become: true
+      ansible.builtin.copy:
+        dest: /opt/kube_orphaned
+        content: "yes"
