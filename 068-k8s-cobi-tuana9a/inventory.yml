@@ -17,14 +17,14 @@ DO_NOT_USE: # NOTE: storing common variables
         - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN6bF/SOzb1XD4qo0LaZ5PVa1sCijDyQS/8oHZe9x6R5"
           comment: "ci"
           user: root
-      kubernetes_major_version: &kubernetes_major_version "1.32"
-      kubernetes_minor_version: &kubernetes_minor_version "1.32.11"
+      kubernetes_major_version: &kubernetes_major_version "1.33"
+      kubernetes_minor_version: &kubernetes_minor_version "1.33.10"
       cluster_ops: &cluster_ops
         # some operation required taking variable from control plane like:
         # - getting kube_pki
         # - kube join command
         # each data node having this variable will be able to reference control plane via hostvars, example: "hostvars[cluster_ops.host].kube_join_command"
-        host: 192.168.56.25
+        host: 192.168.56.26
         remove_hosts:
           - 192.168.56.31
       gateway_ip: &gateway_ip 192.168.56.1
@@ -76,6 +76,9 @@ k8s_cluster:
       pve_node: "engineer"
       pve_cluster: "alien"
       cluster_ops: *cluster_ops
+      upgrade:
+        batch: batch1
+        skip_phases: ["kube-proxy"] # TODO: test this next time
       kube_pki: *kube_pki
       kubevip: *kubevip
       authorized_keys: *authorized_keys
@@ -95,6 +98,9 @@ k8s_cluster:
       pve_node: "engineer"
       pve_cluster: "alien"
       cluster_ops: *cluster_ops
+      upgrade:
+        batch: batch2
+        skip_phases: ["kube-proxy"]
       kube_pki: *kube_pki
       kubevip: *kubevip
       authorized_keys: *authorized_keys
@@ -114,6 +120,9 @@ k8s_cluster:
       pve_node: "engineer"
       pve_cluster: "alien"
       cluster_ops: *cluster_ops
+      upgrade:
+        batch: batch3
+        skip_phases: ["kube-proxy"]
       kube_pki: *kube_pki
       kubevip: *kubevip
       authorized_keys: *authorized_keys
@@ -154,6 +163,9 @@ k8s_cluster:
       pve_node: "neomorph"
       pve_cluster: "alien"
       cluster_ops: *cluster_ops
+      upgrade:
+        batch: batch4
+        skip_phases: ["kube-proxy"]
       wireguard_clients:
         - file: i-132.conf
           name: i-132
@@ -173,30 +185,36 @@ k8s_cluster:
       pve_node: "neomorph"
       pve_cluster: "alien"
       cluster_ops: *cluster_ops
+      upgrade:
+        batch: batch5
+        skip_phases: ["kube-proxy"]
       wireguard_clients:
         - file: i-133.conf
           name: i-133
       kubernetes_major_version: *kubernetes_major_version
       kubernetes_minor_version: *kubernetes_minor_version
-    # 192.168.56.34: &i-134
-    #   ansible_user: u
-    #   nodename: i-134
-    #   vmid: 134
-    #   roles:
-    #     - data-plane
-    #   cloudimg: *cloudimg
-    #   corecount: 4
-    #   memsize: 12288
-    #   pve_network_device: "vmbr0"
-    #   gateway_ip: *gateway_ip
-    #   pve_node: "neomorph"
-    #   pve_cluster: "alien"
-    #   cluster_ops: *cluster_ops
-    #   wireguard_clients:
-    #     - file: i-134.conf
-    #       name: i-134
-    #   kubernetes_major_version: *kubernetes_major_version
-    #   kubernetes_minor_version: *kubernetes_minor_version
+    192.168.56.34: &i-134
+      ansible_user: u
+      nodename: i-134
+      vmid: 134
+      roles:
+        - data-plane
+      cloudimg: *cloudimg
+      corecount: 4
+      memsize: 12288
+      pve_network_device: "vmbr0"
+      gateway_ip: *gateway_ip
+      pve_node: "neomorph"
+      pve_cluster: "alien"
+      cluster_ops: *cluster_ops
+      upgrade:
+        batch: batch6
+        skip_phases: ["kube-proxy"]
+      wireguard_clients:
+        - file: i-134.conf
+          name: i-134
+      kubernetes_major_version: *kubernetes_major_version
+      kubernetes_minor_version: *kubernetes_minor_version
     # 192.168.56.35: &i-135
     #   ansible_user: u
     #   nodename: i-135

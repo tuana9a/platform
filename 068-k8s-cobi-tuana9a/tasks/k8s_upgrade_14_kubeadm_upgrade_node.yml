@@ -1,7 +1,7 @@
 - name: apply upgrades
   shell: |
     set -xeu
-    sudo kubeadm upgrade node
+    sudo kubeadm upgrade node {{ '--skip-phases=addon/kube-proxy' if 'kube-proxy' in upgrade.skip_phases else '' }}
   register: apply_upgrade
 - debug:
     msg: "{{ apply_upgrade.stdout_lines }}"

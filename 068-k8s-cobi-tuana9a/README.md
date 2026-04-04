@@ -145,3 +145,19 @@ wireguard client set dns server on startup, It will maybe overwrite existing dns
 Issues:
 
 after uninstalling flannel spegel stop working, calico is fail to pull images -> cni fail
+
+# k8s upgrade
+
+prechecks
+
+```bash
+pluto detect-helm -owide
+```
+
+```bash
+pluto detect-api-resources -owide
+```
+
+```bash
+pluto detect-all-in-cluster -o wide 2>/dev/null
+```

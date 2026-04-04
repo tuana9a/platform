@@ -1,0 +1,63 @@
+- hosts: k8s_cluster
+  tasks:
+    - name: init some vars
+      set_fact:
+        is_control_plane: "{{ 'control-plane' in roles }}"
+        is_cluster_ops_host: "{{ inventory_hostname == cluster_ops.host }}"
+        my_turn: "{{ upgrade.batch == current_batch }}"
+
+    # -----
+    # drain node
+    # -----
+    - name: Set batch_nodes_str
+      when: "is_control_plane and is_cluster_ops_host"
+      set_fact:
+        batch_nodes_str: |
+          {% for host in groups["k8s_cluster"] %}
+          {% set x = hostvars[host] %}
+          {% if x.upgrade.batch == current_batch %}
+          - nodename: "{{ x.nodename }}"
+          {% endif %}
+          {% endfor %}
+
+    - name: Set batch_nodes
+      when: "is_control_plane and is_cluster_ops_host"
+      set_fact:
+        batch_nodes: "{{ batch_nodes_str | from_yaml }}"
+
+    - debug:
+        msg: "{{ batch_nodes }}"
+      when: "is_control_plane and is_cluster_ops_host"
+
+    - include_tasks: ./tasks/kubectl_drain.yml
+      when: "is_control_plane and is_cluster_ops_host"
+      loop: "{{ batch_nodes }}"
+      vars:
+        k8s_node_name: "{{ item.nodename }}"
+
+    # -----
+    # upgrade packages
+    # -----
+    - include_tasks: ./tasks/k8s_upgrade_04_update_packages.yml
+      when: "my_turn"
+
+    - include_tasks: ./tasks/type_yes_to_continue.yml
+      when: my_turn
+
+    - include_tasks: ./tasks/k8s_upgrade_06_upgrade_kubeadm_package.yml
+      when: "my_turn"
+
+    - include_tasks: ./tasks/k8s_upgrade_14_kubeadm_upgrade_node.yml
+      when: "my_turn"
+
+    - include_tasks: ./tasks/k8s_upgrade_12_upgrade_kubelet.yml
+      when: "my_turn"
+
+    # -----
+    # uncordon after completed
+    # -----
+    - include_tasks: ./tasks/kubectl_uncordon.yml
+      when: "is_control_plane and is_cluster_ops_host"
+      loop: "{{ batch_nodes }}"
+      vars:
+        k8s_node_name: "{{ item.nodename }}"

@@ -1,0 +1,9 @@
+- name: Proceed?
+  pause:
+    prompt: "Continue? (yes/no)"
+  register: pause_result
+
+- name: Exit if you did not say 'yes'
+  fail:
+    msg: "Exit."
+  when: pause_result.user_input != "yes"
