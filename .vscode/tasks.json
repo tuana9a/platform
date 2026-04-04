@@ -96,19 +96,6 @@
             },
         },
         {
-            "label": "k9s",
-            "type": "shell",
-            "command": "k9s",
-            "options": {
-                "cwd": "${workspaceFolder}/"
-            },
-            "group": "build",
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
-            },
-        },
-        {
             "label": "terraform fmt all",
             "type": "shell",
             "command": "./terraform_fmt_all.sh",
