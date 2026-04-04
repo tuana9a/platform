@@ -1,0 +1,45 @@
+# https://docs.cilium.io/en/latest/network/kubernetes/kubeproxy-free/
+
+- hosts: k8s_cluster
+  tasks:
+    - name: init some vars
+      set_fact:
+        is_control_plane: "{{ 'control-plane' in roles }}"
+        is_cluster_ops_host: "{{ inventory_hostname == cluster_ops.host }}"
+
+    - name: delete kube-proxy
+      when: "is_control_plane and is_cluster_ops_host"
+      become: true
+      ansible.builtin.shell: |
+        set -ex
+        kubectl -n kube-system delete ds kube-proxy --ignore-not-found
+        kubectl -n kube-system delete cm kube-proxy --ignore-not-found
+      register: delete_kubeproxy_result
+      environment:
+        KUBECONFIG: "{{ kubeconfig | default('/etc/kubernetes/admin.conf') }}"
+      changed_when: delete_kubeproxy_result.rc == 0
+      failed_when: delete_kubeproxy_result.rc != 0
+
+    - name: delete kubeproxy result
+      when: "is_control_plane and is_cluster_ops_host"
+      debug:
+        msg:
+          stdout: "{{ delete_kubeproxy_result.stdout | split('\n') }}"
+          stderr: "{{ delete_kubeproxy_result.stderr | split('\n') }}"
+
+    - name: cleanup iptables
+      become: true
+      ansible.builtin.shell: |
+        set -ex
+        iptables-save | grep -v KUBE | iptables-restore
+      register: cleanup_iptables_result
+      environment:
+        KUBECONFIG: "{{ kubeconfig | default('/etc/kubernetes/admin.conf') }}"
+      changed_when: cleanup_iptables_result.rc == 0
+      failed_when: cleanup_iptables_result.rc != 0
+
+    - name: cleanup iptables result
+      debug:
+        msg:
+          stdout: "{{ cleanup_iptables_result.stdout | split('\n') }}"
+          stderr: "{{ cleanup_iptables_result.stderr | split('\n') }}"
