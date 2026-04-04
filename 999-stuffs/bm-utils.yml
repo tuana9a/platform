@@ -38,6 +38,7 @@ spec:
     spec:
       securityContext:
         fsGroup: 101 # uid=100(appuser) gid=101(appgroup) groups=101(appgroup)
+        fsGroupChangePolicy: OnRootMismatch
       containers:
         - name: bm-utils
           image: tuana9a/bm-utils:git-24e132d4463c8cf8b970d3e5e88eb799bc35ec49

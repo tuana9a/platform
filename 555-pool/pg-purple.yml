@@ -65,6 +65,7 @@ spec:
       serviceAccountName: pg-purple
       securityContext:
         fsGroup: 999 # postres
+        fsGroupChangePolicy: OnRootMismatch
       initContainers:
         - name: fix-permissions
           image: busybox
