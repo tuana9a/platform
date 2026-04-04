@@ -80,10 +80,10 @@ spec:
         - container: controller
           requests:
             cpu: 10m
-            memory: 150Mi
+            memory: 300Mi
           limits:
             cpu: 100m
-            memory: 150Mi
+            memory: 300Mi
     - name: 3scale-kourier-gateway
       resources:
         - container: kourier-gateway
