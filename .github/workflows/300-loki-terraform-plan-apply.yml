@@ -18,6 +18,6 @@ jobs:
     with:
       runs-on: self-hosted-0
       WORKING_DIR: ${{ github.workflow }}
-      AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/i-300-loki
+      AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/github-workflow
       download-secret-files: true
     secrets: inherit
