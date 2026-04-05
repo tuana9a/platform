@@ -1,0 +1,15 @@
+name: "003-aws-sso-iam-you-re-hacked"
+
+on:
+  pull_request:
+
+jobs:
+  main:
+    permissions:
+      contents: read
+      id-token: write
+    uses: ./.github/workflows/tfaa.yml
+    with:
+      WORKING_DIR: ${{ github.workflow }}
+      AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/terraform-sso-admin
+    secrets: inherit
