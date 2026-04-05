@@ -30,9 +30,9 @@ pipeline {
                 echo "inventory"
                 container('etcd') {
                     script {
-                        inventory = readYaml file: "./inventory.yml"
+                        inventory = readYaml file: "./068-k8s-cobi-tuana9a/inventory.yml"
                         inventory["k8s_cluster"]["hosts"].each { host, vars ->
-                            if (vm["roles"].contains("control-plane")) {
+                            if (vars["roles"].contains("control-plane")) {
                                 def vm = [:]
                                 vm["host"] = host
                                 vm["vmid"] = vars["vmid"]
@@ -165,20 +165,20 @@ pipeline {
                     echo $DURATION_PRETTY > /workdir/duration_pretty.txt
                     '''
 
-                    for (vm in vms) {
-                        def nodename = vm["nodename"]
-                        sh '''
-                        case "$(cat /workdir/status)" in
-                            1) status_msg="ok" ;;
-                            *) status_msg="fuck" ;;
-                        esac
-                        MSG="$status_msg backup-kubernetes $(cat /workdir/datehour)-k8s-backup-''' + nodename + '''.tar.gz $(cat /workdir/duration_pretty.txt) $BUILD_URL"
-                        set +x
-                        curl -sS -X POST "https://api.telegram.org/bot$(cat /var/secrets/TELEGRAM_BOT_TOKEN)/sendMessage" \
-                            -d chat_id="$(cat /var/secrets/TELEGRAM_CHAT_ID)" \
-                            -d text="$MSG"
-                        '''
-                    }
+                    def nodenames = vms.collect { it["nodename"] } .join(",")
+
+                    sh '''
+                    case "$(cat /workdir/status)" in
+                        1) status_msg="ok" ;;
+                        *) status_msg="fuck" ;;
+                    esac
+                    MSG="$status_msg backup-kubernetes $(cat /workdir/datehour)-k8s-backup-{''' + nodenames + '''}.tar.gz $(cat /workdir/duration_pretty.txt) $BUILD_URL"
+                    set +x
+                    curl -sS -X POST "https://api.telegram.org/bot$(cat /var/secrets/TELEGRAM_BOT_TOKEN)/sendMessage" \
+                        -d parse_mode="markdown" \
+                        -d chat_id="$(cat /var/secrets/TELEGRAM_CHAT_ID)" \
+                        -d text="$MSG"
+                    '''
 
                     sh '''
                     push_gateway_baseurl="http://prometheus-pushgateway.prometheus.svc.cluster.local:9091";
