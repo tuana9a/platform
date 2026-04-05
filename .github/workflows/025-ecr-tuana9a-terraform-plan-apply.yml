@@ -17,5 +17,5 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       WORKING_DIR: ${{ github.workflow }}
-      AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/terraform-ecr-admin
+      AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/github-workflow
     secrets: inherit
