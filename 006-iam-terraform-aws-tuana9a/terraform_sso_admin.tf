@@ -6,18 +6,10 @@ resource "aws_iam_role" "terraform_sso_admin" {
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": "sts:AssumeRoleWithWebIdentity",
       "Principal": {
-        "Federated": "${data.aws_iam_openid_connect_provider.github.arn}"
+        "AWS": "${aws_iam_role.github_workflow.arn}"
       },
-      "Condition": {
-        "StringLike": {
-          "token.actions.githubusercontent.com:sub": "repo:tuana9a/platform:*"
-        },
-        "StringEquals": {
-          "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
-        }
-      }
+      "Action": "sts:AssumeRole"
     }
   ]
 }
