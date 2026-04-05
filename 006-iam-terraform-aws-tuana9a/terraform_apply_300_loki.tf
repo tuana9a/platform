@@ -1,36 +1,28 @@
-resource "aws_iam_role" "i_300_loki" {
-  name               = "i-300-loki"
+resource "aws_iam_role" "terraform_apply_300_loki" {
+  name               = "terraform-apply-300-loki"
   assume_role_policy = <<EOT
 {
   "Version": "2012-10-17",
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": "sts:AssumeRoleWithWebIdentity",
       "Principal": {
-        "Federated": "${data.aws_iam_openid_connect_provider.github.arn}"
+        "AWS": "${aws_iam_role.github_workflow.arn}"
       },
-      "Condition": {
-        "StringLike": {
-          "token.actions.githubusercontent.com:sub": "repo:tuana9a/platform:*"
-        },
-        "StringEquals": {
-          "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
-        }
-      }
+      "Action": "sts:AssumeRole"
     }
   ]
 }
 EOT
 }
 
-resource "aws_iam_role_policy" "i_300_loki" {
-  role   = aws_iam_role.i_300_loki.name
-  name   = "i-300-loki"
-  policy = data.aws_iam_policy_document.i_300_loki.json
+resource "aws_iam_role_policy" "terraform_apply_300_loki" {
+  role   = aws_iam_role.terraform_apply_300_loki.name
+  name   = "terraform-apply-300-loki"
+  policy = data.aws_iam_policy_document.terraform_apply_300_loki.json
 }
 
-data "aws_iam_policy_document" "i_300_loki" {
+data "aws_iam_policy_document" "terraform_apply_300_loki" {
   statement {
     effect = "Allow"
     actions = [

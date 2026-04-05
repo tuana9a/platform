@@ -24,6 +24,7 @@ provider "google" {
 provider "aws" {
   region = "ap-southeast-1"
   assume_role {
+    # NOTE this role is created by this stack, so it's managing itself
     role_arn = "arn:aws:iam::384588864907:role/terraform-iam-admin"
   }
 }

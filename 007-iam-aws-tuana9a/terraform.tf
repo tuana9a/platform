@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "007-iam-cicd-aws-tuana9a"
+    prefix = "007-iam-aws-tuana9a"
   }
   required_providers {
     google = {
@@ -24,4 +24,7 @@ provider "google" {
 
 provider "aws" {
   region = "ap-southeast-1"
+  assume_role {
+    role_arn = "arn:aws:iam::384588864907:role/terraform-iam-admin"
+  }
 }
