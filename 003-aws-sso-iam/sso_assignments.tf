@@ -5,7 +5,7 @@ resource "aws_ssoadmin_account_assignment" "group_admins_tuana9a" {
   principal_id   = aws_identitystore_group.admins.group_id
   principal_type = "GROUP"
 
-  target_id   = "384588864907" # tuana9a
+  target_id   = local.aws_accounts.tuana9a.id
   target_type = "AWS_ACCOUNT"
 }
 
@@ -16,7 +16,7 @@ resource "aws_ssoadmin_account_assignment" "group_admins_t9st" {
   principal_id   = aws_identitystore_group.admins.group_id
   principal_type = "GROUP"
 
-  target_id   = "445567113688" # t9st
+  target_id   = local.aws_accounts.t9st.id
   target_type = "AWS_ACCOUNT"
 }
 
@@ -27,6 +27,6 @@ resource "aws_ssoadmin_account_assignment" "group_admins_Atlantis" {
   principal_id   = aws_identitystore_group.admins.group_id
   principal_type = "GROUP"
 
-  target_id   = "541645813908" # Atlantis
+  target_id   = local.aws_accounts.Atlantis.id
   target_type = "AWS_ACCOUNT"
 }
