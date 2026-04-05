@@ -13,3 +13,19 @@ resource "aws_identitystore_user" "zero_tuana9a_com" {
     value = "zero@tuana9a.com"
   }
 }
+
+resource "aws_identitystore_user" "you_are_hacked" {
+  identity_store_id = local.sso_identity_store_id
+
+  display_name = "You're hacked"
+  user_name    = "you@hacked.com"
+
+  name {
+    given_name  = "You"
+    family_name = "Hacked"
+  }
+
+  emails {
+    value = "you@hacked.com"
+  }
+}
