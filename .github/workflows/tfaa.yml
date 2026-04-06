@@ -11,6 +11,10 @@ on:
         type: boolean
         required: false
         default: false
+      install-sops:
+        type: boolean
+        required: false
+        default: false
       WORKING_DIR:
         type: string
         required: true
@@ -73,6 +77,14 @@ jobs:
           echo "run_url=$run_url" >> $GITHUB_ENV
           echo $run_name
           echo $run_url
+      - name: Install SOPS
+        if: "${{ inputs.install-sops }}"
+        run: |
+          SOPS_VERSION="3.12.2"
+          curl -LO "https://github.com/getsops/sops/releases/download/v${SOPS_VERSION}/sops-v${SOPS_VERSION}.linux.amd64"
+          sudo mv "sops-v${SOPS_VERSION}.linux.amd64" /usr/local/bin/sops
+          sudo chmod +x /usr/local/bin/sops
+          sops --version
       - uses: actions/checkout@v4
       - uses: google-github-actions/auth@v2
         with:

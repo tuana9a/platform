@@ -12,6 +12,10 @@ terraform {
       source  = "integrations/github"
       version = "6.5.0"
     }
+    external = {
+      source  = "hashicorp/external"
+      version = "2.3.5"
+    }
   }
 }
 
@@ -22,5 +26,8 @@ provider "google" {
 }
 
 provider "github" {
-  token = var.github_token
+  token = local.github_secrets.github_token
+}
+
+provider "external" {
 }
