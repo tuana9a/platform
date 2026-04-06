@@ -12,6 +12,10 @@ terraform {
       source  = "gitlabhq/gitlab"
       version = "17.9.0"
     }
+    external = {
+      source  = "hashicorp/external"
+      version = "2.3.5"
+    }
   }
 }
 
@@ -22,5 +26,8 @@ provider "google" {
 }
 
 provider "gitlab" {
-  token = var.gitlab_token
+  token = local.gitlab_secrets.gitlab_token
+}
+
+provider "external" {
 }
