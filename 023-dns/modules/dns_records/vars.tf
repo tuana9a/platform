@@ -9,7 +9,7 @@ variable "name" {
 
 variable "records" {
   type = list(object({
-    type  = optional(string, "A")
+    type    = optional(string, "A")
     content = string
   }))
 }

@@ -12,6 +12,10 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "4.47.0"
     }
+    external = {
+      source  = "hashicorp/external"
+      version = "2.3.5"
+    }
   }
   required_version = ">= 1.2.0"
 }
@@ -23,5 +27,8 @@ provider "google" {
 }
 
 provider "cloudflare" {
-  api_token = var.cloudflare_api_token
+  api_token = local.dns_secrets.cloudflare_api_token
+}
+
+provider "external" {
 }

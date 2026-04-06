@@ -16,6 +16,7 @@ jobs:
       id-token: write
     uses: ./.github/workflows/tfaa.yml
     with:
+      install-sops: true
       WORKING_DIR: ${{ github.workflow }}
-      download-secret-files: true
+      AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/github-workflow
     secrets: inherit
