@@ -41,7 +41,7 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
       containers:
         - name: bm-utils
-          image: tuana9a/bm-utils:git-24e132d4463c8cf8b970d3e5e88eb799bc35ec49
+          image: tuana9a/bm-utils:git-2ddaaa9d51b54adbf8bf14f04dd894e89b2d906d
           envFrom:
             - configMapRef:
                 name: bm-utils
