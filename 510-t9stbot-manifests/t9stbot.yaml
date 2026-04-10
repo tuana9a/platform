@@ -21,6 +21,7 @@ data:
   BIND_ADDRESS: 0.0.0.0
   PORT: "8080"
   TELEGRAM_AVAILABLE_COMMANDS: chatid,myid,help
+  TELEGRAM_BOT_NAME: t9stbot
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -38,7 +39,7 @@ spec:
     spec:
       initContainers:
         - name: set-commands
-          image: tuana9a/t9stbot:git-e3c290598c4c98e1e2fc28d04121f2a07ec0382f
+          image: tuana9a/t9stbot:git-1f65b9b51f5ac4c8bf960546f56943e0e14726c9
           envFrom:
             - configMapRef:
                 name: t9stbot
@@ -46,7 +47,7 @@ spec:
                 name: t9stbot
           command: ["node", "set_my_commands.js"]
         - name: set-webhook
-          image: tuana9a/t9stbot:git-e3c290598c4c98e1e2fc28d04121f2a07ec0382f
+          image: tuana9a/t9stbot:git-1f65b9b51f5ac4c8bf960546f56943e0e14726c9
           envFrom:
             - configMapRef:
                 name: t9stbot
@@ -55,7 +56,7 @@ spec:
           command: ["node", "set_webhook.js"]
       containers:
         - name: t9stbot
-          image: tuana9a/t9stbot:git-e3c290598c4c98e1e2fc28d04121f2a07ec0382f
+          image: tuana9a/t9stbot:git-1f65b9b51f5ac4c8bf960546f56943e0e14726c9
           envFrom:
             - configMapRef:
                 name: t9stbot
