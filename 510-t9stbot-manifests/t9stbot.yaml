@@ -39,7 +39,7 @@ spec:
     spec:
       initContainers:
         - name: set-commands
-          image: tuana9a/t9stbot:git-60730a3604825fa035d8aba6875bfde8e2dfb80a
+          image: tuana9a/t9stbot:git-571202fda9959caae94761cd61829399babd1238
           envFrom:
             - configMapRef:
                 name: t9stbot
@@ -47,7 +47,7 @@ spec:
                 name: t9stbot
           command: ["node", "set_my_commands.js"]
         - name: set-webhook
-          image: tuana9a/t9stbot:git-60730a3604825fa035d8aba6875bfde8e2dfb80a
+          image: tuana9a/t9stbot:git-571202fda9959caae94761cd61829399babd1238
           envFrom:
             - configMapRef:
                 name: t9stbot
@@ -56,7 +56,7 @@ spec:
           command: ["node", "set_webhook.js"]
       containers:
         - name: t9stbot
-          image: tuana9a/t9stbot:git-60730a3604825fa035d8aba6875bfde8e2dfb80a
+          image: tuana9a/t9stbot:git-571202fda9959caae94761cd61829399babd1238
           envFrom:
             - configMapRef:
                 name: t9stbot
