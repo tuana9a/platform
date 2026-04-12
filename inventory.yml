@@ -37,35 +37,24 @@ orisis:
       ansible_user: root
       HOST_NAME: orisis
       haproxy_stats_enabled: false
+      # DAM hell check can make cpu 100%
       upstream_servers:
-        - hostname: k8s-cobi-5
-          ip: 10.5.115.25
-          http_port: 30080
-          https_port: 30443
-        - hostname: k8s-cobi-6
-          ip: 10.5.115.26
-          http_port: 30080
-          https_port: 30443
-        - hostname: k8s-cobi-7
-          ip: 10.5.115.27
-          http_port: 30080
-          https_port: 30443
-        - hostname: i-131
-          ip: 10.5.115.31
-          http_port: 30080
-          https_port: 30443
-        - hostname: i-132
-          ip: 10.5.115.32
-          http_port: 30080
-          https_port: 30443
-        - hostname: i-133
-          ip: 10.5.115.33
-          http_port: 30080
-          https_port: 30443
-        - hostname: i-134
-          ip: 10.5.115.34
-          http_port: 30080
-          https_port: 30443
+        # - hostname: i-131
+        #   ip: 10.5.115.31
+        #   http_port: 30080
+        #   https_port: 30443
+        # - hostname: i-132
+        #   ip: 10.5.115.32
+        #   http_port: 30080
+        #   https_port: 30443
+        # - hostname: i-133
+        #   ip: 10.5.115.33
+        #   http_port: 30080
+        #   https_port: 30443
+        # - hostname: i-134
+        #   ip: 10.5.115.34
+        #   http_port: 30080
+        #   https_port: 30443
         - hostname: i-135
           ip: 10.5.115.35
           http_port: 30080
@@ -74,19 +63,19 @@ orisis:
           ip: 10.5.115.36
           http_port: 30080
           https_port: 30443
-        - hostname: i-137
-          ip: 10.5.115.37
-          http_port: 30080
-          https_port: 30443
-        - hostname: i-138
-          ip: 10.5.115.38
-          http_port: 30080
-          https_port: 30443
-        - hostname: i-139
-          ip: 10.5.115.39
-          http_port: 30080
-          https_port: 30443
-        - hostname: i-140
-          ip: 10.5.115.40
-          http_port: 30080
-          https_port: 30443
+        # - hostname: i-137
+        #   ip: 10.5.115.37
+        #   http_port: 30080
+        #   https_port: 30443
+        # - hostname: i-138
+        #   ip: 10.5.115.38
+        #   http_port: 30080
+        #   https_port: 30443
+        # - hostname: i-139
+        #   ip: 10.5.115.39
+        #   http_port: 30080
+        #   https_port: 30443
+        # - hostname: i-140
+        #   ip: 10.5.115.40
+        #   http_port: 30080
+        #   https_port: 30443
