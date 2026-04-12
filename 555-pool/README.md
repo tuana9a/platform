@@ -12,6 +12,20 @@ https://patroni.readthedocs.io/en/latest/standby_cluster.html
 
 Ref: https://patroni.readthedocs.io/en/latest/kubernetes.html
 
+common operations
+
+```bash
+patronictl list
+```
+
+```bash
+patronictl edit-config
+```
+
+```bash
+patronictl restart pg-purple pg-purple-0
+```
+
 # kafka cluster
 
 powered by strimzi
