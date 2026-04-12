@@ -5,6 +5,7 @@
         is_control_plane: "{{ 'control-plane' in roles }}"
         is_cluster_ops_host: "{{ inventory_hostname == cluster_ops.host }}"
         remove_hosts: "{{ cluster_ops['remove_hosts'] }}"
+        is_removing_me: "{{ inventory_hostname in cluster_ops['remove_hosts'] }}"
 
     - name: Set remove_nodes_str
       set_fact:
@@ -17,6 +18,14 @@
     - name: Set remove_nodes
       set_fact:
         remove_nodes: "{{ remove_nodes_str | from_yaml }}"
+
+    - debug:
+        msg:
+          is_control_plane: "{{ is_control_plane }}"
+          is_cluster_ops_host: "{{ is_cluster_ops_host }}"
+          remove_hosts: "{{ remove_hosts }}"
+          is_removing_me: "{{ is_removing_me }}"
+          remove_nodes: "{{ remove_nodes }}"
 
     - include_tasks: ./tasks/kubectl_drain.yml
       when: "is_control_plane and is_cluster_ops_host"
@@ -37,9 +46,10 @@
         k8s_node_name: "{{ item.nodename }}"
 
     - import_tasks: ./tasks/kubeadm_reset.yml
-      when: "inventory_hostname in remove_hosts"
+      when: "is_removing_me"
 
     - name: Mark as kube orphaned
+      when: "is_removing_me"
       become: true
       ansible.builtin.copy:
         dest: /opt/kube_orphaned

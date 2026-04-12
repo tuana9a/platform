@@ -66,3 +66,27 @@ orisis:
           ip: 10.5.115.34
           http_port: 30080
           https_port: 30443
+        - hostname: i-135
+          ip: 10.5.115.35
+          http_port: 30080
+          https_port: 30443
+        - hostname: i-136
+          ip: 10.5.115.36
+          http_port: 30080
+          https_port: 30443
+        - hostname: i-137
+          ip: 10.5.115.37
+          http_port: 30080
+          https_port: 30443
+        - hostname: i-138
+          ip: 10.5.115.38
+          http_port: 30080
+          https_port: 30443
+        - hostname: i-139
+          ip: 10.5.115.39
+          http_port: 30080
+          https_port: 30443
+        - hostname: i-140
+          ip: 10.5.115.40
+          http_port: 30080
+          https_port: 30443

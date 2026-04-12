@@ -2,5 +2,8 @@ kubeProxyReplacement: true
 k8sServiceHost: 192.168.56.21
 k8sServicePort: 6443
 ipam:
+  # -- Configure IP Address Management mode.
+  # ref: https://docs.cilium.io/en/stable/network/concepts/ipam/
+  mode: "cluster-pool"
   operator:
-    clusterPoolIPv4PodCIDRList: ["10.0.0.0/8"]
+    clusterPoolIPv4PodCIDRList: ["10.244.0.0/16"]

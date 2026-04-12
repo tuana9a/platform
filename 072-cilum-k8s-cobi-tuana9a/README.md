@@ -2,7 +2,7 @@
 
 cilium comes in after 2 days strugling with calico cni.
 
-# what did I do
+# kubeproxy free
 
 removal of kube-proxy as result of me meshing up with calico and don't know how to recovery kubeproxy
 
@@ -26,3 +26,9 @@ kubeProxyReplacement: true
 k8sServiceHost: 192.168.56.21
 k8sServicePort: 6443
 ```
+
+# change pod cidr
+
+- uninstall cilium
+- delete ciliumnode
+- rollout replace node

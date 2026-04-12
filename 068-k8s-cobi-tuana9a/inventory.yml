@@ -24,224 +24,89 @@ DO_NOT_USE: # NOTE: storing common variables
         # - getting kube_pki
         # - kube join command
         # each data node having this variable will be able to reference control plane via hostvars, example: "hostvars[cluster_ops.host].kube_join_command"
-        host: 192.168.56.26
+        host: 192.168.56.22
         remove_hosts:
-          - 192.168.56.31
+          - 192.168.56.32
+          - 192.168.56.34
       gateway_ip: &gateway_ip 192.168.56.1
       cloudimg: &cloudimg debian-12-generic-amd64-20251129-2311.img
+
+      k8s_node_defaults: &k8s_node_defaults
+        pve_cluster: "alien"
+        pve_node: "neomorph"
+        cloudimg: *cloudimg
+        pve_network_device: "vmbr0"
+        gateway_ip: *gateway_ip
+        authorized_keys: *authorized_keys
+        # ----
+        cluster_ops: *cluster_ops
+        # ----
+        kubernetes_major_version: *kubernetes_major_version
+        kubernetes_minor_version: *kubernetes_minor_version
+
+      control_plane_defaults: &control_plane_defaults
+        <<: *k8s_node_defaults
+        roles:
+          - control-plane
+        corecount: 2
+        memsize: 4096
+        kube_pki: *kube_pki
+        kubevip: *kubevip
+      data_plane_defaults: &data_plane_defaults
+        <<: *k8s_node_defaults
+        roles:
+          - data-plane
+        corecount: 4
+        memsize: 12288
 k8s_cluster:
   hosts:
     # --- CONTROL PLANE ---
-    # 192.168.56.22: &i-122
-    #   ansible_user: u
-    #   nodename: i-122
-    #   vmid: 122
-    #   is_control_plane: true
-    #   kube_pki: *kube_pki
-    #   kubevip: *kubevip
-    #   authorized_keys: *authorized_keys
-    #   kubernetes_major_version: *kubernetes_major_version
-    #   kubernetes_minor_version: *kubernetes_minor_version
-    # 192.168.56.23: &i-123
-    #   ansible_user: u
-    #   nodename: i-123
-    #   vmid: 123
-    #   is_control_plane: true
-    #   kube_pki: *kube_pki
-    #   kubevip: *kubevip
-    #   authorized_keys: *authorized_keys
-    #   kubernetes_major_version: *kubernetes_major_version
-    #   kubernetes_minor_version: *kubernetes_minor_version
-    # 192.168.56.24: &i-124
-    #   ansible_user: u
-    #   nodename: i-124
-    #   vmid: 124
-    #   is_control_plane: true
-    #   kube_pki: *kube_pki
-    #   kubevip: *kubevip
-    #   authorized_keys: *authorized_keys
-    #   kubernetes_major_version: *kubernetes_major_version
-    #   kubernetes_minor_version: *kubernetes_minor_version
-    192.168.56.25: &i-125
+    192.168.56.22: &i-122
+      <<: *control_plane_defaults
       ansible_user: u
-      nodename: i-125
-      vmid: 125
-      roles:
-        - control-plane
-      cloudimg: *cloudimg
-      corecount: 2
-      memsize: 6144
-      pve_network_device: "vmbr0"
-      gateway_ip: *gateway_ip
+      vmid: 122
+      nodename: i-122
       pve_node: "engineer"
-      pve_cluster: "alien"
-      cluster_ops: *cluster_ops
       upgrade:
         batch: batch1
         skip_phases: ["kube-proxy"] # TODO: test this next time
-      kube_pki: *kube_pki
-      kubevip: *kubevip
-      authorized_keys: *authorized_keys
-      kubernetes_major_version: *kubernetes_major_version
-      kubernetes_minor_version: *kubernetes_minor_version
-    192.168.56.26: &i-126
+    192.168.56.23: &i-123
+      <<: *control_plane_defaults
       ansible_user: u
-      nodename: i-126
-      vmid: 126
-      roles:
-        - control-plane
-      cloudimg: *cloudimg
-      corecount: 2
-      memsize: 6144
-      pve_network_device: "vmbr0"
-      gateway_ip: *gateway_ip
-      pve_node: "engineer"
-      pve_cluster: "alien"
-      cluster_ops: *cluster_ops
+      vmid: 123
+      nodename: i-123
       upgrade:
         batch: batch2
-        skip_phases: ["kube-proxy"]
-      kube_pki: *kube_pki
-      kubevip: *kubevip
-      authorized_keys: *authorized_keys
-      kubernetes_major_version: *kubernetes_major_version
-      kubernetes_minor_version: *kubernetes_minor_version
-    192.168.56.27: &i-127
+        skip_phases: ["kube-proxy"] # TODO: test this next time
+    192.168.56.24: &i-124
+      <<: *control_plane_defaults
       ansible_user: u
-      nodename: i-127
-      vmid: 127
-      roles:
-        - control-plane
-      cloudimg: *cloudimg
-      corecount: 2
-      memsize: 6144
-      pve_network_device: "vmbr0"
-      gateway_ip: *gateway_ip
-      pve_node: "engineer"
-      pve_cluster: "alien"
-      cluster_ops: *cluster_ops
+      vmid: 124
+      nodename: i-124
       upgrade:
         batch: batch3
-        skip_phases: ["kube-proxy"]
-      kube_pki: *kube_pki
-      kubevip: *kubevip
-      authorized_keys: *authorized_keys
-      kubernetes_major_version: *kubernetes_major_version
-      kubernetes_minor_version: *kubernetes_minor_version
+        skip_phases: ["kube-proxy"] # TODO: test this next time
 
     # --- DATA PLANE ---
-    # 192.168.56.31: &i-131
-    #   ansible_user: u
-    #   nodename: i-131
-    #   vmid: 131
-    #   roles:
-    #     - data-plane
-    #   cloudimg: *cloudimg
-    #   corecount: 4
-    #   memsize: 12288
-    #   pve_network_device: "vmbr0"
-    #   gateway_ip: *gateway_ip
-    #   pve_node: "neomorph"
-    #   pve_cluster: "alien"
-    #   cluster_ops: *cluster_ops
-    #   wireguard_clients:
-    #     - file: i-131.conf
-    #       name: i-131
-    #   kubernetes_major_version: *kubernetes_major_version
-    #   kubernetes_minor_version: *kubernetes_minor_version
-    192.168.56.32: &i-132
+    192.168.56.35: &i-135
+      <<: *data_plane_defaults
       ansible_user: u
-      nodename: i-132
-      vmid: 132
-      roles:
-        - data-plane
-      cloudimg: *cloudimg
-      corecount: 4
-      memsize: 12288
-      pve_network_device: "vmbr0"
-      gateway_ip: *gateway_ip
-      pve_node: "neomorph"
-      pve_cluster: "alien"
-      cluster_ops: *cluster_ops
+      nodename: i-135
+      vmid: 135
       upgrade:
         batch: batch4
         skip_phases: ["kube-proxy"]
       wireguard_clients:
-        - file: i-132.conf
-          name: i-132
-      kubernetes_major_version: *kubernetes_major_version
-      kubernetes_minor_version: *kubernetes_minor_version
-    192.168.56.33: &i-133
+        - file: i-135.conf
+          name: i-135
+    192.168.56.36: &i-136
+      <<: *data_plane_defaults
       ansible_user: u
-      nodename: i-133
-      vmid: 133
-      roles:
-        - data-plane
-      cloudimg: *cloudimg
-      corecount: 4
-      memsize: 12288
-      pve_network_device: "vmbr0"
-      gateway_ip: *gateway_ip
-      pve_node: "neomorph"
-      pve_cluster: "alien"
-      cluster_ops: *cluster_ops
+      nodename: i-136
+      vmid: 136
       upgrade:
         batch: batch5
         skip_phases: ["kube-proxy"]
       wireguard_clients:
-        - file: i-133.conf
-          name: i-133
-      kubernetes_major_version: *kubernetes_major_version
-      kubernetes_minor_version: *kubernetes_minor_version
-    192.168.56.34: &i-134
-      ansible_user: u
-      nodename: i-134
-      vmid: 134
-      roles:
-        - data-plane
-      cloudimg: *cloudimg
-      corecount: 4
-      memsize: 12288
-      pve_network_device: "vmbr0"
-      gateway_ip: *gateway_ip
-      pve_node: "neomorph"
-      pve_cluster: "alien"
-      cluster_ops: *cluster_ops
-      upgrade:
-        batch: batch6
-        skip_phases: ["kube-proxy"]
-      wireguard_clients:
-        - file: i-134.conf
-          name: i-134
-      kubernetes_major_version: *kubernetes_major_version
-      kubernetes_minor_version: *kubernetes_minor_version
-    # 192.168.56.35: &i-135
-    #   ansible_user: u
-    #   nodename: i-135
-    #   vmid: 135
-    #   is_control_plane: false
-    #   wireguard_clients:
-    #     - file: i-135.conf
-    #       name: i-135
-    #   kubernetes_major_version: *kubernetes_major_version
-    #   kubernetes_minor_version: *kubernetes_minor_version
-    # 192.168.56.36: &i-136
-    #   ansible_user: u
-    #   nodename: i-136
-    #   vmid: 136
-    #   is_control_plane: false
-    #   wireguard_clients:
-    #     - file: i-136.conf
-    #       name: i-136
-    #   kubernetes_major_version: *kubernetes_major_version
-    #   kubernetes_minor_version: *kubernetes_minor_version
-    # 192.168.56.37: &i-137
-    #   ansible_user: u
-    #   nodename: i-137
-    #   vmid: 137
-    #   is_control_plane: false
-    #   wireguard_clients:
-    #     - file: i-137.conf
-    #       name: i-137
-    #   kubernetes_major_version: *kubernetes_major_version
-    #   kubernetes_minor_version: *kubernetes_minor_version
+        - file: i-136.conf
+          name: i-136
