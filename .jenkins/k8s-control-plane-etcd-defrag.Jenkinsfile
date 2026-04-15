@@ -47,6 +47,10 @@ pipeline {
                         vm["vmid"] = vars["vmid"]
                         vm["nodename"] = vars["nodename"]
                         vms.add(vm)
+                        echo "Found vm ${host}"
+                    }
+                    if (!vms || vms.isEmpty()) {
+                        error("No control-plane VMs found in inventory")
                     }
                 }
 
