@@ -5,8 +5,31 @@ pipeline {
     // }
     agent {
         kubernetes {
-            yamlFile '.jenkins/tfaa.yml'
-            defaultContainer 'main'
+            yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - name: ubuntu
+      image: tuana9a/tfaa:2026.04.15
+      command:
+        - sleep
+      args:
+        - infinity
+      volumeMounts:
+        - name: secrets
+          mountPath: "/var/secrets"
+          readOnly: true
+        - name: workdir
+          mountPath: "/workdir"
+  volumes:
+    - name: secrets
+      secret:
+        secretName: etcd-defrag
+    - name: workdir
+      emptyDir: {}
+'''
+            defaultContainer 'ubuntu'
         }
     }
     parameters { 
@@ -32,10 +55,12 @@ pipeline {
                 script {
                     currentBuild.displayName = "#${env.BUILD_NUMBER} - ${params.WORKINGDIR}"
                 }
+
                 echo 'set-params'
                 sh 'date +%s > /workdir/start.time'
                 sh 'echo "no" > /workdir/ruok'
-                echo 'add-missing-files'
+
+                echo 'download-secret-files'
                 dir(params.WORKINGDIR) {
                     sh 'set +x; curl -sSf -X GET https://vault.tuana9a.com/v1/kv/github.com/tuana9a/platform/' + params.WORKINGDIR + '/terraform -H "X-Vault-Token: $VAULT_TOKEN" -o vault_data.json'
                     sh '''
