@@ -86,7 +86,7 @@ spec:
               mountPath: /home/postgres/pgdata
       containers:
         - name: *cluster_name
-          image: tuana9a/patroni-postgres-16:git-490a2d680b9cea9aa205bea8f1d71cd6799e783f # support patroni.yml overwrite
+          image: tuana9a/patroni-postgres-16.11:2026.04.15
           imagePullPolicy: IfNotPresent
           readinessProbe:
             httpGet:
