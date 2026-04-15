@@ -51,9 +51,9 @@ spec:
                 echo "inventory"
                 container('etcd') {
                     script {
-                        inventory = readYaml file: "./inventory.yml"
+                        inventory = readYaml file: "./068-k8s-cobi-tuana9a/inventory.yml"
                         inventory["k8s_cluster"]["hosts"].each { host, vars ->
-                            if (!vars["is_control_plane"]) {
+                            if (!vars["roles"].contains("control-plane")) {
                                 return
                             }
                             def vm = [:]
