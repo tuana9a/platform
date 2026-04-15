@@ -7,31 +7,8 @@ pipeline {
     options { buildDiscarder(logRotator(numToKeepStr: '14')) }
     agent {
         kubernetes {
-            yaml '''
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-    - name: etcd
-      image: tuana9a/toolbox:etcd-3.5.15
-      command:
-        - sleep
-      args:
-        - infinity
-      volumeMounts:
-        - name: secrets
-          mountPath: "/var/secrets"
-          readOnly: true
-        - name: workdir
-          mountPath: "/workdir"
-  volumes:
-    - name: secrets
-      secret:
-        secretName: etcd-defrag
-    - name: workdir
-      emptyDir: {}
-'''
-            defaultContainer 'etcd'
+            yamlFile '.jenkins/ubuntu.yml'
+            defaultContainer 'ubuntu'
             retries 2
         }
     }
@@ -44,60 +21,65 @@ spec:
         stage('prepare') {
             steps {
                 echo "set-params"
-                container('etcd') {
-                    sh 'echo 0 > /workdir/status'
-                    sh 'date +%s > /workdir/start.time'
-                }
+                sh 'echo 0 > /workdir/status'
+                sh 'date +%s > /workdir/start.time'
+
+                echo "install-tools"
+                sh 'apt update && apt install -y curl wget unzip openssh-client'
+                sh '''
+                export ETCD_VER=v3.5.15
+                mkdir -p /tmp/etcd-download \
+                && curl -L https://storage.googleapis.com/etcd/${ETCD_VER}/etcd-${ETCD_VER}-linux-amd64.tar.gz -o /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz \
+                && tar xzvf /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz -C /tmp/etcd-download --strip-components=1 \
+                && cp /tmp/etcd-download/etcd* /usr/local/bin/ \
+                && /usr/local/bin/etcdctl version
+                '''
+
                 echo "inventory"
-                container('etcd') {
-                    script {
-                        inventory = readYaml file: "./068-k8s-cobi-tuana9a/inventory.yml"
-                        inventory["k8s_cluster"]["hosts"].each { host, vars ->
-                            if (!vars["roles"].contains("control-plane")) {
-                                return
-                            }
-                            def vm = [:]
-                            vm["host"] = host
-                            vm["vmid"] = vars["vmid"]
-                            vm["nodename"] = vars["nodename"]
-                            vms.add(vm)
+                script {
+                    inventory = readYaml file: "./068-k8s-cobi-tuana9a/inventory.yml"
+                    inventory["k8s_cluster"]["hosts"].each { host, vars ->
+                        if (!vars["roles"].contains("control-plane")) {
+                            return
                         }
+                        def vm = [:]
+                        vm["host"] = host
+                        vm["vmid"] = vars["vmid"]
+                        vm["nodename"] = vars["nodename"]
+                        vms.add(vm)
                     }
                 }
-                echo "download-k8s-certs"
-                container('etcd') {
-                    script {
-                        sh "cp /var/secrets/ci /workdir/ci && chmod 600 /workdir/ci"
-                        for (vm in vms) {
-                            def vmid = vm["vmid"]
-                            def host = vm["host"]
-                            def nodename = vm["nodename"]
-                            sh "ssh -o StrictHostKeyChecking=accept-new -i /workdir/ci root@${host} echo helloworld"
-                            sh "scp -i /workdir/ci -r root@${host}:/etc/kubernetes/pki /workdir/pki-${nodename}"
-                        }
+
+                echo "download-certs"
+                script {
+                    sh "cp /var/secrets/ci /workdir/ci && chmod 600 /workdir/ci"
+                    for (vm in vms) {
+                        def vmid = vm["vmid"]
+                        def host = vm["host"]
+                        def nodename = vm["nodename"]
+                        sh "ssh -o StrictHostKeyChecking=accept-new -i /workdir/ci root@${host} echo helloworld"
+                        sh "scp -i /workdir/ci -r root@${host}:/etc/kubernetes/pki /workdir/pki-${nodename}"
                     }
                 }
-                echo "list-files"
-                container('etcd') {
-                    sh 'ls -lha /var/secrets/'
-                    sh 'ls -lha /workdir/'
-                    sh 'find /workdir/'
-                }
-                echo "list-etcd-members"
-                container('etcd') {
-                    script {
-                        for (vm in vms) {
-                            def vmid = vm["vmid"]
-                            def host = vm["host"]
-                            def nodename = vm["nodename"]
-                            echo "vmid: ${vmid}"
-                            withEnv([
-                                "ETCDCTL_CACERT=/workdir/pki-${nodename}/etcd/ca.crt",
-                                "ETCDCTL_CERT=/workdir/pki-${nodename}/apiserver-etcd-client.crt",
-                                "ETCDCTL_KEY=/workdir/pki-${nodename}/apiserver-etcd-client.key",
-                            ]) {
-                                sh "/usr/local/bin/etcdctl member list --endpoints=${host}:2379 -w=table"
-                            }
+
+                echo "debug"
+                sh 'ls -lha /var/secrets/'
+                sh 'ls -lha /workdir/'
+                sh 'find /workdir/'
+
+                echo "etcd-members"
+                script {
+                    for (vm in vms) {
+                        def vmid = vm["vmid"]
+                        def host = vm["host"]
+                        def nodename = vm["nodename"]
+                        echo "vmid: ${vmid}"
+                        withEnv([
+                            "ETCDCTL_CACERT=/workdir/pki-${nodename}/etcd/ca.crt",
+                            "ETCDCTL_CERT=/workdir/pki-${nodename}/apiserver-etcd-client.crt",
+                            "ETCDCTL_KEY=/workdir/pki-${nodename}/apiserver-etcd-client.key",
+                        ]) {
+                            sh "/usr/local/bin/etcdctl member list --endpoints=${host}:2379 -w=table"
                         }
                     }
                 }
@@ -105,20 +87,18 @@ spec:
         }
         stage('defrag') {
             steps {
-                container('etcd') {
-                    script {
-                        for (vm in vms) {
-                            def vmid = vm["vmid"]
-                            def host = vm["host"]
-                            def nodename = vm["nodename"]
-                            echo "vmid: ${vmid}"
-                            withEnv([
-                                "ETCDCTL_CACERT=/workdir/pki-${nodename}/etcd/ca.crt",
-                                "ETCDCTL_CERT=/workdir/pki-${nodename}/apiserver-etcd-client.crt",
-                                "ETCDCTL_KEY=/workdir/pki-${nodename}/apiserver-etcd-client.key",
-                            ]) {
-                                sh "/usr/local/bin/etcdctl defrag --endpoints=${host}:2379 -w=table"
-                            }
+                script {
+                    for (vm in vms) {
+                        def vmid = vm["vmid"]
+                        def host = vm["host"]
+                        def nodename = vm["nodename"]
+                        echo "vmid: ${vmid}"
+                        withEnv([
+                            "ETCDCTL_CACERT=/workdir/pki-${nodename}/etcd/ca.crt",
+                            "ETCDCTL_CERT=/workdir/pki-${nodename}/apiserver-etcd-client.crt",
+                            "ETCDCTL_KEY=/workdir/pki-${nodename}/apiserver-etcd-client.key",
+                        ]) {
+                            sh "/usr/local/bin/etcdctl defrag --endpoints=${host}:2379 -w=table"
                         }
                     }
                 }
@@ -134,9 +114,7 @@ spec:
     post {
         always {
             echo 'set-params'
-            container('etcd') {
-                sh 'date +%s > /workdir/stop.time'
-            }
+            sh 'date +%s > /workdir/stop.time'
         }
     }
 }
