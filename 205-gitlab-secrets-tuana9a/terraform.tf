@@ -26,7 +26,7 @@ provider "google" {
 }
 
 provider "gitlab" {
-  token = local.gitlab_secrets.gitlab_token
+  token = local.secrets.gitlab_token
 }
 
 provider "external" {

@@ -26,7 +26,7 @@ provider "google" {
 }
 
 provider "github" {
-  token = local.github_secrets.github_token
+  token = local.secrets.github_token
 }
 
 provider "external" {

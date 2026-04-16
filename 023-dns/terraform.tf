@@ -27,7 +27,7 @@ provider "google" {
 }
 
 provider "cloudflare" {
-  api_token = local.dns_secrets.cloudflare_api_token
+  api_token = local.secrets.cloudflare_api_token
 }
 
 provider "external" {
