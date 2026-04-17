@@ -7,7 +7,7 @@ pipeline {
     options { buildDiscarder(logRotator(numToKeepStr: '14')) }
     agent {
         kubernetes {
-            yamlFile '.jenkins/ubuntu.yml'
+            yamlFile '.jenkins/etcd-defrag.yml'
             defaultContainer 'ubuntu'
             retries 2
         }
@@ -23,17 +23,6 @@ pipeline {
                 echo "set-params"
                 sh 'echo 0 > /workdir/status'
                 sh 'date +%s > /workdir/start.time'
-
-                echo "install-tools"
-                sh 'apt update && apt install -y curl wget unzip openssh-client'
-                sh '''
-                export ETCD_VER=v3.5.15
-                mkdir -p /tmp/etcd-download \
-                && curl -L https://storage.googleapis.com/etcd/${ETCD_VER}/etcd-${ETCD_VER}-linux-amd64.tar.gz -o /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz \
-                && tar xzvf /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz -C /tmp/etcd-download --strip-components=1 \
-                && cp /tmp/etcd-download/etcd* /usr/local/bin/ \
-                && /usr/local/bin/etcdctl version
-                '''
 
                 echo "inventory"
                 script {
@@ -83,7 +72,7 @@ pipeline {
                             "ETCDCTL_CERT=/workdir/pki-${nodename}/apiserver-etcd-client.crt",
                             "ETCDCTL_KEY=/workdir/pki-${nodename}/apiserver-etcd-client.key",
                         ]) {
-                            sh "/usr/local/bin/etcdctl member list --endpoints=${host}:2379 -w=table"
+                            sh "/devops/tools/bin/etcdctl member list --endpoints=${host}:2379 -w=table"
                         }
                     }
                 }
@@ -102,7 +91,7 @@ pipeline {
                             "ETCDCTL_CERT=/workdir/pki-${nodename}/apiserver-etcd-client.crt",
                             "ETCDCTL_KEY=/workdir/pki-${nodename}/apiserver-etcd-client.key",
                         ]) {
-                            sh "/usr/local/bin/etcdctl defrag --endpoints=${host}:2379 -w=table"
+                            sh "/devops/tools/bin/etcdctl defrag --endpoints=${host}:2379 -w=table"
                         }
                     }
                 }
