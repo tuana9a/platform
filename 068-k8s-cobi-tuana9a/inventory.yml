@@ -26,8 +26,7 @@ DO_NOT_USE: # NOTE: storing common variables
         # each data node having this variable will be able to reference control plane via hostvars, example: "hostvars[cluster_ops.host].kube_join_command"
         host: 192.168.56.22
         remove_hosts:
-          - 192.168.56.32
-          - 192.168.56.34
+          - 192.168.56.39
       gateway_ip: &gateway_ip 192.168.56.1
       cloudimg: &cloudimg debian-12-generic-amd64-20251129-2311.img
 
@@ -74,6 +73,7 @@ k8s_cluster:
       <<: *control_plane_defaults
       ansible_user: u
       vmid: 123
+      pve_node: "engineer"
       nodename: i-123
       upgrade:
         batch: batch2
@@ -82,31 +82,32 @@ k8s_cluster:
       <<: *control_plane_defaults
       ansible_user: u
       vmid: 124
+      pve_node: "engineer"
       nodename: i-124
       upgrade:
         batch: batch3
         skip_phases: ["kube-proxy"] # TODO: test this next time
 
     # --- DATA PLANE ---
-    192.168.56.35: &i-135
+    192.168.56.37: &i-137
       <<: *data_plane_defaults
       ansible_user: u
-      nodename: i-135
-      vmid: 135
+      nodename: i-137
+      vmid: 137
       upgrade:
         batch: batch4
         skip_phases: ["kube-proxy"]
       wireguard_clients:
-        - file: i-135.conf
-          name: i-135
-    192.168.56.36: &i-136
+        - file: i-137.conf
+          name: i-137
+    192.168.56.38: &i-138
       <<: *data_plane_defaults
       ansible_user: u
-      nodename: i-136
-      vmid: 136
+      nodename: i-138
+      vmid: 138
       upgrade:
         batch: batch5
         skip_phases: ["kube-proxy"]
       wireguard_clients:
-        - file: i-136.conf
-          name: i-136
+        - file: i-138.conf
+          name: i-138

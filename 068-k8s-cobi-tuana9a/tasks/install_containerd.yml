@@ -1,14 +1,20 @@
+- name: Set default containerd variables if not defined
+  ansible.builtin.set_fact:
+    containerd_version: "{{ containerd_version | default('2.2.3') }}"
+    containerd_os: "{{ containerd_os | default('linux') }}"
+    containerd_arch: "{{ containerd_arch | default('amd64') }}"
+
 - name: Download containerd archive
   become: true
   ansible.builtin.get_url:
-    url: "https://github.com/containerd/containerd/releases/download/v1.7.24/containerd-1.7.24-linux-amd64.tar.gz"
-    dest: "/opt/containerd-1.7.24-linux-amd64.tar.gz"
+    url: "https://github.com/containerd/containerd/releases/download/v{{ containerd_version }}/containerd-{{ containerd_version }}-{{ containerd_os }}-{{ containerd_arch }}.tar.gz"
+    dest: "/opt/containerd-{{ containerd_version }}-{{ containerd_os }}-{{ containerd_arch }}.tar.gz"
     mode: "0644"
 
 - name: Extract containerd to /usr/local
   become: true
   ansible.builtin.unarchive:
-    src: "/opt/containerd-1.7.24-linux-amd64.tar.gz"
+    src: "/opt/containerd-{{ containerd_version }}-{{ containerd_os }}-{{ containerd_arch }}.tar.gz"
     dest: "/usr/local"
     remote_src: yes
     # Optimization: prevents re-extraction if the main binary exists
