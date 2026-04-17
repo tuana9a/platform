@@ -61,6 +61,9 @@ data:
             }
           }
           multibranchPipelineJob('206-github-setup-terraform-plan-apply') {
+            configure {
+              it / disabled << 'true'
+            }
             branchSources {
               git {
                 // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
