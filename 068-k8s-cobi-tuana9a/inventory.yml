@@ -17,6 +17,10 @@ DO_NOT_USE: # NOTE: storing common variables
         - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN6bF/SOzb1XD4qo0LaZ5PVa1sCijDyQS/8oHZe9x6R5"
           comment: "ci"
           user: root
+          state: absent
+        - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN6bF/SOzb1XD4qo0LaZ5PVa1sCijDyQS/8oHZe9x6R5"
+          comment: "ci"
+          user: u
       kubernetes_major_version: &kubernetes_major_version "1.33"
       kubernetes_minor_version: &kubernetes_minor_version "1.33.10"
       cluster_ops: &cluster_ops
@@ -31,6 +35,7 @@ DO_NOT_USE: # NOTE: storing common variables
       cloudimg: &cloudimg debian-12-generic-amd64-20251129-2311.img
 
       k8s_node_defaults: &k8s_node_defaults
+        ansible_user: u
         pve_cluster: "alien"
         pve_node: "neomorph"
         cloudimg: *cloudimg
@@ -62,7 +67,6 @@ k8s_cluster:
     # --- CONTROL PLANE ---
     192.168.56.22: &i-122
       <<: *control_plane_defaults
-      ansible_user: u
       vmid: 122
       nodename: i-122
       pve_node: "engineer"
@@ -71,7 +75,6 @@ k8s_cluster:
         skip_phases: ["kube-proxy"] # TODO: test this next time
     192.168.56.23: &i-123
       <<: *control_plane_defaults
-      ansible_user: u
       vmid: 123
       pve_node: "engineer"
       nodename: i-123
@@ -80,7 +83,6 @@ k8s_cluster:
         skip_phases: ["kube-proxy"] # TODO: test this next time
     192.168.56.24: &i-124
       <<: *control_plane_defaults
-      ansible_user: u
       vmid: 124
       pve_node: "engineer"
       nodename: i-124
@@ -91,7 +93,6 @@ k8s_cluster:
     # --- DATA PLANE ---
     192.168.56.37: &i-137
       <<: *data_plane_defaults
-      ansible_user: u
       nodename: i-137
       vmid: 137
       upgrade:
@@ -102,7 +103,6 @@ k8s_cluster:
           name: i-137
     192.168.56.38: &i-138
       <<: *data_plane_defaults
-      ansible_user: u
       nodename: i-138
       vmid: 138
       upgrade:
