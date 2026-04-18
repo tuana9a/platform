@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - name: ubuntu
+      image: tuana9a/ubuntu-24.04:2026.04.17
+      command:
+        - sleep
+      args:
+        - infinity
+      volumeMounts:
+        - name: workdir
+          mountPath: "/workdir"
+        - name: devops-tools
+          mountPath: /devops
+  volumes:
+    - name: workdir
+      emptyDir: {}
+    - name: devops-tools
+      image:
+        reference: tuana9a/devops-tools:2026.04.18
+        pullPolicy: IfNotPresent

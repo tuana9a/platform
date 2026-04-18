@@ -7,7 +7,7 @@ pipeline {
     options { buildDiscarder(logRotator(numToKeepStr: '14')) }
     agent {
         kubernetes {
-            yamlFile '.jenkins/etcd-defrag.yml'
+            yamlFile '.jenkins/ubuntu-pod.yml'
             defaultContainer 'ubuntu'
             retries 2
         }
@@ -45,18 +45,18 @@ pipeline {
 
                 echo "download-certs"
                 script {
-                    sh "cp /var/secrets/ci /workdir/ci && chmod 600 /workdir/ci"
                     for (vm in vms) {
                         def vmid = vm["vmid"]
                         def host = vm["host"]
                         def nodename = vm["nodename"]
-                        sh "ssh -o StrictHostKeyChecking=accept-new -i /workdir/ci root@${host} echo helloworld"
-                        sh "scp -i /workdir/ci -r root@${host}:/etc/kubernetes/pki /workdir/pki-${nodename}"
+                        sshagent(credentials: ['id_rsa']) {
+                            sh "ssh -o StrictHostKeyChecking=accept-new root@${host} echo helloworld"
+                            sh "scp -r root@${host}:/etc/kubernetes/pki /workdir/pki-${nodename}"
+                        }
                     }
                 }
 
                 echo "debug"
-                sh 'ls -lha /var/secrets/'
                 sh 'ls -lha /workdir/'
                 sh 'find /workdir/'
 
