@@ -17,6 +17,7 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
+      install-sops: true
       WORKING_DIR: ${{ github.workflow }}
-      download-secret-files: true
+      AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/github-workflow
     secrets: inherit

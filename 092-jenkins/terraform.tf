@@ -12,6 +12,10 @@ terraform {
       source  = "hashicorp/helm"
       version = "2.12.1"
     }
+    external = {
+      source  = "hashicorp/external"
+      version = "2.3.5"
+    }
   }
 }
 
@@ -24,7 +28,10 @@ provider "google" {
 provider "helm" {
   kubernetes {
     host                   = "https://192.168.56.21:6443"
-    cluster_ca_certificate = base64decode(var.cluster_ca_certificate_b64)
-    token                  = var.token
+    cluster_ca_certificate = base64decode(local.secrets.cluster_ca_certificate_b64)
+    token                  = local.secrets.token
   }
+}
+
+provider "external" {
 }
