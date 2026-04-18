@@ -31,6 +31,7 @@ jenkins-plugin-cli --plugins matrix-auth
 jenkins-plugin-cli --plugins google-login
 jenkins-plugin-cli --plugins dark-theme
 jenkins-plugin-cli --plugins pipeline-graph-view
+jenkins-plugin-cli --plugins ssh-agent
 ```
 
 # How I configured google-login
