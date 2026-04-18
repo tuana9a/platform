@@ -35,6 +35,7 @@ pipeline {
                         vm["host"] = host
                         vm["vmid"] = vars["vmid"]
                         vm["nodename"] = vars["nodename"]
+                        vm["username"] = vars["ansible_user"]
                         vms.add(vm)
                         echo "Found vm ${host}"
                     }
@@ -49,33 +50,16 @@ pipeline {
                         def vmid = vm["vmid"]
                         def host = vm["host"]
                         def nodename = vm["nodename"]
+                        sh "mkdir -p /workdir/${nodename}/pki"
                         sshagent(credentials: ['id_rsa']) {
-                            sh "ssh -o StrictHostKeyChecking=accept-new root@${host} echo helloworld"
-                            sh "scp -r root@${host}:/etc/kubernetes/pki /workdir/pki-${nodename}"
+                            sh "ssh -o StrictHostKeyChecking=accept-new ${vm['username']}@${host} 'echo helloworld'"
+                            sh "ssh ${vm['username']}@${host} 'sudo cat /etc/kubernetes/pki/etcd/ca.crt' > /workdir/${nodename}/pki/ca.crt"
+                            sh "ssh ${vm['username']}@${host} 'sudo cat /etc/kubernetes/pki/apiserver-etcd-client.crt' > /workdir/${nodename}/pki/apiserver-etcd-client.crt"
+                            sh "ssh ${vm['username']}@${host} 'sudo cat /etc/kubernetes/pki/apiserver-etcd-client.key' > /workdir/${nodename}/pki/apiserver-etcd-client.key"
                         }
                     }
                 }
-
-                echo "debug"
-                sh 'ls -lha /workdir/'
                 sh 'find /workdir/'
-
-                echo "etcd-members"
-                script {
-                    for (vm in vms) {
-                        def vmid = vm["vmid"]
-                        def host = vm["host"]
-                        def nodename = vm["nodename"]
-                        echo "vmid: ${vmid}"
-                        withEnv([
-                            "ETCDCTL_CACERT=/workdir/pki-${nodename}/etcd/ca.crt",
-                            "ETCDCTL_CERT=/workdir/pki-${nodename}/apiserver-etcd-client.crt",
-                            "ETCDCTL_KEY=/workdir/pki-${nodename}/apiserver-etcd-client.key",
-                        ]) {
-                            sh "/devops/tools/bin/etcdctl member list --endpoints=${host}:2379 -w=table"
-                        }
-                    }
-                }
             }
         }
         stage('defrag') {
@@ -87,9 +71,9 @@ pipeline {
                         def nodename = vm["nodename"]
                         echo "vmid: ${vmid}"
                         withEnv([
-                            "ETCDCTL_CACERT=/workdir/pki-${nodename}/etcd/ca.crt",
-                            "ETCDCTL_CERT=/workdir/pki-${nodename}/apiserver-etcd-client.crt",
-                            "ETCDCTL_KEY=/workdir/pki-${nodename}/apiserver-etcd-client.key",
+                            "ETCDCTL_CACERT=/workdir/${nodename}/pki/ca.crt",
+                            "ETCDCTL_CERT=/workdir/${nodename}/pki/apiserver-etcd-client.crt",
+                            "ETCDCTL_KEY=/workdir/${nodename}/pki/apiserver-etcd-client.key",
                         ]) {
                             sh "/devops/tools/bin/etcdctl defrag --endpoints=${host}:2379 -w=table"
                         }
