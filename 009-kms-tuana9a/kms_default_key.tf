@@ -47,6 +47,7 @@ resource "aws_kms_key" "default_key" {
         Principal = {
           AWS = [
             "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/github-workflow",
+            "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/jenkins-job",
             "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-reserved/sso.amazonaws.com/ap-southeast-1/AWSReservedSSO_Admin_c31bf84842b4b2b9",
           ]
         },
