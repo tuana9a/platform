@@ -3,7 +3,7 @@ pipeline {
     triggers { cron('0 17 * * *') }
     agent {
         kubernetes {
-            yamlFile '.jenkins/vault-secret-store-token-renew.yml'
+            yamlFile '.jenkins/ubuntu-pod.yml'
             defaultContainer 'ubuntu'
             retries 2
         }
@@ -15,21 +15,24 @@ pipeline {
         stage('prepare') {
             steps {
                 echo 'set-params'
-                container('ubuntu') {
-                    sh 'date +%s > /workdir/start.time'
-                    sh 'echo no > /workdir/ruok'
-                }
+                sh 'date +%s > /workdir/start.time'
+                sh 'echo no > /workdir/ruok'
             }
         }
         stage('renew') {
             steps {
-                container('vault') {
+                withCredentials([
+                    string(credentialsId: 'VAULT_TOKEN', variable: 'VAULT_TOKEN'),
+                ]) {
                     sh '''
                     set +x
-                    VAULT_TOKEN=$(cat /var/secrets/token) vault token renew > /dev/null
+                    curl -fsS --request POST \
+                        --header "X-Vault-Token: $VAULT_TOKEN" \
+                        --data '{"increment": "72h"}' \
+                        $VAULT_ADDR/v1/auth/token/renew-self
                     '''
-                    sh 'echo yes > /workdir/ruok'
                 }
+                sh 'echo yes > /workdir/ruok'
             }
         }
         stage('finally') {
@@ -40,8 +43,11 @@ pipeline {
     }
     post {
         always {
-            container('ubuntu') {
-                sh 'date +%s > /workdir/stop.time'
+            sh 'date +%s > /workdir/stop.time'
+            withCredentials([
+                string(credentialsId: 'TELEGRAM_CHAT_ID', variable: 'TELEGRAM_CHAT_ID'),
+                string(credentialsId: 'TELEGRAM_BOT_TOKEN', variable: 'TELEGRAM_BOT_TOKEN'),
+            ]) {
                 sh '''
                 START_TIME=$(cat "/workdir/start.time")
                 STOP_TIME=$(cat "/workdir/stop.time")
