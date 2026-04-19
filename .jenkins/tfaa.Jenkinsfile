@@ -16,6 +16,7 @@ pipeline {
         string(name: 'GCP_SERVICE_ACCOUNT', defaultValue: 'terraform-state-editor@tuana9a.iam.gserviceaccount.com', description: 'GCP Service Account Email')
         string(name: 'GCP_WORKLOAD_IDENTITY_POOL', defaultValue: 'jenkins', description: 'GCP Workload Identity Pool Name')
         string(name: 'GCP_WORKLOAD_IDENTITY_POOL_PROVIDER', defaultValue: 'jenkins-tuana9a-com', description: 'GCP Workload Identity Pool Provider Name')
+        string(name: 'AWS_ROLE_ARN', defaultValue: 'arn:aws:iam::384588864907:role/jenkins-job', description: 'AWS iam role to assume')
     }
     environment {
         GOOGLE_APPLICATION_CREDENTIALS = "$WORKSPACE_TMP/application_default_credentials.json"
@@ -25,6 +26,7 @@ pipeline {
         GCP_SERVICE_ACCOUNT = "${params.GCP_SERVICE_ACCOUNT}"
         GCP_WORKLOAD_IDENTITY_POOL = "${params.GCP_WORKLOAD_IDENTITY_POOL}"
         GCP_WORKLOAD_IDENTITY_POOL_PROVIDER = "${params.GCP_WORKLOAD_IDENTITY_POOL_PROVIDER}"
+        AWS_ROLE_ARN = "${params.AWS_ROLE_ARN}"
     }
     stages {
         stage('prepare') {
@@ -52,7 +54,10 @@ pipeline {
         }
         stage('terraform') {
             steps {
-                withCredentials([file(variable: 'ID_TOKEN_FILE', credentialsId: 'gcp-oidc-id-token')]) {
+                withCredentials([
+                    file(variable: 'GCP_OIDC_ID_TOKEN_FILE', credentialsId: 'gcp-oidc-id-token'),
+                    file(variable: 'AWS_WEB_IDENTITY_TOKEN_FILE', credentialsId: 'aws-oidc-id-token'),
+                ]) {
                     writeFile file: "$WORKSPACE_TMP/application_default_credentials.json", text: """{
                         "type": "external_account",
                         "audience": "//iam.googleapis.com/projects/${params.GCP_PROJECT_NUM}/locations/global/workloadIdentityPools/${params.GCP_WORKLOAD_IDENTITY_POOL}/providers/${params.GCP_WORKLOAD_IDENTITY_POOL_PROVIDER}",
@@ -60,13 +65,14 @@ pipeline {
                         "token_url": "https://sts.googleapis.com/v1/token",
                         "service_account_impersonation_url": "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/${params.GCP_SERVICE_ACCOUNT}:generateAccessToken",
                         "credential_source": {
-                            "file": "$ID_TOKEN_FILE",
+                            "file": "$GCP_OIDC_ID_TOKEN_FILE",
                             "format": {
                                 "type": "text"
                             }
                         }
                     }"""
                     dir(params.WORKINGDIR) {
+                        sh '/devops/tools/aws-cli/v2/2.34.32/dist/aws sts get-caller-identity'
                         sh '''
                         export PATH=$PATH:/devops/tools/bin/
                         terraform init -input=false
