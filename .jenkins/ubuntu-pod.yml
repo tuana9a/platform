@@ -18,5 +18,5 @@ spec:
       emptyDir: {}
     - name: devops-tools
       image:
-        reference: tuana9a/devops-tools:2026.04.18
+        reference: tuana9a/devops-tools:2026.04.19
         pullPolicy: IfNotPresent

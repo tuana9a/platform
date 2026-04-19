@@ -5,30 +5,7 @@ pipeline {
     // }
     agent {
         kubernetes {
-            yaml '''
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-    - name: ubuntu
-      image: tuana9a/tfaa:2026.04.15
-      command:
-        - sleep
-      args:
-        - infinity
-      volumeMounts:
-        - name: secrets
-          mountPath: "/var/secrets"
-          readOnly: true
-        - name: workdir
-          mountPath: "/workdir"
-  volumes:
-    - name: secrets
-      secret:
-        secretName: etcd-defrag
-    - name: workdir
-      emptyDir: {}
-'''
+            yamlFile '.jenkins/ubuntu-pod.yml'
             defaultContainer 'ubuntu'
         }
     }
@@ -62,7 +39,11 @@ spec:
 
                 echo 'download-secret-files'
                 dir(params.WORKINGDIR) {
-                    sh 'set +x; curl -sSf -X GET https://vault.tuana9a.com/v1/kv/github.com/tuana9a/platform/' + params.WORKINGDIR + '/terraform -H "X-Vault-Token: $VAULT_TOKEN" -o vault_data.json'
+                    withCredentials([
+                        string(credentialsId: 'VAULT_TOKEN', variable: 'VAULT_TOKEN'),
+                    ]) {
+                        sh 'set +x; curl -sSf -X GET https://vault.tuana9a.com/v1/kv/github.com/tuana9a/platform/' + params.WORKINGDIR + '/terraform -H "X-Vault-Token: $VAULT_TOKEN" -o vault_data.json'
+                    }
                     sh '''
                     for x in $(jq -r '.data._files_' vault_data.json); do echo "=== $x ==="; jq -r '.data."'$x'"' vault_data.json > $x; done
                     '''
@@ -86,9 +67,18 @@ spec:
                         }
                     }"""
                     dir(params.WORKINGDIR) {
-                        sh 'terraform init -input=false'
-                        sh 'terraform plan -input=false -out tfplan.out'
-                        sh 'terraform apply -input=false -auto-approve tfplan.out'
+                        sh '''
+                        export PATH=$PATH:/devops/tools/bin/
+                        terraform init -input=false
+                        '''
+                        sh '''
+                        export PATH=$PATH:/devops/tools/bin/
+                        terraform plan -input=false -out tfplan.out
+                        '''
+                        sh '''
+                        export PATH=$PATH:/devops/tools/bin/
+                        terraform apply -input=false -auto-approve tfplan.out
+                        '''
                     }
                 }
                 sh 'echo "yes" > /workdir/ruok'
@@ -104,20 +94,25 @@ spec:
         always {
             script {
                 sh 'date +%s > /workdir/stop.time'
-                sh '''
-                START_TIME=$(cat "/workdir/start.time")
-                STOP_TIME=$(cat "/workdir/stop.time")
-                DURATION=$((STOP_TIME - START_TIME))
-                case "$(cat /workdir/ruok)" in
-                    "yes") status="ok" ;;
-                    *) status="fuck" ;;
-                esac
-                MSG="$status $WORKINGDIR $(($DURATION / 60))m$(($DURATION % 60))s $BUILD_URL"
-                set +x
-                curl -sS -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
-                    -d chat_id="$TELEGRAM_CHAT_ID" \
-                    -d text="$MSG"
-                '''
+                withCredentials([
+                    string(credentialsId: 'TELEGRAM_CHAT_ID', variable: 'TELEGRAM_CHAT_ID'),
+                    string(credentialsId: 'TELEGRAM_BOT_TOKEN', variable: 'TELEGRAM_BOT_TOKEN'),
+                ]) {
+                    sh '''
+                    START_TIME=$(cat "/workdir/start.time")
+                    STOP_TIME=$(cat "/workdir/stop.time")
+                    DURATION=$((STOP_TIME - START_TIME))
+                    case "$(cat /workdir/ruok)" in
+                        "yes") status="ok" ;;
+                        *) status="fuck" ;;
+                    esac
+                    MSG="$status $WORKINGDIR $(($DURATION / 60))m$(($DURATION % 60))s $BUILD_URL"
+                    set +x
+                    curl -sS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+                        -d chat_id="${TELEGRAM_CHAT_ID}" \
+                        -d text="$MSG"
+                    '''
+                }
             }
         }
     }
