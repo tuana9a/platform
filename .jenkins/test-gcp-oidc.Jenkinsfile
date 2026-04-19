@@ -3,27 +3,7 @@ pipeline {
     triggers { cron('0 17 * * *') }
     agent {
         kubernetes {
-            yaml '''
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-    - name: shell
-      image: ubuntu
-      command:
-        - sleep
-      args:
-        - infinity
-      securityContext:
-        # ubuntu runs as root by default, it is recommended or even mandatory in some environments (such as pod security admission "restricted") to run as a non-root user.
-        runAsUser: 1000
-    - name: gcloud
-      image: google/cloud-sdk:stable
-      command:
-        - sleep
-      args:
-        - infinity
-'''
+            yamlFile '.jenkins/test-gcp-oidc-pod.yml'
             defaultContainer 'shell'
             retries 2
         }
