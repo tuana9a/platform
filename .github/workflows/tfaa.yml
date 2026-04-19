@@ -105,7 +105,7 @@ jobs:
         with:
           terraform_version: "1.7.1"
       - id: download-secret-files
-        name: add missing files
+        name: download secret files
         if: "${{ inputs.download-secret-files }}"
         working-directory: "${{ inputs.WORKING_DIR }}"
         run: |
