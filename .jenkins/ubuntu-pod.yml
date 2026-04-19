@@ -3,7 +3,7 @@ kind: Pod
 spec:
   containers:
     - name: ubuntu
-      image: tuana9a/ubuntu-24.04:2026.04.17
+      image: tuana9a/ubuntu-24.04:2026.04.19
       command:
         - sleep
       args:
