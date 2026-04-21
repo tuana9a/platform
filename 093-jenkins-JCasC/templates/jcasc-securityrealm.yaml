@@ -1,0 +1,5 @@
+jenkins:
+  securityRealm:
+    googleOAuth2:
+      clientId: "${google-login-client-id}"
+      clientSecret: "${google-login-client-secret}"

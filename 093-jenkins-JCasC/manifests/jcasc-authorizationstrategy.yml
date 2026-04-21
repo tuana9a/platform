@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: jenkins
+  name: jcasc-authorizationstrategy
+  labels:
+    jenkins-jenkins-config: "true"
+data:
+  authorizationstrategy.yaml: |
+    jenkins:
+      authorizationStrategy:
+        projectMatrix:
+          entries:
+            - user:
+                name: anonymous
+                permissions: []
+            - user:
+                name: tuana9a@gmail.com
+                permissions:
+                  - Overall/Administer
