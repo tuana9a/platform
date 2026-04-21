@@ -19,19 +19,19 @@ Jenkins's home dir is persisted by PVC, plugins are persisted in Jenkins's home 
 *NOTE*: *Actual plugin's versions may be changed by applying updates from Jenkins UI, below is just a reference.*
 
 ```bash
-jenkins-plugin-cli --plugins git
-jenkins-plugin-cli --plugins oidc-provider
-jenkins-plugin-cli --plugins mask-passwords
-jenkins-plugin-cli --plugins pipeline-utility-steps
-jenkins-plugin-cli --plugins timestamper
-jenkins-plugin-cli --plugins kubernetes
-jenkins-plugin-cli --plugins configuration-as-code
-jenkins-plugin-cli --plugins saferestart
-jenkins-plugin-cli --plugins matrix-auth
-jenkins-plugin-cli --plugins google-login
-jenkins-plugin-cli --plugins dark-theme
-jenkins-plugin-cli --plugins pipeline-graph-view
-jenkins-plugin-cli --plugins ssh-agent
+jenkins-plugin-cli -d /var/jenkins_home/plugins --plugins git
+jenkins-plugin-cli -d /var/jenkins_home/plugins --plugins oidc-provider
+jenkins-plugin-cli -d /var/jenkins_home/plugins --plugins mask-passwords
+jenkins-plugin-cli -d /var/jenkins_home/plugins --plugins pipeline-utility-steps
+jenkins-plugin-cli -d /var/jenkins_home/plugins --plugins timestamper
+jenkins-plugin-cli -d /var/jenkins_home/plugins --plugins kubernetes
+jenkins-plugin-cli -d /var/jenkins_home/plugins --plugins configuration-as-code
+jenkins-plugin-cli -d /var/jenkins_home/plugins --plugins saferestart
+jenkins-plugin-cli -d /var/jenkins_home/plugins --plugins matrix-auth
+jenkins-plugin-cli -d /var/jenkins_home/plugins --plugins google-login
+jenkins-plugin-cli -d /var/jenkins_home/plugins --plugins dark-theme
+jenkins-plugin-cli -d /var/jenkins_home/plugins --plugins pipeline-graph-view
+jenkins-plugin-cli -d /var/jenkins_home/plugins --plugins ssh-agent
 ```
 
 # How I configured google-login
