@@ -3,7 +3,7 @@ pipeline {
     triggers { cron('0 17 * * *') }
     agent {
         kubernetes {
-            yamlFile '.jenkins/ubuntu-pod.yml'
+            yamlFile '.jenkins/backup-coder-db.yml'
             defaultContainer 'ubuntu'
         }
     }
@@ -25,12 +25,14 @@ pipeline {
                     file(credentialsId: 'backup-coder-db.env', variable: 'BACKUP_CODER_DB_ENV_FILE')
                 ]) {
                     echo "dump"
-                    sh '''
-                    set +x
-                    . $BACKUP_CODER_DB_ENV_FILE
-                    export PGPASSWORD=$PG_PASS
-                    /postgres/usr/bin/pg_dump --no-owner -v -h $PG_HOST -p ${PG_PORT:-5432} -U $PG_USER -d $PG_DATABASE > /workdir/dump.sql
-                    '''
+                    container("postgres") {
+                        sh '''
+                        set +x
+                        . $BACKUP_CODER_DB_ENV_FILE
+                        export PGPASSWORD=$PG_PASS
+                        pg_dump --no-owner -v -h $PG_HOST -p ${PG_PORT:-5432} -U $PG_USER -d $PG_DATABASE > /workdir/dump.sql
+                        '''
+                    }
                     sh 'ls -lha /workdir/'
 
                     echo "zip"
@@ -38,12 +40,14 @@ pipeline {
                     sh 'ls -lha /workdir/'
 
                     echo "upload"
-                    sh '''
-                    set +x
-                    . $BACKUP_CODER_DB_ENV_FILE
-                    OBJECT_KEY=$(cat /workdir/object_key.env)
-                    /devops/tools/aws-cli/v2/2.34.32/dist/aws s3api --endpoint-url ${S3_ENDPOINT} put-object --bucket ${BUCKET_NAME} --key $OBJECT_KEY --body /workdir/dump.sql.tar.gz
-                    '''
+                    container("awscli") {
+                        sh '''
+                        set +x
+                        . $BACKUP_CODER_DB_ENV_FILE
+                        OBJECT_KEY=$(cat /workdir/object_key.env)
+                        aws s3api --endpoint-url ${S3_ENDPOINT} put-object --bucket ${BUCKET_NAME} --key $OBJECT_KEY --body /workdir/dump.sql.tar.gz
+                        '''
+                    }
                     sh 'echo 1 > /workdir/status'
                     sh 'echo upload completed'
                 }

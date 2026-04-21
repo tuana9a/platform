@@ -3,19 +3,11 @@ kind: Pod
 spec:
   containers:
     - name: ubuntu
-      image: tuana9a/ubuntu:git-1d3169e
+      image: tuana9a/ubuntu-24.04:2026.04.19
       command:
         - sleep
       args:
         - infinity
-      env:
-        - name: POD_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-      envFrom:
-        - secretRef:
-            name: backup-coder-postgres
       volumeMounts:
         - name: workdir
           mountPath: /workdir
@@ -29,9 +21,6 @@ spec:
       volumeMounts:
         - name: workdir
           mountPath: /workdir
-      envFrom:
-        - secretRef:
-            name: backup-coder-postgres
 
     - name: awscli
       image: amazon/aws-cli:2.18.0
@@ -39,9 +28,6 @@ spec:
         - sleep
       args:
         - infinity
-      envFrom:
-        - secretRef:
-            name: backup-coder-postgres
       volumeMounts:
         - name: workdir
           mountPath: /workdir
