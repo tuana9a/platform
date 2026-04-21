@@ -13,10 +13,16 @@ spec:
           mountPath: "/workdir"
         - name: devops-tools
           mountPath: /devops
+        - name: vault
+          mountPath: /vault
   volumes:
     - name: workdir
       emptyDir: {}
     - name: devops-tools
       image:
         reference: tuana9a/devops-tools:2026.04.19
+        pullPolicy: IfNotPresent
+    - name: vault
+      image:
+        reference: hashicorp/vault:1.17.2
         pullPolicy: IfNotPresent

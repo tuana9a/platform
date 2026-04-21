@@ -3,7 +3,7 @@ pipeline {
     triggers { cron('0 17 * * *') }
     agent {
         kubernetes {
-            yamlFile '.jenkins/vault-backup.yml'
+            yamlFile '.jenkins/ubuntu-pod.yml'
             defaultContainer 'ubuntu'
             retries 2
         }
@@ -15,47 +15,47 @@ pipeline {
         stage('prepare') {
             steps {
                 echo 'set-params'
-                container('ubuntu') {
-                    sh 'date +%s > /workdir/start.time'
-                    sh 'echo no > /workdir/ruok'
-                    sh 'OBJECT_KEY=$(date +"%Y%m%d%H")-vault.snapshot.tar.gz && echo $OBJECT_KEY > /workdir/object_key'
-                }
+                sh 'date +%s > /workdir/start.time'
+                sh 'echo no > /workdir/ruok'
+                sh 'OBJECT_KEY="vault/$(date +"%Y%m%d%H")/vault.snap.tar.gz" && echo $OBJECT_KEY > /workdir/object_key'
             }
         }
-        stage('renew') {
+        stage('vault') {
             steps {
-                container('vault') {
-                    sh 'vault token renew > /dev/null'
-                }
-            }
-        }
-        stage('snap') {
-            steps {
-                container('vault') {
-                    sh 'vault operator raft snapshot save /workdir/vault.snap'
-                }
-            }
-        }
-        stage('zip') {
-            steps {
-                container('ubuntu') {
-                    sh 'cd /workdir && tar -czvf vault.snap.tar.gz vault.snap'
-                }
-            }
-        }
-        stage('upload') {
-            steps {
-                container('awscli') {
+                withCredentials([
+                    file(credentialsId: 'vault-backup.env', variable: 'VAULT_BACKUP_ENV_FILE')
+                ]) {
+                    echo "renew"
                     sh '''
-                    OBJECT_KEY=$(cat /workdir/object_key)
-                    aws s3api --endpoint-url ${S3_ENDPOINT} put-object --bucket ${BUCKET_NAME} --key $OBJECT_KEY --body /workdir/vault.snap.tar.gz
+                    set +x
+                    . $VAULT_BACKUP_ENV_FILE
+                    /vault/bin/vault token renew > /dev/null
                     '''
+
+                    echo "snapshot"
+                    sh '''
+                    set +x
+                    . $VAULT_BACKUP_ENV_FILE
+                    /vault/bin/vault operator raft snapshot save /workdir/vault.snap
+                    '''
+
+                    echo "zip"
+                    sh 'cd /workdir && tar -czvf vault.snap.tar.gz vault.snap'
+
+                    echo "upload"
+                    sh '''
+                    set +x
+                    . $VAULT_BACKUP_ENV_FILE
+                    OBJECT_KEY=$(cat /workdir/object_key)
+                    /devops/tools/aws-cli/v2/2.34.32/dist/aws s3api --endpoint-url ${S3_ENDPOINT} put-object --bucket ${BUCKET_NAME} --key $OBJECT_KEY --body /workdir/vault.snap.tar.gz
+                    '''
+
                     echo "upload completed"
                     sh 'echo yes > /workdir/ruok'
                 }
             }
         }
-        stage('noti') {
+        stage('finally') {
             steps {
                 echo "dummy"
             }
@@ -63,9 +63,13 @@ pipeline {
     }
     post {
         always {
-            container('ubuntu') {
-                sh 'date +%s > /workdir/stop.time'
+            sh 'date +%s > /workdir/stop.time'
+            withCredentials([
+                file(credentialsId: 'vault-backup.env', variable: 'VAULT_BACKUP_ENV_FILE')
+            ]) {
                 sh '''
+                set +x
+                . $VAULT_BACKUP_ENV_FILE
                 START_TIME=$(cat "/workdir/start.time")
                 STOP_TIME=$(cat "/workdir/stop.time")
                 DURATION=$((STOP_TIME - START_TIME))
