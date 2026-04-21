@@ -24,11 +24,11 @@ controller:
   JCasC:
     authorizationStrategy: "" # disable here we already have it configured in 093-jenkins-JCasC
     securityRealm: "" # disable here we already have it configured in 093-jenkins-JCasC
-  additionalExistingSecrets:
-    - name: google-login # for used in 093-jenkins-JCasC google login
-      keyName: client-id
-    - name: google-login # for used in 093-jenkins-JCasC google login
-      keyName: client-secret
+  # additionalExistingSecrets:
+  #   - name: google-login # for used in 093-jenkins-JCasC google login
+  #     keyName: client-id
+  #   - name: google-login # for used in 093-jenkins-JCasC google login
+  #     keyName: client-secret
   resources:
     requests:
       cpu: "100m"

@@ -9,21 +9,7 @@ resource "kubernetes_namespace_v1" "jenkins" {
   }
 }
 
-resource "kubernetes_secret_v1" "google_login" {
-  metadata {
-    name      = "google-login"
-    namespace = kubernetes_namespace_v1.jenkins.metadata[0].name
-  }
-
-  data = {
-    client-id     = local.secrets.google-login.client-id
-    client-secret = local.secrets.google-login.client-secret
-  }
-}
-
 resource "helm_release" "jenkins" {
-  depends_on = [kubernetes_secret_v1.google_login]
-
   name      = "jenkins"
   namespace = kubernetes_namespace_v1.jenkins.metadata[0].name
 
