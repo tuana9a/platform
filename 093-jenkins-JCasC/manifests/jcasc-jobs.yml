@@ -39,7 +39,7 @@ data:
               }
             }
           }
-          multibranchPipelineJob('k8s-control-plane-backup-kubernetes') {
+          multibranchPipelineJob('backup-kubernetes') {
             branchSources {
               git {
                 // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
@@ -50,11 +50,11 @@ data:
             }
             factory {
               workflowBranchProjectFactory {
-                scriptPath('.jenkins/k8s-control-plane-backup-kubernetes.Jenkinsfile')
+                scriptPath('.jenkins/backup-kubernetes.Jenkinsfile')
               }
             }
           }
-          multibranchPipelineJob('k8s-control-plane-etcd-defrag') {
+          multibranchPipelineJob('defrag-etcd') {
             branchSources {
               git {
                 // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
@@ -65,7 +65,7 @@ data:
             }
             factory {
               workflowBranchProjectFactory {
-                scriptPath('.jenkins/k8s-control-plane-etcd-defrag.Jenkinsfile')
+                scriptPath('.jenkins/defrag-etcd.Jenkinsfile')
               }
             }
           }
