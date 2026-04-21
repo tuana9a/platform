@@ -15,6 +15,8 @@ spec:
           mountPath: /devops
         - name: vault
           mountPath: /vault
+        - name: postgres
+          mountPath: /postgres
   volumes:
     - name: workdir
       emptyDir: {}
@@ -25,4 +27,8 @@ spec:
     - name: vault
       image:
         reference: hashicorp/vault:1.17.2
+        pullPolicy: IfNotPresent
+    - name: postgres
+      image:
+        reference: postgres:16
         pullPolicy: IfNotPresent
