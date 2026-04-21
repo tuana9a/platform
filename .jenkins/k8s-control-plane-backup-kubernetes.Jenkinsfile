@@ -138,7 +138,8 @@ pipeline {
                 def nodenames = vms.collect { it["nodename"] } .join(",")
 
                 withCredentials([
-                    file(credentialsId: 'k8s-backup.env', variable: 'K8S_BACKUP_ENV_FILE')
+                    string(credentialsId: 'TELEGRAM_CHAT_ID', variable: 'TELEGRAM_CHAT_ID'),
+                    string(credentialsId: 'TELEGRAM_BOT_TOKEN', variable: 'TELEGRAM_BOT_TOKEN'),
                 ]) {
                     sh '''
                     set +x

@@ -65,7 +65,8 @@ pipeline {
         always {
             sh 'date +%s > /workdir/stop.time'
             withCredentials([
-                file(credentialsId: 'vault-backup.env', variable: 'VAULT_BACKUP_ENV_FILE')
+                string(credentialsId: 'TELEGRAM_CHAT_ID', variable: 'TELEGRAM_CHAT_ID'),
+                string(credentialsId: 'TELEGRAM_BOT_TOKEN', variable: 'TELEGRAM_BOT_TOKEN'),
             ]) {
                 sh '''
                 set +x

@@ -62,7 +62,8 @@ pipeline {
     post {
         always {
             withCredentials([
-                file(credentialsId: 'backup-coder-db.env', variable: 'BACKUP_CODER_DB_ENV_FILE')
+                string(credentialsId: 'TELEGRAM_CHAT_ID', variable: 'TELEGRAM_CHAT_ID'),
+                string(credentialsId: 'TELEGRAM_BOT_TOKEN', variable: 'TELEGRAM_BOT_TOKEN'),
             ]) {
                 sh 'date +%s > /workdir/stop.time'
                 sh '''
