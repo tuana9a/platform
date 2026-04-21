@@ -35,11 +35,25 @@ pipeline {
     //     }
     //   }
     // }
-    stage('test') {
+    // stage('test') {
+    //   steps {
+    //     script {
+    //       inventory = readYaml file: "./inventory.yml"
+    //       echo inventory
+    //     }
+    //   }
+    // }
+    stage('print ssh key') {
       steps {
-        script {
-          inventory = readYaml file: "./inventory.yml"
-          echo inventory
+        withCredentials([
+          sshUserPrivateKey(
+            credentialsId: 'id_rsa',
+            keyFileVariable: 'SSH_KEY_FILE',
+            usernameVariable: 'SSH_USER'
+          )
+        ]) {
+          sh 'echo $SSH_KEY_FILE $SSH_USER'
+          sh 'cat $SSH_KEY_FILE'
         }
       }
     }
