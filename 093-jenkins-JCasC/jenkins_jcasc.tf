@@ -41,6 +41,7 @@ resource "kubernetes_config_map" "jcasc_credentials" {
       vault-backup-env-b64      = base64encode(local.secrets.vault-backup-env)
       backup-coder-db-env-b64   = base64encode(local.secrets.backup-coder-db-env)
       k8s-backup-env-b64        = base64encode(local.secrets.k8s-backup-env)
+      id_rsa                    = local.secrets.id_rsa
     })
   }
 }
