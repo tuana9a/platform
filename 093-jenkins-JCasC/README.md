@@ -2,6 +2,10 @@
 
 This is the JCasC folder inside jenkins master `/var/jenkins_home/casc_configs`
 
+```bash
+./generate_jcasc_pipeline.py .jenkins/*.Jenkinsfile > 093-jenkins-JCasC/manifests/jcasc-jobs.yml
+```
+
 ## How to configure `authorizationStrategy`
 
 https://github.com/jenkinsci/matrix-auth-plugin/blob/50ec01b320a33d7eb2d649bd40bcc97221f50a79/src/test/resources/org/jenkinsci/plugins/matrixauth/integrations/casc/configuration-as-code-v3.yml#L1

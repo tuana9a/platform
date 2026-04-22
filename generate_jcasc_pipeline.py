@@ -44,7 +44,7 @@ header = """apiVersion: v1
 kind: ConfigMap
 metadata:
   namespace: jenkins
-  name: jobs-jcasc
+  name: jcasc-jobs
   labels:
     jenkins-jenkins-config: "true"
 data:
