@@ -43,19 +43,27 @@ pipeline {
     //     }
     //   }
     // }
-    stage('print ssh key') {
+    stage('test') {
       steps {
-        withCredentials([
-          sshUserPrivateKey(
-            credentialsId: 'id_rsa',
-            keyFileVariable: 'SSH_KEY_FILE',
-            usernameVariable: 'SSH_USER'
-          )
-        ]) {
-          sh 'echo $SSH_KEY_FILE $SSH_USER'
-          sh 'cat $SSH_KEY_FILE'
+        script {
+          env.GIT_HASH = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+          sh 'echo $GIT_HASH'
         }
       }
     }
+    // stage('print ssh key') {
+    //   steps {
+    //     withCredentials([
+    //       sshUserPrivateKey(
+    //         credentialsId: 'id_rsa',
+    //         keyFileVariable: 'SSH_KEY_FILE',
+    //         usernameVariable: 'SSH_USER'
+    //       )
+    //     ]) {
+    //       sh 'echo $SSH_KEY_FILE $SSH_USER'
+    //       sh 'cat $SSH_KEY_FILE'
+    //     }
+    //   }
+    // }
   }
 }
