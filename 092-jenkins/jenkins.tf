@@ -15,7 +15,7 @@ resource "helm_release" "jenkins" {
 
   repository = "https://charts.jenkins.io"
   chart      = "jenkins"
-  version    = "5.8.10"
+  version    = "5.9.18"
 
   values = [file("./values.yml")]
 }
