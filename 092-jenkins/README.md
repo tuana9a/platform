@@ -37,3 +37,9 @@ jenkins-plugin-cli -d /var/jenkins_home/plugins --plugins ssh-agent
 # How I configured google-login
 
 see [093-jenkins-JCasC/README.md#how-i-config-google-login-and-found-the-way-to-inject-secrets-into-jcasc](../093-jenkins-JCasC/README.md#how-i-config-google-login-and-found-the-way-to-inject-secrets-into-jcasc)
+
+# Other stuffs
+
+https://jenkins.tuana9a.com/manage/configureSecurity/#contentSecurityPolicy
+
+![CSP](imgs/CSP.png)
