@@ -1,11 +1,11 @@
-name: "003-aws-sso-iam"
+name: "tuana9a-global-003-aws-sso"
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - "003-aws-sso-iam/**"
-      - ".github/workflows/003-aws-sso-iam*"
+      - "tuana9a/global/003-aws-sso/**"
+      - ".github/workflows/tuana9a-global-003-aws-sso*"
     branches:
       - rock-n-roll
 
@@ -16,6 +16,6 @@ jobs:
       id-token: write
     uses: ./.github/workflows/tfaa.yml
     with:
-      WORKING_DIR: ${{ github.workflow }}
+      WORKING_DIR: tuana9a/global/003-aws-sso
       AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/github-workflow
     secrets: inherit
