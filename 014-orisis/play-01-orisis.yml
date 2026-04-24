@@ -5,4 +5,4 @@
     - import_tasks: ./tasks/install_fail2ban.yml
     - import_tasks: ./tasks/fail2ban_setup.yml
     - import_tasks: ./tasks/install_node_exporter.yml
-    - import_tasks: ./tasks/install_network_exporter.yml
+    - import_tasks: ./tasks/uninstall_network_exporter.yml

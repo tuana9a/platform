@@ -1,0 +1,36 @@
+- name: Stop and disable network_exporter service
+  become: true
+  ansible.builtin.service:
+    name: network_exporter
+    state: stopped
+    enabled: no
+  ignore_errors: true
+
+- name: Remove network_exporter systemd service file
+  become: true
+  ansible.builtin.file:
+    path: /etc/systemd/system/network_exporter.service
+    state: absent
+
+- name: Reload systemd daemon
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Remove network_exporter config file
+  become: true
+  ansible.builtin.file:
+    path: /opt/network_exporter.yml
+    state: absent
+
+- name: Remove extracted network_exporter directory
+  become: true
+  ansible.builtin.file:
+    path: "/opt/network_exporter_{{ network_exporter_version | default('1.8.0') }}.Linux_x86_64"
+    state: absent
+
+- name: Remove network_exporter tarball
+  become: true
+  ansible.builtin.file:
+    path: /opt/network_exporter.tar.gz
+    state: absent
