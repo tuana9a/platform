@@ -1,0 +1,20 @@
+targets:
+  - name: i-137-ping
+    host: 10.5.115.37
+    type: ICMP
+  - name: i-138-ping
+    host: 10.5.115.38
+    type: ICMP
+  - name: i-140-ping
+    host: 10.5.115.40
+    type: ICMP
+
+  - name: i-137-http
+    host: http://10.5.115.37:30080/
+    type: HTTPGet
+  - name: i-138-http
+    host: http://10.5.115.38:30080/
+    type: HTTPGet
+  - name: i-140-http
+    host: http://10.5.115.40:30080/
+    type: HTTPGet

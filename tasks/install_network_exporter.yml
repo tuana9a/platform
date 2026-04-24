@@ -1,0 +1,43 @@
+- set_fact: network_exporter_version="1.8.0"
+  when: network_exporter_version is undefined
+
+- name: Download network_exporter tarball
+  become: true
+  get_url:
+    url: https://github.com/syepes/network_exporter/releases/download/{{ network_exporter_version }}/network_exporter_{{ network_exporter_version }}.Linux_x86_64.tar.gz
+    dest: /opt/network_exporter.tar.gz
+
+- name: Extract network_exporter tarball
+  become: true
+  ansible.builtin.unarchive:
+    src: /opt/network_exporter.tar.gz
+    dest: /opt
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    remote_src: yes
+
+- name: Create network_exporter systemd service
+  become: true
+  ansible.builtin.template:
+    src: network_exporter.service
+    dest: /etc/systemd/system/network_exporter.service
+    mode: "0644"
+
+- name: Copy network_exporter.yml
+  become: true
+  ansible.builtin.template:
+    src: network_exporter.yml
+    dest: /opt/network_exporter.yml
+    mode: "0644"
+
+- name: Run systemctl daemon-reload
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Start network_exporter service
+  become: true
+  ansible.builtin.service:
+    name: network_exporter
+    state: restarted
+    enabled: yes

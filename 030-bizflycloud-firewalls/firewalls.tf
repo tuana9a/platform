@@ -62,6 +62,13 @@ resource "bizflycloud_firewall" "orisis" {
     protocol   = "tcp"
   }
 
+  # allow_network_exporter
+  ingress {
+    cidr       = "14.0.0.0/8"
+    port_range = "9427"
+    protocol   = "tcp"
+  }
+
   # allow_haproxy_stats
   ingress {
     cidr       = "14.0.0.0/8"

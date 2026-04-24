@@ -1,0 +1,10 @@
+[Unit]
+Description=Network Exporter
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/opt/network_exporter --config.file /opt/network_exporter.yml
+
+[Install]
+WantedBy=multi-user.target
