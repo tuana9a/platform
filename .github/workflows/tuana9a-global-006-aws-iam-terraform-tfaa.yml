@@ -1,11 +1,11 @@
-name: "006-iam-terraform-aws-tuana9a"
+name: "tuana9a-global-006-aws-iam-terraform"
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - "006-iam-terraform-aws-tuana9a/**"
-      - ".github/workflows/006-iam-terraform-aws-tuana9a*"
+      - "tuana9a/global/006-aws-iam-terraform/**"
+      - ".github/workflows/tuana9a-global-006-aws-iam-terraform*"
     branches:
       - rock-n-roll
 
@@ -16,6 +16,6 @@ jobs:
       id-token: write
     uses: ./.github/workflows/tfaa.yml
     with:
-      WORKING_DIR: ${{ github.workflow }}
+      WORKING_DIR: tuana9a/global/006-aws-iam-terraform
       AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/github-workflow
     secrets: inherit
