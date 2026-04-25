@@ -25,6 +25,6 @@ provider "google" {
 provider "aws" {
   region = "ap-southeast-1"
   assume_role {
-    role_arn = "arn:aws:iam::384588864907:role/terraform-sso-admin"
+    role_arn = "arn:aws:iam::${local.aws_accounts.tuana9a.id}:role/terraform-sso-admin"
   }
 }
