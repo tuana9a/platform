@@ -1,11 +1,11 @@
-name: "009-kms-tuana9a"
+name: "tuana9a-global-009-kms"
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - "009-kms-tuana9a/**"
-      - ".github/workflows/009-kms-tuana9a*"
+      - "tuana9a/global/009-kms/**"
+      - ".github/workflows/tuana9a-global-009-kms*"
     branches:
       - rock-n-roll
 
@@ -16,6 +16,6 @@ jobs:
       id-token: write
     uses: ./.github/workflows/tfaa.yml
     with:
-      WORKING_DIR: ${{ github.workflow }}
+      WORKING_DIR: tuana9a/global/009-kms
       AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/github-workflow
     secrets: inherit
