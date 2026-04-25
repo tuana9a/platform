@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "008-iam-users-aws-Atlantis"
+    prefix = "atlantis-tle/global/005-aws-iam"
   }
   required_providers {
     google = {
@@ -10,7 +10,7 @@ terraform {
     }
     aws = {
       source  = "hashicorp/aws"
-      version = "5.24"
+      version = "6.42.0"
     }
   }
   required_version = ">= 1.2.0"
@@ -25,6 +25,6 @@ provider "google" {
 provider "aws" {
   region = "ap-southeast-1"
   assume_role {
-    role_arn = "arn:aws:iam::541645813908:role/OrganizationAccountAccessRole" # Atlantis
+    role_arn = "arn:aws:iam::${local.aws_accounts.atlantis-tle.id}:role/terraform-iam-admin"
   }
 }

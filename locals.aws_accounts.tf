@@ -6,7 +6,7 @@ locals {
     t9st = {
       id = 445567113688
     }
-    Atlantis = {
+    atlantis-tle = {
       id = 541645813908
     }
   }
