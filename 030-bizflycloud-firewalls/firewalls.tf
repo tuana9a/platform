@@ -15,7 +15,7 @@ resource "bizflycloud_firewall" "orisis" {
 
   # allow_ssh
   ingress {
-    cidr       = "0.0.0.0/0"
+    cidr       = "14.0.0.0/0"
     port_range = "22"
     protocol   = "tcp"
   }
@@ -43,7 +43,7 @@ resource "bizflycloud_firewall" "orisis" {
 
   # allow_wireguard
   ingress {
-    cidr       = "0.0.0.0/0"
+    cidr       = "14.0.0.0/0"
     port_range = "51820"
     protocol   = "udp"
   }
