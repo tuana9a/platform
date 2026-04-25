@@ -10,7 +10,7 @@ resource "aws_iam_role" "upload_s3_tuana9a_com" {
       "Effect": "Allow",
       "Action": "sts:AssumeRoleWithWebIdentity",
       "Principal": {
-        "Federated": "${data.aws_iam_openid_connect_provider.github.arn}"
+        "Federated": "${aws_iam_openid_connect_provider.github.arn}"
       },
       "Condition": {
         "StringLike": {
