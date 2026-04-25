@@ -36,7 +36,7 @@ orisis:
     orisis.tuana9a.com:
       ansible_user: root
       HOST_NAME: orisis
-      haproxy_stats_enabled: false
+      haproxy_stats_enabled: true
       # DAM hell check can make cpu 100%
       upstream_servers:
         # - hostname: i-131
@@ -55,14 +55,14 @@ orisis:
         #   ip: 10.5.115.34
         #   http_port: 30080
         #   https_port: 30443
-        - hostname: i-135
-          ip: 10.5.115.35
-          http_port: 30080
-          https_port: 30443
-        - hostname: i-136
-          ip: 10.5.115.36
-          http_port: 30080
-          https_port: 30443
+        # - hostname: i-135
+        #   ip: 10.5.115.35
+        #   http_port: 30080
+        #   https_port: 30443
+        # - hostname: i-136
+        #   ip: 10.5.115.36
+        #   http_port: 30080
+        #   https_port: 30443
         - hostname: i-137
           ip: 10.5.115.37
           http_port: 30080
@@ -75,7 +75,7 @@ orisis:
         #   ip: 10.5.115.39
         #   http_port: 30080
         #   https_port: 30443
-        # - hostname: i-140
-        #   ip: 10.5.115.40
-        #   http_port: 30080
-        #   https_port: 30443
+        - hostname: i-140
+          ip: 10.5.115.40
+          http_port: 30080
+          https_port: 30443
