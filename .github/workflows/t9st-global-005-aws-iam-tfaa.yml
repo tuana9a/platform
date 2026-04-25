@@ -1,0 +1,21 @@
+name: "t9st-global-005-aws-iam"
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "t9st/global/005-aws-iam/**"
+      - ".github/workflows/t9st-global-005-aws-iam*"
+    branches:
+      - rock-n-roll
+
+jobs:
+  main:
+    permissions:
+      contents: read
+      id-token: write
+    uses: ./.github/workflows/tfaa.yml
+    with:
+      WORKING_DIR: t9st/global/005-aws-iam
+      AWS_ASSUME_ROLE: arn:aws:iam::445567113688:role/github-workflow
+    secrets: inherit

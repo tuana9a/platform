@@ -1,19 +1,18 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "001-aws-account-alias-t9st"
+    prefix = "t9st/global/006-aws-iam-terraform"
   }
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "5.29.1"
+      version = "5.28.0"
     }
     aws = {
       source  = "hashicorp/aws"
-      version = "5.24"
+      version = "5.84.0"
     }
   }
-  required_version = ">= 1.2.0"
 }
 
 provider "google" {
@@ -25,6 +24,7 @@ provider "google" {
 provider "aws" {
   region = "ap-southeast-1"
   assume_role {
-    role_arn = "arn:aws:iam::445567113688:role/OrganizationAccountAccessRole" # t9st
+    # NOTE this role is created by this stack, so it's managing itself
+    role_arn = "arn:aws:iam::${local.aws_accounts.t9st.id}:role/terraform-iam-admin"
   }
 }

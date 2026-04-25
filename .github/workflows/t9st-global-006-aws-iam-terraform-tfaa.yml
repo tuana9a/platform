@@ -1,0 +1,21 @@
+name: "t9st-global-006-aws-iam-terraform"
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "t9st/global/006-aws-iam-terraform/**"
+      - ".github/workflows/t9st-global-006-aws-iam-terraform*"
+    branches:
+      - rock-n-roll
+
+jobs:
+  main:
+    permissions:
+      contents: read
+      id-token: write
+    uses: ./.github/workflows/tfaa.yml
+    with:
+      WORKING_DIR: t9st/global/006-aws-iam-terraform
+      AWS_ASSUME_ROLE: arn:aws:iam::445567113688:role/github-workflow
+    secrets: inherit
