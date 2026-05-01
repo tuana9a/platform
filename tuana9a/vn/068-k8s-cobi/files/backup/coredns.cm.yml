@@ -4,21 +4,21 @@ data:
     .:53 {
         errors
         health {
-           lameduck 5s
+            lameduck 5s
         }
         ready
         kubernetes cluster.local in-addr.arpa ip6.arpa {
-           pods insecure
-           fallthrough in-addr.arpa ip6.arpa
-           ttl 30
+            pods insecure
+            fallthrough in-addr.arpa ip6.arpa
+            ttl 30
         }
         prometheus :9153
         forward . /etc/resolv.conf {
-           max_concurrent 1000
+            max_concurrent 1000
         }
         cache 30 {
-           disable success cluster.local
-           disable denial cluster.local
+            disable success cluster.local
+            disable denial cluster.local
         }
         loop
         reload
@@ -29,5 +29,5 @@ metadata:
   creationTimestamp: "2024-04-17T08:13:41Z"
   name: coredns
   namespace: kube-system
-  resourceVersion: "7757809397"
+  resourceVersion: "7861050653"
   uid: 59c57fba-08a0-4839-bba8-2ec9127ca349

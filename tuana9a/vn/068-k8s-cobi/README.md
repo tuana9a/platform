@@ -1,4 +1,4 @@
-# k8s-cobi-tuana9a
+# k8s-cobi
 
 ```bash
 kubeadm init \
