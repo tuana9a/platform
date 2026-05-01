@@ -1,6 +1,12 @@
+resource "kubernetes_namespace_v1" "cilium_system" {
+  metadata {
+    name = "cilium-system"
+  }
+}
+
 resource "helm_release" "cilium" {
   name      = "cilium"
-  namespace = "kube-system"
+  namespace = kubernetes_namespace_v1.cilium_system.metadata[0].name
 
   repository = "https://helm.cilium.io/"
   chart      = "cilium"
