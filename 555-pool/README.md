@@ -26,6 +26,10 @@ patronictl edit-config
 patronictl restart pg-purple pg-purple-0
 ```
 
+```bash
+patronictl failover
+```
+
 # kafka cluster
 
 powered by strimzi

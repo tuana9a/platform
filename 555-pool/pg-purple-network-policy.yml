@@ -1,0 +1,62 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: pg-purple-network-policy
+spec:
+  podSelector:
+    matchLabels:
+      cluster-name: pg-purple
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        # app: coder
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: coder
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: coder
+      ports:
+        - protocol: TCP
+          port: 5432
+    - from: # cluster member
+        - podSelector:
+            matchLabels:
+              cluster-name: pg-purple
+      ports:
+        - protocol: TCP
+          port: 5432
+        - protocol: TCP # Ex: patronictl failover
+          port: 8008
+  egress:
+    - to: # cluster member
+        - podSelector:
+            matchLabels:
+              cluster-name: pg-purple
+      ports:
+        - protocol: TCP
+          port: 5432
+        - protocol: TCP # Ex: patronictl failover
+          port: 8008
+    - to: # configuration store: built-in etcd (api-server)
+        - ipBlock:
+            cidr: 10.233.0.1/32
+      ports:
+        - protocol: TCP
+          port: 443
+---
+# cilium monitor --type drop
+#   xx drop (Policy denied) flow 0x817cd88b to endpoint 0, ifindex 191, file bpf_lxc.c:1533, , identity 16833->kube-apiserver: 10.244.4.217:38372 -> 192.168.56.22:6443 tcp SYN
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: pg-purple-allow-apiserver
+spec:
+  endpointSelector:
+    matchLabels:
+      cluster-name: pg-purple
+  egress:
+    - toEntities:
+        - kube-apiserver
