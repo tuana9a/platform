@@ -18,6 +18,13 @@ spec:
           podSelector:
             matchLabels:
               app.kubernetes.io/instance: coder
+        # cicd: jenkins
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: jenkins
+          podSelector:
+            matchLabels:
+              jenkins/jenkins-jenkins-agent: "true"
       ports:
         - protocol: TCP
           port: 5432
