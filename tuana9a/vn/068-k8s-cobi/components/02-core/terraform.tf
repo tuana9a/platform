@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "tuana9a/vn/068-k8s-cobi/components/02-cilium"
+    prefix = "tuana9a/vn/068-k8s-cobi/components/02-core"
   }
   required_providers {
     google = {
@@ -15,6 +15,10 @@ terraform {
     helm = {
       source  = "hashicorp/helm"
       version = "2.12.1"
+    }
+    external = {
+      source  = "hashicorp/external"
+      version = "2.3.5"
     }
   }
 }
