@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "072-cilum-k8s-cobi-tuana9a"
+    prefix = "tuana9a/vn/068-k8s-cobi/components/02-cilium"
   }
   required_providers {
     google = {
