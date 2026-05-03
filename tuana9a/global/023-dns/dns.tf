@@ -1,16 +1,10 @@
-resource "cloudflare_record" "OSSRH_88779" {
-  zone_id = data.cloudflare_zone.tuana9a_com.id
-  name    = "@"
-  content = "OSSRH-88779"
-  type    = "TXT"
-  ttl     = 60
-  proxied = false
-}
-
-module "dns_records" {
-  for_each = local.records
-  source   = "./modules/dns_records"
+resource "cloudflare_record" "records_v2" {
+  for_each = local.records_v2
   zone_id  = data.cloudflare_zone.tuana9a_com.id
-  name     = each.key
-  records  = each.value
+
+  type    = each.value.type
+  name    = each.value.name
+  content = each.value.content
+  ttl     = each.value.ttl
+  proxied = each.value.proxied
 }

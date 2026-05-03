@@ -1,11 +1,11 @@
-name: "023-dns"
+name: "tuana9a-global-023-dns"
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - "023-dns/**"
-      - ".github/workflows/023-dns-terraform-plan-apply*"
+      - "tuana9a/global/023-dns/**"
+      - ".github/workflows/tuana9a-global-023-dns*"
     branches:
       - rock-n-roll
 
@@ -17,6 +17,6 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       install-sops: true
-      WORKING_DIR: ${{ github.workflow }}
+      WORKING_DIR: tuana9a/global/023-dns
       AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/github-workflow
     secrets: inherit
