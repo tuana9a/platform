@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "024-email"
+    prefix = "tuana9a/global/024-email-routing"
   }
   required_providers {
     google = {
@@ -11,6 +11,10 @@ terraform {
     cloudflare = {
       source  = "cloudflare/cloudflare"
       version = "4.17.0"
+    }
+    external = {
+      source  = "hashicorp/external"
+      version = "2.3.5"
     }
   }
   required_version = ">= 1.2.0"
@@ -23,5 +27,8 @@ provider "google" {
 }
 
 provider "cloudflare" {
-  api_token = var.cloudflare_api_token
+  api_token = local.secrets.cloudflare_api_token
+}
+
+provider "external" {
 }
