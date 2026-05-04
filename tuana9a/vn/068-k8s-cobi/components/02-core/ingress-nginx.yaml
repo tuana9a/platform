@@ -4,8 +4,9 @@ controller:
     nodePorts:
       http: 30080
       https: 30443
-    # annotations:
-    #   external-dns.alpha.kubernetes.io/hostname: ingress-nginx.svc.k8s-internal.tuana9a.com
+    annotations:
+      # external-dns.alpha.kubernetes.io/hostname: ingress-nginx.svc.k8s-internal.tuana9a.com
+      metallb.io/loadBalancerIPs: 192.168.56.80
   autoscaling:
     enabled: true
     minReplicas: 3
