@@ -27,7 +27,7 @@ pipeline {
                 sh 'date +%s > /workdir/unixtimestamp'
                 echo "inventory"
                 script {
-                    inventory = readYaml file: "./068-k8s-cobi-tuana9a/inventory.yml"
+                    inventory = readYaml file: "./tuana9a/vn/068-k8s-cobi/inventory.yml"
                     inventory["k8s_cluster"]["hosts"].each { host, vars ->
                         if (vars["roles"].contains("control-plane")) {
                             def vm = [:]
