@@ -1,0 +1,23 @@
+name: "tuana9a/vn/068-k8s-cobi/components/08-ingress"
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tuana9a/vn/068-k8s-cobi/components/08-ingress/**"
+      - ".github/workflows/tuana9a-vn-068-k8s-cobi-components-08-ingress*"
+    branches:
+      - rock-n-roll
+
+jobs:
+  main:
+    permissions:
+      contents: read
+      id-token: write
+    uses: ./.github/workflows/tfaa.yml
+    with:
+      runs-on: self-hosted-0
+      install-sops: true
+      WORKING_DIR: ${{ github.workflow }}
+      AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/github-workflow
+    secrets: inherit
