@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "300-alertmanager-k8s-cobi"
+    prefix = "tuana9a/vn/068-k8s-cobi/components/14-monitoring"
   }
   required_providers {
     google = {
@@ -33,14 +33,14 @@ provider "kubernetes" {
   host                   = "https://192.168.56.21:6443"
   cluster_ca_certificate = base64decode(local.secrets.cluster_ca_certificate_b64)
 
-  token = local.secrets.token
+  token = local.secrets.cluster_auth_token
 }
 
 provider "helm" {
   kubernetes {
     host                   = "https://192.168.56.21:6443"
     cluster_ca_certificate = base64decode(local.secrets.cluster_ca_certificate_b64)
-    token                  = local.secrets.token
+    token                  = local.secrets.cluster_auth_token
   }
 }
 

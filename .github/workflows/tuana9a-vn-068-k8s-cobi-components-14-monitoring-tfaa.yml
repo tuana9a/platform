@@ -1,11 +1,11 @@
-name: "300-prometheus-pushgateway-k8s-cobi"
+name: "tuana9a/vn/068-k8s-cobi/components/14-monitoring"
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - "300-prometheus-pushgateway-k8s-cobi/**"
-      - ".github/workflows/300-prometheus-pushgateway-k8s-cobi-terraform-plan-apply*"
+      - "tuana9a/vn/068-k8s-cobi/components/14-monitoring/**"
+      - ".github/workflows/tuana9a-vn-068-k8s-cobi-components-14-monitoring*"
     branches:
       - rock-n-roll
 
@@ -17,5 +17,7 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
+      install-sops: true
       WORKING_DIR: ${{ github.workflow }}
+      AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/github-workflow
     secrets: inherit
