@@ -1,12 +1,4 @@
 loki:
-  storage:
-    bucketNames:
-      chunks: ${s3_chunks_bucket_name}
-      ruler: ${s3_ruler_bucket_name}
-  storage_config:
-    aws:
-      s3: s3://${s3_access_key_id}:${s3_secret_access_key_uri_encoded}@${s3_region}
-      bucketnames: ${s3_bucket_names}
   commonConfig:
     replication_factor: 1 # required as SingleBinary, default is 3
   schemaConfig:
@@ -40,9 +32,17 @@ singleBinary:
     storageClass: proxmox-data-xfs
     size: 10Gi
 
-# Disable minio for using aws S3
 minio:
-  enabled: false
+  enabled: true
+  persistence:
+    storageClass: proxmox-data-xfs
+    size: 25Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      memory: 512Mi
 
 # Cache config
 resultsCache:
