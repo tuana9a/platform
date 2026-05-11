@@ -1,4 +1,4 @@
-name: "atlantis-tle-global-005-aws-iam"
+name: "atlantis-tle/global/005-aws-iam"
 
 on:
   workflow_dispatch:
@@ -16,6 +16,6 @@ jobs:
       id-token: write
     uses: ./.github/workflows/tfaa.yml
     with:
-      WORKING_DIR: atlantis-tle/global/005-aws-iam
+      WORKING_DIR: ${{ github.workflow }}
       AWS_ASSUME_ROLE: arn:aws:iam::541645813908:role/github-workflow
     secrets: inherit
