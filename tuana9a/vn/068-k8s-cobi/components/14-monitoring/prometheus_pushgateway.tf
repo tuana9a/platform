@@ -11,5 +11,5 @@ resource "helm_release" "prometheus_pushgateway" {
   chart      = "prometheus-pushgateway"
   version    = "2.12.0"
 
-  values = [file("./prometheus-pushgateway.yaml")]
+  values = [file("./manifests/prometheus-pushgateway-values.yaml")]
 }

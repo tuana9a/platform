@@ -7,6 +7,6 @@ resource "helm_release" "loki" {
   version    = "6.10.2"
 
   values = [
-    templatefile("./loki.yaml", {})
+    templatefile("./manifests/loki-values.yaml", {})
   ]
 }

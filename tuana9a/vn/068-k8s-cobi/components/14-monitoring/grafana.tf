@@ -17,7 +17,7 @@ resource "helm_release" "grafana" {
   chart      = "grafana"
   version    = "10.5.8"
 
-  values = [file("./grafana.yaml")]
+  values = [file("./manifests/grafana-values.yaml")]
 }
 
 resource "kubernetes_config_map_v1" "name" {

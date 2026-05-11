@@ -29,5 +29,5 @@ resource "helm_release" "alertmanager" {
   chart      = "alertmanager"
   version    = "1.30.0"
 
-  values = [file("./alertmanager.yaml")]
+  values = [file("./manifests/alertmanager-values.yaml")]
 }
