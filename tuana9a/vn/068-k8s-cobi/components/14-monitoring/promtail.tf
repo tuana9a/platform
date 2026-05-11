@@ -6,5 +6,5 @@ resource "helm_release" "promtail" {
   chart      = "promtail"
   version    = "6.16.6"
 
-  values = [file("./promtail.yaml")]
+  values = [file("./manifests/promtail-values.yaml")]
 }

@@ -7,5 +7,5 @@ config:
   snippets:
     extraRelabelConfigs:
       - source_labels: [namespace]
-        regex: "grafana"
+        regex: "grafana|argocd"
         action: drop
