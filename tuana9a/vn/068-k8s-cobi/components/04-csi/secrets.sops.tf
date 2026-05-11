@@ -1,0 +1,1 @@
+../../../../../scripts/secrets.sops.tf

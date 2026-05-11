@@ -1,5 +1,11 @@
 # proxmox csi
 
+before removing any nodes, wait for detachment of volumes first
+
+```bash
+kubectl get volumeattachments.storage.k8s.io --no-headers | awk '{print $4}' | sort | uniq
+```
+
 # how-to
 
 ```bash

@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "165-proxmox-csi-k8s-cobi"
+    prefix = "tuana9a/vn/068-k8s-cobi/components/04-csi"
   }
   required_providers {
     google = {
@@ -20,6 +20,10 @@ terraform {
       source  = "hashicorp/helm"
       version = "2.12.1"
     }
+    external = {
+      source  = "hashicorp/external"
+      version = "2.3.5"
+    }
   }
 }
 
@@ -30,15 +34,18 @@ provider "google" {
 }
 
 provider "proxmox" {
-  endpoint  = var.pve_endpoint
-  api_token = var.pve_api_token
-  insecure  = var.pve_insecure
+  endpoint  = local.secrets.pve_endpoint
+  api_token = local.secrets.pve_api_token
+  insecure  = local.secrets.pve_insecure
 }
 
 provider "helm" {
   kubernetes {
     host                   = "https://192.168.56.21:6443"
-    cluster_ca_certificate = base64decode(var.cluster_ca_certificate_b64)
-    token                  = var.token
+    cluster_ca_certificate = base64decode(local.secrets.cluster_ca_certificate_b64)
+    token                  = local.secrets.cluster_auth_token
   }
+}
+
+provider "external" {
 }
