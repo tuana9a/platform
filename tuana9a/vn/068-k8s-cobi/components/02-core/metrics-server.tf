@@ -22,5 +22,5 @@ resource "helm_release" "metrics_server" {
   chart      = "metrics-server"
   version    = "3.12.0"
 
-  values = [file("./metrics-server.yaml")]
+  values = [file("./manifests/metrics-server-values.yaml")]
 }

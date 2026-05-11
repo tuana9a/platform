@@ -11,7 +11,7 @@ resource "helm_release" "cilium" {
   repository = "https://helm.cilium.io/"
   chart      = "cilium"
   version    = "1.19.1"
-  values     = [file("./cilium.yml")]
+  values     = [file("./manifests/cilium-values.yml")]
 
   timeout = 10 * 60
 }

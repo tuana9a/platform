@@ -17,5 +17,5 @@ resource "kubernetes_namespace_v1" "kube_flannel" {
 #   chart      = "flannel"
 #   version    = "v0.25.1"
 
-#   values = [file("./flannel.yaml")]
+#   values = [file("./manifests/flannel-values.yaml")]
 # }

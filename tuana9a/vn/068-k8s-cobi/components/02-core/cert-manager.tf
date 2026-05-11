@@ -22,5 +22,5 @@ resource "helm_release" "cert_manager" {
   chart      = "cert-manager"
   version    = "v1.15.0"
 
-  values = [file("./cert-manager.yaml")]
+  values = [file("./manifests/cert-manager-values.yaml")]
 }
