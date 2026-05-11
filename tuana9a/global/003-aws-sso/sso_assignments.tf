@@ -20,13 +20,18 @@ resource "aws_ssoadmin_account_assignment" "group_admins_t9st" {
   target_type = "AWS_ACCOUNT"
 }
 
-resource "aws_ssoadmin_account_assignment" "group_admins_Atlantis" {
+moved {
+  from = aws_ssoadmin_account_assignment.group_admins_Atlantis
+  to   = aws_ssoadmin_account_assignment.group_admins_atlantis-tle
+}
+
+resource "aws_ssoadmin_account_assignment" "group_admins_atlantis-tle" {
   instance_arn       = local.sso_arn
   permission_set_arn = aws_ssoadmin_permission_set.admin.arn
 
   principal_id   = aws_identitystore_group.admins.group_id
   principal_type = "GROUP"
 
-  target_id   = local.aws_accounts.Atlantis.id
+  target_id   = local.aws_accounts.atlantis-tle.id
   target_type = "AWS_ACCOUNT"
 }
