@@ -1,8 +1,10 @@
-- hosts: orisis
+- hosts: tuana9a-dev2
   tasks:
+    - import_tasks: ./tasks/wireguard_client.yml
+    - import_tasks: ./tasks/install_haproxy.yml
     - name: Print haproxy.cfg
       debug:
-        msg: "{{ lookup('template', './templates/orisis/haproxy.cfg') | split('\n') }}"
+        msg: "{{ lookup('template', './templates/tuana9a-dev2/haproxy.cfg') | split('\n') }}"
     - name: Confirm update
       pause:
         prompt: "Do you want to proceed with these servers? (yes/no)"
@@ -13,7 +15,7 @@
     - name: Update haproxy cfg
       become: true
       template:
-        src: "./templates/orisis/haproxy.cfg"
+        src: "./templates/tuana9a-dev2/haproxy.cfg"
         dest: "/etc/haproxy/haproxy.cfg"
     - name: Reload haproxy service
       become: true

@@ -101,6 +101,8 @@ k8s_cluster:
       wireguard_clients:
         - file: i-137.conf
           name: i-137
+          state: stopped
+          enabled: true
     192.168.56.38: &i-138
       <<: *data_plane_defaults
       nodename: i-138
@@ -111,6 +113,8 @@ k8s_cluster:
       wireguard_clients:
         - file: i-138.conf
           name: i-138
+          state: stopped
+          enabled: true
     192.168.56.40: &i-140
       <<: *data_plane_defaults
       nodename: i-140
@@ -123,3 +127,5 @@ k8s_cluster:
       wireguard_clients:
         - file: i-140.conf
           name: i-140
+          state: stopped
+          enabled: true

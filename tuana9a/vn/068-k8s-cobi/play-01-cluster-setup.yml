@@ -84,10 +84,6 @@
 
     - import_tasks: ./tasks/install_etcdcli.yml
       when: "is_control_plane"
-    - import_tasks: ./tasks/install_wireguard.yml
-      when: wireguard_clients is defined
-    - import_tasks: ./tasks/wireguard_client.yml
-      when: wireguard_clients is defined
 
     # NOTE: kubectl label node (required for csi-proxmox plugin working correctly)
     # https://github.com/sergelogvinov/proxmox-csi-plugin/blob/main/docs/install.md#prepare-kubernetes-cluster

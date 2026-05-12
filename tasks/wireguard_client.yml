@@ -1,15 +1,20 @@
-- name: Upload .conf file
+- name: Copy client config
   loop: "{{ wireguard_clients }}"
   become: true
   copy:
-    src: "{{ item.file }}"
+    content: >-
+      {{
+        lookup('community.sops.sops', item.file)
+        if item.encrypted | default(false)
+        else lookup('file', item.file)
+      }}
     dest: "/etc/wireguard/{{ item.name }}.conf"
     mode: "0644"
 
-- name: Setup wireguard service
+- name: Start wireguard service
   loop: "{{ wireguard_clients }}"
   become: true
   service:
     name: "wg-quick@{{ item.name }}"
-    state: "{{ item.state | default('restarted') }}"
+    state: "{{ item.state | default('started') }}"
     enabled: "{{ item.enabled | default('true') }}"
