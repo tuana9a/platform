@@ -22,5 +22,5 @@ resource "helm_release" "ingress_kong" {
   chart      = "kong"
   version    = "2.42.0"
 
-  values = [file("./ingress-kong.yaml")]
+  values = [file("./manifests/ingress-kong.values.yaml")]
 }

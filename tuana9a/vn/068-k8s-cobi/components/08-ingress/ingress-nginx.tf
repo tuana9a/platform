@@ -22,5 +22,5 @@ resource "helm_release" "ingress_nginx" {
   chart      = "ingress-nginx"
   version    = "4.12.1"
 
-  values = [file("./ingress-nginx.yaml")]
+  values = [file("./manifests/ingress-nginx.values.yaml")]
 }
