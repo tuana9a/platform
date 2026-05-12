@@ -11,7 +11,7 @@ resource "kubernetes_namespace_v1" "metrics_server" {
 
 import {
   to = helm_release.metrics_server
-  id = "kube-system/metrics-server"
+  id = "metrics-server/metrics-server"
 }
 
 resource "helm_release" "metrics_server" {
@@ -22,5 +22,13 @@ resource "helm_release" "metrics_server" {
   chart      = "metrics-server"
   version    = "3.12.0"
 
-  values = [file("./manifests/metrics-server-values.yaml")]
+  set {
+    name  = "replicas"
+    value = "3"
+  }
+
+  set_list {
+    name  = "args"
+    value = ["--kubelet-insecure-tls"]
+  }
 }

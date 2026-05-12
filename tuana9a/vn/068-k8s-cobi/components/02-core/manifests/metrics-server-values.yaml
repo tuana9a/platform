@@ -1,2 +1,0 @@
-replicas: 3
-args: ["--kubelet-insecure-tls"]
