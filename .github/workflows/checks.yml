@@ -7,9 +7,9 @@ on:
       - main
 
 jobs:
-  check-terraform-key:
+  check_terraform_backend_prefix:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - id: check-terraform-key
-        run: ./scripts/check_terraform_key.sh
+      - id: check_terraform_backend_prefix
+        run: ./scripts/check_terraform_backend_prefix.sh
