@@ -1,11 +1,11 @@
-name: "020-proxmox-cloudimg-neomorph"
+name: "tuana9a/vn/cobi/112-neomorph/cloudimgs"
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - "020-proxmox-cloudimg-neomorph/**"
-      - ".github/workflows/020-proxmox-cloudimg-neomorph-terraform-plan-apply*"
+      - "tuana9a/vn/cobi/112-neomorph/cloudimgs/**"
+      - ".github/workflows/tuana9a-vn-cobi-112-neomorph-cloudimgs*"
     branches:
       - rock-n-roll
 
@@ -17,6 +17,7 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
+      install-sops: true
       WORKING_DIR: ${{ github.workflow }}
-      download-secret-files: true
+      AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/github-workflow
     secrets: inherit

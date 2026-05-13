@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "020-proxmox-cloudimg-neomorph"
+    prefix = "tuana9a/vn/cobi/112-neomorph/cloudimgs"
   }
   required_providers {
     google = {
@@ -11,6 +11,10 @@ terraform {
     proxmox = {
       source  = "bpg/proxmox"
       version = "0.79.0"
+    }
+    external = {
+      source  = "hashicorp/external"
+      version = "2.3.5"
     }
   }
 }
@@ -22,7 +26,10 @@ provider "google" {
 }
 
 provider "proxmox" {
-  endpoint  = var.pve_endpoint
-  api_token = var.pve_api_token
-  insecure  = var.pve_insecure
+  endpoint  = local.secrets.pve_endpoint
+  api_token = local.secrets.pve_api_token
+  insecure  = local.secrets.pve_insecure
+}
+
+provider "external" {
 }
