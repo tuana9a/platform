@@ -73,6 +73,6 @@ resource "proxmox_virtual_environment_vm" "cluster" {
   reboot_after_update = false
 
   lifecycle {
-    ignore_changes = [initialization]
+    ignore_changes = [initialization, disk[0].file_id]
   }
 }

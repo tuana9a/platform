@@ -1,16 +1,20 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "tuana9a/vn/068-k8s-cobi/components/08-ingress"
+    prefix = "tuana9a/vn/cobi/121-anor-londo-cluster/04-csi"
   }
   required_providers {
     google = {
       source  = "hashicorp/google"
       version = "5.29.1"
     }
-    kubernetes = {
-      source  = "hashicorp/kubernetes"
-      version = "3.1.0"
+    time = {
+      source  = "hashicorp/time"
+      version = "~> 0.9.0"
+    }
+    proxmox = {
+      source  = "bpg/proxmox"
+      version = "0.89.1"
     }
     helm = {
       source  = "hashicorp/helm"
@@ -29,11 +33,10 @@ provider "google" {
   zone    = "asia-southeast1-b"
 }
 
-provider "kubernetes" {
-  host                   = "https://192.168.56.21:6443"
-  cluster_ca_certificate = base64decode(local.secrets.cluster_ca_certificate_b64)
-
-  token = local.secrets.cluster_auth_token
+provider "proxmox" {
+  endpoint  = local.secrets.pve_endpoint
+  api_token = local.secrets.pve_api_token
+  insecure  = local.secrets.pve_insecure
 }
 
 provider "helm" {

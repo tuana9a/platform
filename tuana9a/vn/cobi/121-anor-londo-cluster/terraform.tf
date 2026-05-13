@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "tuana9a/vn/068-k8s-cobi"
+    prefix = "tuana9a/vn/cobi/121-anor-londo-cluster"
   }
   required_providers {
     google = {

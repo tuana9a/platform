@@ -1,11 +1,11 @@
-name: "tuana9a/vn/068-k8s-cobi/components/02-network"
+name: "tuana9a/vn/cobi/121-anor-londo-cluster/24-security"
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - "tuana9a/vn/068-k8s-cobi/components/02-network/**"
-      - ".github/workflows/tuana9a-vn-068-k8s-cobi-components-02-network*"
+      - "tuana9a/vn/cobi/121-anor-londo-cluster/24-security/**"
+      - ".github/workflows/tuana9a-vn-cobi-121-anor-londo-cluster-24-security-tfaa*"
     branches:
       - rock-n-roll
 

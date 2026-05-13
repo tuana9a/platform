@@ -13,14 +13,6 @@ DO_NOT_USE: # NOTE: storing common variables
       kubevip: &kubevip
         inf: eth0
         vip: 192.168.56.21
-      authorized_keys: &authorized_keys
-        - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN6bF/SOzb1XD4qo0LaZ5PVa1sCijDyQS/8oHZe9x6R5"
-          comment: "ci"
-          user: root
-          state: absent
-        - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN6bF/SOzb1XD4qo0LaZ5PVa1sCijDyQS/8oHZe9x6R5"
-          comment: "ci"
-          user: u
       kubernetes_major_version: &kubernetes_major_version "1.33"
       kubernetes_minor_version: &kubernetes_minor_version "1.33.10"
       cluster_ops: &cluster_ops
@@ -32,7 +24,7 @@ DO_NOT_USE: # NOTE: storing common variables
         remove_hosts:
           - 192.168.56.39
       gateway_ip: &gateway_ip 192.168.56.1
-      cloudimg: &cloudimg debian-12-generic-amd64-20251129-2311.img
+      cloudimg: &cloudimg debian-12-generic-amd64-20251129.img
 
       k8s_node_defaults: &k8s_node_defaults
         ansible_user: u
@@ -41,10 +33,7 @@ DO_NOT_USE: # NOTE: storing common variables
         cloudimg: *cloudimg
         pve_network_device: "vmbr0"
         gateway_ip: *gateway_ip
-        authorized_keys: *authorized_keys
-        # ----
         cluster_ops: *cluster_ops
-        # ----
         kubernetes_major_version: *kubernetes_major_version
         kubernetes_minor_version: *kubernetes_minor_version
 

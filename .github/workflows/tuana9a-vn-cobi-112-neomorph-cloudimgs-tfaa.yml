@@ -5,7 +5,7 @@ on:
   push:
     paths:
       - "tuana9a/vn/cobi/112-neomorph/cloudimgs/**"
-      - ".github/workflows/tuana9a-vn-cobi-112-neomorph-cloudimgs*"
+      - ".github/workflows/tuana9a-vn-cobi-112-neomorph-cloudimgs-tfaa*"
     branches:
       - rock-n-roll
 

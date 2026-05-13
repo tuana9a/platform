@@ -35,8 +35,6 @@
         dest: /opt/kubesetup_completed
         content: "yes"
 
-    - import_tasks: ./tasks/authorized_keys.yml
-
     # ----------------
     # | join cluster |
     # ----------------
