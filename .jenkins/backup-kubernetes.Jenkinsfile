@@ -27,7 +27,11 @@ pipeline {
                 sh 'date +%s > /workdir/unixtimestamp'
                 echo "inventory"
                 script {
-                    inventory = readYaml file: "./tuana9a/vn/068-k8s-cobi/inventory.yml"
+                    env.BACKUP_DATE = sh(script: "date +%Y/%m/%d", returnStdout: true).trim()
+                    env.S3_OBJECT_KEY_PREFIX = "anor-londo-cluster/${env.BACKUP_DATE}"
+                }
+                script {
+                    inventory = readYaml file: "./tuana9a/vn/cobi/121-anor-londo-cluster/inventory.yml"
                     inventory["k8s_cluster"]["hosts"].each { host, vars ->
                         if (vars["roles"].contains("control-plane")) {
                             def vm = [:]
@@ -104,7 +108,7 @@ pipeline {
                             sh '''
                             set +x
                             . $K8S_BACKUP_ENV_FILE
-                            /devops/tools/aws-cli/v2/2.34.32/dist/aws s3api --endpoint-url $S3_ENDPOINT put-object --bucket $BUCKET_NAME --key k8s-backup/$(cat /workdir/datehour)/''' + nodename + '''.tar.gz --body /workdir/''' + nodename + '''.tar.gz
+                            /devops/tools/aws-cli/v2/2.34.32/dist/aws s3api --endpoint-url $S3_ENDPOINT put-object --bucket $BUCKET_NAME --key $S3_OBJECT_KEY_PREFIX/''' + nodename + '''.tar.gz --body /workdir/''' + nodename + '''.tar.gz
                             '''
                         }
                     }
@@ -148,7 +152,7 @@ pipeline {
                         1) status_msg="ok" ;;
                         *) status_msg="fuck" ;;
                     esac
-                    MSG="$status_msg backup-kubernetes $(cat /workdir/datehour)-k8s-backup-{''' + nodenames + '''}.tar.gz $(cat /workdir/duration_pretty.txt) $BUILD_URL"
+                    MSG="$status_msg backup $S3_OBJECT_KEY_PREFIX/{''' + nodenames + '''}.tar.gz $(cat /workdir/duration_pretty.txt) $BUILD_URL"
                     curl -sS -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
                         -d parse_mode="markdown" \
                         -d chat_id="$TELEGRAM_CHAT_ID" \
