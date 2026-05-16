@@ -32,12 +32,11 @@ pipeline {
                         $VAULT_ADDR/v1/auth/token/renew-self
                     '''
                 }
-                sh 'echo yes > /workdir/ruok'
             }
         }
         stage('finally') {
             steps {
-                echo "dummy"
+                sh 'echo yes > /workdir/ruok'
             }
         }
     }
@@ -56,7 +55,7 @@ pipeline {
                     'yes') status_msg="ok" ;;
                     *) status_msg="fuck" ;;
                 esac
-                MSG="$status_msg vault-secret-store-token-renew $(($DURATION / 60))m$(($DURATION % 60))s $BUILD_URL"
+                MSG="$status_msg vault-token-renew $(($DURATION / 60))m$(($DURATION % 60))s $BUILD_URL"
                 curl -sS -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
                     -d chat_id="$TELEGRAM_CHAT_ID" \
                     -d text="$MSG"

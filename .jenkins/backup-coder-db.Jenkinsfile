@@ -10,9 +10,11 @@ pipeline {
     stages {
         stage('prepare') {
             steps {
-                echo 'set-params'
                 script {
-                    env.JOB_STATUS = "start"
+                    env.JOB_STATUS = "prepare"
+                }
+                sh 'date "+%Y%m%d%H" > /workdir/datehour'
+                script {
                     env.START_TIME = sh(script: "date +%s", returnStdout: true).trim()
                     env.BACKUP_DATE = sh(script: "date +%Y/%m/%d", returnStdout: true).trim()
                     env.S3_OBJECT_KEY = "coder-db/${env.BACKUP_DATE}/dump.sql.tar.gz"
@@ -22,6 +24,9 @@ pipeline {
         }
         stage('backup') {
             steps {
+                script {
+                    env.JOB_STATUS = "backup"
+                }
                 withCredentials([
                     file(credentialsId: 'backup-coder-db.env', variable: 'BACKUP_CODER_DB_ENV_FILE')
                 ]) {
@@ -48,16 +53,15 @@ pipeline {
                         aws s3api --endpoint-url ${S3_ENDPOINT} put-object --bucket ${BUCKET_NAME} --key $S3_OBJECT_KEY --body /workdir/dump.sql.tar.gz
                         '''
                     }
-                    echo "completed"
-                    script {
-                        env.JOB_STATUS = "completed"
-                    }
                 }
             }
         }
         stage('finally') {
             steps {
-                echo 'dummy'
+                echo "completed"
+                script {
+                    env.JOB_STATUS = "completed"
+                }
             }
         }
     }
@@ -71,7 +75,7 @@ pipeline {
                 script {
                     env.STOP_TIME = sh(script: "date +%s", returnStdout: true).trim()
                     env.DURATION = env.STOP_TIME.toLong() - env.START_TIME.toLong()
-                    echo "${env.STOP_TIME} - ${env.START_TIME} = ${env.DURATION}"
+                    echo "duration: ${env.STOP_TIME} - ${env.START_TIME} = ${env.DURATION}"
                 }
                 sh '''
                 set +x
@@ -80,7 +84,7 @@ pipeline {
                     "completed") status_msg="ok" ;;
                     *) status_msg="fuck" ;;
                 esac
-                MSG="$status_msg backup-coder-db $JOB_STATUS $(($DURATION / 60))m$(($DURATION % 60))s $BUILD_URL $S3_OBJECT_KEY"
+                MSG="$status_msg backup $S3_OBJECT_KEY $(($DURATION / 60))m$(($DURATION % 60))s $BUILD_URL"
                 set +x
                 curl -sS -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
                     -d chat_id="$TELEGRAM_CHAT_ID" \
@@ -90,10 +94,10 @@ pipeline {
                 set +x
                 . $BACKUP_CODER_DB_ENV_FILE
                 cat << EOF > /workdir/backup.metrics
+# TYPE k8s_backup_datehour counter
+k8s_backup_datehour_count{namespace="$POD_NAMESPACE"} $(cat /workdir/datehour)
 # TYPE postgres_backup_duration gauge
 postgres_backup_duration{host="$PG_HOST", database="$PG_DATABASE"} $DURATION
-# TYPE postgres_backup_unixtimestamp gauge
-postgres_backup_unixtimestamp{host="$PG_HOST", database="$PG_DATABASE"} $STOP_TIME
 EOF
                 cat /workdir/backup.metrics
                 push_gateway_baseurl="http://prometheus-pushgateway.prometheus.svc.cluster.local:9091"

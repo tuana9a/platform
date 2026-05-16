@@ -23,8 +23,6 @@ pipeline {
                 sh 'echo 0 > /workdir/status'
                 sh 'date +%s > /workdir/start.time'
                 sh 'date "+%Y%m%d%H" > /workdir/datehour'
-                sh 'date "+%H%M%S" > /workdir/hourminutesecond'
-                sh 'date +%s > /workdir/unixtimestamp'
                 echo "inventory"
                 script {
                     env.BACKUP_DATE = sh(script: "date +%Y/%m/%d", returnStdout: true).trim()
@@ -128,17 +126,16 @@ pipeline {
         always {
             echo 'set-params'
             sh 'date +%s > /workdir/stop.time'
+            sh '''
+            START_TIME=$(cat "/workdir/start.time")
+            STOP_TIME=$(cat "/workdir/stop.time")
+            DURATION=$((STOP_TIME - START_TIME))
+            DURATION_PRETTY="$(($DURATION / 60))m$(($DURATION % 60))s"
+            echo $DURATION > /workdir/duration.time
+            echo $DURATION_PRETTY > /workdir/duration_pretty.txt
+            '''
             echo 'notify'
             script {
-                sh '''
-                START_TIME=$(cat "/workdir/start.time")
-                STOP_TIME=$(cat "/workdir/stop.time")
-                DURATION=$((STOP_TIME - START_TIME))
-                DURATION_PRETTY="$(($DURATION / 60))m$(($DURATION % 60))s"
-                echo $DURATION > /workdir/duration.time
-                echo $DURATION_PRETTY > /workdir/duration_pretty.txt
-                '''
-
                 def nodenames = vms.collect { it["nodename"] } .join(",")
 
                 withCredentials([
@@ -163,12 +160,10 @@ pipeline {
                 push_gateway_baseurl="http://prometheus-pushgateway.prometheus.svc.cluster.local:9091";
                 POD_NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace);
                 cat << EOF | curl -sS --noproxy '*' --data-binary @- $push_gateway_baseurl/metrics/job/k8s_backup_cronjob
-# TYPE k8s_backup_datehour gauge
-k8s_backup_datehour{namespace="$POD_NAMESPACE"} $(cat /workdir/datehour)
+# TYPE k8s_backup_datehour counter
+k8s_backup_datehour_count{namespace="$POD_NAMESPACE"} $(cat /workdir/datehour)
 # TYPE k8s_backup_duration gauge
 k8s_backup_duration{namespace="$POD_NAMESPACE"} $(cat /workdir/duration.time)
-# TYPE k8s_backup_unixtimestamp gauge
-k8s_backup_unixtimestamp{namespace="$POD_NAMESPACE"} $(cat /workdir/unixtimestamp)
 EOF
                 '''
             }

@@ -16,8 +16,9 @@ pipeline {
             steps {
                 echo 'set-params'
                 sh 'date +%s > /workdir/start.time'
+                sh 'date "+%Y%m%d%H" > /workdir/datehour'
                 sh 'echo no > /workdir/ruok'
-                sh 'OBJECT_KEY="vault/$(date +"%Y%m%d%H")/vault.snap.tar.gz" && echo $OBJECT_KEY > /workdir/object_key'
+                sh 'OBJECT_KEY="vault/$(date +"%Y/%m/%d/%H")/vault.snap.tar.gz" && echo $OBJECT_KEY > /workdir/object_key'
             }
         }
         stage('vault') {
@@ -49,21 +50,27 @@ pipeline {
                     OBJECT_KEY=$(cat /workdir/object_key)
                     /devops/tools/aws-cli/v2/2.34.32/dist/aws s3api --endpoint-url ${S3_ENDPOINT} put-object --bucket ${BUCKET_NAME} --key $OBJECT_KEY --body /workdir/vault.snap.tar.gz
                     '''
-
-                    echo "upload completed"
-                    sh 'echo yes > /workdir/ruok'
                 }
             }
         }
         stage('finally') {
             steps {
-                echo "dummy"
+                echo "completed"
+                sh 'echo yes > /workdir/ruok'
             }
         }
     }
     post {
         always {
             sh 'date +%s > /workdir/stop.time'
+            sh '''
+            START_TIME=$(cat "/workdir/start.time")
+            STOP_TIME=$(cat "/workdir/stop.time")
+            DURATION=$((STOP_TIME - START_TIME))
+            DURATION_PRETTY="$(($DURATION / 60))m$(($DURATION % 60))s"
+            echo $DURATION > /workdir/duration.time
+            echo $DURATION_PRETTY > /workdir/duration_pretty.txt
+            '''
             withCredentials([
                 string(credentialsId: 'TELEGRAM_CHAT_ID', variable: 'TELEGRAM_CHAT_ID'),
                 string(credentialsId: 'TELEGRAM_BOT_TOKEN', variable: 'TELEGRAM_BOT_TOKEN'),
@@ -71,20 +78,27 @@ pipeline {
                 sh '''
                 set +x
                 . $VAULT_BACKUP_ENV_FILE
-                START_TIME=$(cat "/workdir/start.time")
-                STOP_TIME=$(cat "/workdir/stop.time")
-                DURATION=$((STOP_TIME - START_TIME))
                 OBJECT_KEY=$(cat /workdir/object_key)
                 case "$(cat /workdir/ruok)" in
                     "yes") status_msg="ok" ;;
                     *) status_msg="fuck" ;;
                 esac
-                MSG="$status_msg vault-backup $OBJECT_KEY $(($DURATION / 60))m$(($DURATION % 60))s $BUILD_URL"
+                MSG="$status_msg backup $OBJECT_KEY $(cat /workdir/duration_pretty.txt) $BUILD_URL"
                 curl -sS -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
                     -d chat_id="$TELEGRAM_CHAT_ID" \
                     -d text="$MSG"
                 '''
             }
+            sh '''
+            push_gateway_baseurl="http://prometheus-pushgateway.prometheus.svc.cluster.local:9091";
+            POD_NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace);
+            cat << EOF | curl -sS --noproxy '*' --data-binary @- $push_gateway_baseurl/metrics/job/k8s_backup_cronjob
+# TYPE k8s_backup_datehour counter
+k8s_backup_datehour_count{namespace="$POD_NAMESPACE"} $(cat /workdir/datehour)
+# TYPE k8s_backup_duration gauge
+k8s_backup_duration{namespace="$POD_NAMESPACE"} $(cat /workdir/duration.time)
+EOF
+            '''
         }
     }
 }
