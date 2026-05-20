@@ -8,6 +8,15 @@ sum by (namespace) (count_over_time({namespace=~".+"} [1h]))
 
 # prometheus
 
+```promql
+sum(
+  container_memory_working_set_bytes{
+    namespace=~"kube-system|cert-manager|cilium-system|csi-proxmox|ingress-nginx|metrics-server|grafana|prometheus",
+    container!=""
+  }
+) by (namespace) / 1e6
+```
+
 ```bash
 kubectl -n prometheus port-forward svc/prometheus-server --address ${address:-0.0.0.0} ${port:-9090}:80
 ```
