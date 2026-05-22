@@ -26,7 +26,7 @@ pipeline {
 
                 echo "inventory"
                 script {
-                    inventory = readYaml file: "./068-k8s-cobi-tuana9a/inventory.yml"
+                    inventory = readYaml file: "./tuana9a/vn/cobi/121-anor-londo-cluster/inventory.yml"
                     inventory["k8s_cluster"]["hosts"].each { host, vars ->
                         if (!vars["roles"].contains("control-plane")) {
                             return

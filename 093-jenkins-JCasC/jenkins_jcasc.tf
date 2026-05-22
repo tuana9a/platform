@@ -4,6 +4,27 @@ resource "kubernetes_manifest" "jcasc" {
   manifest = yamldecode(file("./manifests/${each.key}"))
 }
 
+resource "kubernetes_config_map" "jcasc_jobs" {
+  metadata {
+    namespace = "jenkins"
+    name      = "jcasc-jobs"
+
+    labels = {
+      "jenkins-jenkins-config" = "true"
+    }
+  }
+
+  data = {
+    "jobs.yaml" = yamlencode({
+      jobs = [
+        {
+          script = file("./generated/jobs.groovy")
+        }
+      ]
+    })
+  }
+}
+
 resource "kubernetes_config_map" "jcasc_securityrealm" {
   metadata {
     name      = "jcasc-securityrealm"

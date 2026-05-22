@@ -21,36 +21,27 @@ for filepath in filepaths:
   hex_digest = hasher.hexdigest()
   unique_id = int(hex_digest, 16)
 
-  tmpl = """          multibranchPipelineJob('""" + nameonly + """') {
-            branchSources {
-              git {
-                // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
-                id('""" + str(unique_id) + """')
-                remote('https://github.com/tuana9a/platform.git')
-                includes('rock-n-roll')
-              }
-            }
-            factory {
-              workflowBranchProjectFactory {
-                scriptPath('.jenkins/""" + nameonly + """.Jenkinsfile')
-              }
-            }
-          }
+  tmpl = """
+multibranchPipelineJob('""" + nameonly + """') {
+  branchSources {
+    git {
+      // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
+      id('""" + str(unique_id) + """')
+      remote('https://github.com/tuana9a/platform.git')
+      includes('rock-n-roll')
+    }
+  }
+  factory {
+    workflowBranchProjectFactory {
+      scriptPath('.jenkins/""" + nameonly + """.Jenkinsfile')
+    }
+  }
+}
 """
   body += tmpl
   i = i + 1
 
-header = """apiVersion: v1
-kind: ConfigMap
-metadata:
-  namespace: jenkins
-  name: jcasc-jobs
-  labels:
-    jenkins-jenkins-config: "true"
-data:
-  jobs.yaml: |
-    jobs:
-      - script: |
+header = f"""// {" ".join(sys.argv)}
 """
 
 content = header + body
