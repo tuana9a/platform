@@ -19,7 +19,7 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev2" {
   }
 
   memory {
-    dedicated = 6144
+    dedicated = 4096
     floating  = 0
   }
 
