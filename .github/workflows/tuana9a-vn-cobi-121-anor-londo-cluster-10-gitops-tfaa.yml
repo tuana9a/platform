@@ -1,11 +1,11 @@
-name: "092-jenkins"
+name: "tuana9a/vn/cobi/121-anor-londo-cluster/10-gitops"
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - "092-jenkins/**"
-      - ".github/workflows/092-jenkins-terraform-plan-apply*"
+      - "tuana9a/vn/cobi/121-anor-londo-cluster/10-gitops/**"
+      - ".github/workflows/tuana9a-vn-cobi-121-anor-londo-cluster-10-gitops-tfaa*"
     branches:
       - rock-n-roll
 
