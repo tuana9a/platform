@@ -1,0 +1,18 @@
+appearance:
+  themeManager:
+    disableUserThemes: true
+    theme: "darkSystem" # use 'dark' for forcing the dark theme regardless of OS settings
+unclassified:
+  timestamper:
+    allPipelines: true
+jenkins:
+  authorizationStrategy:
+    projectMatrix:
+      entries:
+        - user:
+            name: anonymous
+            permissions: []
+        - user:
+            name: tuana9a@gmail.com
+            permissions:
+              - Overall/Administer
