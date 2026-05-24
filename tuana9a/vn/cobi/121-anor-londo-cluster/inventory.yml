@@ -20,11 +20,11 @@ DO_NOT_USE: # NOTE: storing common variables
         # - getting kube_pki
         # - kube join command
         # each data node having this variable will be able to reference control plane via hostvars, example: "hostvars[cluster_ops.host].kube_join_command"
-        host: 192.168.56.22
+        host: 192.168.56.25
         remove_hosts:
-          - 192.168.56.39
+          - 192.168.56.22
       gateway_ip: &gateway_ip 192.168.56.1
-      cloudimg: &cloudimg debian-12-generic-amd64-20251129.img
+      cloudimg: &cloudimg debian-12-generic-amd64-20260510-2474.img
 
       k8s_node_defaults: &k8s_node_defaults
         ansible_user: u
@@ -54,30 +54,35 @@ DO_NOT_USE: # NOTE: storing common variables
 k8s_cluster:
   hosts:
     # --- CONTROL PLANE ---
-    192.168.56.22: &i-122
+    192.168.56.25: &i-125
       <<: *control_plane_defaults
-      vmid: 122
-      nodename: i-122
+      vmid: 125
       pve_node: "engineer"
+      nodename: i-125
       upgrade:
         batch: batch1
         skip_phases: ["kube-proxy"] # TODO: test this next time
-    192.168.56.23: &i-123
+      corecount: 2
+      memsize: 6144
+    192.168.56.26: &i-126
       <<: *control_plane_defaults
-      vmid: 123
+      vmid: 126
       pve_node: "engineer"
-      nodename: i-123
+      nodename: i-126
       upgrade:
         batch: batch2
         skip_phases: ["kube-proxy"] # TODO: test this next time
-    192.168.56.24: &i-124
+      corecount: 2
+      memsize: 6144
+    192.168.56.27: &i-127
       <<: *control_plane_defaults
-      vmid: 124
-      pve_node: "engineer"
-      nodename: i-124
+      vmid: 127
+      nodename: i-127
       upgrade:
         batch: batch3
         skip_phases: ["kube-proxy"] # TODO: test this next time
+      corecount: 2
+      memsize: 6144
 
     # --- DATA PLANE ---
     192.168.56.37: &i-137
