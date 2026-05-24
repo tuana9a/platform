@@ -13,7 +13,7 @@ spec:
         app: paste
     spec:
       containers:
-        - image: tuana9a/paste-go:2.0.0
+        - image: tuana9a/paste-go:git-9021772f
           name: paste
           env:
             - name: BIND
@@ -23,10 +23,9 @@ spec:
           resources:
             requests:
               memory: "250Mi"
-              cpu: "250m"
+              cpu: "50m"
             limits:
               memory: "300Mi"
-              cpu: "300m"
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -36,25 +35,6 @@ spec:
           livenessProbe:
             tcpSocket:
               port: 8080
----
-# apiVersion: autoscaling/v2
-# kind: HorizontalPodAutoscaler
-# metadata:
-#   name: paste
-# spec:
-#   scaleTargetRef:
-#     apiVersion: apps/v1
-#     kind: Deployment
-#     name: paste
-#   minReplicas: 1
-#   maxReplicas: 5
-#   metrics:
-#     - type: Resource
-#       resource:
-#         name: cpu
-#         target:
-#           type: Utilization
-#           averageUtilization: 80
 ---
 apiVersion: v1
 kind: Service
