@@ -1,39 +1,75 @@
-apiVersion: serving.knative.dev/v1
-kind: Service
+---
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: uuid
-  namespace: stuffs
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: uuid
   template:
+    metadata:
+      labels:
+        app: uuid
     spec:
       containers:
-        - image: tuana9a/uuid:git-af287c15e3b164a81fcf36e6a679c12d190d4cbe # break: migrate to golang
+        - image: tuana9a/uuid:git-af287c15e3b164a81fcf36e6a679c12d190d4cbe
+          name: uuid
           env:
             - name: BIND
               value: "0.0.0.0"
+            - name: PORT
+              value: "8080"
+          resources:
+            requests:
+              memory: "10Mi"
+              cpu: "5m"
+            limits:
+              memory: "10Mi"
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: "/"
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: uuid
+spec:
+  selector:
+    app: uuid
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      name: http
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: uuid
-  namespace: stuffs
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - uuid.stuffs.kn.tuana9a.com
-      secretName: uuid-stuffs-kn-tuana9a-com-tls
+        - uuid.tuana9a.com
+      secretName: uuid-tuana9a-com-tls
   rules:
-    - host: uuid.stuffs.kn.tuana9a.com
+    - host: uuid.tuana9a.com
       http:
         paths:
-          - pathType: Prefix
-            path: "/"
+          - path: /
+            pathType: Prefix
             backend:
               service:
-                name: forward-kourier
+                name: uuid
                 port:
-                  number: 80
+                  number: 8080
