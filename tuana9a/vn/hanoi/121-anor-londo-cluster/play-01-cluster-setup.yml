@@ -80,6 +80,10 @@
         dest: /opt/kubejoined_completed
         content: "yes"
 
+    # ----------------
+    # | other stuffs |
+    # ----------------
+
     - import_tasks: ./tasks/install_etcdcli.yml
       when: "is_control_plane"
 

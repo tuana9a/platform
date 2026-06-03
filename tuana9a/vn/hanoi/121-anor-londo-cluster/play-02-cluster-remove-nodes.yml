@@ -34,10 +34,16 @@
         k8s_node_name: "{{ item.nodename }}"
 
     - include_tasks: ./tasks/etcd_member_remove.yml
-      when: "{{ is_control_plane and is_cluster_ops_host and (item.is_control_plane) }}"
+      when: "is_control_plane and is_cluster_ops_host and item.is_control_plane"
       loop: "{{ remove_nodes }}"
       vars:
         k8s_node_name: "{{ item.nodename }}"
+
+    - name: Pause kubectl delete node
+      when: "is_control_plane and is_cluster_ops_host"
+      pause:
+        prompt: "Continue kubectl delete node? (type anything)"
+      register: continue_delete_node
 
     - include_tasks: ./tasks/kubectl_delete_node.yml
       when: "is_control_plane and is_cluster_ops_host"
