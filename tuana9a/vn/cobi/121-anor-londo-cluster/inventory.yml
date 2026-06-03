@@ -22,7 +22,7 @@ DO_NOT_USE: # NOTE: storing common variables
         # each data node having this variable will be able to reference control plane via hostvars, example: "hostvars[cluster_ops.host].kube_join_command"
         host: 192.168.56.25
         remove_hosts:
-          - 192.168.56.22
+          - 192.168.56.40
       gateway_ip: &gateway_ip 192.168.56.1
       cloudimg: &cloudimg debian-12-generic-amd64-20260510-2474.img
 
@@ -107,19 +107,5 @@ k8s_cluster:
       wireguard_clients:
         - file: i-138.conf
           name: i-138
-          state: stopped
-          enabled: true
-    192.168.56.40: &i-140
-      <<: *data_plane_defaults
-      nodename: i-140
-      vmid: 140
-      corecount: 4
-      memsize: 8192
-      upgrade:
-        batch: batch5
-        skip_phases: ["kube-proxy"]
-      wireguard_clients:
-        - file: i-140.conf
-          name: i-140
           state: stopped
           enabled: true
