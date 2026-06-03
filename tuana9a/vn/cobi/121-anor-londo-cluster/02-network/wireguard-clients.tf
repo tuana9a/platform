@@ -65,7 +65,7 @@ resource "kubernetes_deployment_v1" "wireguard_client" {
 
         container {
           name  = "wireguard-client"
-          image = "lscr.io/linuxserver/wireguard:latest"
+          image = "lscr.io/linuxserver/wireguard:1.0.20250521-r1-ls113"
 
           # Keep the pod alive; the tunnel was started in the init container
           # The entrypoint script:
