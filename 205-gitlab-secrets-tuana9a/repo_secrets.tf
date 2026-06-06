@@ -6,4 +6,3 @@ module "repo_secrets" {
   repo_name    = each.key
   repo_secrets = local.repo_secrets[each.key]
 }
-
