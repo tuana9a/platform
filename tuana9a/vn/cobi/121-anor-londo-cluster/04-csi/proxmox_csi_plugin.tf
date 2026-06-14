@@ -36,11 +36,25 @@ resource "proxmox_virtual_environment_user_token" "kubernetes_csi" {
   privileges_separation = false
 }
 
+import {
+  to = kubernetes_namespace_v1.csi_proxmox
+  id = "csi-proxmox"
+}
+
+resource "kubernetes_namespace_v1" "csi_proxmox" {
+  metadata {
+    name = "csi-proxmox"
+  }
+}
+
+import {
+  to = helm_release.proxmox_csi_plugin
+  id = "csi-proxmox/proxmox-csi-plugin"
+}
+
 resource "helm_release" "proxmox_csi_plugin" {
   name      = "proxmox-csi-plugin"
-  namespace = "csi-proxmox"
-
-  create_namespace = true
+  namespace = kubernetes_namespace_v1.csi_proxmox.metadata[0].name
 
   repository = "oci://ghcr.io/sergelogvinov/charts"
   chart      = "proxmox-csi-plugin"

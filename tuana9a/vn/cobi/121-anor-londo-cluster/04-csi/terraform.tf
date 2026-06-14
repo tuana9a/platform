@@ -16,9 +16,13 @@ terraform {
       source  = "bpg/proxmox"
       version = "0.89.1"
     }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "3.2.0"
+    }
     helm = {
       source  = "hashicorp/helm"
-      version = "2.12.1"
+      version = "3.2.0"
     }
     external = {
       source  = "hashicorp/external"
@@ -39,8 +43,15 @@ provider "proxmox" {
   insecure  = local.secrets.pve_insecure
 }
 
+provider "kubernetes" {
+  host                   = "https://192.168.56.21:6443"
+  cluster_ca_certificate = base64decode(local.secrets.cluster_ca_certificate_b64)
+
+  token = local.secrets.cluster_auth_token
+}
+
 provider "helm" {
-  kubernetes {
+  kubernetes = {
     host                   = "https://192.168.56.21:6443"
     cluster_ca_certificate = base64decode(local.secrets.cluster_ca_certificate_b64)
     token                  = local.secrets.cluster_auth_token
