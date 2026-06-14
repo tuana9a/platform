@@ -29,6 +29,7 @@ resource "kubernetes_secret_v1" "orisis_clients" {
     # Key name becomes the filename when mounted as a volume
     "orisis-0.conf" = local.secrets.wireguard.client_configs["k8s-cobi-6.conf"]
     "orisis-1.conf" = local.secrets.wireguard.client_configs["k8s-cobi-7.conf"]
+    "orisis-2.conf" = local.secrets.wireguard.client_configs["k8s-cobi-5.conf"]
   }
 }
 
@@ -57,6 +58,33 @@ resource "kubernetes_stateful_set_v1" "orisis" {
       }
 
       spec {
+        affinity {
+          pod_anti_affinity {
+            required_during_scheduling_ignored_during_execution {
+              label_selector {
+                match_expressions {
+                  key      = "app"
+                  operator = "In"
+                  values   = ["orisis"]
+                }
+              }
+              topology_key = "kubernetes.io/hostname"
+            }
+          }
+        }
+
+        # NOTE: using topology_spread_constraint for better performance on large deployment
+        # topology_spread_constraint {
+        #   max_skew           = 1
+        #   topology_key       = "kubernetes.io/hostname"
+        #   when_unsatisfiable = "DoNotSchedule"
+        #   label_selector {
+        #     match_labels = {
+        #       app = "orisis"
+        #     }
+        #   }
+        # }
+
         host_network = true
 
         container {
