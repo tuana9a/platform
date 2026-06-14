@@ -14,7 +14,6 @@ tuana9a's platform
 - `haproxy`: lb
 - `nginx`: ingress, lb, web
 - `vault`: secret manager
-- `knative`: serverless
 - `k8s`: infra
 - `flannel`: k8s cni
 - `metallb`: k8s lb
@@ -55,7 +54,6 @@ graph TB
     165-proxmox-csi --> 300-loki[loki]
     165-proxmox-csi --> 300-prometheus[prometheus]
 
-    090-argocd --> 210-knative[knative]
     090-argocd --> 093-jenkins-jcasc[jcasc]
     090-argocd --> 555-pool[pool]
 
