@@ -8,7 +8,6 @@ locals {
   }
 }
 
-
 resource "kubernetes_namespace_v1" "wireguard" {
   metadata {
     name   = "wireguard"
@@ -16,9 +15,9 @@ resource "kubernetes_namespace_v1" "wireguard" {
   }
 }
 
-resource "kubernetes_secret_v1" "wireguard_client_configs" {
+resource "kubernetes_secret_v1" "orisis_clients" {
   metadata {
-    name      = "wireguard-client-configs"
+    name      = "orisis-clients"
     namespace = kubernetes_namespace_v1.wireguard.metadata[0].name
     labels    = local.wireguard.labels
   }
@@ -28,35 +27,32 @@ resource "kubernetes_secret_v1" "wireguard_client_configs" {
 
   data = {
     # Key name becomes the filename when mounted as a volume
-    "k8s-cobi-5.conf" = local.secrets.wireguard.client_configs["k8s-cobi-5.conf"]
+    "orisis-0.conf" = local.secrets.wireguard.client_configs["k8s-cobi-6.conf"]
+    "orisis-1.conf" = local.secrets.wireguard.client_configs["k8s-cobi-7.conf"]
   }
 }
 
-resource "kubernetes_deployment_v1" "wireguard_client" {
+resource "kubernetes_stateful_set_v1" "orisis" {
   metadata {
-    name      = "wireguard-client"
+    name      = "orisis"
     namespace = kubernetes_namespace_v1.wireguard.metadata[0].name
     labels    = local.wireguard.labels
   }
 
   spec {
-    replicas = 1
-
-    # WireGuard is stateful – rolling update keeps a single active tunnel
-    strategy {
-      type = "Recreate"
-    }
+    service_name = "wg"
+    replicas     = 2
 
     selector {
       match_labels = {
-        app = "wireguard-client"
+        app = "orisis"
       }
     }
 
     template {
       metadata {
         labels = {
-          app = "wireguard-client"
+          app = "orisis"
         }
       }
 
@@ -64,7 +60,7 @@ resource "kubernetes_deployment_v1" "wireguard_client" {
         host_network = true
 
         container {
-          name  = "wireguard-client"
+          name  = "wireguard"
           image = "lscr.io/linuxserver/wireguard:1.0.20250521-r1-ls113"
 
           # Keep the pod alive; the tunnel was started in the init container
@@ -81,19 +77,46 @@ resource "kubernetes_deployment_v1" "wireguard_client" {
               set -e
               cleanup() {
                 echo "[wireguard] Received shutdown signal bringing down"
-                wg-quick down /etc/wireguard/k8s-cobi-5.conf || true
+                wg-quick down /etc/wireguard/$POD_NAME.conf || true
                 exit 0
               }
               trap cleanup TERM INT EXIT
 
               echo "[wireguard] Bringing up"
-              wg-quick up /etc/wireguard/k8s-cobi-5.conf
+              wg-quick up /etc/wireguard/$POD_NAME.conf
 
               echo "[wireguard] Tunnel is up sleeping until signal"
               sleep infinity &
               wait $!
             EOT
           ]
+
+          env {
+            name = "POD_NAME"
+            value_from {
+              field_ref {
+                field_path = "metadata.name"
+              }
+            }
+          }
+
+          env {
+            name = "POD_NAMESPACE"
+            value_from {
+              field_ref {
+                field_path = "metadata.namespace"
+              }
+            }
+          }
+
+          env {
+            name = "NODE_NAME"
+            value_from {
+              field_ref {
+                field_path = "spec.nodeName"
+              }
+            }
+          }
 
           security_context {
             capabilities {
@@ -125,21 +148,21 @@ resource "kubernetes_deployment_v1" "wireguard_client" {
           }
 
           # Optional: liveness probe – checks that wg interface is up
-          liveness_probe {
-            exec {
-              command = ["wg", "show", "k8s-cobi-5"]
-            }
-            initial_delay_seconds = 10
-            period_seconds        = 30
-            failure_threshold     = 3
-          }
+          # liveness_probe {
+          #   exec {
+          #     command = ["wg", "show", "$POD_NAME"]
+          #   }
+          #   initial_delay_seconds = 10
+          #   period_seconds        = 30
+          #   failure_threshold     = 3
+          # }
         }
 
         # ── Volumes ──────────────────────────────────────────
         volume {
           name = "wireguard-config"
           secret {
-            secret_name  = kubernetes_secret_v1.wireguard_client_configs.metadata[0].name
+            secret_name  = kubernetes_secret_v1.orisis_clients.metadata[0].name
             default_mode = "0400" # owner read-only .conf contains private keys
           }
         }
@@ -161,9 +184,4 @@ resource "kubernetes_deployment_v1" "wireguard_client" {
       }
     }
   }
-
-  depends_on = [
-    kubernetes_secret_v1.wireguard_client_configs,
-    kubernetes_namespace_v1.wireguard,
-  ]
 }
