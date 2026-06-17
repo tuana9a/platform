@@ -33,8 +33,8 @@ provider "cloudflare" {
 provider "aws" {
   region = "us-east-1"
 
-  access_key = var.aws_access_key_id
-  secret_key = var.aws_secret_access_key
+  shared_credentials_files = ["./aws_config"]
+  profile                  = "r2"
 
   skip_credentials_validation = true
   skip_region_validation      = true
