@@ -1,22 +1,3 @@
-resource "aws_s3_bucket" "tuana9a_com" {
-  bucket = "tuana9a.com"
-}
-
-resource "aws_acm_certificate" "tuana9a_com" {
-  domain_name       = "tuana9a.com"
-  validation_method = "DNS"
-
-  /*
-  creating CloudFront Distribution: operation error CloudFront: CreateDistributionWithTags, https response error StatusCode: 400, RequestID: fd270c25-46c3-4072-84c6-45de58edb4bd,
-  InvalidViewerCertificate: The specified SSL certificate doesn't exist, isn't in us-east-1 region, isn't valid, or doesn't include a valid certificate chain.
-  */
-  region = "us-east-1"
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
 resource "aws_cloudfront_origin_access_control" "tuana9a_com" {
   name                              = "default-oac"
   origin_access_control_origin_type = "s3"
@@ -70,36 +51,4 @@ resource "aws_cloudfront_distribution" "tuana9a_com" {
     acm_certificate_arn = aws_acm_certificate.tuana9a_com.arn
     ssl_support_method  = "sni-only"
   }
-}
-
-data "aws_iam_policy_document" "tuana9a_com_bucket_policy" {
-  statement {
-    sid    = "AllowCloudFrontServicePrincipalReadWrite"
-    effect = "Allow"
-
-    principals {
-      type        = "Service"
-      identifiers = ["cloudfront.amazonaws.com"]
-    }
-
-    actions = [
-      "s3:GetObject",
-      "s3:PutObject",
-    ]
-
-    resources = [
-      "${aws_s3_bucket.tuana9a_com.arn}/*",
-    ]
-
-    condition {
-      test     = "StringEquals"
-      variable = "AWS:SourceArn"
-      values   = [aws_cloudfront_distribution.tuana9a_com.arn]
-    }
-  }
-}
-
-resource "aws_s3_bucket_policy" "tuana9a_com" {
-  bucket = aws_s3_bucket.tuana9a_com.bucket
-  policy = data.aws_iam_policy_document.tuana9a_com_bucket_policy.json
 }
