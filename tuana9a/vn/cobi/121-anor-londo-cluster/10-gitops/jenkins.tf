@@ -17,5 +17,5 @@ resource "helm_release" "jenkins" {
   chart      = "jenkins"
   version    = "5.9.18"
 
-  values = [file("./values.yml")]
+  values = [file("./manifests/jenkins.values.yml")]
 }
