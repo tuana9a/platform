@@ -3,5 +3,5 @@
     "yaml.schemas": {
         "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook": "play-*.yml"
     },
-    "terminal.integrated.tabs.location": "left"
+    "terminal.integrated.tabs.location": "right"
 }
