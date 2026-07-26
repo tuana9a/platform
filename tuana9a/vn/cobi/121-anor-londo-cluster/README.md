@@ -94,8 +94,8 @@ ssh i-123
 ETCDCTL_CACERT="/etc/kubernetes/pki/etcd/ca.crt"
 ETCDCTL_CERT="/etc/kubernetes/pki/apiserver-etcd-client.crt"
 ETCDCTL_KEY="/etc/kubernetes/pki/apiserver-etcd-client.key"
-host=192.168.56.23
-ETCDCTL_OPTS="--endpoints=$host:2379 --cacert=$ETCDCTL_CACERT --cert=$ETCDCTL_CERT --key=$ETCDCTL_KEY"
+ETCDCTL_ENDPOINTS=192.168.56.25:2379
+ETCDCTL_OPTS="--endpoints=$ETCDCTL_ENDPOINTS --cacert=$ETCDCTL_CACERT --cert=$ETCDCTL_CERT --key=$ETCDCTL_KEY"
 ```
 
 ```bash
