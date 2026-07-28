@@ -42,7 +42,7 @@ resource "kubernetes_stateful_set_v1" "orisis" {
 
   spec {
     service_name = "wg"
-    replicas     = 2
+    replicas     = 3
 
     selector {
       match_labels = {
@@ -176,14 +176,15 @@ resource "kubernetes_stateful_set_v1" "orisis" {
           }
 
           # Optional: liveness probe – checks that wg interface is up
-          # liveness_probe {
-          #   exec {
-          #     command = ["wg", "show", "$POD_NAME"]
-          #   }
-          #   initial_delay_seconds = 10
-          #   period_seconds        = 30
-          #   failure_threshold     = 3
-          # }
+          liveness_probe {
+            exec {
+              command = ["ping", "-c", "1", "10.5.115.1"]
+            }
+            initial_delay_seconds = 3
+            period_seconds        = 10
+            failure_threshold     = 3
+            timeout_seconds       = 3
+          }
         }
 
         # ── Volumes ──────────────────────────────────────────
