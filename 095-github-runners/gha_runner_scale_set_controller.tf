@@ -1,14 +1,3 @@
-import {
-  to = kubernetes_namespace_v1.github_runners
-  id = "github-runners"
-}
-
-resource "kubernetes_namespace_v1" "github_runners" {
-  metadata {
-    name = "github-runners"
-  }
-}
-
 resource "kubernetes_secret_v1" "pre_defined_secret" {
   metadata {
     name      = "pre-defined-secret"
