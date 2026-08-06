@@ -1,13 +1,24 @@
 apiVersion: rbac.authorization.k8s.io/v1
-# This cluster role binding allows anyone in the "manager" group to read secrets in any namespace.
 kind: ClusterRoleBinding
 metadata:
-  name: tuana9a-gmail-com-cluster-admin
+  name: tuana9a-gmail-com
 subjects:
   - kind: User
     name: https://accounts.google.com#105303642619365489614
     apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole
-  name: god-hand
+  name: tuana9a-gmail-com
   apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: tuana9a-gmail-com
+rules:
+  - apiGroups:
+      - "*"
+    resources:
+      - "*"
+    verbs:
+      - "*"
