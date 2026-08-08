@@ -1,0 +1,22 @@
+name: "tuana9a/vn/cobi/121-anor-londo-cluster/16-rbac"
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tuana9a/vn/cobi/121-anor-londo-cluster/16-rbac/**"
+      - ".github/workflows/tuana9a-vn-cobi-121-anor-londo-cluster-16-rbac-tfaa*"
+    branches:
+      - rock-n-roll
+
+jobs:
+  main:
+    permissions:
+      contents: read
+      id-token: write
+    uses: ./.github/workflows/tfaa.yml
+    with:
+      runs-on: self-hosted-0
+      login-vault-in-cluster-sa: true
+      WORKING_DIR: ${{ github.workflow }}
+    secrets: inherit

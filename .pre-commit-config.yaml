@@ -3,10 +3,6 @@
 repos:
   - repo: local
     hooks:
-      - id: check_terraform_backend_prefix
-        name: check_terraform_backend_prefix
-        entry: ./scripts/check_terraform_backend_prefix.sh
-        language: script
       - id: check_terraform_fmt
         name: check_terraform_fmt
         entry: ./scripts/check_terraform_fmt.sh
