@@ -1,11 +1,11 @@
-name: "195-vault-k8s-cobi-tuana9a"
+name: "tuana9a/vn/cobi/121-anor-londo-cluster/19-vault"
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - "195-vault-k8s-cobi-tuana9a/**"
-      - ".github/workflows/195-vault-k8s-cobi-tuana9a-terraform-plan-apply*"
+      - "tuana9a/vn/cobi/121-anor-londo-cluster/19-vault/**"
+      - ".github/workflows/tuana9a-vn-cobi-121-anor-londo-cluster-19-vault-tfaa*"
     branches:
       - rock-n-roll
 
@@ -18,5 +18,5 @@ jobs:
     with:
       runs-on: self-hosted-0
       WORKING_DIR: ${{ github.workflow }}
-      download-secret-files: true
+      login-vault-in-cluster-sa: true
     secrets: inherit
