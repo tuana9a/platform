@@ -1,11 +1,11 @@
-name: "502-coder"
+name: "tuana9a/vn/cobi/502-coder"
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - "502-coder/**"
-      - ".github/workflows/502-coder-terraform-plan-apply*"
+      - "tuana9a/vn/cobi/502-coder/**"
+      - ".github/workflows/tuana9a-vn-502-coder-tfaa*"
     branches:
       - rock-n-roll
 
@@ -17,6 +17,6 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
+      login-vault-in-cluster-sa: true
       WORKING_DIR: ${{ github.workflow }}
-      download-secret-files: true
     secrets: inherit
