@@ -50,7 +50,7 @@ template:
     serviceAccountName: gha-sa
 YAML
 
-    isopod = <<YAML
+    vault-maintenance = <<YAML
 dogminRunners: 0
 maxRunners: 10
 # bruh https://github.com/actions/actions-runner-controller/blob/088e2a3a9029f1c85e7bd3d2539f8b8ead5947f9/charts/gha-runner-scale-set/templates/autoscalingrunnerset.yaml#L1
@@ -61,7 +61,7 @@ resourceMeta:
       enabled: "yes"
 template:
   spec:
-    serviceAccountName: gha-sa
+    serviceAccountName: vault-maintenance
 YAML
   }
 }
