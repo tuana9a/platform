@@ -14,7 +14,7 @@ terraform {
     }
     vault = {
       source  = "hashicorp/vault"
-      version = "4.4.0"
+      version = "5.10.1"
     }
     random = {
       source  = "hashicorp/random"
@@ -31,7 +31,7 @@ provider "google" {
 
 provider "coderd" {
   url   = "https://coder.tuana9a.com"
-  token = var.coder_token
+  token = data.vault_kv_secret_v2.coder_config.data["coder_token"]
 }
 
 provider "vault" {

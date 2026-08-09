@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - "tuana9a/vn/cobi/502-coder/**"
+      - "!tuana9a/vn/cobi/502-coder/503-coder-config/**"
       - ".github/workflows/tuana9a-vn-502-coder-tfaa*"
     branches:
       - rock-n-roll
