@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - "tuana9a/vn/cobi/121-anor-londo-cluster/19-vault/**"
+      - "!tuana9a/vn/cobi/121-anor-londo-cluster/19-vault/196-vault-config/**"
       - ".github/workflows/tuana9a-vn-cobi-121-anor-londo-cluster-19-vault-tfaa*"
     branches:
       - rock-n-roll

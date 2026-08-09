@@ -6,7 +6,7 @@ import {
 resource "vault_userpass_auth_backend_user" "admin" {
   mount               = vault_auth_backend.userpass.path
   username            = "admin"
-  password_wo         = var.vault_userpass_admin_password
+  password_wo         = "it's gone :)" # no worries
   password_wo_version = 2
 
   token_policies = [vault_policy.vault_admin.name, vault_policy.secret_operator.name]
