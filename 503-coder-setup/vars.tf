@@ -3,7 +3,7 @@ variable "coder_token" {
   sensitive = true
 }
 
-variable "vault_token" {
-  type      = string
-  sensitive = true
-}
+# variable "vault_token" {
+#  type      = string
+#  sensitive = true
+# }
