@@ -6,10 +6,12 @@ resource "vault_jwt_auth_backend_role" "default" {
     "https://192.168.56.21:6443",
     "https://kubernetes.default.svc.cluster.local",
   ]
-  user_claim     = "sub"
-  bound_subject  = "system:serviceaccount:default:default"
-  token_policies = [vault_policy.lookup_self.name]
-  token_ttl      = 3600
+  user_claim    = "sub"
+  bound_subject = "system:serviceaccount:default:default"
+  token_policies = [
+    vault_policy.lookup_self.name,
+  ]
+  token_ttl = 3600
 }
 
 resource "vault_jwt_auth_backend_role" "gha_sa" {
@@ -20,10 +22,13 @@ resource "vault_jwt_auth_backend_role" "gha_sa" {
     "https://192.168.56.21:6443",
     "https://kubernetes.default.svc.cluster.local",
   ]
-  user_claim     = "sub"
-  bound_subject  = "system:serviceaccount:github-runners:gha-sa"
-  token_policies = [vault_policy.secret_operator.name, vault_policy.lookup_self.name]
-  token_ttl      = 3600
+  user_claim    = "sub"
+  bound_subject = "system:serviceaccount:github-runners:gha-sa"
+  token_policies = [
+    vault_policy.secret_operator.name,
+    vault_policy.lookup_self.name,
+  ]
+  token_ttl = 3600
 }
 
 resource "vault_jwt_auth_backend_role" "vault_secret_operator" {
@@ -34,10 +39,13 @@ resource "vault_jwt_auth_backend_role" "vault_secret_operator" {
     "https://192.168.56.21:6443",
     "https://kubernetes.default.svc.cluster.local",
   ]
-  user_claim     = "sub"
-  bound_subject  = "system:serviceaccount:vault:vault-secret-operator"
-  token_policies = [vault_policy.secret_operator.name, vault_policy.lookup_self.name]
-  token_ttl      = 3600
+  user_claim    = "sub"
+  bound_subject = "system:serviceaccount:vault:vault-secret-operator"
+  token_policies = [
+    vault_policy.secret_operator.name,
+    vault_policy.lookup_self.name,
+  ]
+  token_ttl = 3600
 }
 
 # this role is managing this stack its self, so it's a cyclic dependency
