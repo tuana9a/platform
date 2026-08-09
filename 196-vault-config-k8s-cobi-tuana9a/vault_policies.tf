@@ -1,3 +1,12 @@
+resource "vault_policy" "lookup_self" {
+  name   = "lookup-self"
+  policy = <<EOT
+path "auth/token/lookup-self" {
+  capabilities = ["read"]
+}
+EOT
+}
+
 resource "vault_policy" "auth_operator" {
   name   = "auth-operator"
   policy = <<EOT
@@ -52,4 +61,10 @@ path "kv/coder.tuana9a.com/users/*" {
   capabilities = ["read"]
 }
 EOT
+}
+
+# "* cannot delete default policy" I can't delete this resource now :v
+resource "vault_policy" "default" {
+  name   = "default"
+  policy = vault_policy.lookup_self.policy
 }

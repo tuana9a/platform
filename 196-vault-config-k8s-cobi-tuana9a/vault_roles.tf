@@ -1,0 +1,27 @@
+resource "vault_jwt_auth_backend_role" "default" {
+  backend   = vault_jwt_auth_backend.in_cluster.path
+  role_name = "default"
+  role_type = "jwt"
+  bound_audiences = [
+    "https://192.168.56.21:6443",
+    "https://kubernetes.default.svc.cluster.local",
+  ]
+  user_claim     = "sub"
+  bound_subject  = "system:serviceaccount:default:default"
+  token_policies = [vault_policy.lookup_self.name]
+  token_ttl      = 3600
+}
+
+resource "vault_jwt_auth_backend_role" "gha_sa" {
+  backend   = vault_jwt_auth_backend.in_cluster.path
+  role_name = "gha-sa"
+  role_type = "jwt"
+  bound_audiences = [
+    "https://192.168.56.21:6443",
+    "https://kubernetes.default.svc.cluster.local",
+  ]
+  user_claim     = "sub"
+  bound_subject  = "system:serviceaccount:github-runners:gha-sa"
+  token_policies = [vault_policy.secret_operator.name, vault_policy.lookup_self.name]
+  token_ttl      = 3600
+}
