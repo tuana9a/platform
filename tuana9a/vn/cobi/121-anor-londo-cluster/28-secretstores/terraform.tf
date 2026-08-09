@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "202-secretstores"
+    prefix = "1786266974"
   }
   required_providers {
     google = {
@@ -11,6 +11,10 @@ terraform {
     kubernetes = {
       source  = "hashicorp/kubernetes"
       version = "3.1.0"
+    }
+    vault = {
+      source  = "hashicorp/vault"
+      version = "~> 5.10.1"
     }
     external = {
       source  = "hashicorp/external"
@@ -25,11 +29,20 @@ provider "google" {
   zone    = "asia-southeast1-b"
 }
 
+data "vault_kv_secret_v2" "cluster_auth" {
+  mount = "kvv2"
+  name  = "in-cluster/common"
+}
+
 provider "kubernetes" {
   host                   = "https://192.168.56.21:6443"
-  cluster_ca_certificate = base64decode(local.secrets.cluster_ca_certificate_b64)
+  cluster_ca_certificate = base64decode(data.vault_kv_secret_v2.cluster_auth.data["cluster_ca_certificate_b64"])
+  token                  = data.vault_kv_secret_v2.cluster_auth.data["cluster_auth_token"]
+}
 
-  token = local.secrets.cluster_auth_token
+provider "vault" {
+  address          = "https://vault.tuana9a.com"
+  skip_child_token = true
 }
 
 provider "external" {
