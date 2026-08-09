@@ -22,7 +22,6 @@ provider "google" {
 }
 
 provider "vault" {
-  address = "https://vault.tuana9a.com"
-
+  address          = "https://vault.tuana9a.com"
   skip_child_token = true
 }
