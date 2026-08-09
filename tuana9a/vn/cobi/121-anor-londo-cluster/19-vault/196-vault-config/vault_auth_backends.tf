@@ -3,6 +3,7 @@ resource "vault_auth_backend" "userpass" {
   path = "userpass"
 }
 
+# https://developer.hashicorp.com/vault/docs/auth/jwt/oidc-providers/kubernetes#use-service-account-issuer-discovery
 resource "vault_jwt_auth_backend" "in_cluster" {
   type                  = "jwt"
   oidc_discovery_url    = "https://192.168.56.21:6443"
