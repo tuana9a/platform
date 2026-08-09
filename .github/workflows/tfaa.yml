@@ -59,6 +59,10 @@ on:
         type: string
         required: false
         default: https://vault.tuana9a.com
+      VAULT_ROLE:
+        type: string
+        required: false
+        default: gha-sa
     secrets:
       VAULT_TOKEN:
         required: false
@@ -75,6 +79,7 @@ env:
   TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
   VAULT_ADDR: ${{ inputs.VAULT_ADDR }}
   SA_TOKEN_PATH: ${{ inputs.SA_TOKEN_PATH }}
+  VAULT_ROLE: ${{ inputs.VAULT_ROLE }}
 
 jobs:
   tfaa:
@@ -113,12 +118,12 @@ jobs:
           aws-region: "${{ inputs.AWS_REGION }}"
           retry-max-attempts: 3
       - uses: actions/setup-node@v6 # [/usr/bin/env: 'node' no such file or directory](https://github.com/hashicorp/setup-terraform/issues/84)
-        if: "${{ contains(inputs.runs-on, 'self-hosted') }}"
+        # if: "${{ contains(inputs.runs-on, 'self-hosted') }}" # well we install it anyway
         with:
           node-version: "24"
       - uses: hashicorp/setup-terraform@v4.0.1
         with:
-          terraform_version: "1.7.1"
+          terraform_version: "1.15.8"
       - id: download-secret-files
         name: download secret files
         if: "${{ inputs.download-secret-files }}"
@@ -134,7 +139,7 @@ jobs:
           VAULT_TOKEN=$(curl -sSf \
             --request POST \
             --header "X-Vault-Request: true" \
-            --data "{\"jwt\":\"${JWT}\",\"role\":\"gha-sa\"}" \
+            --data "{\"jwt\":\"${JWT}\",\"role\":\"${VAULT_ROLE}\"}" \
             "${VAULT_ADDR}/v1/auth/in-cluster/login" | jq -r '.auth.client_token')
 
           if [ -z "$VAULT_TOKEN" ] || [ "$VAULT_TOKEN" = "null" ]; then

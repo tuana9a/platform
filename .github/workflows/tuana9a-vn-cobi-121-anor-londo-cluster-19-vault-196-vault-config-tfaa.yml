@@ -17,6 +17,7 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: vault-maintenance
-      WORKING_DIR: ${{ github.workflow }}
       login-vault-in-cluster-sa: true
+      VAULT_ROLE: vault-maintenance
+      WORKING_DIR: ${{ github.workflow }}
     secrets: inherit
