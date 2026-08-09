@@ -20,17 +20,22 @@ path "auth/*" {
 EOT
 }
 
-resource "vault_policy" "vault_maintenance" {
-  name   = "vault-maintenance"
+resource "vault_policy" "auth_admin" {
+  name   = "auth-admin"
   policy = <<EOT
 # Enable and manage authentication methods
-path "sys/auth" {
+path "auth" {
   capabilities = ["read", "list"]
 }
-path "sys/auth/*" {
+path "auth/*" {
   capabilities = ["create", "read", "update", "delete", "sudo", "list"]
 }
+EOT
+}
 
+resource "vault_policy" "sys_admin" {
+  name   = "sys-admin"
+  policy = <<EOT
 # Enable and manage secrets engines (mounts)
 path "sys/mounts" {
   capabilities = ["read", "list"]

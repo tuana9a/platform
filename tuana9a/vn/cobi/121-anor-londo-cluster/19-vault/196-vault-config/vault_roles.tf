@@ -49,8 +49,13 @@ resource "vault_jwt_auth_backend_role" "vault_maintenance" {
     "https://192.168.56.21:6443",
     "https://kubernetes.default.svc.cluster.local",
   ]
-  user_claim     = "sub"
-  bound_subject  = "system:serviceaccount:github-runners:vault-maintenance"
-  token_policies = [vault_policy.vault_maintenance.name, vault_policy.lookup_self.name]
-  token_ttl      = 3600
+  user_claim    = "sub"
+  bound_subject = "system:serviceaccount:github-runners:vault-maintenance"
+  token_policies = [
+    vault_policy.sys_admin.name,
+    vault_policy.auth_admin.name,
+    vault_policy.secret_operator.name,
+    vault_policy.lookup_self.name,
+  ]
+  token_ttl = 3600
 }
