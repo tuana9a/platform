@@ -7,13 +7,49 @@ path "auth/token/lookup-self" {
 EOT
 }
 
-resource "vault_policy" "auth_operator" {
-  name   = "auth-operator"
+resource "vault_policy" "vault_admin" {
+  name   = "vault-admin"
   policy = <<EOT
-# Manage auth methods broadly
-path "auth/*"
-{
+path "sys/*" {
   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+path "auth/*" {
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+EOT
+}
+
+resource "vault_policy" "vault_maintenance" {
+  name   = "vault-maintenance"
+  policy = <<EOT
+# Enable and manage authentication methods
+path "sys/auth" {
+  capabilities = ["read", "list"]
+}
+path "sys/auth/*" {
+  capabilities = ["create", "read", "update", "delete", "sudo", "list"]
+}
+
+# Enable and manage secrets engines (mounts)
+path "sys/mounts" {
+  capabilities = ["read", "list"]
+}
+path "sys/mounts/*" {
+  capabilities = ["create", "read", "update", "delete", "sudo", "list"]
+}
+
+# Manage access control policies
+path "sys/policies/acl" {
+  capabilities = ["read", "list"]
+}
+path "sys/policies/acl/*" {
+  capabilities = ["create", "read", "update", "delete", "list"]
+}
+
+# Check system health status
+path "sys/health" {
+  capabilities = ["read"]
 }
 EOT
 }
@@ -34,30 +70,10 @@ path "${vault_mount.kvv2.path}/*"
 EOT
 }
 
-resource "vault_policy" "sys_operator" {
-  name   = "sys-operator"
-  policy = <<EOT
-# Create and manage policies
-path "sys/*"
-{
-  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-}
-EOT
-}
-
 resource "vault_policy" "backup" {
   name   = "backup"
   policy = <<EOT
 path "sys/storage/raft/snapshot" {
-  capabilities = ["read"]
-}
-EOT
-}
-
-resource "vault_policy" "coder_tuana9a_com_setup" {
-  name   = "coder-tuana9a-com-setup"
-  policy = <<EOT
-path "kv/coder.tuana9a.com/users/*" {
   capabilities = ["read"]
 }
 EOT

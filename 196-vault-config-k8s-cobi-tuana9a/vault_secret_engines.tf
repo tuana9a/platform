@@ -13,8 +13,7 @@ resource "vault_mount" "kvv2" {
 }
 
 resource "vault_kv_secret_backend_v2" "kvv2" {
-  mount                = vault_mount.kvv2.path
-  max_versions         = 5
-  delete_version_after = 12600
-  cas_required         = false
+  mount        = vault_mount.kvv2.path
+  max_versions = 10
+  cas_required = false
 }
