@@ -20,10 +20,9 @@ DO_NOT_USE: # NOTE: storing common variables
         # - getting kube_pki
         # - kube join command
         # each data node having this variable will be able to reference control plane via hostvars, example: "hostvars[cluster_ops.host].kube_join_command"
-        host: 192.168.56.25
+        host: 192.168.56.26
         remove_hosts:
-          - 192.168.56.28
-          - 192.168.56.29
+          - 192.168.56.25
       gateway_ip: &gateway_ip 192.168.56.1
       cloudimg: &cloudimg debian-12-generic-amd64-20260510-2474.img
 

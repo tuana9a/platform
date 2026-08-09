@@ -11,6 +11,10 @@ data:
         value: https://accounts.google.com
       - name: feature-gates
         value: "ImageVolume=true"
+      - name: service-account-issuer
+        value: https://192.168.56.21:6443
+      - name: service-account-issuer
+        value: https://kubernetes.default.svc.cluster.local
     caCertificateValidityPeriod: 87600h0m0s
     certificateValidityPeriod: 8760h0m0s
     certificatesDir: /etc/kubernetes/pki
