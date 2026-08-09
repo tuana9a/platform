@@ -131,8 +131,7 @@ jobs:
         run: |
           JWT=$(cat "${SA_TOKEN_PATH}")
 
-          VAULT_TOKEN=$(curl -sS \
-            --fail \
+          VAULT_TOKEN=$(curl -sSf \
             --request POST \
             --header "X-Vault-Request: true" \
             --data "{\"jwt\":\"${JWT}\",\"role\":\"gha-sa\"}" \
@@ -142,8 +141,10 @@ jobs:
             echo "Failed to obtain Vault token" >&2
             exit 1
           fi
-
           echo "::add-mask::$VAULT_TOKEN"
+          curl -sSf \
+            --header "X-Vault-Token: $VAULT_TOKEN" \
+            "$VAULT_ADDR/v1/auth/token/lookup-self" | jq '.data.ttl'
           echo "VAULT_TOKEN=$VAULT_TOKEN" >> "$GITHUB_ENV"
       - id: tfinit
         name: tfinit
