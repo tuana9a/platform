@@ -1,23 +1,23 @@
 resource "cloudflare_pages_project" "dkhptd_web" {
-  account_id        = var.cloudflare_account_id
+  account_id        = local.cloudflare_account_id
   name              = "dkhptd-web"
   production_branch = "main"
 }
 
 resource "cloudflare_pages_domain" "dkhptd_web" {
-  account_id   = var.cloudflare_account_id
+  account_id   = local.cloudflare_account_id
   project_name = cloudflare_pages_project.dkhptd_web.name
-  domain       = "dkhptd.tuana9a.com"
+  name         = "dkhptd.tuana9a.com"
 }
 
 resource "cloudflare_pages_project" "mom" {
-  account_id        = var.cloudflare_account_id
+  account_id        = local.cloudflare_account_id
   name              = "mom"
   production_branch = "main"
 
-  source {
+  source = {
     type = "gitlab"
-    config {
+    config = {
       owner                         = "tuana9a"
       repo_name                     = "mom"
       production_branch             = "main"
@@ -31,7 +31,7 @@ resource "cloudflare_pages_project" "mom" {
 }
 
 resource "cloudflare_pages_domain" "mom" {
-  account_id   = var.cloudflare_account_id
+  account_id   = local.cloudflare_account_id
   project_name = cloudflare_pages_project.mom.name
-  domain       = "mom.tuana9a.com"
+  name         = "mom.tuana9a.com"
 }
