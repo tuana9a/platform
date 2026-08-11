@@ -1,11 +1,11 @@
-name: "806-monitor-do"
+name: "tuana9a/global/806-do-uptime"
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - "806-monitor-do/**"
-      - ".github/workflows/806-monitor-do-terraform-plan-apply*"
+      - "tuana9a/global/806-do-uptime/**"
+      - ".github/workflows/tuana9a-global-806-do-uptime-tfaa*"
     branches:
       - rock-n-roll
 
@@ -16,6 +16,7 @@ jobs:
       id-token: write
     uses: ./.github/workflows/tfaa.yml
     with:
+      runs-on: self-hosted-0
       WORKING_DIR: ${{ github.workflow }}
-      download-secret-files: true
+      login-vault-in-cluster-sa: true
     secrets: inherit
