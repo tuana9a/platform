@@ -144,22 +144,6 @@ multibranchPipelineJob('vault-backup') {
   }
 }
 
-multibranchPipelineJob('vault-secret-store-token-renew') {
-  branchSources {
-    git {
-      // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
-      id('60046855633295167470940976125235051245')
-      remote('https://github.com/tuana9a/platform.git')
-      includes('rock-n-roll')
-    }
-  }
-  factory {
-    workflowBranchProjectFactory {
-      scriptPath('.jenkins/vault-secret-store-token-renew.Jenkinsfile')
-    }
-  }
-}
-
 multibranchPipelineJob('vault-unseal') {
   branchSources {
     git {
