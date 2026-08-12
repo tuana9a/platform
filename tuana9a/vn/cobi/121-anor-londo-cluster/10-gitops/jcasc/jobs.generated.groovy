@@ -1,21 +1,5 @@
 // ./generate_jcasc_pipeline.py .jenkins/095-github-runners-terraform-plan-apply.Jenkinsfile .jenkins/backup-coder-db.Jenkinsfile .jenkins/backup-kubernetes.Jenkinsfile .jenkins/defrag-etcd.Jenkinsfile .jenkins/test-aws-oidc.Jenkinsfile .jenkins/test-gcp-oidc.Jenkinsfile .jenkins/test.Jenkinsfile .jenkins/tfaa.Jenkinsfile .jenkins/vault-backup.Jenkinsfile .jenkins/vault-secret-store-token-renew.Jenkinsfile .jenkins/vault-unseal.Jenkinsfile
 
-multibranchPipelineJob('095-github-runners-terraform-plan-apply') {
-  branchSources {
-    git {
-      // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
-      id('125764316729195362236712013194236041629')
-      remote('https://github.com/tuana9a/platform.git')
-      includes('rock-n-roll')
-    }
-  }
-  factory {
-    workflowBranchProjectFactory {
-      scriptPath('.jenkins/095-github-runners-terraform-plan-apply.Jenkinsfile')
-    }
-  }
-}
-
 multibranchPipelineJob('backup-coder-db') {
   branchSources {
     git {
