@@ -27,7 +27,7 @@ resource "helm_release" "gha_runner_scale_sets" {
 
   set_sensitive {
     name  = "githubConfigSecret.github_token"
-    value = local.secrets.github_token
+    value = data.vault_kv_secret_v2.github_runners.data["github_token"]
     type  = "string"
   }
 

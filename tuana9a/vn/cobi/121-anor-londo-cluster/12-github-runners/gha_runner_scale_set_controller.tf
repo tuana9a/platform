@@ -5,7 +5,7 @@ resource "kubernetes_secret_v1" "pre_defined_secret" {
   }
 
   data = {
-    github_token = local.secrets.github_token
+    github_token = data.vault_kv_secret_v2.github_runners.data["github_token"]
   }
 }
 

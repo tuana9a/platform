@@ -1,0 +1,19 @@
+# This file is auto-generated. Do not edit manually.
+name: tuana9a/vn/cobi/121-anor-londo-cluster/12-github-runners
+'on':
+  workflow_dispatch:
+    inputs:
+      runs-on:
+        type: string
+        required: true
+jobs:
+  main:
+    permissions:
+      contents: read
+      id-token: write
+    uses: ./.github/workflows/tfaa.yml
+    with:
+      runs-on: self-hosted-0
+      WORKING_DIR: tuana9a/vn/cobi/121-anor-londo-cluster/12-github-runners
+      login-vault-in-cluster-sa: true
+    secrets: inherit

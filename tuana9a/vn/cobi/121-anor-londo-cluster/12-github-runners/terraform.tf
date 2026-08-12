@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "095-github-runners"
+    prefix = "1786494826" # date +%s
   }
   required_providers {
     google = {
@@ -20,6 +20,10 @@ terraform {
       source  = "hashicorp/external"
       version = "2.3.5"
     }
+    vault = {
+      source  = "hashicorp/vault"
+      version = "~> 5.10.1"
+    }
   }
 }
 
@@ -29,18 +33,27 @@ provider "google" {
   zone    = "asia-southeast1-b"
 }
 
+provider "vault" {
+  address          = "https://vault.tuana9a.com"
+  skip_child_token = true
+}
+
+data "vault_kv_secret_v2" "cluster_auth" {
+  mount = "kvv2"
+  name  = "in-cluster/common"
+}
+
 provider "kubernetes" {
   host                   = "https://192.168.56.21:6443"
-  cluster_ca_certificate = base64decode(local.secrets.cluster_ca_certificate_b64)
-
-  token = local.secrets.cluster_auth_token
+  cluster_ca_certificate = base64decode(data.vault_kv_secret_v2.cluster_auth.data["cluster_ca_certificate_b64"])
+  token                  = data.vault_kv_secret_v2.cluster_auth.data["cluster_auth_token"]
 }
 
 provider "helm" {
   kubernetes {
     host                   = "https://192.168.56.21:6443"
-    cluster_ca_certificate = base64decode(local.secrets.cluster_ca_certificate_b64)
-    token                  = local.secrets.cluster_auth_token
+    cluster_ca_certificate = base64decode(data.vault_kv_secret_v2.cluster_auth.data["cluster_ca_certificate_b64"])
+    token                  = data.vault_kv_secret_v2.cluster_auth.data["cluster_auth_token"]
   }
 }
 
