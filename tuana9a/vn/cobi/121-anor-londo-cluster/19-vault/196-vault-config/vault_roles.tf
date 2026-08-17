@@ -14,6 +14,8 @@ resource "vault_jwt_auth_backend_role" "default" {
   token_ttl = 3600
 }
 
+# this role is managing this stack its self, so it's a cyclic dependency
+# NOTE: apply manually first
 resource "vault_jwt_auth_backend_role" "gha_sa" {
   backend   = vault_jwt_auth_backend.in_cluster.path
   role_name = "gha-sa"
@@ -27,6 +29,12 @@ resource "vault_jwt_auth_backend_role" "gha_sa" {
   token_policies = [
     vault_policy.secret_operator.name,
     vault_policy.lookup_self.name,
+    # --- WARN ---
+    # these polices are critical, to remove/replace them, please add equivalent policy first, so that the runner can apply this stack
+    vault_policy.sys_admin.name,
+    vault_policy.auth_admin.name,
+    vault_policy.secret_operator.name,
+    # --- ENDWARN ---
   ]
   token_ttl = 3600
 }
