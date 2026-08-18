@@ -64,7 +64,6 @@ resource "kubernetes_config_map_v1" "jcasc_credentials" {
 
   data = {
     "credentials.yaml" = templatefile("./jcasc/jcasc-credentials.template.yaml", {
-      VAULT_TOKEN               = local.secrets.jenkins.VAULT_TOKEN
       TELEGRAM_CHAT_ID          = local.secrets.jenkins.TELEGRAM_CHAT_ID
       TELEGRAM_BOT_TOKEN        = local.secrets.jenkins.TELEGRAM_BOT_TOKEN
       vault-unseal-keys-env-b64 = base64encode(local.secrets.jenkins.vault-unseal-keys-env)
