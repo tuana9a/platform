@@ -16,8 +16,7 @@ jobs:
       id-token: write
     uses: ./.github/workflows/tfaa.yml
     with:
-      runs-on: vault-maintenance
+      runs-on: self-hosted-0
       login-vault-in-cluster-sa: true
-      VAULT_ROLE: vault-maintenance
       WORKING_DIR: ${{ github.workflow }}
     secrets: inherit
