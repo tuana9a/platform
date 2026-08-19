@@ -34,6 +34,7 @@ resource "vault_jwt_auth_backend_role" "gha_sa" {
     vault_policy.sys_admin.name,
     vault_policy.auth_admin.name,
     vault_policy.secret_operator.name,
+    vault_policy.backup.name,
     # --- ENDWARN ---
   ]
   token_ttl = 3600
