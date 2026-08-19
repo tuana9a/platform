@@ -1,0 +1,87 @@
+name: Vault Backup + Telegram Notify
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # daily at 00:00 UTC — adjust as needed
+  workflow_dispatch: {} # allows manual trigger from the Actions tab
+
+env:
+  VAULT_ADDR: ${{ secrets.VAULT_ADDR || 'https://vault.tuana9a.com' }}
+  VAULT_ROLE: ${{ vars.VAULT_ROLE || 'gha-sa' }}
+  SA_TOKEN_PATH: /var/run/secrets/kubernetes.io/serviceaccount/token
+
+jobs:
+  backup:
+    runs-on: self-hosted-0
+    steps:
+      - name: Install Vault CLI
+        run: |
+          wget -q -O - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" \
+            | sudo tee /etc/apt/sources.list.d/hashicorp.list
+          sudo apt-get update -qq && sudo apt-get install -y vault jq
+
+      - name: Login to Vault using k8s SA JWT
+        run: |
+          JWT=$(cat "${SA_TOKEN_PATH}")
+
+          VAULT_TOKEN=$(curl -sSf \
+            --request POST \
+            --header "X-Vault-Request: true" \
+            --data "{\"jwt\":\"${JWT}\",\"role\":\"${VAULT_ROLE}\"}" \
+            "${VAULT_ADDR}/v1/auth/in-cluster/login" | jq -r '.auth.client_token')
+
+          if [ -z "$VAULT_TOKEN" ] || [ "$VAULT_TOKEN" = "null" ]; then
+            echo "Failed to obtain Vault token" >&2
+            exit 1
+          fi
+          echo "::add-mask::$VAULT_TOKEN"
+          curl -sSf \
+            --header "X-Vault-Token: $VAULT_TOKEN" \
+            "$VAULT_ADDR/v1/auth/token/lookup-self" | jq '.data.ttl'
+          echo "VAULT_TOKEN=$VAULT_TOKEN" >> "$GITHUB_ENV"
+
+      - name: Verify Vault connectivity
+        run: vault status || true # non-zero exit on sealed vault; don't fail the job here
+
+      - name: Take Raft snapshot
+        id: snapshot
+        run: |
+          set -e
+          TIMESTAMP=$(date -u +%Y%m%d-%H%M%S)
+          FILE="vault-backup-${TIMESTAMP}.snap"
+          vault operator raft snapshot save "$FILE"
+          echo "file=$FILE" >> "$GITHUB_OUTPUT"
+
+      - name: Upload snapshot as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vault-backup-${{ github.run_id }}
+          path: ${{ steps.snapshot.outputs.file }}
+          retention-days: 30
+
+      # Optional: ship the snapshot offsite too, e.g. to S3/GCS/MinIO.
+      # GitHub Actions artifacts are fine for short-term retention but
+      # shouldn't be your only copy for a real backup strategy.
+      # - name: Upload to S3
+      #   run: aws s3 cp "${{ steps.snapshot.outputs.file }}" s3://my-vault-backups/
+
+      - name: Notify Telegram - Success
+        if: success()
+        run: |
+          curl -sf -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+            -d parse_mode="Markdown" \
+            -d text="✅ *Vault backup succeeded*
+          File: \`${{ steps.snapshot.outputs.file }}\`
+          Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+      - name: Notify Telegram - Failure
+        if: failure()
+        run: |
+          curl -sf -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+            -d parse_mode="Markdown" \
+            -d text="❌ *Vault backup FAILED*
+          Repo: ${{ github.repository }}
+          Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
