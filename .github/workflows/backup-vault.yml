@@ -1,4 +1,4 @@
-name: Vault Backup + Telegram Notify
+name: backup-vault
 
 on:
   schedule:
