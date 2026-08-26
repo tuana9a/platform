@@ -23,5 +23,6 @@ resource "coderd_user" "all" {
   email      = local.users[each.key].data.email
   name       = lookup(local.users[each.key].data, "name", null)
   login_type = local.users[each.key].data.login_type
+  password   = lookup(local.users[each.key].data, "password", null)
   roles      = lookup(local.users[each.key].data, "roles", null) != null ? split(",", local.users[each.key].data.roles) : []
 }
