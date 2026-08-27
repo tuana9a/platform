@@ -121,7 +121,7 @@ resource "kubernetes_stateful_set" "main" {
         }
         spec {
           access_modes       = ["ReadWriteOnce"]
-          storage_class_name = data.coder_parameter.home_storage_class.value
+          storage_class_name = data.coder_parameter.home_disk_storage_class.value
           resources {
             requests = {
               storage = "${data.coder_parameter.home_disk_size.value}Gi"

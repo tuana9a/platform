@@ -1,5 +1,5 @@
 data "coder_parameter" "cpu" {
-  name         = "cpu"
+  name         = "0_cpu"
   display_name = "CPU"
   description  = "The number of CPU cores"
   icon         = "/icon/memory.svg"
@@ -20,7 +20,7 @@ data "coder_parameter" "cpu" {
 }
 
 data "coder_parameter" "memory" {
-  name         = "memory"
+  name         = "1_memory"
   display_name = "Memory"
   description  = "The amount of memory in GB"
   icon         = "/icon/memory.svg"
@@ -44,42 +44,24 @@ data "coder_parameter" "memory" {
   }
 }
 
-data "coder_parameter" "home_persistent" {
-  name         = "home_persistent"
-  display_name = "Home dir persistent"
-  description  = "Whether home dir is persistent or ephemeral"
-  icon         = "/icon/database.svg"
-  mutable      = true
-  type         = "string"
-  default      = "no"
-  option {
-    name  = "yes"
-    value = "yes"
-  }
-  option {
-    name  = "no"
-    value = "no"
-  }
-}
-
 data "coder_parameter" "home_disk_size" {
-  name         = "home_disk_size"
+  name         = "3_home_disk_size"
   display_name = "Home disk size"
-  description  = "The size of the home disk in GB"
+  description  = "The size of the home disk in GB, set to 0 to disable the persistent"
   type         = "number"
   icon         = "/icon/database.svg"
   mutable      = false
   default      = "10"
   validation {
-    min = 5
+    min = 0
     max = 100
   }
 }
 
-data "coder_parameter" "home_storage_class" {
-  name         = "home_storage_class"
-  display_name = "Home storage class"
-  description  = "home storage class"
+data "coder_parameter" "home_disk_storage_class" {
+  name         = "4_home_disk_storage_class"
+  display_name = "Home disk storage class"
+  description  = "The home disk storage class to use"
   icon         = "/icon/database.svg"
   mutable      = false
   type         = "string"
@@ -91,7 +73,7 @@ data "coder_parameter" "home_storage_class" {
 }
 
 data "coder_parameter" "image_tag" {
-  name         = "image_tag"
+  name         = "6_image_tag"
   display_name = "Image tag"
   description  = "Docker image tuana9a/coder tag"
   default      = "minimal-2025.12.22"
