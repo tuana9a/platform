@@ -16,10 +16,6 @@ terraform {
       source  = "hashicorp/helm"
       version = "2.12.1"
     }
-    external = {
-      source  = "hashicorp/external"
-      version = "2.3.5"
-    }
     vault = {
       source  = "hashicorp/vault"
       version = "~> 5.10.1"
@@ -55,7 +51,4 @@ provider "helm" {
     cluster_ca_certificate = base64decode(data.vault_kv_secret_v2.cluster_auth.data["cluster_ca_certificate_b64"])
     token                  = data.vault_kv_secret_v2.cluster_auth.data["cluster_auth_token"]
   }
-}
-
-provider "external" {
 }
