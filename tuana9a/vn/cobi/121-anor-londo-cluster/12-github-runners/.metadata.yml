@@ -4,10 +4,12 @@ github_workflow:
       inputs:
         runs-on:
           type: string
-          required: true
+          required: false
+          default: self-hosted-0
   jobs:
     main:
       with:
         login-vault-in-cluster-sa: true
+        runs-on: "${{ inputs.runs-on }}"
 github_workflow_opts:
   push: false
