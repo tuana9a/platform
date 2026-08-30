@@ -1,0 +1,48 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: starscream
+  namespace: ${namespace}
+spec:
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyService:
+        patch:
+          type: StrategicMerge
+          value:
+            spec:
+              ports:
+                - port: 80
+                  name: http
+                  nodePort: 31080
+                - port: 443
+                  name: https
+                  nodePort: 31443
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: starscream
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    name: starscream
+    namespace: default
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: starscream
+  namespace: ${namespace}
+spec:
+  gatewayClassName: starscream
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+  infrastructure:
+    annotations:
+      metallb.io/loadBalancerIPs: 192.168.56.88
