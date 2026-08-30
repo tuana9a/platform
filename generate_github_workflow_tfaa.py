@@ -36,6 +36,7 @@ def build_skeleton(folder: str, opts: dict) -> dict:
                 "with": {
                     "runs-on": "self-hosted-0",
                     "WORKING_DIR": folder,
+                    "login-vault-in-cluster-sa": True
                 },
                 "secrets": "inherit",
             }
@@ -66,10 +67,10 @@ def deep_merge(base, override):
     return override
 
 
-def read_metadata(folder: str) -> dict | None:
+def read_metadata(folder: str) -> dict:
     metadata_path = os.path.join(folder, ".metadata.yml")
     if not os.path.isfile(metadata_path):
-        return None
+        return {}
 
     with open(metadata_path, "r") as f:
         metadata = yaml.safe_load(f) or {}
@@ -77,14 +78,13 @@ def read_metadata(folder: str) -> dict | None:
     return metadata
 
 
-def generate_workflow(folder: str) -> str | None:
-    metadata = read_metadata(folder)
-    if metadata is None:
-        return None
-
+def generate_workflow(folder: str, metadata={}) -> str | None:
     opts = metadata.get("github_workflow_opts") or {}
     if not isinstance(opts, dict):
-        print(f"Warning: github_workflow_opts in {folder} is not a dict, ignoring", file=sys.stderr)
+        print(
+            f"Warning: github_workflow_opts in {folder} is not a dict, ignoring",
+            file=sys.stderr,
+        )
         opts = {}
 
     skeleton = build_skeleton(folder, opts)
@@ -94,11 +94,12 @@ def generate_workflow(folder: str) -> str | None:
         skeleton = deep_merge(skeleton, github_workflow)
 
     if not skeleton.get("on"):
-        print(f"Warning: {folder} has no triggers under 'on' after merge", file=sys.stderr)
+        print(
+            f"Warning: {folder} has no triggers under 'on' after merge", file=sys.stderr
+        )
 
-    header = "# This file is auto-generated. Do not edit manually.\n"
     body = yaml.dump(skeleton, sort_keys=False, default_flow_style=False)
-    return header + body
+    return body
 
 
 def main():
@@ -117,7 +118,8 @@ def main():
             continue
         seen.add(folder)
 
-        content = generate_workflow(folder)
+        metadata = read_metadata(folder)
+        content = generate_workflow(folder, metadata)
         if content is None:
             print(f"Skipping (no .metadata.yml): {folder}", file=sys.stderr)
             continue

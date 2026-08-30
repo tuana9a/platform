@@ -121,6 +121,7 @@ jobs:
         # if: "${{ contains(inputs.runs-on, 'self-hosted') }}" # well we install it anyway
         with:
           node-version: "24"
+          mirror: https://nodejs.org/dist
       - uses: hashicorp/setup-terraform@v4.0.1
         with:
           terraform_version: "1.15.8"

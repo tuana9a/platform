@@ -1,4 +1,3 @@
-# This file is auto-generated. Do not edit manually.
 name: tuana9a/vn/cobi/121-anor-londo-cluster/12-github-runners
 'on':
   workflow_dispatch:
