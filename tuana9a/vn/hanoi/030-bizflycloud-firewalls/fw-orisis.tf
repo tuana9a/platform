@@ -3,10 +3,6 @@
 resource "bizflycloud_firewall" "orisis" {
   name = "orisis"
 
-  network_interfaces = [
-    local.servers.orisis.network_interfaces.0.id,
-  ]
-
   # allow_ping
   ingress {
     cidr     = "0.0.0.0/0"
