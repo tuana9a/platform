@@ -24,15 +24,3 @@ resource "helm_release" "metallb" {
 
   timeout = 60 * 10 # 10 mins
 }
-
-resource "kubernetes_manifest" "vmbr56_ipaddresspool" {
-  depends_on = [helm_release.metallb]
-
-  manifest = yamldecode(file("./manifests/vmbr56.IPAddressPool.yaml"))
-}
-
-resource "kubernetes_manifest" "vmbr56_l2advertisement" {
-  depends_on = [helm_release.metallb]
-
-  manifest = yamldecode(file("./manifests/vmbr56.L2Advertisement.yaml"))
-}
