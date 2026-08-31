@@ -3,6 +3,15 @@ data "vault_kv_secret_v2" "wireguard_clients" {
   name  = "github.com/tuana9a/platform/tuana9a/vn/hanoi/121-anor-londo-cluster/20-wireguard-clients/terraform"
 }
 
+module "starscream_parsed_wireguard_config" {
+  source  = "./modules/parse-wireguard-config"
+  content = data.vault_kv_secret_v2.wireguard_clients.data.starscream-0_conf
+}
+
+locals {
+  starscream_gateway_ip = nonsensitive(module.starscream_parsed_wireguard_config.wg_gateway)
+}
+
 resource "kubernetes_secret_v1" "starscream_clients" {
   metadata {
     name      = "starscream-clients"
@@ -30,7 +39,7 @@ resource "kubernetes_stateful_set_v1" "starscream" {
 
   spec {
     service_name = "wg"
-    replicas     = 1
+    replicas     = 2
 
     selector {
       match_labels = {
@@ -166,7 +175,7 @@ resource "kubernetes_stateful_set_v1" "starscream" {
           # Optional: liveness probe – checks that wg interface is up
           liveness_probe {
             exec {
-              command = ["ping", "-c", "1", "10.5.115.1"]
+              command = ["ping", "-c", "1", local.starscream_gateway_ip]
             }
             initial_delay_seconds = 3
             period_seconds        = 10
