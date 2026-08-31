@@ -1,10 +1,10 @@
-name: tuana9a/vn/cobi/121-anor-londo-cluster/18-gateway
+name: tuana9a/vn/hanoi/121-anor-londo-cluster/18-gateway
 'on':
   workflow_dispatch: null
   push:
     paths:
-    - tuana9a/vn/cobi/121-anor-londo-cluster/18-gateway/**
-    - .github/workflows/tuana9a-vn-cobi-121-anor-londo-cluster-18-gateway-tfaa*
+    - tuana9a/vn/hanoi/121-anor-londo-cluster/18-gateway/**
+    - .github/workflows/tuana9a-vn-hanoi-121-anor-londo-cluster-18-gateway-tfaa*
     branches:
     - rock-n-roll
 jobs:
@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
-      WORKING_DIR: tuana9a/vn/cobi/121-anor-londo-cluster/18-gateway
+      WORKING_DIR: tuana9a/vn/hanoi/121-anor-londo-cluster/18-gateway
       login-vault-in-cluster-sa: true
     secrets: inherit
