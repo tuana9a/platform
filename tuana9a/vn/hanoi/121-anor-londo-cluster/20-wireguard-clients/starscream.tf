@@ -15,9 +15,9 @@ resource "kubernetes_secret_v1" "starscream_clients" {
 
   data = {
     # Key name becomes the filename when mounted as a volume
-    "starscream-0.conf" = data.vault_kv_secret_v2.wireguard_clients.data.starscream-1_conf
-    "starscream-1.conf" = data.vault_kv_secret_v2.wireguard_clients.data.starscream-2_conf
-    "starscream-2.conf" = data.vault_kv_secret_v2.wireguard_clients.data.starscream-3_conf
+    "starscream-0.conf" = data.vault_kv_secret_v2.wireguard_clients.data.starscream-0_conf
+    "starscream-1.conf" = data.vault_kv_secret_v2.wireguard_clients.data.starscream-1_conf
+    "starscream-2.conf" = data.vault_kv_secret_v2.wireguard_clients.data.starscream-2_conf
   }
 }
 
@@ -30,7 +30,7 @@ resource "kubernetes_stateful_set_v1" "starscream" {
 
   spec {
     service_name = "wg"
-    replicas     = 3
+    replicas     = 1
 
     selector {
       match_labels = {
