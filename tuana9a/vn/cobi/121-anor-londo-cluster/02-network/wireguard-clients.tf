@@ -42,7 +42,7 @@ resource "kubernetes_stateful_set_v1" "orisis" {
 
   spec {
     service_name = "wg"
-    replicas     = 3
+    replicas     = 1
 
     selector {
       match_labels = {
