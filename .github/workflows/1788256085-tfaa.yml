@@ -1,0 +1,20 @@
+name: tuana9a/global/023-dns
+'on':
+  workflow_dispatch: null
+  push:
+    paths:
+    - tuana9a/global/023-dns/**
+    - .github/workflows/tuana9a-global-023-dns-tfaa*
+    branches:
+    - rock-n-roll
+jobs:
+  main:
+    permissions:
+      contents: read
+      id-token: write
+    uses: ./.github/workflows/tfaa.yml
+    with:
+      runs-on: self-hosted-0
+      WORKING_DIR: tuana9a/global/023-dns
+      login-vault-in-cluster-sa: true
+    secrets: inherit

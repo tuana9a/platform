@@ -1,20 +1,20 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "tuana9a/global/023-dns"
+    prefix = "1788256085" # date %+
   }
   required_providers {
     google = {
       source  = "hashicorp/google"
       version = "5.29.1"
     }
+    vault = {
+      source  = "hashicorp/vault"
+      version = "~> 5.10.1"
+    }
     cloudflare = {
       source  = "cloudflare/cloudflare"
       version = "4.47.0"
-    }
-    external = {
-      source  = "hashicorp/external"
-      version = "2.3.5"
     }
   }
   required_version = ">= 1.2.0"
@@ -26,9 +26,11 @@ provider "google" {
   zone    = "asia-southeast1-b"
 }
 
-provider "cloudflare" {
-  api_token = local.secrets.cloudflare_api_token
+provider "vault" {
+  address          = "https://vault.tuana9a.com"
+  skip_child_token = true
 }
 
-provider "external" {
+provider "cloudflare" {
+  api_token = data.vault_kv_secret_v2.dns.data.cloudflare_api_token
 }

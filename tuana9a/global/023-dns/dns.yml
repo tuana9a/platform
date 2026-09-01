@@ -1,0 +1,42 @@
+A:
+  imperial-ally-285602:
+    - content: "${imperial_ally_285602_ip}"
+  orisis:
+    - content: "${orisis_ip}"
+  megatron:
+    - content: "${megatron_ip}"
+CNAME:
+  "*.coder":
+    - content: orisis.tuana9a.com
+  coder:
+    - content: orisis.tuana9a.com
+  d9stbot:
+    - content: orisis.tuana9a.com
+  "*.dev2":
+    - content: orisis.tuana9a.com
+  dev2:
+    - content: orisis.tuana9a.com
+  dkhptd-api:
+    - content: orisis.tuana9a.com
+  hcr:
+    - content: orisis.tuana9a.com
+  jenkins:
+    - content: orisis.tuana9a.com
+  paste:
+    - content: orisis.tuana9a.com
+  t9stbot:
+    - content: orisis.tuana9a.com
+  vault:
+    - content: orisis.tuana9a.com
+  utils.bm:
+    - content: orisis.tuana9a.com
+  "*.stuffs.kn":
+    - content: orisis.tuana9a.com
+  argocd:
+    - content: orisis.tuana9a.com
+  grpc.argocd:
+    - content: orisis.tuana9a.com
+  grafana:
+    - content: orisis.tuana9a.com
+  uuid:
+    - content: orisis.tuana9a.com

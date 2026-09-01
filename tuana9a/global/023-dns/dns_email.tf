@@ -12,6 +12,23 @@ resource "cloudflare_record" "txt_v_spf1" {
   proxied = false
 }
 
+locals {
+  mx_cloudflare_routes = [
+    {
+      target   = "route1.mx.cloudflare.net.",
+      priority = 64,
+    },
+    {
+      target   = "route2.mx.cloudflare.net.",
+      priority = 38,
+    },
+    {
+      target   = "route3.mx.cloudflare.net.",
+      priority = 47,
+    },
+  ]
+}
+
 resource "cloudflare_record" "mx_tuana9a_com_mx_cloudflare_net" {
   for_each = { for o in local.mx_cloudflare_routes : o.target => o }
   zone_id  = data.cloudflare_zone.tuana9a_com.id
