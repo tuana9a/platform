@@ -102,7 +102,7 @@ metadata:
 spec:
   parentRef:
     name: starscream
-    namespace: gateway
+    namespace: envoy-gateway-system
   listeners:
     - name: https
       hostname: paste-next.tuana9a.com
