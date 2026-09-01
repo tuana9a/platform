@@ -17,6 +17,6 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
-      login-vault-in-cluster-sa: true
+      login-vault: "in-cluster-sa"
       WORKING_DIR: ${{ github.workflow }}
     secrets: inherit

@@ -20,5 +20,5 @@ jobs:
       install-sops: true
       WORKING_DIR: ${{ github.workflow }}
       AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/github-workflow
-      login-vault-in-cluster-sa: true
+      login-vault: "in-cluster-sa"
     secrets: inherit

@@ -2,13 +2,33 @@
 import sys
 import os
 import yaml
+import re
 
 
 def to_workflow_file_name(folder: str) -> str:
     return folder.replace("/", "-") + "-tfaa"
 
 
-def build_skeleton(folder: str, opts: dict) -> dict:
+def read_terraform_prefix(folder: str) -> str | None:
+    """
+    Read terraform.tf in `folder` and extract the backend "gcs" prefix value.
+    Returns None if the file doesn't exist or no prefix is found.
+    """
+    tf_path = os.path.join(folder, "terraform.tf")
+    if not os.path.isfile(tf_path):
+        return None
+
+    with open(tf_path, "r") as f:
+        content = f.read()
+
+    match = re.search(r'prefix\s*=\s*"([^"]+)"', content)
+    if not match:
+        return None
+
+    return match.group(1)
+
+
+def build_skeleton(folder: str, project_prefix: str, opts: dict) -> dict:
     path_pattern_dir = f"{folder}/**"
     path_pattern_workflow = f".github/workflows/{to_workflow_file_name(folder)}*"
 
@@ -19,7 +39,11 @@ def build_skeleton(folder: str, opts: dict) -> dict:
 
     if opts.get("push", True):
         on_section["push"] = {
-            "paths": [path_pattern_dir, path_pattern_workflow],
+            "paths": [
+                path_pattern_dir,
+                # path_pattern_workflow,
+                f"{project_prefix}-tfaa*",
+            ],
             "branches": ["rock-n-roll"],
         }
 
@@ -36,7 +60,7 @@ def build_skeleton(folder: str, opts: dict) -> dict:
                 "with": {
                     "runs-on": "self-hosted-0",
                     "WORKING_DIR": folder,
-                    "login-vault-in-cluster-sa": True
+                    "login-vault": "in-cluster-sa",
                 },
                 "secrets": "inherit",
             }
@@ -78,7 +102,7 @@ def read_metadata(folder: str) -> dict:
     return metadata
 
 
-def generate_workflow(folder: str, metadata={}) -> str | None:
+def generate_workflow(folder: str, project_prefix: str, metadata={}) -> str | None:
     opts = metadata.get("github_workflow_opts") or {}
     if not isinstance(opts, dict):
         print(
@@ -87,11 +111,7 @@ def generate_workflow(folder: str, metadata={}) -> str | None:
         )
         opts = {}
 
-    skeleton = build_skeleton(folder, opts)
-
-    github_workflow = metadata.get("github_workflow")
-    if github_workflow:
-        skeleton = deep_merge(skeleton, github_workflow)
+    skeleton = build_skeleton(folder, project_prefix, opts)
 
     if not skeleton.get("on"):
         print(
@@ -119,12 +139,20 @@ def main():
         seen.add(folder)
 
         metadata = read_metadata(folder)
-        content = generate_workflow(folder, metadata)
+
+        project_prefix = read_terraform_prefix(folder)
+        if project_prefix is None:
+            print(
+                f"Skipping (no prefix found in terraform.tf): {folder}", file=sys.stderr
+            )
+            continue
+
+        content = generate_workflow(folder, project_prefix, metadata)
         if content is None:
             print(f"Skipping (no .metadata.yml): {folder}", file=sys.stderr)
             continue
 
-        workflow_filename = to_workflow_file_name(folder) + ".yml"
+        workflow_filename = project_prefix + "-tfaa.yml"
         output_path = os.path.join(".github", "workflows", workflow_filename)
 
         os.makedirs(os.path.dirname(output_path), exist_ok=True)

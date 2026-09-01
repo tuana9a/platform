@@ -11,11 +11,11 @@ on:
         type: boolean
         required: false
         default: false
-      login-vault-in-cluster-sa:
-        description: "Login to Vault using in cluster k8s service account"
+      login-vault:
+        description: "Login vault"
         required: false
-        default: false
-        type: boolean
+        default: "nope"
+        type: string
       install-sops:
         type: boolean
         required: false
@@ -131,8 +131,8 @@ jobs:
         run: |
           curl -sSf -X GET https://vault.tuana9a.com/v1/kv/github.com/tuana9a/platform/${{ inputs.WORKING_DIR }}/terraform -H "X-Vault-Token: ${{ secrets.VAULT_TOKEN }}" -o vault_data.json
           for x in $(jq -r '.data._files_' vault_data.json); do echo "=== $x ==="; jq -r '.data."'$x'"' vault_data.json > $x; done
-      - name: Login to Vault using k8s SA JWT
-        if: "${{ inputs.login-vault-in-cluster-sa }}"
+      - name: login-vault in-cluster-sa
+        if: "${{ inputs.login-vault == 'in-cluster-sa' }}"
         run: |
           JWT=$(cat "${SA_TOKEN_PATH}")
 

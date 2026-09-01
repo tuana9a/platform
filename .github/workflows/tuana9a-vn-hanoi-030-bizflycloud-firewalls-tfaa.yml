@@ -16,5 +16,5 @@ jobs:
     with:
       runs-on: self-hosted-0
       WORKING_DIR: tuana9a/vn/hanoi/030-bizflycloud-firewalls
-      login-vault-in-cluster-sa: true
+      login-vault: "in-cluster-sa"
     secrets: inherit

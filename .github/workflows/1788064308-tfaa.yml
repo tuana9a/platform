@@ -4,7 +4,7 @@ name: tuana9a/vn/hanoi/121-anor-londo-cluster/18-gateway
   push:
     paths:
     - tuana9a/vn/hanoi/121-anor-londo-cluster/18-gateway/**
-    - .github/workflows/tuana9a-vn-hanoi-121-anor-londo-cluster-18-gateway-tfaa*
+    - 1788064308-tfaa*
     branches:
     - rock-n-roll
 jobs:
@@ -16,5 +16,5 @@ jobs:
     with:
       runs-on: self-hosted-0
       WORKING_DIR: tuana9a/vn/hanoi/121-anor-londo-cluster/18-gateway
-      login-vault-in-cluster-sa: true
+      login-vault: in-cluster-sa
     secrets: inherit
