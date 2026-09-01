@@ -46,3 +46,15 @@ spec:
   infrastructure:
     annotations:
       metallb.io/loadBalancerIPs: 192.168.56.88
+  allowedListeners:
+    namespaces:
+      from: Selector
+      selector:
+        matchExpressions:
+          - key: kubernetes.io/metadata.name
+            operator: In
+            values:
+              - default
+              - stuffs
+              - coder
+              - vault
