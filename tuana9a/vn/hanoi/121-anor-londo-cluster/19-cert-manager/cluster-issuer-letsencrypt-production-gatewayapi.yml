@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-production-gatewayapi
+spec:
+  acme:
+    email: tuana9a@gmail.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-production-gatewayapi
+    solvers:
+      - http01:
+          gatewayHTTPRoute: {}
