@@ -30,7 +30,7 @@ spec:
     group: gateway.envoyproxy.io
     kind: EnvoyProxy
     name: starscream
-    namespace: default
+    namespace: ${namespace}
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
