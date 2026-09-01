@@ -12,3 +12,7 @@ spec:
     targetRevision: rock-n-roll
   destination:
     server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
