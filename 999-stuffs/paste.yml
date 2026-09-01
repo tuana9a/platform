@@ -71,3 +71,48 @@ spec:
                 name: paste
                 port:
                   number: 8080
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: paste-next
+spec:
+  parentRefs:
+    - kind: ListenerSet
+      name: paste-next
+  hostnames:
+    - paste-next.tuana9a.com
+  rules:
+    - backendRefs:
+        - kind: Service
+          name: paste
+          port: 8080
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
+kind: ListenerSet
+apiVersion: gateway.networking.k8s.io/v1
+metadata:
+  name: paste-next
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+spec:
+  parentRef:
+    name: starscream
+    namespace: gateway
+  listeners:
+    - name: https
+      hostname: paste-next.tuana9a.com
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: paste-next-tuana9a-com-tls
+    - name: http
+      hostname: paste-next.tuana9a.com
+      port: 80
+      protocol: HTTP
