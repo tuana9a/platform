@@ -1,8 +1,3 @@
-data "vault_kv_secret_v2" "wireguard_clients" {
-  mount = "kvv2"
-  name  = "github.com/tuana9a/platform/tuana9a/vn/hanoi/121-anor-londo-cluster/20-wireguard-clients/terraform"
-}
-
 module "starscream_parsed_wireguard_config" {
   source  = "./modules/parse-wireguard-config"
   content = data.vault_kv_secret_v2.wireguard_clients.data.starscream-0_conf
