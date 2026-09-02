@@ -24,6 +24,7 @@ subsets:
       - ip: "192.168.56.113" # engineer
       - ip: "192.168.56.209" # dev2
       - ip: "14.225.1.214" # orisis
+      - ip: "103.109.43.120" # megatron
     ports:
       - port: 9100
         protocol: TCP
