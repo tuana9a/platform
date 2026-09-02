@@ -1,0 +1,3 @@
+- hosts: megatron
+  tasks:
+    - import_tasks: ./tasks/fail2ban_setup.yml

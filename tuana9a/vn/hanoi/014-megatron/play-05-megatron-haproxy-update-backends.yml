@@ -1,0 +1,39 @@
+- hosts: megatron
+  tasks:
+    - name: Upload haproxy-next.cfg
+      become: true
+      template:
+        src: "haproxy.cfg"
+        dest: "/etc/haproxy/haproxy-next.cfg"
+
+    - name: Diff existing vs next haproxy.cfg
+      become: true
+      command: diff -u /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy-next.cfg
+      register: haproxy_diff
+      failed_when: haproxy_diff.rc > 1 # diff returns 1 when files differ, 2+ on error
+
+    - name: Print diff
+      debug:
+        msg: "{{ haproxy_diff.stdout | split('\n') }}"
+
+    - name: Confirm update
+      pause:
+        prompt: "Do you want to proceed with the above changes? (yes/no)"
+      register: confirm_update_result
+
+    - name: Cancel update haproxy
+      meta: end_play
+      when: confirm_update_result.user_input != 'yes'
+
+    - name: Update haproxy cfg
+      become: true
+      copy:
+        remote_src: true
+        src: "/etc/haproxy/haproxy-next.cfg"
+        dest: "/etc/haproxy/haproxy.cfg"
+
+    - name: Reload haproxy service
+      become: true
+      ansible.builtin.service:
+        name: haproxy
+        state: reloaded
