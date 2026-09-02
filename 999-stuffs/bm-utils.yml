@@ -78,32 +78,6 @@ spec:
     - port: 5000
       targetPort: 5000
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: bm-utils
-  annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-production"
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/proxy-body-size: "10m" # max upload size
-spec:
-  ingressClassName: nginx
-  tls:
-    - hosts:
-        - utils.bm.tuana9a.com
-      secretName: utils-bm-tuana9a-com-tls
-  rules:
-    - host: utils.bm.tuana9a.com
-      http:
-        paths:
-          - pathType: Prefix
-            path: "/"
-            backend:
-              service:
-                name: bm-utils
-                port:
-                  number: 5000
----
 kind: ListenerSet
 apiVersion: gateway.networking.k8s.io/v1
 metadata:
