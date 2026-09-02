@@ -97,6 +97,10 @@ spec:
         mode: Terminate
         certificateRefs:
           - name: utils-bm-tuana9a-com-tls
+    - name: http # requires for cert http challenge
+      hostname: utils.bm.tuana9a.com
+      port: 80
+      protocol: HTTP
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
