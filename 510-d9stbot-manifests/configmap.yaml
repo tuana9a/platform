@@ -1,8 +1,0 @@
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: d9stbot
-data:
-  BIND_ADDRESS: 0.0.0.0
-  PORT: "8080"

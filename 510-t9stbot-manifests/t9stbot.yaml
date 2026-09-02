@@ -76,27 +76,47 @@ spec:
     - port: 8080
       targetPort: 8080
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+kind: ListenerSet
+apiVersion: gateway.networking.k8s.io/v1
 metadata:
   name: t9stbot
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-production"
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-production-gatewayapi
 spec:
-  ingressClassName: nginx
-  tls:
-    - hosts:
-        - t9stbot.tuana9a.com
-      secretName: t9stbot-tuana9a-com-tls
+  parentRef:
+    name: starscream
+    namespace: envoy-gateway-system
+  listeners:
+    - name: https
+      hostname: t9stbot.tuana9a.com
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: t9stbot-tuana9a-com-tls
+    - name: http
+      hostname: t9stbot.tuana9a.com
+      port: 80
+      protocol: HTTP
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: t9stbot
+spec:
+  parentRefs:
+    - kind: ListenerSet
+      name: t9stbot
+  hostnames:
+    - t9stbot.tuana9a.com
   rules:
-    - host: t9stbot.tuana9a.com
-      http:
-        paths:
-          - pathType: Prefix
-            path: "/"
-            backend:
-              service:
-                name: t9stbot
-                port:
-                  number: 8080
+    - backendRefs:
+        - kind: Service
+          name: t9stbot
+          port: 8080
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /

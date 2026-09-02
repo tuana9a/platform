@@ -11,7 +11,7 @@ CNAME:
   coder:
     - content: orisis.tuana9a.com
   d9stbot:
-    - content: orisis.tuana9a.com
+    - content: megatron.tuana9a.com
   "*.dev2":
     - content: orisis.tuana9a.com
   dev2:
@@ -27,7 +27,7 @@ CNAME:
   paste-next:
     - content: megatron.tuana9a.com
   t9stbot:
-    - content: orisis.tuana9a.com
+    - content: megatron.tuana9a.com
   vault:
     - content: orisis.tuana9a.com
   utils.bm:

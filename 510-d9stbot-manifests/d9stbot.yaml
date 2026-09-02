@@ -1,3 +1,25 @@
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: d9stbot
+spec:
+  refreshInterval: "15s"
+  secretStoreRef:
+    name: vault-tuana9a-com
+    kind: ClusterSecretStore
+  target:
+    name: d9stbot
+  dataFrom:
+    - extract:
+        key: d9stbot/env
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: d9stbot
+data:
+  BIND_ADDRESS: 0.0.0.0
+  PORT: "8080"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -34,3 +56,48 @@ spec:
   ports:
     - port: 8080
       targetPort: 8080
+---
+kind: ListenerSet
+apiVersion: gateway.networking.k8s.io/v1
+metadata:
+  name: d9stbot
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production-gatewayapi
+spec:
+  parentRef:
+    name: starscream
+    namespace: envoy-gateway-system
+  listeners:
+    - name: https
+      hostname: d9stbot.tuana9a.com
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: d9stbot-tuana9a-com-tls
+    - name: http
+      hostname: d9stbot.tuana9a.com
+      port: 80
+      protocol: HTTP
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: d9stbot
+spec:
+  parentRefs:
+    - kind: ListenerSet
+      name: d9stbot
+  hostnames:
+    - d9stbot.tuana9a.com
+  rules:
+    - backendRefs:
+        - kind: Service
+          name: d9stbot
+          port: 8080
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
