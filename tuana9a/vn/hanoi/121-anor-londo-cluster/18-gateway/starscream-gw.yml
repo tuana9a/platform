@@ -58,6 +58,8 @@ spec:
               - stuffs
               - coder
               - vault
+              - d9stbot
+              - t9stbot
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: ClientTrafficPolicy
