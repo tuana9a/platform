@@ -48,30 +48,6 @@ spec:
       port: 8080
       targetPort: 8080
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: paste
-  annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-production"
-spec:
-  ingressClassName: nginx
-  tls:
-    - hosts:
-        - paste.tuana9a.com
-      secretName: paste-tuana9a-com-tls
-  rules:
-    - host: paste.tuana9a.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: paste
-                port:
-                  number: 8080
----
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
