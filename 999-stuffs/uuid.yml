@@ -50,26 +50,47 @@ spec:
       targetPort: 8080
       name: http
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+kind: ListenerSet
+apiVersion: gateway.networking.k8s.io/v1
 metadata:
   name: uuid
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    cert-manager.io/cluster-issuer: letsencrypt-production-gatewayapi
 spec:
-  ingressClassName: nginx
-  tls:
-    - hosts:
-        - uuid.tuana9a.com
-      secretName: uuid-tuana9a-com-tls
+  parentRef:
+    name: starscream
+    namespace: envoy-gateway-system
+  listeners:
+    - name: https
+      hostname: uuid.tuana9a.com
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: uuid-tuana9a-com-tls
+    - name: http
+      hostname: uuid.tuana9a.com
+      port: 80
+      protocol: HTTP
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: uuid
+spec:
+  parentRefs:
+    - kind: ListenerSet
+      name: uuid
+  hostnames:
+    - uuid.tuana9a.com
   rules:
-    - host: uuid.tuana9a.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: uuid
-                port:
-                  number: 8080
+    - backendRefs:
+        - kind: Service
+          name: uuid
+          port: 8080
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
