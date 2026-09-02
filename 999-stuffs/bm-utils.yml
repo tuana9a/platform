@@ -103,3 +103,48 @@ spec:
                 name: bm-utils
                 port:
                   number: 5000
+---
+kind: ListenerSet
+apiVersion: gateway.networking.k8s.io/v1
+metadata:
+  name: bm-utils
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production-gatewayapi
+spec:
+  parentRef:
+    name: starscream
+    namespace: envoy-gateway-system
+  listeners:
+    - name: https
+      hostname: utils.bm.tuana9a.com
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: utils-bm-tuana9a-com-tls
+    - name: http
+      hostname: utils.bm.tuana9a.com
+      port: 80
+      protocol: HTTP
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: bm-utils
+spec:
+  parentRefs:
+    - kind: ListenerSet
+      name: bm-utils
+  hostnames:
+    - utils.bm.tuana9a.com
+  rules:
+    - backendRefs:
+        - kind: Service
+          name: bm-utils
+          port: 8080
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /

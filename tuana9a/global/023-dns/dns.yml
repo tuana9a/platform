@@ -31,7 +31,7 @@ CNAME:
   vault:
     - content: orisis.tuana9a.com
   utils.bm:
-    - content: orisis.tuana9a.com
+    - content: megatron.tuana9a.com
   "*.stuffs.kn":
     - content: orisis.tuana9a.com
   argocd:
