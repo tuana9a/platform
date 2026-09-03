@@ -58,7 +58,7 @@ def build_skeleton(folder: str, project_prefix: str, opts: dict) -> dict:
                 },
                 "uses": "./.github/workflows/tfaa.yml",
                 "with": {
-                    "runs-on": "self-hosted-0",
+                    "runs-on": opts.get("runs-on", "self-hosted-0"),
                     "WORKING_DIR": folder,
                     "login-vault": "in-cluster-sa",
                 },
@@ -103,10 +103,10 @@ def read_metadata(folder: str) -> dict:
 
 
 def generate_workflow(folder: str, project_prefix: str, metadata={}) -> str | None:
-    opts = metadata.get("github_workflow_opts") or {}
+    opts = metadata.get("tfaa") or {}
     if not isinstance(opts, dict):
         print(
-            f"Warning: github_workflow_opts in {folder} is not a dict, ignoring",
+            f"Warning: tfaa in {folder} is not a dict, ignoring",
             file=sys.stderr,
         )
         opts = {}
