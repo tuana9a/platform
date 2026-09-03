@@ -1,0 +1,20 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: custom-envoy-proxy
+spec:
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyService:
+        patch:
+          type: StrategicMerge
+          value:
+            spec:
+              ports:
+                - port: 80 # <--- Crucial: This is the merge key Kubernetes requires
+                  name: http
+                  nodePort: 31080 # Your desired static NodePort
+                - port: 443 # <--- Crucial: Must match the standard service port
+                  name: https
+                  nodePort: 31443 # Your desired static NodePort

@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: jenkins
+  name: jenkins
+  labels:
+    app: jenkins
+spec:
+  containers:
+    - name: jenkins
+      image: jenkins/jenkins:2.542
+      command:
+        - sleep
+        - infinity
+      volumeMounts:
+        - name: jenkins-data
+          mountPath: /var/jenkins_home
+  volumes:
+    - name: jenkins-data
+      persistentVolumeClaim:
+        claimName: jenkins

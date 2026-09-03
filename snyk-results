@@ -1,0 +1,114 @@
+
+Snyk Infrastructure as Code
+
+- Snyk testing Infrastructure as Code configuration issues.
+✔ Test completed.
+
+Issues
+
+High Severity Issues: 7
+
+  [High] Unrestricted SSH access
+  Info:    Compute firewall allows all access to the SSH port. SSH service may
+           be accessible over the internet which defeats network segmentation
+           controls
+  Rule:    https://security.snyk.io/rules/cloud/SNYK-CC-GCP-295
+  Path:    resource > google_compute_firewall[zero_allow_ssh]
+  File:    031-gcp-network-firewall-tuana9a/zero_firewalls.tf
+  Resolve: Set `source_ranges` attribute to specific IP range for example
+           `192.168.0.0/24`
+
+  [High] Role or ClusterRole with too wide permissions
+  Info:    The role uses wildcards, which grant the role permissions to the
+           whole cluster. The use of wildcard rights grants is likely to provide
+           excessive rights to the Kubernetes API. For a ClusterRole this would
+           be considered high severity.
+  Rule:    https://security.snyk.io/rules/cloud/SNYK-CC-K8S-44
+  Path:    [DocId: 0] > rules[0] > verbs
+  File:    130-k8s-auth-rbac/god-hand.yaml
+  Resolve: Set only the necessary permissions required
+
+  [High] Role or ClusterRole with too wide permissions
+  Info:    The role uses wildcards, which grant the role permissions to the
+           whole cluster. The use of wildcard rights grants is likely to provide
+           excessive rights to the Kubernetes API. For a ClusterRole this would
+           be considered high severity.
+  Rule:    https://security.snyk.io/rules/cloud/SNYK-CC-K8S-44
+  Path:    [DocId: 0] > rules[0] > resources
+  File:    130-k8s-auth-rbac/god-hand.yaml
+  Resolve: Set only the necessary permissions required
+
+  [High] Broad IAM permissions in IAM policy
+  Info:    The IAM policy allows all IAM actions on resource. Granting
+           permission to perform any IAM action is against 'least privilege'
+           principle
+  Rule:    https://security.snyk.io/rules/cloud/SNYK-CC-AWS-732
+  Path:    aws_iam_policy_document[terraform_iam_admin_policy] > statement
+  File:    atlantis-tle/global/005-aws-iam/terraform_iam_admin.tf
+  Resolve: Set `statement.action` attribute to specific actions e.g.
+           `iam:ListUsers`
+
+  [High] Broad IAM permissions in IAM policy
+  Info:    The IAM policy allows all IAM actions on resource. Granting
+           permission to perform any IAM action is against 'least privilege'
+           principle
+  Rule:    https://security.snyk.io/rules/cloud/SNYK-CC-AWS-732
+  Path:    aws_iam_policy_document[terraform_iam_admin_policy] > statement
+  File:    t9st/global/006-aws-iam-terraform/terraform_iam_admin.tf
+  Resolve: Set `statement.action` attribute to specific actions e.g.
+           `iam:ListUsers`
+
+  [High] Broad IAM permissions in IAM policy
+  Info:    The IAM policy allows all IAM actions on resource. Granting
+           permission to perform any IAM action is against 'least privilege'
+           principle
+  Rule:    https://security.snyk.io/rules/cloud/SNYK-CC-AWS-732
+  Path:    aws_iam_policy_document[terraform_iam_admin_policy] > statement
+  File:    tuana9a/global/006-aws-iam-terraform/terraform_iam_admin.tf
+  Resolve: Set `statement.action` attribute to specific actions e.g.
+           `iam:ListUsers`
+
+  [High] Privileged container
+  Info:    Container is running in privileged mode. Compromised container could
+           potentially modify the underlying host’s kernel by loading
+           unauthorized modules (i.e. drivers).
+  Rule:    https://security.snyk.io/rules/cloud/SNYK-CC-K8S-1
+  Path:    [DocId: 0] > input > spec > template > spec > containers[kube-proxy]
+           > securityContext > privileged
+  File:    tuana9a/vn/cobi/121-anor-londo-cluster/backup/kube-proxy.ds.yaml
+  Resolve: Remove `securityContext.privileged` attribute, or set value to
+           `false`
+
+Test Failures
+
+  Failed to parse YAML file
+  Path: /home/u/github.com/tuana9a/platform/.venv/lib/python3.10/site-packages/ansible_collections/dellemc/openmanage/playbooks/ome/compliance/ome_configuration_compliance_baseline_workflow.yml
+        /home/u/github.com/tuana9a/platform/.venv/lib/python3.10/site-packages/ansible_collections/infoblox/nios_modules/changelogs/changelog.yaml
+        /home/u/github.com/tuana9a/platform/.venv/lib/python3.10/site-packages/ansible_collections/ovirt/ovirt/roles/disaster_recovery/tasks/recover_engine.yml
+        /home/u/github.com/tuana9a/platform/.venv/lib/python3.10/site-packages/ansible_collections/ovirt/ovirt/roles/disaster_recovery/tasks/unregister_entities.yml
+        /home/u/github.com/tuana9a/platform/.venv/lib/python3.10/site-packages/ansible_collections/ovirt/ovirt/roles/hosted_engine_setup/tasks/fetch_host_ip.yml
+
+  Failed to parse JSON file
+  Path: /home/u/github.com/tuana9a/platform/.vscode/tasks.json
+
+-------------------------------------------------------
+
+Test Summary
+
+  Organization: tuana9a
+  Project name: tuana9a/platform
+
+✔ Files without issues: 301
+✗ Files with issues: 6
+  Ignored issues: 0
+  Total issues: 7 [ 0 critical, 7 high, 0 medium, 0 low ]
+
+Tip: Re-run in debug mode to see more information: DEBUG=*snyk* <COMMAND>
+If the issue persists contact support@snyk.io
+
+-------------------------------------------------------
+
+Tip
+
+  New: Share your test results in the Snyk Web UI with the option --report
+

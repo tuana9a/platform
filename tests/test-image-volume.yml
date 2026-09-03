@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-1
+  template:
+    metadata:
+      labels:
+        app: test-1
+    spec:
+      # nodeSelector:
+      #   kubernetes.io/hostname: i-138
+      containers:
+        - name: shell
+          image: debian
+          command: ["tail", "-f", "/dev/null"]
+          volumeMounts:
+            # - name: devops-tools
+            #   mountPath: /devops
+            #   readOnly: true
+            - name: vault
+              mountPath: /vault
+              readOnly: true
+      volumes:
+        - name: terraform
+          image:
+            reference: tuana9a/terraform:2026.04.18
+            pullPolicy: IfNotPresent
+        - name: awscli
+          image:
+            reference: tuana9a/awscli:2026.04.18
+            pullPolicy: IfNotPresent
+        - name: vault
+          image:
+            reference: hashicorp/vault:1.17.2
+            pullPolicy: IfNotPresent

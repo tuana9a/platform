@@ -1,0 +1,9 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.1
+patch: {}
+ignore: {}
+exclude:
+  global:
+    - 021-r2/terraform.tf:
+        reason: its cloudflare r2
+        created: 2026-06-16T23:52:15.699Z
