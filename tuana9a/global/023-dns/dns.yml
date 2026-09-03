@@ -39,6 +39,6 @@ CNAME:
   grpc.argocd:
     - content: orisis.tuana9a.com
   grafana:
-    - content: orisis.tuana9a.com
+    - content: megatron.tuana9a.com
   uuid:
     - content: megatron.tuana9a.com
