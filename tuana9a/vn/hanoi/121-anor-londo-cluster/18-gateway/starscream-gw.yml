@@ -60,6 +60,7 @@ spec:
               - vault
               - d9stbot
               - t9stbot
+              - grafana
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: ClientTrafficPolicy
