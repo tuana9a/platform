@@ -10,7 +10,7 @@ resource "kubernetes_secret_v1" "alertmanager" {
   }
 
   data = {
-    "telegram_bot_token.txt" = local.secrets.alertmanager.telegram_bot_token
+    "telegram_bot_token.txt" = data.vault_kv_secret_v2.t9stbot_token.data.telegram_bot_token
   }
 }
 
@@ -29,5 +29,5 @@ resource "helm_release" "alertmanager" {
   chart      = "alertmanager"
   version    = "1.30.0"
 
-  values = [file("./manifests/alertmanager-values.yaml")]
+  values = [file("./alertmanager-values.yaml")]
 }

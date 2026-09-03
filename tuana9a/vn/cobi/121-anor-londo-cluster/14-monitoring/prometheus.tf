@@ -22,7 +22,7 @@ resource "helm_release" "prometheus" {
   chart      = "prometheus"
   version    = "25.20.1"
 
-  values = [file("./manifests/prometheus-values.yaml")]
+  values = [file("./prometheus-values.yaml")]
 
   set {
     name  = "alertmanager.enabled"
