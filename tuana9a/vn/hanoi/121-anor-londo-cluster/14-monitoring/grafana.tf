@@ -13,9 +13,9 @@ resource "helm_release" "grafana" {
   name      = "grafana"
   namespace = kubernetes_namespace_v1.grafana.metadata[0].name
 
-  repository = "https://grafana.github.io/helm-charts"
+  repository = "oci://ghcr.io/grafana-community/helm-charts"
   chart      = "grafana"
-  version    = "10.5.8"
+  version    = "13.0.1"
 
   values = [file("./grafana-values.yaml")]
 }
