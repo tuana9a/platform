@@ -4,7 +4,7 @@ name: tuana9a/global/023-dns
   push:
     paths:
     - tuana9a/global/023-dns/**
-    - .github/workflows/tuana9a-global-023-dns-tfaa*
+    - 1788256085-tfaa*
     branches:
     - rock-n-roll
 jobs:
@@ -14,7 +14,7 @@ jobs:
       id-token: write
     uses: ./.github/workflows/tfaa.yml
     with:
-      runs-on: self-hosted-0
+      runs-on: ubuntu-slim
       WORKING_DIR: tuana9a/global/023-dns
-      login-vault: "in-cluster-sa"
+      login-vault: in-cluster-sa
     secrets: inherit
