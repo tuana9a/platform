@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "tuana9a/vn/cobi/121-anor-londo-cluster/14-monitoring"
+    prefix = "1788447365" # date +%s
   }
   required_providers {
     google = {
@@ -16,9 +16,9 @@ terraform {
       source  = "hashicorp/helm"
       version = "2.12.1"
     }
-    external = {
-      source  = "hashicorp/external"
-      version = "2.3.5"
+    vault = {
+      source  = "hashicorp/vault"
+      version = "~> 5.10.1"
     }
   }
 }
@@ -29,20 +29,27 @@ provider "google" {
   zone    = "asia-southeast1-b"
 }
 
+
+provider "vault" {
+  address          = "https://vault.tuana9a.com"
+  skip_child_token = true
+}
+
+ephemeral "vault_kv_secret_v2" "cluster_auth" {
+  mount = "kvv2"
+  name  = "in-cluster/common"
+}
+
 provider "kubernetes" {
   host                   = "https://192.168.56.21:6443"
-  cluster_ca_certificate = base64decode(local.secrets.cluster_ca_certificate_b64)
-
-  token = local.secrets.cluster_auth_token
+  cluster_ca_certificate = base64decode(ephemeral.vault_kv_secret_v2.cluster_auth.data["cluster_ca_certificate_b64"])
+  token                  = ephemeral.vault_kv_secret_v2.cluster_auth.data["cluster_auth_token"]
 }
 
 provider "helm" {
   kubernetes {
     host                   = "https://192.168.56.21:6443"
-    cluster_ca_certificate = base64decode(local.secrets.cluster_ca_certificate_b64)
-    token                  = local.secrets.cluster_auth_token
+    cluster_ca_certificate = base64decode(ephemeral.vault_kv_secret_v2.cluster_auth.data["cluster_ca_certificate_b64"])
+    token                  = ephemeral.vault_kv_secret_v2.cluster_auth.data["cluster_auth_token"]
   }
-}
-
-provider "external" {
 }

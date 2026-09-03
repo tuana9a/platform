@@ -17,12 +17,12 @@ resource "helm_release" "grafana" {
   chart      = "grafana"
   version    = "10.5.8"
 
-  values = [file("./manifests/grafana-values.yaml")]
+  values = [file("./grafana-values.yaml")]
 }
 
-resource "kubernetes_config_map_v1" "name" {
+resource "kubernetes_config_map_v1" "grafana_datasources" {
   metadata {
-    name      = "datasources"
+    name      = "grafana-datasources"
     namespace = kubernetes_namespace_v1.grafana.metadata[0].name
     labels = {
       grafana_datasource = "1"
@@ -30,6 +30,6 @@ resource "kubernetes_config_map_v1" "name" {
   }
 
   data = {
-    "datasources.yaml" = file("./manifests/grafana-datasources.yaml")
+    "datasources.yaml" = file("./grafana-datasources.yaml")
   }
 }

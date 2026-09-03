@@ -9,6 +9,35 @@ ingress:
     - secretName: grafana-tuana9a-com-tls
       hosts:
         - "grafana.tuana9a.com"
+route:
+  main:
+    enabled: true
+    hostnames:
+      - grafana.tuana9a.com
+    parentRefs:
+      - kind: ListenerSet
+        name: grafana
+listenerSet:
+  main:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-production-gatewayapi
+    parentRef:
+      name: starscream
+      namespace: envoy-gateway-system
+    listeners:
+      - name: https
+        hostname: grafana.tuana9a.com
+        port: 443
+        protocol: HTTPS
+        tls:
+          mode: Terminate
+          certificateRefs:
+            - name: grafana-tuana9a-com-tls
+      - name: http # requires for cert http challenge
+        hostname: grafana.tuana9a.com
+        port: 80
+        protocol: HTTP
 dashboardProviders:
   dashboardproviders.yaml:
     apiVersion: 1
