@@ -1,0 +1,24 @@
+kind: ListenerSet
+apiVersion: gateway.networking.k8s.io/v1
+metadata:
+  name: vault
+  namespace: "${namespace}"
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production-gatewayapi
+spec:
+  parentRef:
+    name: starscream
+    namespace: envoy-gateway-system
+  listeners:
+    - name: https
+      hostname: vault.tuana9a.com
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: vault-tuana9a-com-tls
+    - name: http # requires for cert http challenge
+      hostname: vault.tuana9a.com
+      port: 80
+      protocol: HTTP

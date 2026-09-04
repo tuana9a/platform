@@ -24,3 +24,10 @@ server:
       - secretName: vault-tuana9a-com-tls
         hosts:
           - vault.tuana9a.com
+  httproute:
+    enabled: true
+    hostnames:
+      - vault.tuana9a.com
+    parentRefs:
+      - kind: ListenerSet
+        name: vault
