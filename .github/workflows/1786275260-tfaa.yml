@@ -1,14 +1,12 @@
-name: "tuana9a/vn/cobi/121-anor-londo-cluster/19-vault/196-vault-config"
-
-on:
-  workflow_dispatch:
+name: tuana9a/vn/hanoi/121-anor-londo-cluster/19-vault/196-vault-config
+'on':
+  workflow_dispatch: null
   push:
     paths:
-      - "tuana9a/vn/cobi/121-anor-londo-cluster/19-vault/196-vault-config/**"
-      - ".github/workflows/tuana9a-vn-cobi-121-anor-londo-cluster-19-vault-196-vault-config-tfaa*"
+    - tuana9a/vn/hanoi/121-anor-londo-cluster/19-vault/196-vault-config/**
+    - 1786275260-tfaa*
     branches:
-      - rock-n-roll
-
+    - rock-n-roll
 jobs:
   main:
     permissions:
@@ -17,6 +15,6 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
-      login-vault: "in-cluster-sa"
-      WORKING_DIR: ${{ github.workflow }}
+      WORKING_DIR: tuana9a/vn/hanoi/121-anor-londo-cluster/19-vault/196-vault-config
+      login-vault: in-cluster-sa
     secrets: inherit
