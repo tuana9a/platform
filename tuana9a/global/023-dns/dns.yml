@@ -29,7 +29,7 @@ CNAME:
   t9stbot:
     - content: megatron.tuana9a.com
   vault:
-    - content: orisis.tuana9a.com
+    - content: megatron.tuana9a.com
   utils.bm:
     - content: megatron.tuana9a.com
   "*.stuffs.kn":
