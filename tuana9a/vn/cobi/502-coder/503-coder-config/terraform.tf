@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "503-coder-setup"
+    prefix = "1788570931" # date +%s
   }
   required_providers {
     google = {
@@ -27,6 +27,11 @@ provider "google" {
   project = "tuana9a"
   region  = "asia-southeast1"
   zone    = "asia-southeast1-b"
+}
+
+data "vault_kv_secret_v2" "coder_config" {
+  mount = "kvv2"
+  name  = "github.com/tuana9a/platform/1788570931-tfaa"
 }
 
 provider "coderd" {
