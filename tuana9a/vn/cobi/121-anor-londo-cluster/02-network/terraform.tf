@@ -38,22 +38,22 @@ provider "vault" {
   skip_child_token = true
 }
 
-data "vault_kv_secret_v2" "cluster_auth" {
+ephemeral "vault_kv_secret_v2" "cluster_auth" {
   mount = "kvv2"
   name  = "in-cluster/common"
 }
 
 provider "kubernetes" {
   host                   = "https://192.168.56.21:6443"
-  cluster_ca_certificate = base64decode(data.vault_kv_secret_v2.cluster_auth.data["cluster_ca_certificate_b64"])
-  token                  = data.vault_kv_secret_v2.cluster_auth.data["cluster_auth_token"]
+  cluster_ca_certificate = base64decode(ephemeral.vault_kv_secret_v2.cluster_auth.data["cluster_ca_certificate_b64"])
+  token                  = ephemeral.vault_kv_secret_v2.cluster_auth.data["cluster_auth_token"]
 }
 
 provider "helm" {
   kubernetes = {
     host                   = "https://192.168.56.21:6443"
-    cluster_ca_certificate = base64decode(data.vault_kv_secret_v2.cluster_auth.data["cluster_ca_certificate_b64"])
-    token                  = data.vault_kv_secret_v2.cluster_auth.data["cluster_auth_token"]
+    cluster_ca_certificate = base64decode(ephemeral.vault_kv_secret_v2.cluster_auth.data["cluster_ca_certificate_b64"])
+    token                  = ephemeral.vault_kv_secret_v2.cluster_auth.data["cluster_auth_token"]
   }
 }
 
