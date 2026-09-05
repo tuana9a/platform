@@ -7,9 +7,9 @@ A:
     - content: "${megatron_ip}"
 CNAME:
   "*.coder":
-    - content: orisis.tuana9a.com
+    - content: megatron.tuana9a.com
   coder:
-    - content: orisis.tuana9a.com
+    - content: megatron.tuana9a.com
   d9stbot:
     - content: megatron.tuana9a.com
   "*.dev2":
