@@ -37,13 +37,14 @@ def build_skeleton(folder: str, project_prefix: str, opts: dict) -> dict:
     if opts.get("workflow_dispatch", True):
         on_section["workflow_dispatch"] = None
 
+    ignore_paths = opts.get("ignore_paths", [])
     if opts.get("push", True):
         on_section["push"] = {
             "paths": [
                 path_pattern_dir,
-                # path_pattern_workflow,
                 f"{project_prefix}-tfaa*",
-            ],
+            ]
+            + list(map(lambda x: f"!{x}", ignore_paths)),
             "branches": ["rock-n-roll"],
         }
 
