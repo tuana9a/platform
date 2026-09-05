@@ -4,7 +4,7 @@ name: tuana9a/global/023-dns
   push:
     paths:
     - tuana9a/global/023-dns/**
-    - 1788256085-tfaa*
+    - .github/workflows/1788256085-tfaa.yml
     branches:
     - rock-n-roll
 jobs:

@@ -4,7 +4,7 @@ name: tuana9a/vn/hanoi/121-anor-londo-cluster/19-vault
   push:
     paths:
     - tuana9a/vn/hanoi/121-anor-londo-cluster/19-vault/**
-    - 1786269848-tfaa*
+    - .github/workflows/1786269848-tfaa.yml
     - '!tuana9a/vn/hanoi/121-anor-londo-cluster/19-vault/196-vault-config'
     branches:
     - rock-n-roll

@@ -4,7 +4,7 @@ name: tuana9a/vn/hanoi/121-anor-londo-cluster/14-monitoring
   push:
     paths:
     - tuana9a/vn/hanoi/121-anor-londo-cluster/14-monitoring/**
-    - 1788447365-tfaa*
+    - .github/workflows/1788447365-tfaa.yml
     branches:
     - rock-n-roll
 jobs:
