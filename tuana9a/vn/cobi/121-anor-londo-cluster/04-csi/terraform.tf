@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "tuana9a/vn/cobi/121-anor-londo-cluster/04-csi"
+    prefix = "1788598804" # date +%s
   }
   required_providers {
     google = {
@@ -28,6 +28,10 @@ terraform {
       source  = "hashicorp/external"
       version = "2.3.5"
     }
+    vault = {
+      source  = "hashicorp/vault"
+      version = "~> 5.10.1"
+    }
   }
 }
 
@@ -37,24 +41,38 @@ provider "google" {
   zone    = "asia-southeast1-b"
 }
 
+provider "vault" {
+  address          = "https://vault.tuana9a.com"
+  skip_child_token = true
+}
+
+ephemeral "vault_kv_secret_v2" "pve_auth" {
+  mount = "kvv2"
+  name  = "pve/clusters/alien/api-tokens/u@tf"
+}
+
 provider "proxmox" {
-  endpoint  = local.secrets.pve_endpoint
-  api_token = local.secrets.pve_api_token
-  insecure  = local.secrets.pve_insecure
+  endpoint  = ephemeral.vault_kv_secret_v2.pve_auth.data.pve_endpoint
+  api_token = ephemeral.vault_kv_secret_v2.pve_auth.data.pve_api_token
+  insecure  = ephemeral.vault_kv_secret_v2.pve_auth.data.pve_insecure == "yes"
+}
+
+ephemeral "vault_kv_secret_v2" "cluster_auth" {
+  mount = "kvv2"
+  name  = "in-cluster/namespaces/default/serviceaccounts/zeus"
 }
 
 provider "kubernetes" {
   host                   = "https://192.168.56.21:6443"
-  cluster_ca_certificate = base64decode(local.secrets.cluster_ca_certificate_b64)
-
-  token = local.secrets.cluster_auth_token
+  cluster_ca_certificate = base64decode(ephemeral.vault_kv_secret_v2.cluster_auth.data["cluster_ca_certificate_b64"])
+  token                  = ephemeral.vault_kv_secret_v2.cluster_auth.data["cluster_auth_token"]
 }
 
 provider "helm" {
   kubernetes = {
     host                   = "https://192.168.56.21:6443"
-    cluster_ca_certificate = base64decode(local.secrets.cluster_ca_certificate_b64)
-    token                  = local.secrets.cluster_auth_token
+    cluster_ca_certificate = base64decode(ephemeral.vault_kv_secret_v2.cluster_auth.data["cluster_ca_certificate_b64"])
+    token                  = ephemeral.vault_kv_secret_v2.cluster_auth.data["cluster_auth_token"]
   }
 }
 
