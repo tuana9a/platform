@@ -36,7 +36,7 @@ provider "vault" {
 
 ephemeral "vault_kv_secret_v2" "cluster_auth" {
   mount = "kvv2"
-  name  = "github.com/tuana9a/platform/tuana9a/vn/cobi/502-coder/terraform.tf"
+  name  = "in-cluster/namespaces/default/serviceaccounts/zeus"
 }
 
 provider "kubernetes" {
