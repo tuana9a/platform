@@ -61,9 +61,9 @@ resource "helm_release" "proxmox_csi_plugin" {
   version    = "0.5.3"
 
   values = [templatefile("./templates/values.yaml", {
-    pve_url          = local.secrets.proxmox_csi_pve_url
-    pve_insecure     = local.secrets.proxmox_csi_pve_insecure
-    pve_cluster_name = local.secrets.proxmox_csi_cluster_name
+    pve_url          = data.vault_kv_secret_v2.proxmox_csi.data.proxmox_csi_pve_url
+    pve_insecure     = data.vault_kv_secret_v2.proxmox_csi.data.proxmox_csi_pve_insecure == "yes"
+    pve_cluster_name = data.vault_kv_secret_v2.proxmox_csi.data.proxmox_csi_cluster_name
     pve_token_id     = proxmox_virtual_environment_user_token.kubernetes_csi.id
     pve_token_secret = split("=", proxmox_virtual_environment_user_token.kubernetes_csi.value)[1]
     pve_storage_id   = "local"
