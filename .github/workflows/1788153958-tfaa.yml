@@ -4,7 +4,7 @@ name: tuana9a/vn/hanoi/121-anor-londo-cluster/20-wireguard-clients
   push:
     paths:
     - tuana9a/vn/hanoi/121-anor-londo-cluster/20-wireguard-clients/**
-    - 1788153958-tfaa*
+    - .github/workflows/1788153958-tfaa.yml
     branches:
     - rock-n-roll
 jobs:
