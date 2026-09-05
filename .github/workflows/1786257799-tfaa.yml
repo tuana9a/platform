@@ -1,15 +1,13 @@
-name: "tuana9a/vn/cobi/502-coder"
-
-on:
-  workflow_dispatch:
+name: tuana9a/vn/hanoi/121-anor-londo-cluster/502-coder
+'on':
+  workflow_dispatch: null
   push:
     paths:
-      - "tuana9a/vn/cobi/502-coder/**"
-      - "!tuana9a/vn/cobi/502-coder/503-coder-config/**"
-      - ".github/workflows/tuana9a-vn-502-coder-tfaa*"
+    - tuana9a/vn/hanoi/121-anor-londo-cluster/502-coder/**
+    - .github/workflows/1786257799-tfaa.yml
+    - '!tuana9a/vn/hanoi/121-anor-londo-cluster/502-coder/503-coder-config/**'
     branches:
-      - rock-n-roll
-
+    - rock-n-roll
 jobs:
   main:
     permissions:
@@ -18,6 +16,6 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
-      login-vault: "in-cluster-sa"
-      WORKING_DIR: ${{ github.workflow }}
+      WORKING_DIR: tuana9a/vn/hanoi/121-anor-londo-cluster/502-coder
+      login-vault: in-cluster-sa
     secrets: inherit
