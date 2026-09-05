@@ -1,14 +1,12 @@
-name: "tuana9a/vn/cobi/121-anor-londo-cluster/08-ingress"
-
-on:
-  workflow_dispatch:
+name: tuana9a/vn/hanoi/121-anor-londo-cluster/08-ingress-nginx
+'on':
+  workflow_dispatch: null
   push:
     paths:
-      - "tuana9a/vn/cobi/121-anor-londo-cluster/08-ingress/**"
-      - ".github/workflows/tuana9a-vn-cobi-121-anor-londo-cluster-08-ingress-tfaa*"
+    - tuana9a/vn/hanoi/121-anor-londo-cluster/08-ingress-nginx/**
+    - .github/workflows/1788592120-tfaa.yml
     branches:
-      - rock-n-roll
-
+    - rock-n-roll
 jobs:
   main:
     permissions:
@@ -17,7 +15,6 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
-      install-sops: true
-      WORKING_DIR: ${{ github.workflow }}
-      AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/github-workflow
+      WORKING_DIR: tuana9a/vn/hanoi/121-anor-londo-cluster/08-ingress-nginx
+      login-vault: in-cluster-sa
     secrets: inherit
