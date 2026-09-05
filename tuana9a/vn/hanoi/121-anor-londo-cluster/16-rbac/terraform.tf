@@ -27,7 +27,7 @@ provider "google" {
 
 ephemeral "vault_kv_secret_v2" "cluster_auth" {
   mount = "kvv2"
-  name  = "github.com/tuana9a/platform/tuana9a/vn/cobi/121-anor-londo-cluster/16-rbac/terraform.tf"
+  name  = "in-cluster/namespaces/default/serviceaccounts/zeus"
 }
 
 provider "kubernetes" {
