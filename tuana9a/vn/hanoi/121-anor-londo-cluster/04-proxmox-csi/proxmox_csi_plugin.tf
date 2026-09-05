@@ -60,7 +60,7 @@ resource "helm_release" "proxmox_csi_plugin" {
   chart      = "proxmox-csi-plugin"
   version    = "0.5.3"
 
-  values = [templatefile("./templates/values.yaml", {
+  values = [templatefile("./values.yaml", {
     pve_url          = data.vault_kv_secret_v2.proxmox_csi.data.proxmox_csi_pve_url
     pve_insecure     = data.vault_kv_secret_v2.proxmox_csi.data.proxmox_csi_pve_insecure == "yes"
     pve_cluster_name = data.vault_kv_secret_v2.proxmox_csi.data.proxmox_csi_cluster_name
