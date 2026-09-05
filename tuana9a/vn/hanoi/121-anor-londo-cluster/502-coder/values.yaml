@@ -76,7 +76,7 @@ coder:
     enable: true
     type: ClusterIP
   ingress:
-    enable: true
+    enable: false
     className: nginx
     host: coder.tuana9a.com
     wildcardHost: "*.coder.tuana9a.com"
