@@ -14,3 +14,7 @@ megatron:
           ip: 10.20.26.11
           http_port: 31080
           https_port: 31443
+        - hostname: starscream-2
+          ip: 10.20.26.12
+          http_port: 31080
+          https_port: 31443

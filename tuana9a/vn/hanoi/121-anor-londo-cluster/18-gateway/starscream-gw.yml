@@ -8,10 +8,13 @@ spec:
     type: Kubernetes
     kubernetes:
       envoyService:
+        type: NodePort
         patch:
           type: StrategicMerge
           value:
             spec:
+              # externalTrafficPolicy default to local - causing haproxy can only forward traffic to wireguard client running in the same node as envoy proxy pod
+              externalTrafficPolicy: Cluster
               ports:
                 - port: 80
                   name: http
@@ -75,3 +78,4 @@ spec:
       name: starscream
   connection:
     bufferLimit: 10Mi
+  enableProxyProtocol: true

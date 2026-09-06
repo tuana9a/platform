@@ -21,7 +21,7 @@
         prompt: "Do you want to proceed with the above changes? (yes/no)"
       register: confirm_update_result
 
-    - name: Cancel update haproxy
+    - name: Update haproxy canceled
       meta: end_play
       when: confirm_update_result.user_input != 'yes'
 
