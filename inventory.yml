@@ -16,31 +16,6 @@ tuana9a-dev2:
           ip: 192.168.56.80
           http_port: 80
           https_port: 443
-neomorph:
-  hosts:
-    192.168.56.112:
-      ansible_user: u
-      ufw_state: "disabled"
-      ufw_rules: &proxmox_ufw_rules
-        - name: "Allow SSH (Limit)"
-          rule: limit
-          port: "22" # SSH
-          proto: tcp
-        - name: "Allow Proxmox Web UI"
-          rule: allow
-          port: "8006" # Proxmox Web
-          proto: tcp
-        - name: "Allow node-exporter"
-          rule: allow
-          port: "9100" # node-exporter
-          proto: tcp
-          from_ip: "192.168.56.0/24"
-engineer:
-  hosts:
-    192.168.56.113:
-      ansible_user: u
-      ufw_state: "disabled"
-      ufw_rules: *proxmox_ufw_rules
 orisis:
   hosts:
     orisis.tuana9a.com:
