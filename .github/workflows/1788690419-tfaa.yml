@@ -1,14 +1,12 @@
-name: "tuana9a/vn/cobi/121-anor-londo-cluster/02-network"
-
-on:
-  workflow_dispatch:
+name: tuana9a/vn/hanoi/121-anor-londo-cluster/02-metallb
+'on':
+  workflow_dispatch: null
   push:
     paths:
-      - "tuana9a/vn/cobi/121-anor-londo-cluster/02-network/**"
-      - ".github/workflows/tuana9a-vn-cobi-121-anor-londo-cluster-02-network-tfaa*"
+    - tuana9a/vn/hanoi/121-anor-londo-cluster/02-metallb/**
+    - .github/workflows/1788690419-tfaa.yml
     branches:
-      - rock-n-roll
-
+    - rock-n-roll
 jobs:
   main:
     permissions:
@@ -17,8 +15,6 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
-      install-sops: true
-      WORKING_DIR: ${{ github.workflow }}
-      AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/github-workflow
-      login-vault: "in-cluster-sa"
+      WORKING_DIR: tuana9a/vn/hanoi/121-anor-londo-cluster/02-metallb
+      login-vault: in-cluster-sa
     secrets: inherit
