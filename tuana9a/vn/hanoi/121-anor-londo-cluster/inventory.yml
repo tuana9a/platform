@@ -51,7 +51,7 @@ DO_NOT_USE: # NOTE: storing common variables
           - data-plane
         corecount: 4
         memsize: 12288
-k8s_cluster:
+cluster:
   hosts:
     # --- CONTROL PLANE ---
     192.168.56.25: &i-125
