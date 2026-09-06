@@ -3,9 +3,8 @@ name: tuana9a/vn/hanoi/121-anor-londo-cluster/502-coder
   workflow_dispatch: null
   push:
     paths:
-    - tuana9a/vn/hanoi/121-anor-londo-cluster/502-coder/**
+    - tuana9a/vn/hanoi/121-anor-londo-cluster/502-coder/*
     - .github/workflows/1786257799-tfaa.yml
-    - '!tuana9a/vn/hanoi/121-anor-londo-cluster/502-coder/503-coder-config/**'
     branches:
     - rock-n-roll
 jobs:

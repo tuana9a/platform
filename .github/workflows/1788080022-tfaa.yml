@@ -3,7 +3,7 @@ name: tuana9a/vn/hanoi/030-bizflycloud-firewalls
   workflow_dispatch: null
   push:
     paths:
-    - tuana9a/vn/hanoi/030-bizflycloud-firewalls/**
+    - tuana9a/vn/hanoi/030-bizflycloud-firewalls/*
     - .github/workflows/1788080022-tfaa.yml
     branches:
     - rock-n-roll

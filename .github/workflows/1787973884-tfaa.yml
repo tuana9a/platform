@@ -3,7 +3,7 @@ name: tuana9a/vn/hanoi/121-anor-londo-cluster/02-envoy-gateway
   workflow_dispatch: null
   push:
     paths:
-    - tuana9a/vn/hanoi/121-anor-londo-cluster/02-envoy-gateway/**
+    - tuana9a/vn/hanoi/121-anor-londo-cluster/02-envoy-gateway/*
     - .github/workflows/1787973884-tfaa.yml
     branches:
     - rock-n-roll

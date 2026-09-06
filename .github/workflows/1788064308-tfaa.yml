@@ -3,7 +3,7 @@ name: tuana9a/vn/hanoi/121-anor-londo-cluster/18-gateway
   workflow_dispatch: null
   push:
     paths:
-    - tuana9a/vn/hanoi/121-anor-londo-cluster/18-gateway/**
+    - tuana9a/vn/hanoi/121-anor-londo-cluster/18-gateway/*
     - .github/workflows/1788064308-tfaa.yml
     branches:
     - rock-n-roll

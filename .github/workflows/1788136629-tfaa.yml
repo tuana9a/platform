@@ -3,7 +3,7 @@ name: tuana9a/vn/hanoi/121-anor-londo-cluster/19-cert-manager
   workflow_dispatch: null
   push:
     paths:
-    - tuana9a/vn/hanoi/121-anor-londo-cluster/19-cert-manager/**
+    - tuana9a/vn/hanoi/121-anor-londo-cluster/19-cert-manager/*
     - .github/workflows/1788136629-tfaa.yml
     branches:
     - rock-n-roll

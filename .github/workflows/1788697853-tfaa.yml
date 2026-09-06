@@ -3,7 +3,7 @@ name: tuana9a/vn/hanoi/119-pve-alien-cloudimgs
   workflow_dispatch: null
   push:
     paths:
-    - tuana9a/vn/hanoi/119-pve-alien-cloudimgs/**
+    - tuana9a/vn/hanoi/119-pve-alien-cloudimgs/*
     - .github/workflows/1788697853-tfaa.yml
     branches:
     - rock-n-roll

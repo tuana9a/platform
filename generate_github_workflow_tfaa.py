@@ -40,13 +40,13 @@ def read_metadata(folder: str) -> dict:
 
 
 def generate_workflow(folder: str, worflow_filepath: str, opts={}) -> str | None:
-    path_pattern_dir = f"{folder}/**"
+    path_pattern_dir = f"{folder}/*"
 
     on_section = {}
 
     if opts.get("workflow_dispatch", True):
         on_section["workflow_dispatch"] = None
-
+    paths = opts.get("paths", [])
     ignore_paths = opts.get("ignore_paths", [])
     if opts.get("push", True):
         on_section["push"] = {
@@ -54,6 +54,7 @@ def generate_workflow(folder: str, worflow_filepath: str, opts={}) -> str | None
                 path_pattern_dir,
                 worflow_filepath,
             ]
+            + paths
             + list(map(lambda x: f"!{x}", ignore_paths)),
             "branches": ["rock-n-roll"],
         }
@@ -79,9 +80,7 @@ def generate_workflow(folder: str, worflow_filepath: str, opts={}) -> str | None
     }
 
     if not skeleton.get("on"):
-        print(
-            f"Warning: {folder} has no triggers under 'on'", file=sys.stderr
-        )
+        print(f"Warning: {folder} has no triggers under 'on'", file=sys.stderr)
 
     result = yaml.dump(skeleton, sort_keys=False, default_flow_style=False)
     return result

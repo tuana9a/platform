@@ -3,7 +3,7 @@ name: tuana9a/vn/hanoi/121-anor-londo-cluster/02-metallb
   workflow_dispatch: null
   push:
     paths:
-    - tuana9a/vn/hanoi/121-anor-londo-cluster/02-metallb/**
+    - tuana9a/vn/hanoi/121-anor-londo-cluster/02-metallb/*
     - .github/workflows/1788690419-tfaa.yml
     branches:
     - rock-n-roll

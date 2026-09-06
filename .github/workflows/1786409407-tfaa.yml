@@ -1,10 +1,10 @@
-name: tuana9a/vn/hanoi/121-anor-londo-cluster/14-monitoring
+name: tuana9a/global/806-do-uptime
 'on':
   workflow_dispatch: null
   push:
     paths:
-    - tuana9a/vn/hanoi/121-anor-londo-cluster/14-monitoring/*
-    - .github/workflows/1788447365-tfaa.yml
+    - tuana9a/global/806-do-uptime/*
+    - .github/workflows/1786409407-tfaa.yml
     branches:
     - rock-n-roll
 jobs:
@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
-      WORKING_DIR: tuana9a/vn/hanoi/121-anor-londo-cluster/14-monitoring
+      WORKING_DIR: tuana9a/global/806-do-uptime
       login-vault: in-cluster-sa
     secrets: inherit

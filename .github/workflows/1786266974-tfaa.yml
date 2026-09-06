@@ -3,7 +3,7 @@ name: tuana9a/vn/hanoi/121-anor-londo-cluster/28-secretstores
   workflow_dispatch: null
   push:
     paths:
-    - tuana9a/vn/hanoi/121-anor-londo-cluster/28-secretstores/**
+    - tuana9a/vn/hanoi/121-anor-londo-cluster/28-secretstores/*
     - .github/workflows/1786266974-tfaa.yml
     branches:
     - rock-n-roll

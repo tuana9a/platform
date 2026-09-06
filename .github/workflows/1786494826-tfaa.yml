@@ -3,7 +3,7 @@ name: tuana9a/vn/hanoi/121-anor-londo-cluster/12-github-runners
   workflow_dispatch: null
   push:
     paths:
-    - tuana9a/vn/hanoi/121-anor-londo-cluster/12-github-runners/**
+    - tuana9a/vn/hanoi/121-anor-londo-cluster/12-github-runners/*
     - .github/workflows/1786494826-tfaa.yml
     branches:
     - rock-n-roll
