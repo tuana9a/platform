@@ -32,7 +32,7 @@ provider "vault" {
 
 ephemeral "vault_kv_secret_v2" "pve_auth" {
   mount = "kvv2"
-  name  = "pve/clusters/alien/api-tokens/u@tf"
+  name  = "pve/clusters/alien/users/u/api-tokens/tf/auth"
 }
 
 provider "proxmox" {
