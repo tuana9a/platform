@@ -4,7 +4,7 @@ name: tuana9a/vn/hanoi/030-bizflycloud-firewalls
   push:
     paths:
     - tuana9a/vn/hanoi/030-bizflycloud-firewalls/**
-    - .github/workflows/tuana9a-vn-hanoi-030-bizflycloud-firewalls-tfaa*
+    - .github/workflows/1788080022-tfaa.yml
     branches:
     - rock-n-roll
 jobs:
@@ -16,5 +16,5 @@ jobs:
     with:
       runs-on: self-hosted-0
       WORKING_DIR: tuana9a/vn/hanoi/030-bizflycloud-firewalls
-      login-vault: "in-cluster-sa"
+      login-vault: in-cluster-sa
     secrets: inherit
