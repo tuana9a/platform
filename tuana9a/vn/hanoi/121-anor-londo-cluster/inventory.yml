@@ -13,8 +13,7 @@ DO_NOT_USE: # NOTE: storing common variables
       kubevip: &kubevip
         inf: eth0
         vip: 192.168.56.21
-      kubernetes_major_version: &kubernetes_major_version "1.33"
-      kubernetes_minor_version: &kubernetes_minor_version "1.33.10"
+      kubernetes_version: &kubernetes_version "1.33.10"
       cluster_ops: &cluster_ops
         # some operation required taking variable from control plane like:
         # - getting kube_pki
@@ -34,8 +33,7 @@ DO_NOT_USE: # NOTE: storing common variables
         pve_network_device: "vmbr0"
         gateway_ip: *gateway_ip
         cluster_ops: *cluster_ops
-        kubernetes_major_version: *kubernetes_major_version
-        kubernetes_minor_version: *kubernetes_minor_version
+        kubernetes_version: *kubernetes_version
 
       control_plane_defaults: &control_plane_defaults
         <<: *k8s_node_defaults

@@ -20,6 +20,10 @@ terraform {
       source  = "hashicorp/vault"
       version = "5.11.0"
     }
+    external = {
+      source  = "hashicorp/external"
+      version = "2.4.1"
+    }
   }
 }
 
@@ -57,4 +61,7 @@ provider "proxmox" {
 }
 
 provider "random" {
+}
+
+provider "external" {
 }

@@ -5,10 +5,34 @@ locals {
     # adding just deriviated fields
     for vmip, vm in yamldecode(file("./inventory.yml"))["cluster"]["hosts"] :
     vm["nodename"] => merge(vm, {
-      address        = "${vmip}/24"
-      network_device = vm["pve_network_device"]
+      ip_address       = vmip
+      address          = "${vmip}/24"
+      network_device   = vm["pve_network_device"]
+      is_control_plane = contains(vm.roles, "control-plane")
     })
   }
+
+  cluster_control_planes = { for k, v in local.cluster : k => v if v.is_control_plane }
+}
+
+data "vault_kv_secret_v2" "ci" {
+  mount = "kvv2"
+  name  = "ci"
+}
+
+data "external" "kubeadm_join_command" {
+  program = ["bash", "${path.module}/get_join_command.sh"]
+
+  query = {
+    host     = values(local.cluster_control_planes)[0].ip_address
+    ssh_user = "u"
+
+    ssh_key_content = data.vault_kv_secret_v2.ci.data.id_rsa
+  }
+}
+
+locals {
+  kubeadm_join_command = data.external.kubeadm_join_command.result.join_command
 }
 
 resource "random_password" "vm_password" {
@@ -79,6 +103,29 @@ resource "proxmox_virtual_environment_vm" "cluster" {
       username = "u"
       keys     = var.vm_authorized_keys
     }
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "u"
+    private_key = data.vault_kv_secret_v2.ci.data.id_rsa
+    host        = each.value.ip_address
+  }
+
+  provisioner "file" {
+    source      = "install-kube.sh"
+    destination = "/tmp/install-kube.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "#!/bin/bash",
+      "set -euo pipefail",
+      "export KUBERNETES_VERSION=${each.value.kubernetes_version}",
+      "chmod +x /tmp/install-kube.sh",
+      "/tmp/install-kube.sh",
+      "sudo ${local.kubeadm_join_command} ${each.value.is_control_plane ? "--control-plane" : ""}"
+    ]
   }
 
   on_boot = true
