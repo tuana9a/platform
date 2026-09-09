@@ -150,6 +150,7 @@ sudo sysctl --system
 
 echo "==> Installing kubelet/kubeadm/kubectl ${KUBERNETES_VERSION}"
 
+sudo apt-get update
 sudo apt install -y gnupg2
 
 sudo install -m 0755 -d /etc/apt/keyrings

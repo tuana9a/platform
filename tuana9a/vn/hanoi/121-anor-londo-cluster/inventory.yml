@@ -26,6 +26,7 @@ DO_NOT_USE: # NOTE: storing common variables
       cloudimg: &cloudimg debian-12-generic-amd64-20260510-2474.img
 
       k8s_node_defaults: &k8s_node_defaults
+        create: true
         ansible_user: u
         pve_cluster: "alien"
         pve_node: "neomorph"
@@ -115,3 +116,13 @@ cluster:
       upgrade:
         batch: batch5
         skip_phases: ["kube-proxy"]
+    192.168.56.39: &i-139
+      <<: *data_plane_defaults
+      create: false
+      vmid: 139
+      nodename: i-139
+      upgrade:
+        batch: batch3
+        skip_phases: ["kube-proxy"] # TODO: test this next time
+      corecount: 2
+      memsize: 4096
