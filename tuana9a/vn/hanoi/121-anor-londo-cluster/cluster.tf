@@ -113,28 +113,30 @@ resource "proxmox_virtual_environment_vm" "cluster" {
       username = local.vm_username
       keys     = local.vm_authorized_keys
     }
+
+    upgrade = false
   }
 
   provisioner "local-exec" {
     when    = create
-    command = "./tmp/wait_for_ssh_${each.key}.sh"
+    command = "./tmp/wait_for_ssh.sh ${each.value.ip_address}"
   }
 
   provisioner "local-exec" {
     when    = create
-    command = "./tmp/wait_for_cloud_init_${each.key}.sh"
+    command = "./tmp/wait_for_cloud_init.sh ${each.value.ip_address}"
   }
 
   # TODO: wait for cloud-init to be completed
 
   provisioner "local-exec" {
     when    = create
-    command = "./tmp/install_kube_${each.key}.sh"
+    command = "./tmp/install_kube.sh ${each.value.ip_address} ${each.value.kubernetes_version}"
   }
 
   provisioner "local-exec" {
     when    = create
-    command = "./tmp/kube_join_${each.key}.sh"
+    command = "./tmp/kube_join.sh ${each.value.ip_address} ${each.value.is_control_plane ? 1 : 0}"
   }
 
   provisioner "local-exec" {
@@ -154,7 +156,7 @@ resource "proxmox_virtual_environment_vm" "cluster" {
 
   provisioner "local-exec" {
     when    = destroy
-    command = "./tmp/kubeadm_reset_${each.key}.sh"
+    command = "./tmp/kubeadm_reset.sh ${each.key}"
   }
 
   on_boot = true

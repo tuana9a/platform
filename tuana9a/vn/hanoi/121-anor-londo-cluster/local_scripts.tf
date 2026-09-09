@@ -9,13 +9,13 @@ resource "local_sensitive_file" "ci" {
 }
 
 resource "local_file" "wait_for_ssh" {
-  for_each = local.cluster
-
-  filename        = "${local.local_scripts_dir}/wait_for_ssh_${each.key}.sh"
+  filename        = "${local.local_scripts_dir}/wait_for_ssh.sh"
   file_permission = "0700"
   content         = <<EOF
 #!/usr/bin/env bash
 set -euo pipefail
+
+node_ip=$1
 
 TIMEOUT=300
 INTERVAL=5
@@ -24,20 +24,20 @@ SSH_OPTS=(
   -o StrictHostKeyChecking=no
 )
 
-echo "Waiting for SSH on ${local.vm_username}@${each.value.ip_address} (timeout: $${TIMEOUT}s)..."
+echo "Waiting for SSH on ${local.vm_username}@$node_ip (timeout: $${TIMEOUT}s)..."
 
 start_time=$(date +%s)
 
 while true; do
-  if ssh "$${SSH_OPTS[@]}" "${local.vm_username}@${each.value.ip_address}" true 2>/dev/null; then
-    echo "SSH is up on ${each.value.ip_address}"
+  if ssh "$${SSH_OPTS[@]}" "${local.vm_username}@$node_ip" true 2>/dev/null; then
+    echo "SSH is up on $node_ip"
     exit 0
   fi
 
   now=$(date +%s)
   elapsed=$(( now - start_time ))
   if (( elapsed >= TIMEOUT )); then
-    echo "Timed out after $${TIMEOUT}s waiting for SSH on ${each.value.ip_address}" >&2
+    echo "Timed out after $${TIMEOUT}s waiting for SSH on $node_ip" >&2
     exit 1
   fi
 
@@ -47,13 +47,13 @@ EOF
 }
 
 resource "local_file" "wait_for_cloud_init" {
-  for_each = local.cluster
-
-  filename        = "${local.local_scripts_dir}/wait_for_cloud_init_${each.key}.sh"
+  filename        = "${local.local_scripts_dir}/wait_for_cloud_init.sh"
   file_permission = "0700"
   content         = <<EOF
 #!/usr/bin/env bash
 set -euo pipefail
+
+node_ip=$1
 
 TIMEOUT=300
 INTERVAL=5
@@ -62,45 +62,47 @@ SSH_OPTS=(
   -o StrictHostKeyChecking=no
 )
 
-echo "==> Waiting for cloud-init on ${local.vm_username}@${each.value.ip_address} to finish..."
-ssh "$${SSH_OPTS[@]}" "${local.vm_username}@${each.value.ip_address}" "cloud-init status --wait"
-echo "cloud-init done. Node ${each.value.ip_address} is ready for provisioning."
+echo "==> Waiting for cloud-init on ${local.vm_username}@$node_ip to finish..."
+ssh "$${SSH_OPTS[@]}" "${local.vm_username}@$node_ip" "cloud-init status --wait"
+echo "cloud-init done. Node $node_ip is ready for provisioning."
 EOF
 }
 
 resource "local_file" "install_kube" {
-  for_each = local.cluster
-
-  filename        = "${local.local_scripts_dir}/install_kube_${each.key}.sh"
+  filename        = "${local.local_scripts_dir}/install_kube.sh"
   file_permission = "0700"
   content         = <<EOF
 #!/usr/bin/env bash
 set -euo pipefail
 
+node_ip=$1
+kubernetes_version=$2
+
 scp -o StrictHostKeyChecking=no \
   -i "${local_sensitive_file.ci.filename}" \
-  ./install-kube.sh ${local.vm_username}@${each.value.ip_address}:/tmp/install-kube.sh
+  ./install-kube.sh ${local.vm_username}@$node_ip:/tmp/install-kube.sh
 
 ssh -o StrictHostKeyChecking=no \
   -i "${local_sensitive_file.ci.filename}" \
-  "${local.vm_username}@${each.value.ip_address}" \
-  "set -euo pipefail; chmod +x /tmp/install-kube.sh && sudo KUBERNETES_VERSION=${each.value.kubernetes_version} /tmp/install-kube.sh"
+  "${local.vm_username}@$node_ip" \
+  "set -euo pipefail; chmod +x /tmp/install-kube.sh && sudo KUBERNETES_VERSION=$kubernetes_version /tmp/install-kube.sh"
 EOF
 }
 
 resource "local_sensitive_file" "kube_join" {
-  for_each = local.cluster
-
-  filename        = "${local.local_scripts_dir}/kube_join_${each.key}.sh"
+  filename        = "${local.local_scripts_dir}/kube_join.sh"
   file_permission = "0700"
   content         = <<EOF
 #!/usr/bin/env bash
 set -euo pipefail
 
+node_ip=$1
+is_control_plane=$2
+
 ssh -o StrictHostKeyChecking=no \
   -i "${local_sensitive_file.ci.filename}" \
-  "${local.vm_username}@${each.value.ip_address}" \
-  "set -euo pipefail; sudo ${local.kubeadm_join_command} ${each.value.is_control_plane ? "--control-plane" : ""}"
+  "${local.vm_username}@$node_ip" \
+  "set -euo pipefail; sudo ${local.kubeadm_join_command} $([[ "$is_control_plane" == "1" ]] && '--control-plane' || '')"
 EOF
 }
 
@@ -147,17 +149,22 @@ EOF
 }
 
 resource "local_file" "kubeadm_reset" {
-  for_each = local._cluster
-
-  filename        = "${local.local_scripts_dir}/kubeadm_reset_${each.key}.sh"
+  filename        = "${local.local_scripts_dir}/kubeadm_reset.sh"
   file_permission = "0700"
   content         = <<EOF
 #!/usr/bin/env bash
 set -euo pipefail
 
+node_name=$1
+
+declare -A get_node_ip
+${join("\n", [for k, v in local._cluster : "get_node_ip[${k}]=\"${v.ip_address}\""])}
+
+node_ip="$${get_node_ip[$node_name]}"
+
 ssh -o StrictHostKeyChecking=no \
   -i "${local_sensitive_file.ci.filename}" \
-  "${local.vm_username}@${each.value.ip_address}" \
+  "${local.vm_username}@$node_ip" \
   "set -euo pipefail; sudo kubeadm reset -f"
 EOF
 }
