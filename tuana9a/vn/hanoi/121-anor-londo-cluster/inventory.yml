@@ -53,10 +53,22 @@ DO_NOT_USE: # NOTE: storing common variables
 cluster:
   hosts:
     # --- CONTROL PLANE ---
+    192.168.56.22: &i-122
+      <<: *control_plane_defaults
+      create: true
+      vmid: 122
+      pve_node: "engineer"
+      nodename: i-122
+      upgrade:
+        batch: batch1
+        skip_phases: ["kube-proxy"] # TODO: test this next time
+      corecount: 2
+      memsize: 6144
     192.168.56.25: &i-125
       <<: *control_plane_defaults
       vmid: 125
       pve_node: "engineer"
+      is_primary_control_plane: true
       nodename: i-125
       upgrade:
         batch: batch1
@@ -118,7 +130,7 @@ cluster:
         skip_phases: ["kube-proxy"]
     192.168.56.39: &i-139
       <<: *data_plane_defaults
-      create: false
+      create: true
       vmid: 139
       nodename: i-139
       upgrade:

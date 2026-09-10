@@ -68,6 +68,37 @@ echo "cloud-init done. Node $node_ip is ready for provisioning."
 EOF
 }
 
+resource "local_sensitive_file" "kube_certs" {
+  for_each = data.external.get_kube_certs.result
+
+  filename        = "${local.local_scripts_dir}/${replace(each.key, "/\\/|\\./", "_")}"
+  file_permission = "0600"
+  content_base64  = each.value
+}
+
+resource "local_file" "scp_kube_certs" {
+  filename        = "${local.local_scripts_dir}/scp_kube_certs.sh"
+  file_permission = "0700"
+  content         = <<EOF
+#!/usr/bin/env bash
+set -euo pipefail
+
+node_ip=$1
+is_control_plane=$2
+
+if [[ "$is_control_plane" != "1" ]]; then
+  echo "Not control plane, skipping..." 
+  exit 0
+fi
+
+SSH_OPTS=(-o StrictHostKeyChecking=no -i "${local_sensitive_file.ci.filename}")
+
+${join("\n", [for k, v in local_sensitive_file.kube_certs : "scp $${SSH_OPTS[@]} ${v.filename} ${local.vm_username}@$node_ip:/tmp/${basename(v.filename)}"])}
+${join("\n", [for k, v in local_sensitive_file.kube_certs : "ssh $${SSH_OPTS[@]} ${local.vm_username}@$node_ip \"sudo mkdir -p ${dirname(k)} && sudo chmod 0755 ${dirname(k)}\""])}
+${join("\n", [for k, v in local_sensitive_file.kube_certs : "ssh $${SSH_OPTS[@]} ${local.vm_username}@$node_ip \"sudo mv /tmp/${basename(v.filename)} ${k} && sudo chmod 0644 ${k}\""])}
+EOF
+}
+
 resource "local_file" "install_kube" {
   filename        = "${local.local_scripts_dir}/install_kube.sh"
   file_permission = "0700"
@@ -77,14 +108,11 @@ set -euo pipefail
 
 node_ip=$1
 kubernetes_version=$2
+SSH_OPTS=(-o StrictHostKeyChecking=no -i "${local_sensitive_file.ci.filename}")
 
-scp -o StrictHostKeyChecking=no \
-  -i "${local_sensitive_file.ci.filename}" \
-  ./install-kube.sh ${local.vm_username}@$node_ip:/tmp/install-kube.sh
+scp $${SSH_OPTS[@]} ./install-kube.sh ${local.vm_username}@$node_ip:/tmp/install-kube.sh
 
-ssh -o StrictHostKeyChecking=no \
-  -i "${local_sensitive_file.ci.filename}" \
-  "${local.vm_username}@$node_ip" \
+ssh $${SSH_OPTS[@]} "${local.vm_username}@$node_ip" \
   "set -euo pipefail; chmod +x /tmp/install-kube.sh && sudo KUBERNETES_VERSION=$kubernetes_version /tmp/install-kube.sh"
 EOF
 }
@@ -98,11 +126,15 @@ set -euo pipefail
 
 node_ip=$1
 is_control_plane=$2
+JOIN_OPTS=""
+if [[ "$is_control_plane" == "1" ]]; then
+  JOIN_OPTS+="--control-plane"
+fi
 
-ssh -o StrictHostKeyChecking=no \
-  -i "${local_sensitive_file.ci.filename}" \
-  "${local.vm_username}@$node_ip" \
-  "set -euo pipefail; sudo ${local.kubeadm_join_command} $([[ "$is_control_plane" == "1" ]] && '--control-plane' || '')"
+SSH_OPTS=(-o StrictHostKeyChecking=no -i "${local_sensitive_file.ci.filename}")
+
+ssh $${SSH_OPTS[@]} "${local.vm_username}@$node_ip" \
+  "set -euo pipefail; sudo ${local.kubeadm_join_command} $JOIN_OPTS"
 EOF
 }
 
@@ -113,9 +145,9 @@ resource "local_file" "drain_node" {
 #!/usr/bin/env bash
 set -euo pipefail
 
-ssh -o StrictHostKeyChecking=no \
-  -i "${local_sensitive_file.ci.filename}" \
-  "${local.vm_username}@${local.first_control_plane_ip}" \
+SSH_OPTS=(-o StrictHostKeyChecking=no -i "${local_sensitive_file.ci.filename}")
+
+ssh $${SSH_OPTS[@]} "${local.vm_username}@${local.primary_control_plane_ip}" \
   "set -euo pipefail; /tmp/drain_node.sh $1"
 EOF
 }
@@ -127,9 +159,9 @@ resource "local_file" "wait_node" {
 #!/usr/bin/env bash
 set -euo pipefail
 
-ssh -o StrictHostKeyChecking=no \
-  -i "${local_sensitive_file.ci.filename}" \
-  "${local.vm_username}@${local.first_control_plane_ip}" \
+SSH_OPTS=(-o StrictHostKeyChecking=no -i "${local_sensitive_file.ci.filename}")
+
+ssh $${SSH_OPTS[@]} "${local.vm_username}@${local.primary_control_plane_ip}" \
   "set -euo pipefail; /tmp/wait_for_empty_volumeattachments.sh $1"
 EOF
 }
@@ -141,9 +173,9 @@ resource "local_file" "delete_node" {
 #!/usr/bin/env bash
 set -euo pipefail
 
-ssh -o StrictHostKeyChecking=no \
-  -i "${local_sensitive_file.ci.filename}" \
-  "${local.vm_username}@${local.first_control_plane_ip}" \
+SSH_OPTS=(-o StrictHostKeyChecking=no -i "${local_sensitive_file.ci.filename}")
+
+ssh $${SSH_OPTS[@]} "${local.vm_username}@${local.primary_control_plane_ip}" \
   "set -euo pipefail; /tmp/delete_node.sh $1"
 EOF
 }
@@ -161,10 +193,9 @@ declare -A get_node_ip
 ${join("\n", [for k, v in local._cluster : "get_node_ip[${k}]=\"${v.ip_address}\""])}
 
 node_ip="$${get_node_ip[$node_name]}"
+SSH_OPTS=(-o StrictHostKeyChecking=no -i "${local_sensitive_file.ci.filename}")
 
-ssh -o StrictHostKeyChecking=no \
-  -i "${local_sensitive_file.ci.filename}" \
-  "${local.vm_username}@$node_ip" \
+ssh $${SSH_OPTS[@]} "${local.vm_username}@$node_ip" \
   "set -euo pipefail; sudo kubeadm reset -f"
 EOF
 }

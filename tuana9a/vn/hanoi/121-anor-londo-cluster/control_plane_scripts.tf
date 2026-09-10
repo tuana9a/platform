@@ -30,7 +30,7 @@ EOF
     type        = "ssh"
     user        = local.vm_username
     private_key = data.vault_kv_secret_v2.ci.data.id_rsa
-    host        = local.first_control_plane_ip
+    host        = local.primary_control_plane_ip
   }
 
   provisioner "file" {
