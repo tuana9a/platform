@@ -17,7 +17,7 @@ set -euo pipefail
 
 node_ip=$1
 
-TIMEOUT=300
+TIMEOUT=500
 INTERVAL=5
 
 SSH_OPTS=(
