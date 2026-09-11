@@ -20,16 +20,14 @@ node_ip=$1
 TIMEOUT=500
 INTERVAL=5
 
-SSH_OPTS=(
-  -o StrictHostKeyChecking=no
-)
+SSH_OPTS=(-o StrictHostKeyChecking=no -i "${local_sensitive_file.ci.filename}")
 
 echo "Waiting for SSH on ${local.vm_username}@$node_ip (timeout: $${TIMEOUT}s)..."
 
 start_time=$(date +%s)
 
 while true; do
-  if ssh "$${SSH_OPTS[@]}" "${local.vm_username}@$node_ip" true 2>/dev/null; then
+  if ssh "$${SSH_OPTS[@]}" "${local.vm_username}@$node_ip" true; then
     echo "SSH is up on $node_ip"
     exit 0
   fi
@@ -58,9 +56,7 @@ node_ip=$1
 TIMEOUT=300
 INTERVAL=5
 
-SSH_OPTS=(
-  -o StrictHostKeyChecking=no
-)
+SSH_OPTS=(-o StrictHostKeyChecking=no -i "${local_sensitive_file.ci.filename}")
 
 echo "==> Waiting for cloud-init on ${local.vm_username}@$node_ip to finish..."
 ssh "$${SSH_OPTS[@]}" "${local.vm_username}@$node_ip" "cloud-init status --wait"
