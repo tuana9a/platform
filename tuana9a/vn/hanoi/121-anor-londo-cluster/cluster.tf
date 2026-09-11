@@ -48,7 +48,9 @@ data "external" "get_join_command" {
     host     = local.primary_control_plane_ip
     ssh_user = local.vm_username
 
-    ssh_key_file = local_sensitive_file.ci.filename
+    # WARN: if data is depends on local_sensitive_file.ci (which is a temporary file, being re-created each plan)
+    # this causes get_join_command.sh can not be run, this make any resources depend on for_each = this_resource will break
+    ssh_key_content = ephemeral.vault_kv_secret_v2.ci.data.id_rsa
   }
 }
 
@@ -63,7 +65,9 @@ data "external" "get_kube_certs" {
     host     = local.primary_control_plane_ip
     ssh_user = local.vm_username
 
-    ssh_key_file = local_sensitive_file.ci.filename
+    # WARN: if data is depends on local_sensitive_file.ci (which is a temporary file, being re-created each plan)
+    # this causes get_join_command.sh can not be run, this make any resources depend on for_each = this_resource will break
+    ssh_key_content = ephemeral.vault_kv_secret_v2.ci.data.id_rsa
   }
 }
 
@@ -181,12 +185,12 @@ resource "proxmox_virtual_environment_vm" "cluster" {
 
   provisioner "local-exec" {
     when    = destroy
-    command = "./tmp/delete_node.sh ${each.key}"
+    command = "./tmp/kubeadm_reset.sh ${each.key}"
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = "./tmp/kubeadm_reset.sh ${each.key}"
+    command = "./tmp/delete_node.sh ${each.key}"
   }
 
   on_boot = true

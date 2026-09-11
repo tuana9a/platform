@@ -1,8 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# stdin: JSON query object (host, ssh_user, ssh_key_file) - from `external`'s query
-eval "$(jq -r '@sh "HOST=\(.host) SSH_USER=\(.ssh_user) KEY_FILE=\(.ssh_key_file)"')"
+eval "$(jq -r '@sh "HOST=\(.host) SSH_USER=\(.ssh_user) SSH_KEY_CONTENT=\(.ssh_key_content)"')"
+
+# Write the key content to a temp file - ssh requires a file, not inline content
+KEY_FILE=$(mktemp)
+trap 'rm -f "${KEY_FILE}"' EXIT
+
+printf '%s\n' "${SSH_KEY_CONTENT}" > "${KEY_FILE}"
+chmod 600 "${KEY_FILE}"
 
 # args: list of remote cert paths to fetch, e.g.
 #   ./get_kube_certs.sh /etc/kubernetes/pki/ca.crt /etc/kubernetes/pki/ca.key ...
