@@ -50,7 +50,7 @@ data "external" "get_join_command" {
 
     # WARN: if data is depends on local_sensitive_file.ci (which is a temporary file, being re-created each plan)
     # this causes get_join_command.sh can not be run, this make any resources depend on for_each = this_resource will break
-    ssh_key_content = ephemeral.vault_kv_secret_v2.ci.data.id_rsa
+    ssh_key_content = data.vault_kv_secret_v2.ci.data.id_rsa
   }
 }
 
@@ -67,7 +67,7 @@ data "external" "get_kube_certs" {
 
     # WARN: if data is depends on local_sensitive_file.ci (which is a temporary file, being re-created each plan)
     # this causes get_join_command.sh can not be run, this make any resources depend on for_each = this_resource will break
-    ssh_key_content = ephemeral.vault_kv_secret_v2.ci.data.id_rsa
+    ssh_key_content = data.vault_kv_secret_v2.ci.data.id_rsa
   }
 }
 
