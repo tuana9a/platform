@@ -10,10 +10,12 @@ set -euo pipefail
 # ---------- Variables ----------
 RUNC_VERSION="v1.1.13"
 RUNC_URL="https://github.com/opencontainers/runc/releases/download/${RUNC_VERSION}/runc.amd64"
+CNI_URL=http://192.168.56.85/runc.amd64 # TODO: remove this later
 RUNC_DEST_PATH="/usr/local/sbin/runc"
 
 CNI_VERSION="v1.5.1"
 CNI_URL="https://github.com/containernetworking/plugins/releases/download/${CNI_VERSION}/cni-plugins-linux-amd64-${CNI_VERSION}.tgz"
+CNI_URL=http://192.168.56.85/cni-plugins.tgz # TODO: remove this later
 CNI_BIN_DIR="/opt/cni/bin"
 
 CONTAINERD_VERSION="${CONTAINERD_VERSION:-2.2.3}"
@@ -22,6 +24,7 @@ CONTAINERD_ARCH="${CONTAINERD_ARCH:-amd64}"
 CONTAINERD_SERVICE_ENVS="${CONTAINERD_SERVICE_ENVS:-}"
 CONTAINERD_ARCHIVE_NAME="containerd-${CONTAINERD_VERSION}-${CONTAINERD_OS}-${CONTAINERD_ARCH}.tar.gz"
 CONTAINERD_ARCHIVE_URL="https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/${CONTAINERD_ARCHIVE_NAME}"
+CONTAINERD_ARCHIVE_URL=http://192.168.56.85/containerd.tar.gz # TODO: remove this later
 
 KUBERNETES_VERSION="${KUBERNETES_VERSION:?KUBERNETES_VERSION must be set, e.g. 1.31.0}"
 KUBERNETES_CHANNEL="$(echo "${KUBERNETES_VERSION}" | cut -d. -f1,2)"  # e.g. "1.31.0" -> "1.31"
