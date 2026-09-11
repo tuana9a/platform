@@ -7,3 +7,4 @@ jobs:
     runs-on: self-hosted-0
     steps:
       - run: echo "🎉 This job uses runner scale set runners!"
+      - run: ssh localhost
