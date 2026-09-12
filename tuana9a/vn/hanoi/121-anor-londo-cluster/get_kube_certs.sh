@@ -1,14 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-eval "$(jq -r '@sh "HOST=\(.host) SSH_USER=\(.ssh_user) SSH_KEY_CONTENT=\(.ssh_key_content)"')"
-
-# Write the key content to a temp file - ssh requires a file, not inline content
-KEY_FILE=$(mktemp)
-trap 'rm -f "${KEY_FILE}"' EXIT
-
-printf '%s\n' "${SSH_KEY_CONTENT}" > "${KEY_FILE}"
-chmod 600 "${KEY_FILE}"
+eval "$(jq -r '@sh "HOST=\(.host) SSH_USER=\(.ssh_user) KEY_FILE=\(.key_file)"')"
 
 # args: list of remote cert paths to fetch, e.g.
 #   ./get_kube_certs.sh /etc/kubernetes/pki/ca.crt /etc/kubernetes/pki/ca.key ...
@@ -26,6 +19,9 @@ fetch_cert_b64() {
         "sudo test -f '${remote_path}' && sudo cat '${remote_path}' | base64 -w0 || true" 2>/dev/null
 }
 
+# Build kube_certs.tmp.txt
+kube_certs_txt=""
+
 # Build the JSON object incrementally: one --arg pair + one jq filter fragment per cert path
 json_args=()
 json_filter="{"
@@ -33,8 +29,9 @@ json_filter="{"
 first=true
 for cert_path in "$@"; do
     content_b64="$(fetch_cert_b64 "${cert_path}")"
+    kube_certs_txt+="${cert_path} ${content_b64}
+" # newline character :)
     var_name="v$(echo -n "${cert_path}" | md5sum | cut -c1-8)"  # unique-ish placeholder name
-
     json_args+=(--arg "${var_name}" "${content_b64}")
 
     if [[ "${first}" == true ]]; then
@@ -46,5 +43,7 @@ for cert_path in "$@"; do
 done
 
 json_filter+="}"
+
+printf '%s' "${kube_certs_txt}" > "./kube_certs.tmp.txt"
 
 jq -n "${json_args[@]}" "${json_filter}"

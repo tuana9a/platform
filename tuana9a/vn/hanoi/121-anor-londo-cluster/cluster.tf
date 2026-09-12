@@ -46,11 +46,9 @@ data "external" "get_join_command" {
 
   query = {
     host     = local.primary_control_plane_ip
-    ssh_user = local.vm_username
+    ssh_user = local.vm_user
 
-    # WARN: if data is depends on local_sensitive_file.ci (which is a temporary file, being re-created each plan)
-    # this causes get_join_command.sh can not be run, this make any resources depend on for_each = this_resource will break
-    ssh_key_content = data.vault_kv_secret_v2.ci.data.id_rsa
+    key_file = local.key_file
   }
 }
 
@@ -63,26 +61,24 @@ data "external" "get_kube_certs" {
 
   query = {
     host     = local.primary_control_plane_ip
-    ssh_user = local.vm_username
-
-    # WARN: if data is depends on local_sensitive_file.ci (which is a temporary file, being re-created each plan)
-    # this causes get_join_command.sh can not be run, this make any resources depend on for_each = this_resource will break
-    ssh_key_content = data.vault_kv_secret_v2.ci.data.id_rsa
+    ssh_user = local.vm_user
+    key_file = local.key_file
   }
 }
 
-resource "proxmox_virtual_environment_vm" "cluster" {
-  depends_on = [
-    local_sensitive_file.ci,
-    local_file.wait_for_ssh,
-    local_file.install_kube,
-    local_sensitive_file.kube_join,
-    local_file.drain_node,
-    local_file.wait_node,
-    local_file.delete_node,
-    local_file.scp_kube_certs,
-  ]
+data "external" "variable_files" {
+  program = ["bash", "./variable_files.sh"]
+  query = merge(
+    {
+      vm_user                  = local.vm_user
+      key_file                 = local.key_file
+      primary_control_plane_ip = local.primary_control_plane_ip
+    },
+    { for k, v in local._cluster : "${k}_node_ip" => v.ip_address }
+  )
+}
 
+resource "proxmox_virtual_environment_vm" "cluster" {
   for_each = { for k, v in local.cluster : k => v if v.create }
 
   node_name = each.value.pve_node
@@ -141,7 +137,7 @@ resource "proxmox_virtual_environment_vm" "cluster" {
 
     user_account {
       password = random_password.vm_password.result
-      username = local.vm_username
+      username = local.vm_user
       keys     = local.vm_authorized_keys
     }
 
@@ -150,47 +146,48 @@ resource "proxmox_virtual_environment_vm" "cluster" {
 
   provisioner "local-exec" {
     when    = create
-    command = "./tmp/wait_for_ssh.sh ${each.value.ip_address}"
+    command = "./wait_node_bootstrap_completed.sh ${local.key_file} ${local.vm_user} ${each.value.ip_address}"
   }
 
   provisioner "local-exec" {
     when    = create
-    command = "./tmp/wait_for_cloud_init.sh ${each.value.ip_address}"
+    command = "./ssh_install_kube.sh ${local.key_file} ${local.vm_user} ${each.value.ip_address} ${each.value.kubernetes_version}"
+  }
+
+  # IDEA: bash script wait for a file how-to-scp-kube-certs.txt to be available -> the how to's file content will be multiple line, each line will be a map filepath -> remote file path
+  provisioner "local-exec" {
+    when    = create
+    command = "./scp_kube_certs.sh ${local.key_file} ${local.vm_user} ${each.value.ip_address} ${each.value.is_control_plane ? 1 : 0}"
   }
 
   provisioner "local-exec" {
     when    = create
-    command = "./tmp/install_kube.sh ${each.value.ip_address} ${each.value.kubernetes_version}"
-  }
-
-  provisioner "local-exec" {
-    when    = create
-    command = "./tmp/scp_kube_certs.sh ${each.value.ip_address} ${each.value.is_control_plane ? 1 : 0}"
-  }
-
-  provisioner "local-exec" {
-    when    = create
-    command = "./tmp/kube_join.sh ${each.value.ip_address} ${each.value.is_control_plane ? 1 : 0}"
+    command = "./kube_join.sh ${local.key_file} ${local.vm_user} ${each.value.ip_address} ${each.value.is_control_plane ? 1 : 0}"
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = "./tmp/drain_node.sh ${each.key}"
+    command = "./drain_node.sh ${each.key}"
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = "./tmp/wait_node.sh ${each.key}"
+    command = "./wait_node_detach_resources.sh ${each.key}"
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = "./tmp/kubeadm_reset.sh ${each.key}"
+    command = "./kubeadm_reset.sh ${each.key}"
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = "./tmp/delete_node.sh ${each.key}"
+    command = "./ssh_remove_etcd_member.sh ${each.key}"
+  }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = "./delete_node.sh ${each.key}"
   }
 
   on_boot = true
@@ -205,14 +202,13 @@ resource "proxmox_virtual_environment_vm" "cluster" {
 resource "terraform_data" "cluster" {
   depends_on = [
     proxmox_virtual_environment_vm.cluster,
-    terraform_data.control_plane_scripts,
   ]
 
   triggers_replace = local.cluster_kube_labels
 
   connection {
     type        = "ssh"
-    user        = local.vm_username
+    user        = local.vm_user
     private_key = data.vault_kv_secret_v2.ci.data.id_rsa
     host        = local.primary_control_plane_ip
   }

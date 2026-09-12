@@ -130,7 +130,7 @@ cluster:
         skip_phases: ["kube-proxy"]
     192.168.56.39: &i-139
       <<: *data_plane_defaults
-      create: true
+      create: false
       vmid: 139
       nodename: i-139
       upgrade:

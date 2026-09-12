@@ -1,0 +1,3 @@
+id_rsa
+kube_certs.*
+kubeadm_join_command.*

@@ -10,7 +10,7 @@ set -euo pipefail
 # ---------- Variables ----------
 RUNC_VERSION="v1.1.13"
 RUNC_URL="https://github.com/opencontainers/runc/releases/download/${RUNC_VERSION}/runc.amd64"
-CNI_URL=http://192.168.56.85/runc.amd64 # TODO: remove this later
+RUNC_URL=http://192.168.56.85/runc.amd64 # TODO: remove this later
 RUNC_DEST_PATH="/usr/local/sbin/runc"
 
 CNI_VERSION="v1.5.1"
