@@ -43,9 +43,10 @@ def generate_workflow(folder: str, worflow_filepath: str, opts={}) -> str | None
     path_pattern_dir = f"{folder}/*"
 
     on_section = {}
+    on_section["workflow_dispatch"] = None  # can't trigger manually
 
     if opts.get("workflow_dispatch", True):
-        on_section["workflow_dispatch"] = None
+        on_section["workflow_dispatch"] = {}
     paths = opts.get("paths", [])
     ignore_paths = opts.get("ignore_paths", [])
     if opts.get("push", True):
@@ -59,6 +60,14 @@ def generate_workflow(folder: str, worflow_filepath: str, opts={}) -> str | None
             "branches": ["rock-n-roll"],
         }
 
+    with_section = {
+        "runs-on": opts.get("runs-on", "self-hosted-0"),
+        "WORKING_DIR": folder,
+        "login-vault": "in-cluster-sa",
+    }
+    if opts.get("AWS_ASSUME_ROLE", "") != "":
+        with_section["AWS_ASSUME_ROLE"] = opts["AWS_ASSUME_ROLE"]
+
     skeleton = {
         "name": folder,
         "on": on_section,
@@ -69,11 +78,7 @@ def generate_workflow(folder: str, worflow_filepath: str, opts={}) -> str | None
                     "id-token": "write",
                 },
                 "uses": "./.github/workflows/tfaa.yml",
-                "with": {
-                    "runs-on": opts.get("runs-on", "self-hosted-0"),
-                    "WORKING_DIR": folder,
-                    "login-vault": "in-cluster-sa",
-                },
+                "with": with_section,
                 "secrets": "inherit",
             }
         },
