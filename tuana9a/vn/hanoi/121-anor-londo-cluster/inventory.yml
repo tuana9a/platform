@@ -1,7 +1,7 @@
 DO_NOT_USE: # NOTE: storing common variables
   hosts:
     localhost:
-      kube_pki: &kube_pki
+      kube_certs: &kube_certs
         - /etc/kubernetes/pki/ca.crt
         - /etc/kubernetes/pki/ca.key
         - /etc/kubernetes/pki/sa.key
@@ -16,7 +16,7 @@ DO_NOT_USE: # NOTE: storing common variables
       kubernetes_version: &kubernetes_version "1.33.10"
       cluster_ops: &cluster_ops
         # some operation required taking variable from control plane like:
-        # - getting kube_pki
+        # - getting kube_certs
         # - kube join command
         # each data node having this variable will be able to reference control plane via hostvars, example: "hostvars[cluster_ops.host].kube_join_command"
         host: 192.168.56.26
@@ -35,6 +35,7 @@ DO_NOT_USE: # NOTE: storing common variables
         gateway_ip: *gateway_ip
         cluster_ops: *cluster_ops
         kubernetes_version: *kubernetes_version
+        kube_certs: []
 
       control_plane_defaults: &control_plane_defaults
         <<: *k8s_node_defaults
@@ -42,7 +43,7 @@ DO_NOT_USE: # NOTE: storing common variables
           - control-plane
         corecount: 2
         memsize: 4096
-        kube_pki: *kube_pki
+        kube_certs: *kube_certs
         kubevip: *kubevip
       data_plane_defaults: &data_plane_defaults
         <<: *k8s_node_defaults
@@ -51,6 +52,7 @@ DO_NOT_USE: # NOTE: storing common variables
         corecount: 4
         memsize: 12288
 cluster:
+  ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
   hosts:
     # --- CONTROL PLANE ---
     192.168.56.22: &i-122

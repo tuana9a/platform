@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-eval "$(jq -r '@sh "HOST=\(.host) SSH_USER=\(.ssh_user) KEY_FILE=\(.key_file)"')"
+eval "$(jq -r '@sh "HOST=\(.host) SSH_USER=\(.ssh_user) KEY_FILE=\(.key_file) tmp_dir=\(.tmp_dir)"')"
 
 # args: list of remote cert paths to fetch, e.g.
 #   ./get_kube_certs.sh /etc/kubernetes/pki/ca.crt /etc/kubernetes/pki/ca.key ...
@@ -44,6 +44,6 @@ done
 
 json_filter+="}"
 
-printf '%s' "${kube_certs_txt}" > "./kube_certs.tmp.txt"
+printf '%s' "${kube_certs_txt}" > "$tmp_dir/kube_certs.txt"
 
 jq -n "${json_args[@]}" "${json_filter}"

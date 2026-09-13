@@ -21,33 +21,27 @@ locals {
   cluster_control_planes = { for k, v in local.cluster : k => v if v.is_control_plane }
   cluster_kube_labels    = { for k, v in local.cluster : k => v.kube_labels }
 
-  primary_control_plane_ip   = one([for k, v in local.cluster : v if lookup(v, "is_primary_control_plane", false)]).ip_address
+  primary_control_plane      = one([for k, v in local.cluster : v if lookup(v, "is_primary_control_plane", false)])
+  primary_control_plane_ip   = local.primary_control_plane.ip_address
   kubectl_label_nodes_script = join("\n", [for k, v in local.cluster_kube_labels : "kubectl label node ${k} ${join(" ", v)}"])
 
   vm_authorized_keys = [
     "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCx5LBYrl0TfkKChabUT6Fdwj40qr1eUCKBxIydmWOscQ+DlptTtN28PMmiIp6WAvYfQAD2lp5F6P1znFqqzKpKL/TFswfjdrbb0Br688jmzbeFAZ8cMDwJAEVxMi9P8Gkl5BxfTcVlrxyPdzfAjWps8DkZ8d8QkdKh6puAqfff1oN5/ubOOnSlvUL89VJmkE4jAuN1P5YTwYuz7mCP33LwBKltUqhLkGw5kKLz9MCF7GQ/9smH/1VKaBAsHMHx93ByISVU8zaVjbNfYE6vyHoDZUkLBZTtgksGZboyp8Rfj4+IBQVZ1xy9MiBQFMEAfNXEAHxD3QWNdRNGfNulqwvxeGNyja32gB+M4Ef4pybQ6KHDqW1aVOCqHLlGsQmMQN6E8HShZKQp9Fkq7kT+9e9LKDoJOem8Hb5E3xPD4umReogccJnHJCNuDQOM+Gfqlj1o4w+RTVA5ss6xsMGqUEdHBgoBYZZ2tgQYrIathq7V9+y0Yy3M4YZyEV9WyQI6HwU= u@tuana9a-dev2",
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN6bF/SOzb1XD4qo0LaZ5PVa1sCijDyQS/8oHZe9x6R5 ci",
   ]
+}
 
-  kube_certs = [
-    "/etc/kubernetes/pki/ca.crt",
-    "/etc/kubernetes/pki/ca.key",
-    "/etc/kubernetes/pki/sa.key",
-    "/etc/kubernetes/pki/sa.pub",
-    "/etc/kubernetes/pki/front-proxy-ca.crt",
-    "/etc/kubernetes/pki/front-proxy-ca.key",
-    "/etc/kubernetes/pki/etcd/ca.crt",
-    "/etc/kubernetes/pki/etcd/ca.key",
-  ]
+data "external" "mkdir_tmp" {
+  program = ["bash", "-c", "mkdir -p ./tmp && echo '{\"dir\":\"./tmp\"}'"]
 }
 
 data "external" "get_join_command" {
-  program = ["bash", "${path.module}/get_join_command.sh"]
+  program = ["bash", "./scripts/get_join_command.sh"]
 
   query = {
     host     = local.primary_control_plane_ip
     ssh_user = local.vm_user
-
+    tmp_dir  = data.external.mkdir_tmp.result.dir
     key_file = local.key_file
   }
 }
@@ -57,34 +51,39 @@ locals {
 }
 
 data "external" "get_kube_certs" {
-  program = concat(["bash", "${path.module}/get_kube_certs.sh"], local.kube_certs)
+  program = concat(["bash", "./scripts/get_kube_certs.sh"], local.primary_control_plane.kube_certs)
 
   query = {
     host     = local.primary_control_plane_ip
     ssh_user = local.vm_user
     key_file = local.key_file
+    tmp_dir  = data.external.mkdir_tmp.result.dir
   }
 }
 
 data "external" "variable_files" {
-  program = ["bash", "./variable_files.sh"]
+  program = ["bash", "./scripts/variable_files.sh", data.external.mkdir_tmp.result.dir]
   query = merge(
     {
       vm_user                  = local.vm_user
       key_file                 = local.key_file
       primary_control_plane_ip = local.primary_control_plane_ip
+      tmp_dir                  = data.external.mkdir_tmp.result.dir
     },
-    { for k, v in local._cluster : "${k}_node_ip" => v.ip_address }
+    {
+      for k, v in local._cluster :
+      "${k}_node_ip" => v.ip_address
+    }
   )
 }
 
 resource "proxmox_virtual_environment_vm" "cluster" {
-  for_each = { for k, v in local.cluster : k => v if v.create }
+  for_each = local.cluster
 
   node_name = each.value.pve_node
   vm_id     = each.value.vmid
   name      = "i-${each.value.vmid}"
-  tags      = ["terraform", "k8s", "cobi"]
+  tags      = ["terraform"]
 
   cpu {
     cores   = lookup(each.value, "corecount", 2)
@@ -136,58 +135,58 @@ resource "proxmox_virtual_environment_vm" "cluster" {
     }
 
     user_account {
-      password = random_password.vm_password.result
+      password = local.vm_password
       username = local.vm_user
       keys     = local.vm_authorized_keys
     }
 
-    upgrade = false
+    upgrade = false # dont upgrade during cloud-init
   }
 
   provisioner "local-exec" {
     when    = create
-    command = "./wait_node_bootstrap_completed.sh ${local.key_file} ${local.vm_user} ${each.value.ip_address}"
+    command = "./scripts/wait_node_bootstrap_completed.sh ${local.key_file} ${local.vm_user} ${each.value.ip_address}"
   }
 
   provisioner "local-exec" {
     when    = create
-    command = "./ssh_install_kube.sh ${local.key_file} ${local.vm_user} ${each.value.ip_address} ${each.value.kubernetes_version}"
+    command = "./scripts/install_kube.sh ${local.key_file} ${local.vm_user} ${each.value.ip_address} ${each.value.kubernetes_version}"
   }
 
   # IDEA: bash script wait for a file how-to-scp-kube-certs.txt to be available -> the how to's file content will be multiple line, each line will be a map filepath -> remote file path
   provisioner "local-exec" {
     when    = create
-    command = "./scp_kube_certs.sh ${local.key_file} ${local.vm_user} ${each.value.ip_address} ${each.value.is_control_plane ? 1 : 0}"
+    command = "./scripts/scp_kube_certs.sh ${local.key_file} ${local.vm_user} ${each.value.ip_address} ${each.value.is_control_plane ? 1 : 0}"
   }
 
   provisioner "local-exec" {
     when    = create
-    command = "./kube_join.sh ${local.key_file} ${local.vm_user} ${each.value.ip_address} ${each.value.is_control_plane ? 1 : 0}"
+    command = "./scripts/join_node.sh ${local.key_file} ${local.vm_user} ${each.value.ip_address} ${each.value.is_control_plane ? 1 : 0}"
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = "./drain_node.sh ${each.key}"
+    command = "./scripts/drain_node.sh ${each.key}"
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = "./wait_node_detach_resources.sh ${each.key}"
+    command = "./scripts/wait_node_detach_resources.sh ${each.key}"
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = "./kubeadm_reset.sh ${each.key}"
+    command = "./scripts/reset_kubeadm.sh ${each.key}"
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = "./ssh_remove_etcd_member.sh ${each.key}"
+    command = "./scripts/remove_etcd_member.sh ${each.key}"
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = "./delete_node.sh ${each.key}"
+    command = "./scripts/delete_node.sh ${each.key}"
   }
 
   on_boot = true
