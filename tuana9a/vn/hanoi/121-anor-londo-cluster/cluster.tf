@@ -203,7 +203,7 @@ resource "terraform_data" "cluster" {
     proxmox_virtual_environment_vm.cluster,
   ]
 
-  triggers_replace = local.cluster_kube_labels
+  triggers_replace = proxmox_virtual_environment_vm.cluster
 
   connection {
     type        = "ssh"
@@ -223,6 +223,11 @@ ${local.kubectl_label_nodes_script}
 EOF
   }
 
+  # NOTE: kubectl label node (required for csi-proxmox plugin working correctly)
+  # https://github.com/sergelogvinov/proxmox-csi-plugin/blob/main/docs/install.md#prepare-kubernetes-cluster
+  # Proxmox CSI Plugin relies on the well-known Kubernetes topology node labels to define the disk location.
+  #   topology.kubernetes.io/region - Cluster name, the name must be the same as in cloud config region name
+  #   topology.kubernetes.io/zone - Proxmox node name
   provisioner "remote-exec" {
     inline = [
       "#!/usr/bin/env bash",

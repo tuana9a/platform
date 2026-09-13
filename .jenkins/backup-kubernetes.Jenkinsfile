@@ -30,7 +30,7 @@ pipeline {
                 }
                 script {
                     inventory = readYaml file: "./tuana9a/vn/cobi/121-anor-londo-cluster/inventory.yml"
-                    inventory["k8s_cluster"]["hosts"].each { host, vars ->
+                    inventory["cluster"]["hosts"].each { host, vars ->
                         if (vars["roles"].contains("control-plane")) {
                             def vm = [:]
                             vm["host"] = host

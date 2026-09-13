@@ -1,6 +1,6 @@
 # https://docs.cilium.io/en/latest/network/kubernetes/kubeproxy-free/
 
-- hosts: k8s_cluster
+- hosts: cluster
   tasks:
     - name: init some vars
       set_fact:

@@ -1,4 +1,4 @@
-- hosts: k8s_cluster
+- hosts: cluster
   tasks:
     - name: Remove crontab cronjob
       when: is_control_plane

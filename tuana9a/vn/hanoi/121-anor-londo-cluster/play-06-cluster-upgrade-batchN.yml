@@ -1,4 +1,4 @@
-- hosts: k8s_cluster
+- hosts: cluster
   tasks:
     - name: init some vars
       set_fact:
@@ -13,7 +13,7 @@
       when: "is_control_plane and is_cluster_ops_host"
       set_fact:
         batch_nodes_str: |
-          {% for host in groups["k8s_cluster"] %}
+          {% for host in groups["cluster"] %}
           {% set x = hostvars[host] %}
           {% if x.upgrade.batch == current_batch %}
           - nodename: "{{ x.nodename }}"
