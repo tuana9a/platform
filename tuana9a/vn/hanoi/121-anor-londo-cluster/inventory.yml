@@ -57,7 +57,7 @@ cluster:
     # --- CONTROL PLANE ---
     192.168.56.22: &i-122
       <<: *control_plane_defaults
-      create: false
+      create: true
       vmid: 122
       pve_node: "engineer"
       nodename: i-122
