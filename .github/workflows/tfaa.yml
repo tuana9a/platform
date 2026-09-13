@@ -146,13 +146,13 @@ jobs:
           sudo mv "sops-v${SOPS_VERSION}.linux.amd64" /usr/local/bin/sops
           sudo chmod +x /usr/local/bin/sops
           sops --version
-      - uses: actions/setup-node@v6 # [/usr/bin/env: 'node' no such file or directory](https://github.com/hashicorp/setup-terraform/issues/84)
-        # if: "${{ contains(inputs.runs-on, 'self-hosted') }}" # well we install it anyway
-        with:
-          node-version: "24"
-      - uses: hashicorp/setup-terraform@v4.0.1
-        with:
-          terraform_version: "1.15.8"
+
+      - name: Install terraform
+        run: |
+          curl -sSL -o terraform.zip https://releases.hashicorp.com/terraform/1.15.8/terraform_1.15.8_linux_amd64.zip
+          unzip -o terraform.zip -d "$RUNNER_TEMP/bin"
+          chmod +x "$RUNNER_TEMP/bin/terraform"
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
 
       - id: tfinit
         name: tfinit
