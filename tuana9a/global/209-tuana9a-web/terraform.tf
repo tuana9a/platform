@@ -1,20 +1,24 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "tuana9a/global/209-tuana9a-web"
+    prefix = "1789294186"
   }
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "5.29.1"
+      version = "8.2.0"
     }
     aws = {
       source  = "hashicorp/aws"
-      version = "6.28.0"
+      version = "6.64.0"
+    }
+    vault = {
+      source  = "hashicorp/vault"
+      version = "5.11.0"
     }
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "5.15.0"
+      version = "5.25.0"
     }
   }
   required_version = ">= 1.2.0"
@@ -34,6 +38,16 @@ provider "aws" {
   }
 }
 
+ephemeral "vault_kv_secret_v2" "auth" {
+  mount = "kvv2"
+  name  = "github.com/tuana9a/platform/1789294186-tfaa"
+}
+
+provider "vault" {
+  address          = "https://vault.tuana9a.com"
+  skip_child_token = true
+}
+
 provider "cloudflare" {
-  api_token = var.cloudflare_api_token
+  api_token = ephemeral.vault_kv_secret_v2.auth.data.cloudflare_api_token
 }
