@@ -1,1 +1,0 @@
-../../../scripts/tf_sops_decrypt.sh

@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "tuana9a/global/024-email-routing"
+    prefix = "1789294160"
   }
   required_providers {
     google = {
@@ -12,9 +12,9 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "4.17.0"
     }
-    external = {
-      source  = "hashicorp/external"
-      version = "2.3.5"
+    vault = {
+      source  = "hashicorp/vault"
+      version = "5.11.0"
     }
   }
   required_version = ">= 1.2.0"
@@ -26,9 +26,20 @@ provider "google" {
   zone    = "asia-southeast1-b"
 }
 
-provider "cloudflare" {
-  api_token = local.secrets.cloudflare_api_token
+provider "vault" {
+  address          = "https://vault.tuana9a.com"
+  skip_child_token = true
 }
 
-provider "external" {
+data "vault_kv_secret_v2" "auth" {
+  mount = "kvv2"
+  name  = "github.com/tuana9a/platform/1789294160-tfaa"
+}
+
+locals {
+  cloudflare_account_id = data.vault_kv_secret_v2.auth.data.cloudflare_account_id
+}
+
+provider "cloudflare" {
+  api_token = data.vault_kv_secret_v2.auth.data.cloudflare_api_token
 }
