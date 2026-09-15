@@ -1,0 +1,2 @@
+tfaa:
+  AWS_ASSUME_ROLE: arn:aws:iam::541645813908:role/github-workflow
