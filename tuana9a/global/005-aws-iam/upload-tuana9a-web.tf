@@ -14,7 +14,7 @@ resource "aws_iam_role" "upload_tuana9a_web" {
       },
       "Condition": {
         "StringLike": {
-          "token.actions.githubusercontent.com:sub": "repo:tuana9a/web:*"
+          "token.actions.githubusercontent.com:sub": "repo:tuana9a@53028317/web@1132589135:*"
         },
         "StringEquals": {
           "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
