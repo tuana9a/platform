@@ -110,6 +110,14 @@ coder:
           mode: Terminate
           certificateRefs:
             - name: coder-tuana9a-com-tls
+      - name: wildcard-https
+        hostname: "*.coder.tuana9a.com"
+        port: 443
+        protocol: HTTPS
+        tls:
+          mode: Terminate
+          certificateRefs:
+            - name: wildcard-coder-tuana9a-com-tls
       - name: http # requires for cert http challenge
         hostname: coder.tuana9a.com
         port: 80
