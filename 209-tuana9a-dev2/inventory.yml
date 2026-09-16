@@ -1,1 +1,18 @@
-../inventory.yml
+tuana9a-dev2:
+  hosts:
+    192.168.56.209:
+      ansible_user: u
+      ansible_python_interpreter: /home/u/github.com/tuana9a/platform/.venv/bin/python
+      authorized_keys:
+        - key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEu+yuCFcAO331i+S6902+7WJHmnhponellNnhk45QF2"
+          comment: "tuana9a@tuana9a-mac-air-m2.local"
+      wireguard_clients:
+        - file: facehugger.conf.sops
+          name: facehugger
+          encrypted: true
+      haproxy_stats_enabled: true
+      upstream_servers:
+        - hostname: ingress-nginx-controller-svc
+          ip: 192.168.56.80
+          http_port: 80
+          https_port: 443

@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "209-tuana9a-dev2"
+    prefix = "1789563603"
   }
   required_providers {
     google = {
@@ -12,9 +12,9 @@ terraform {
       source  = "bpg/proxmox"
       version = "0.51.0"
     }
-    cloudflare = {
-      source  = "cloudflare/cloudflare"
-      version = "5.13.0"
+    vault = {
+      source  = "hashicorp/vault"
+      version = "5.11.0"
     }
     random = {
       source  = "hashicorp/random"
@@ -29,20 +29,31 @@ provider "google" {
   zone    = "asia-southeast1-b"
 }
 
+provider "vault" {
+  address          = "https://vault.tuana9a.com"
+  skip_child_token = true
+}
+
+ephemeral "vault_kv_secret_v2" "pve_auth" {
+  mount = "kvv2"
+  name  = "pve/clusters/alien/users/u/api-tokens/tf/auth"
+}
+
+ephemeral "vault_kv_secret_v2" "cf_auth" {
+  mount = "kvv2"
+  name  = "cloudflare/accounts/tuana9a/api-tokens/edit-tunnel"
+}
+
 provider "proxmox" {
-  endpoint  = var.pve_endpoint
-  api_token = var.pve_api_token
-  insecure  = var.pve_insecure
+  endpoint  = ephemeral.vault_kv_secret_v2.pve_auth.data.pve_endpoint
+  api_token = ephemeral.vault_kv_secret_v2.pve_auth.data.pve_api_token
+  insecure  = ephemeral.vault_kv_secret_v2.pve_auth.data.pve_insecure == "yes"
 
   ssh {
     agent       = true
-    username    = var.pve_ssh_username
-    private_key = var.pve_ssh_private_key
+    username    = ephemeral.vault_kv_secret_v2.pve_auth.data.pve_ssh_username
+    private_key = ephemeral.vault_kv_secret_v2.pve_auth.data.pve_ssh_private_key
   }
-}
-
-provider "cloudflare" {
-  api_token = var.cloudflare_api_token
 }
 
 provider "random" {
