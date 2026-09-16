@@ -1,9 +1,9 @@
-name: 209-tuana9a-dev2
+name: tuana9a/vn/hanoi/209-tuana9a-dev2
 'on':
   workflow_dispatch: {}
   push:
     paths:
-    - 209-tuana9a-dev2/*
+    - tuana9a/vn/hanoi/209-tuana9a-dev2/*
     - .github/workflows/1789563603-tfaa.yml
     branches:
     - rock-n-roll
@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
-      WORKING_DIR: 209-tuana9a-dev2
+      WORKING_DIR: tuana9a/vn/hanoi/209-tuana9a-dev2
       login-vault: in-cluster-sa
     secrets: inherit
