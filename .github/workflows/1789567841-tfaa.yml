@@ -1,9 +1,9 @@
-name: 015-cloudflare-tunnel
+name: tuana9a/global/015-cloudflare-tunnel
 'on':
   workflow_dispatch: {}
   push:
     paths:
-    - 015-cloudflare-tunnel/*
+    - tuana9a/global/015-cloudflare-tunnel/*
     - .github/workflows/1789567841-tfaa.yml
     branches:
     - rock-n-roll
@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
-      WORKING_DIR: 015-cloudflare-tunnel
+      WORKING_DIR: tuana9a/global/015-cloudflare-tunnel
       login-vault: in-cluster-sa
     secrets: inherit
