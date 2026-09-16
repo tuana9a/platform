@@ -35,6 +35,16 @@ data "external" "mkdir_tmp" {
   program = ["bash", "-c", "mkdir -p ./tmp && echo '{\"dir\":\"./tmp\"}'"]
 }
 
+data "external" "install_etcdctl" {
+  program = ["bash", "./scripts/install-etcdctl.sh"]
+
+  query = {
+    node_ip  = local.primary_control_plane_ip
+    ssh_user = local.vm_user
+    key_file = local.key_file
+  }
+}
+
 data "external" "get_join_command" {
   program = ["bash", "./scripts/get_join_command.sh"]
 
