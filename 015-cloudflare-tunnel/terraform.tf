@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "015-cloudflare-tunnel"
+    prefix = "1789567841"
   }
   required_providers {
     google = {
@@ -16,6 +16,10 @@ terraform {
       source  = "hashicorp/random"
       version = "3.7.2"
     }
+    vault = {
+      source  = "hashicorp/vault"
+      version = "5.11.0"
+    }
   }
   required_version = ">= 1.2.0"
 }
@@ -26,8 +30,18 @@ provider "google" {
   zone    = "asia-southeast1-b"
 }
 
+provider "vault" {
+  address          = "https://vault.tuana9a.com"
+  skip_child_token = true
+}
+
+data "vault_kv_secret_v2" "cf_auth" {
+  mount = "kvv2"
+  name  = "cloudflare/accounts/tuana9a/api-tokens/edit-tunnel"
+}
+
 provider "cloudflare" {
-  api_token = var.cloudflare_api_token
+  api_token = data.vault_kv_secret_v2.cf_auth.data.cloudflare_api_token
 }
 
 provider "random" {
