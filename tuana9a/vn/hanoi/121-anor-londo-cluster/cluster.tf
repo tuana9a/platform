@@ -213,7 +213,7 @@ resource "terraform_data" "cluster" {
     proxmox_virtual_environment_vm.cluster,
   ]
 
-  triggers_replace = proxmox_virtual_environment_vm.cluster
+  triggers_replace = sha256(jsonencode(local.cluster))
 
   connection {
     type        = "ssh"
