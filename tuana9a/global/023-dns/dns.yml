@@ -12,12 +12,8 @@ CNAME:
     - content: megatron.tuana9a.com
   d9stbot:
     - content: megatron.tuana9a.com
-  dkhptd-api:
-    - content: orisis.tuana9a.com
   hcr:
     - content: megatron.tuana9a.com
-  jenkins:
-    - content: orisis.tuana9a.com
   paste:
     - content: megatron.tuana9a.com
   paste-next:
@@ -28,12 +24,6 @@ CNAME:
     - content: megatron.tuana9a.com
   utils.bm:
     - content: megatron.tuana9a.com
-  "*.stuffs.kn":
-    - content: orisis.tuana9a.com
-  argocd:
-    - content: orisis.tuana9a.com
-  grpc.argocd:
-    - content: orisis.tuana9a.com
   grafana:
     - content: megatron.tuana9a.com
   uuid:
