@@ -1,9 +1,0 @@
-host: "*.dev2.tuana9a.com"
-ingress:
-  className: nginx
-  annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-production-cloudflare"
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-target:
-  ip: 192.168.56.209
-  port: 8209
