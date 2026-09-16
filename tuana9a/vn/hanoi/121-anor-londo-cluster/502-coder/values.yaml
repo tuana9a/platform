@@ -97,7 +97,7 @@ coder:
   listenerset:
     enable: true
     annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-production-gatewayapi
+      cert-manager.io/cluster-issuer: letsencrypt-production-cloudflare
     parentRef:
       name: starscream
       namespace: envoy-gateway-system
