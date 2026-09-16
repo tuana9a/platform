@@ -49,7 +49,7 @@ data "external" "get_join_command" {
   program = ["bash", "./scripts/get_join_command.sh"]
 
   query = {
-    host     = local.primary_control_plane_ip
+    node_ip  = local.primary_control_plane_ip
     ssh_user = local.vm_user
     tmp_dir  = data.external.mkdir_tmp.result.dir
     key_file = local.key_file
@@ -64,7 +64,7 @@ data "external" "get_kube_certs" {
   program = concat(["bash", "./scripts/get_kube_certs.sh"], local.primary_control_plane.kube_certs)
 
   query = {
-    host     = local.primary_control_plane_ip
+    node_ip  = local.primary_control_plane_ip
     ssh_user = local.vm_user
     key_file = local.key_file
     tmp_dir  = data.external.mkdir_tmp.result.dir

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-eval "$(jq -r '@sh "HOST=\(.host) SSH_USER=\(.ssh_user) KEY_FILE=\(.key_file) tmp_dir=\(.tmp_dir)"')"
+eval "$(jq -r '@sh "node_ip=\(.node_ip) ssh_user=\(.ssh_user) key_file=\(.key_file) tmp_dir=\(.tmp_dir)"')"
 
 # args: list of remote cert paths to fetch, e.g.
 #   ./get_kube_certs.sh /etc/kubernetes/pki/ca.crt /etc/kubernetes/pki/ca.key ...
@@ -10,12 +10,12 @@ if [[ $# -eq 0 ]]; then
     exit 1
 fi
 
-SSH_OPTS=(-o StrictHostKeyChecking=no -i "${KEY_FILE}")
+SSH_OPTS=(-o StrictHostKeyChecking=no -i "${key_file}")
 
 # Fetch a remote file's content, base64-encoded, or empty string if missing.
 fetch_cert_b64() {
     local remote_path="$1"
-    ssh "${SSH_OPTS[@]}" "${SSH_USER}@${HOST}" \
+    ssh "${SSH_OPTS[@]}" "${ssh_user}@${node_ip}" \
         "sudo test -f '${remote_path}' && sudo cat '${remote_path}' | base64 -w0 || true" 2>/dev/null
 }
 
