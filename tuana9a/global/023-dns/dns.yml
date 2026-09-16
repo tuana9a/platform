@@ -12,10 +12,6 @@ CNAME:
     - content: megatron.tuana9a.com
   d9stbot:
     - content: megatron.tuana9a.com
-  "*.dev2":
-    - content: orisis.tuana9a.com
-  dev2:
-    - content: orisis.tuana9a.com
   dkhptd-api:
     - content: orisis.tuana9a.com
   hcr:
