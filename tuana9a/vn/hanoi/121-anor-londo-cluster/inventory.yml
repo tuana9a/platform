@@ -58,6 +58,7 @@ cluster:
     192.168.56.22: &i-122
       <<: *control_plane_defaults
       create: true
+      is_primary_control_plane: true
       vmid: 122
       pve_node: "engineer"
       nodename: i-122
@@ -70,7 +71,6 @@ cluster:
       <<: *control_plane_defaults
       vmid: 125
       pve_node: "engineer"
-      is_primary_control_plane: true
       nodename: i-125
       upgrade:
         batch: batch1
@@ -89,6 +89,7 @@ cluster:
       memsize: 6144
     192.168.56.27: &i-127
       <<: *control_plane_defaults
+      create: false
       vmid: 127
       nodename: i-127
       upgrade:
