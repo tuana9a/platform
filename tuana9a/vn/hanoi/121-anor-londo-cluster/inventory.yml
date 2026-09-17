@@ -67,6 +67,17 @@ cluster:
         skip_phases: ["kube-proxy"] # TODO: test this next time
       corecount: 2
       memsize: 6144
+    192.168.56.23: &i-123
+      <<: *control_plane_defaults
+      create: true
+      vmid: 123
+      pve_node: "engineer"
+      nodename: i-123
+      upgrade:
+        batch: batch1
+        skip_phases: ["kube-proxy"] # TODO: test this next time
+      corecount: 2
+      memsize: 6144
     192.168.56.25: &i-125
       <<: *control_plane_defaults
       vmid: 125
