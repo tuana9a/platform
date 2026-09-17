@@ -90,6 +90,7 @@ cluster:
       memsize: 6144
     192.168.56.26: &i-126
       <<: *control_plane_defaults
+      create: false
       vmid: 126
       pve_node: "engineer"
       nodename: i-126
