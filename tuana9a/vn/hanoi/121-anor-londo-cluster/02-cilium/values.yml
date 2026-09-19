@@ -15,14 +15,12 @@ hubble:
     enabled: false
   metrics:
     enabled:
-      - dns
-      - drop
-      - tcp
-      - flow
       - icmp
-      - http
-      - port-distribution
-      - "httpV2:exemplars=true;labelsContext=source_ip,source_namespace,source_workload,destination_ip,destination_namespace,destination_workload,traffic_direction"
+      - dns:query;labelsContext=source_ip,destination_ip,source_pod,destination_pod,source_namespace,destination_namespace,traffic_direction
+      - flow:labelsContext=source_ip,destination_ip,source_pod,destination_pod,source_namespace,destination_namespace,traffic_direction
+      - tcp:labelsContext=source_ip,destination_ip,source_pod,destination_pod,source_namespace,destination_namespace,traffic_direction
+      - httpV2:labelsContext=source_ip,destination_ip,source_pod,destination_pod,source_namespace,destination_namespace,traffic_direction
+      - drop:labelsContext=source_ip,destination_ip,source_pod,destination_pod,source_namespace,destination_namespace,traffic_direction
 prometheus:
   enabled: true
 operator:
