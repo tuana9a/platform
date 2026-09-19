@@ -14,7 +14,15 @@ hubble:
   ui:
     enabled: false
   metrics:
-    enabled: [dns, drop, tcp, flow, icmp, http]
+    enabled:
+      - dns
+      - drop
+      - tcp
+      - flow
+      - icmp
+      - http
+      - port-distribution
+      - "httpV2:exemplars=true;labelsContext=source_ip,source_namespace,source_workload,destination_ip,destination_namespace,destination_workload,traffic_direction"
 prometheus:
   enabled: true
 operator:
