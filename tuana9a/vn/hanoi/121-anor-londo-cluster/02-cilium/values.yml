@@ -13,6 +13,8 @@ hubble:
     enabled: true
   ui:
     enabled: false
+  metrics:
+    enabled: [dns, drop, tcp, flow, icmp, http]
 prometheus:
   enabled: true
 operator:
