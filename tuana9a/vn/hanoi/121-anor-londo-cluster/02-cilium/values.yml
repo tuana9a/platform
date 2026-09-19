@@ -13,3 +13,8 @@ hubble:
     enabled: true
   ui:
     enabled: false
+prometheus:
+  enabled: true
+operator:
+  prometheus:
+    enabled: true
