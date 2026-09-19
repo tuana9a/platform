@@ -7,3 +7,7 @@ ipam:
   mode: "cluster-pool"
   operator:
     clusterPoolIPv4PodCIDRList: ["10.244.0.0/16"]
+hubble:
+  enabled: true
+  relay:
+    enabled: true
