@@ -32,3 +32,16 @@ k8sServicePort: 6443
 - uninstall cilium
 - delete ciliumnode
 - rollout replace node
+
+# monitoring
+
+- https://docs.cilium.io/en/stable/observability/grafana/#deploy-cilium-and-hubble-with-metrics-enabled
+- https://docs.cilium.io/en/stable/observability/metrics/#hubble-exported-metrics
+
+```promql
+sum(rate(hubble_flows_processed_total{destination_ip!~"10.(233|244|20).+"}[15s])) by (destination_ip)
+```
+
+```promql
+sum(rate(hubble_flows_processed_total{destination_ip="10.20.26.1"}[15s])) by (source_ip,source_pod)
+```
