@@ -12,8 +12,8 @@ resource "helm_release" "falco" {
   chart      = "falco"
   version    = "8.0.3"
 
-  set {
+  set = [{
     name  = "tty"
     value = "true"
-  }
+  }]
 }
