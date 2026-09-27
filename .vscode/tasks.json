@@ -44,6 +44,23 @@
                 "reveal": "always",
                 "panel": "shared"
             },
+        },
+        {
+            "label": "unseal vault",
+            "type": "shell",
+            "command": "./unseal_vault.sh",
+            "options": {
+                "cwd": "${workspaceFolder}/",
+                "env": {
+                    "VAULT_ADDR": "https://vault.tuana9a.com",
+                    "KUBECONFIG": "./secrets/.kube/oidc@anor-londo-cluster.yml"
+                }
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
         }
     ]
 }
