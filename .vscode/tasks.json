@@ -29,5 +29,21 @@
                 "panel": "shared"
             },
         },
+        {
+            "label": "login vault",
+            "type": "shell",
+            "command": " vault login -method=userpass username=admin password=$(cat ../secrets/userpass.admin.pass)",
+            "options": {
+                "cwd": "${workspaceFolder}/",
+                "env": {
+                    "VAULT_ADDR": "https://vault.tuana9a.com"
+                }
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+        }
     ]
 }
