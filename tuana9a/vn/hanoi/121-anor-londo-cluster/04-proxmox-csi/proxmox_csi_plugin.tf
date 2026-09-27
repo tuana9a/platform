@@ -23,13 +23,13 @@ resource "proxmox_virtual_environment_user" "kubernetes_csi" {
   user_id = "kubernetes-csi@pve"
 }
 
-resource "time_offset" "three_months_from_now" {
-  offset_months = 9
+resource "time_offset" "expiration_date" {
+  offset_months = 12
 }
 
 resource "proxmox_virtual_environment_user_token" "kubernetes_csi" {
   comment         = "Managed by Terraform"
-  expiration_date = time_offset.three_months_from_now.rfc3339
+  expiration_date = time_offset.expiration_date.rfc3339
   token_name      = "kubernetes-csi"
   user_id         = proxmox_virtual_environment_user.kubernetes_csi.user_id
 
