@@ -7,5 +7,5 @@ module "k8s-cobi-clients" {
     data.vault_kv_secret_v2.wireguard_clients.data["k8s-cobi-6.conf"],
     data.vault_kv_secret_v2.wireguard_clients.data["k8s-cobi-7.conf"],
   ]
-  replicas = 3
+  replicas = 0
 }
