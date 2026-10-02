@@ -12,6 +12,7 @@ locals {
 
   repositories = {
     platform = {
+      _has_secrets           = true
       has_downloads          = false
       has_issues             = true
       has_projects           = false
@@ -67,6 +68,7 @@ locals {
       }
     }
     docker-images = {
+      _has_secrets           = true
       visibility             = "public"
       auto_init              = false
       allow_merge_commit     = true
@@ -74,6 +76,7 @@ locals {
       vulnerability_alerts   = false
     }
     kp = {
+      _has_secrets           = true
       visibility             = "public"
       auto_init              = false
       allow_merge_commit     = true
@@ -88,6 +91,7 @@ locals {
       ]
     }
     dkhptd = {
+      _has_secrets           = true
       visibility             = "public"
       auto_init              = false
       allow_merge_commit     = true
@@ -99,6 +103,7 @@ locals {
       has_discussions        = true
     }
     web = {
+      _has_secrets           = true
       visibility             = "public"
       auto_init              = false
       allow_merge_commit     = true
@@ -106,6 +111,7 @@ locals {
       vulnerability_alerts   = false
     }
     spring-mongo-query-resolver = {
+      _has_secrets           = true
       visibility             = "public"
       auto_init              = false
       allow_merge_commit     = true
@@ -124,7 +130,7 @@ locals {
 }
 
 data "vault_kv_secret_v2" "repo_secret" {
-  for_each = local.repositories
+  for_each = { for k, v in local.repositories : k => v if can(v._has_secrets) }
 
   mount = "kvv2"
   name  = "github.com/tuana9a/${each.key}/_/secrets"
