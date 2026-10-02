@@ -16,6 +16,7 @@ module "repo" {
   has_wiki               = try(each.value.has_wiki, false)
   visibility             = try(each.value.visibility, "private")
   auto_init              = try(each.value.auto_init, true)
+  collaborators          = try(each.value.collaborators, {})
   default_branch         = try(each.value.default_branch, "")
   allow_merge_commit     = try(each.value.allow_merge_commit, false)
   delete_branch_on_merge = try(each.value.delete_branch_on_merge, true)
@@ -24,9 +25,8 @@ module "repo" {
   description            = try(each.value.description, "")
   topics                 = try(each.value.topics, [])
   actions_secrets        = try(data.vault_kv_secret_v2.repo_secret[each.key].data, {})
-
-  archived = try(each.value.archived, false)
-  pages    = try(each.value.pages, null)
-  rulesets = try(each.value.rulesets, {})
-  webhooks = try(each.value.webhooks, {})
+  archived               = try(each.value.archived, false)
+  pages                  = try(each.value.pages, null)
+  rulesets               = try(each.value.rulesets, {})
+  webhooks               = try(each.value.webhooks, {})
 }
