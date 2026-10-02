@@ -135,7 +135,7 @@ locals {
       delete_branch_on_merge = false
       vulnerability_alerts   = false
       collaborators = {
-        tuana91a = "maintain"
+        tuana91a = "push"
       }
     }
   }
