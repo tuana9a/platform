@@ -1,6 +1,6 @@
 name: tuana9a/global/022-cloudflare-pages
 'on':
-  workflow_dispatch: null
+  workflow_dispatch: {}
   push:
     paths:
     - tuana9a/global/022-cloudflare-pages/*

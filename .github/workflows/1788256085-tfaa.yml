@@ -1,6 +1,6 @@
 name: tuana9a/global/023-dns
 'on':
-  workflow_dispatch: null
+  workflow_dispatch: {}
   push:
     paths:
     - tuana9a/global/023-dns/*
