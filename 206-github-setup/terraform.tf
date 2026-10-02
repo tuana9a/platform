@@ -8,13 +8,13 @@ terraform {
       source  = "hashicorp/google"
       version = "5.29.1"
     }
+    vault = {
+      source  = "hashicorp/vault"
+      version = "5.11.0"
+    }
     github = {
       source  = "integrations/github"
       version = "6.5.0"
-    }
-    external = {
-      source  = "hashicorp/external"
-      version = "2.3.5"
     }
   }
 }
@@ -25,9 +25,16 @@ provider "google" {
   zone    = "asia-southeast1-b"
 }
 
-provider "github" {
-  token = local.secrets.github_token
+provider "vault" {
+  address          = "https://vault.tuana9a.com"
+  skip_child_token = true
 }
 
-provider "external" {
+ephemeral "vault_kv_secret_v2" "github_token" {
+  mount = "kvv2"
+  name  = "github.com/tuana9a/platform/1790941292-tfaa"
+}
+
+provider "github" {
+  token = ephemeral.vault_kv_secret_v2.github_token.data.github_token
 }
