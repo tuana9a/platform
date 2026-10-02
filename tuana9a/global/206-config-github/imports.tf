@@ -53,8 +53,7 @@
 #   id = "spring-mongo-query-resolver"
 # }
 
-import {
-  id = "html2image-server:tuana91a"
-  to =  module.repo["html2image-server"].github_repository_collaborator.this["tuana91a"]
-}
-
+# import {
+#   id = "html2image-server:tuana91a"
+#   to =  module.repo["html2image-server"].github_repository_collaborator.this["tuana91a"]
+# }
