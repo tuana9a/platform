@@ -116,6 +116,13 @@ locals {
   }
 }
 
+data "vault_kv_secret_v2" "repo_secret" {
+  for_each = local.repositories
+
+  mount = "kvv2"
+  name  = "github.com/tuana9a/${each.key}/_/secrets"
+}
+
 module "repo" {
   source   = "./modules/github-repository"
   for_each = local.repositories
@@ -133,6 +140,7 @@ module "repo" {
   archive_on_destroy     = try(each.value.archive_on_destroy, true)
   description            = try(each.value.description, "")
   topics                 = try(each.value.topics, [])
+  actions_secrets        = try(data.vault_kv_secret_v2.repo_secret[each.key].data, {})
 
   archived = try(each.value.archived, false)
   pages    = try(each.value.pages, null)
