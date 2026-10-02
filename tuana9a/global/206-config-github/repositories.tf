@@ -113,6 +113,13 @@ locals {
       vulnerability_alerts   = false
       description            = "Resolve mongo criteria query from string"
     }
+    html2image-server = {
+      visibility             = "public"
+      auto_init              = false
+      allow_merge_commit     = true
+      delete_branch_on_merge = false
+      vulnerability_alerts   = false
+    }
   }
 }
 
