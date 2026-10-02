@@ -66,6 +66,53 @@ locals {
         path   = "/"
       }
     }
+    docker-images = {
+      visibility             = "public"
+      auto_init              = false
+      allow_merge_commit     = true
+      delete_branch_on_merge = false
+      vulnerability_alerts   = false
+    }
+    kp = {
+      visibility             = "public"
+      auto_init              = false
+      allow_merge_commit     = true
+      delete_branch_on_merge = false
+      vulnerability_alerts   = false
+      archived               = true
+      description            = "a kubernetes proxmox cli"
+      topics = [
+        "cli",
+        "kubernetes",
+        "proxmox",
+      ]
+    }
+    dkhptd = {
+      visibility             = "public"
+      auto_init              = false
+      allow_merge_commit     = true
+      delete_branch_on_merge = false
+      vulnerability_alerts   = false
+      description            = "Đăng ký lớp tự động Đại học Bách Khoa Hà Nội"
+      archived               = true
+      has_projects           = true
+      has_discussions        = true
+    }
+    web = {
+      visibility             = "public"
+      auto_init              = false
+      allow_merge_commit     = true
+      delete_branch_on_merge = false
+      vulnerability_alerts   = false
+    }
+    spring-mongo-query-resolver = {
+      visibility             = "public"
+      auto_init              = false
+      allow_merge_commit     = true
+      delete_branch_on_merge = false
+      vulnerability_alerts   = false
+      description            = "Resolve mongo criteria query from string"
+    }
   }
 }
 
@@ -84,7 +131,10 @@ module "repo" {
   delete_branch_on_merge = try(each.value.delete_branch_on_merge, true)
   vulnerability_alerts   = try(each.value.vulnerability_alerts, true)
   archive_on_destroy     = try(each.value.archive_on_destroy, true)
+  description            = try(each.value.description, "")
+  topics                 = try(each.value.topics, [])
 
+  archived = try(each.value.archived, false)
   pages    = try(each.value.pages, null)
   rulesets = try(each.value.rulesets, {})
   webhooks = try(each.value.webhooks, {})
