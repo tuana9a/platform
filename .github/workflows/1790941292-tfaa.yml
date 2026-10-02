@@ -1,9 +1,9 @@
-name: 206-github-setup
+name: tuana9a/global/206-config-github
 'on':
   workflow_dispatch: {}
   push:
     paths:
-    - 206-github-setup/*
+    - tuana9a/global/206-config-github/*
     - .github/workflows/1790941292-tfaa.yml
     branches:
     - rock-n-roll
@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
-      WORKING_DIR: 206-github-setup
+      WORKING_DIR: tuana9a/global/206-config-github
       login-vault: in-cluster-sa
     secrets: inherit
