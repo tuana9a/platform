@@ -32,7 +32,7 @@ variable "topics" {
 
 variable "default_branch" {
   type    = string
-  default = "main"
+  default = ""
 }
 
 variable "auto_init" {
