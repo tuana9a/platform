@@ -130,6 +130,7 @@ locals {
       description            = "Resolve mongo criteria query from string"
     }
     html2image-server = {
+      _has_secrets           = true
       visibility             = "public"
       allow_merge_commit     = true
       delete_branch_on_merge = false
