@@ -14,17 +14,17 @@ spec:
     spec:
       containers:
         - name: html2image-server
-          image: tuana9a/html2image-server:sha-caa428c
+          image: tuana9a/html2image-server:sha-0f43766
           ports:
             - containerPort: 3000
               name: http
           resources:
             requests:
               cpu: 50m
-              memory: 128Mi
+              memory: 500Mi
             limits:
               cpu: 250m
-              memory: 128Mi
+              memory: 500Mi
 ---
 apiVersion: v1
 kind: Service
