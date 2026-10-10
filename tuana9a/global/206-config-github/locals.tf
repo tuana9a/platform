@@ -45,7 +45,6 @@ locals {
           pull_request  = local.one_approval_pr
         }
       }
-
       webhooks = {
         jenkins = {
           url    = "https://jenkins.tuana9a.com/github-webhook/"
@@ -54,19 +53,16 @@ locals {
       }
     }
     helm-charts = {
-      has_downloads  = false
-      has_issues     = true
-      has_projects   = false
-      has_wiki       = false
-      default_branch = "main"
-
-      # same overrides as platform; confirm against the plan
+      has_downloads          = false
+      has_issues             = true
+      has_projects           = false
+      has_wiki               = false
+      default_branch         = "main"
       visibility             = "public"
       auto_init              = false
       allow_merge_commit     = true
       delete_branch_on_merge = false
       vulnerability_alerts   = false
-
       pages = {
         branch = "gh-pages"
         path   = "/"
