@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: html2image-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: html2image-server
+  template:
+    metadata:
+      labels:
+        app: html2image-server
+    spec:
+      containers:
+        - name: html2image-server
+          image: tuana9a/html2image-server:sha-caa428c
+          ports:
+            - containerPort: 3000
+              name: http
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: html2image-server
+spec:
+  type: ClusterIP
+  selector:
+    app: html2image-server
+  ports:
+    - port: 80
+      targetPort: 3000
+      name: http
