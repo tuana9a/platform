@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: html2image-server
-          image: tuana9a/html2image-server:sha-be42485
+          image: tuana9a/html2image-server:sha-a827302
           ports:
             - containerPort: 3000
               name: http
