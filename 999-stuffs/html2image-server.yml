@@ -14,10 +14,15 @@ spec:
     spec:
       containers:
         - name: html2image-server
-          image: tuana9a/html2image-server:sha-650f84d
+          image: tuana9a/html2image-server:sha-56d7510
           ports:
             - containerPort: 3000
               name: http
+          env:
+            - name: VIEWPORT_WIDTH
+              value: "820"
+            - name: VIEWPORT_HEIGHT
+              value: "720"
           resources:
             requests:
               cpu: 50m
