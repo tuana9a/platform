@@ -20,7 +20,7 @@ spec:
               name: http
           env:
             - name: VIEWPORT_WIDTH
-              value: "900"
+              value: "1280"
             - name: VIEWPORT_HEIGHT
               value: "720"
           resources:
