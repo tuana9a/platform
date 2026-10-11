@@ -24,23 +24,21 @@ resource "helm_release" "prometheus" {
 
   values = [file("./prometheus-values.yaml")]
 
-  set {
-    name  = "alertmanager.enabled"
-    value = "false"
-  }
-
-  set {
-    name  = "kube-state-metrics.enabled"
-    value = "false"
-  }
-
-  set {
-    name  = "prometheus-node-exporter.enabled"
-    value = "false"
-  }
-
-  set {
-    name  = "prometheus-pushgateway.enabled"
-    value = "false"
-  }
+  set = [
+    {
+      name  = "alertmanager.enabled"
+      value = "false"
+    },
+    {
+      name  = "kube-state-metrics.enabled"
+      value = "false"
+      }, {
+      name  = "prometheus-node-exporter.enabled"
+      value = "false"
+    },
+    {
+      name  = "prometheus-pushgateway.enabled"
+      value = "false"
+    },
+  ]
 }
