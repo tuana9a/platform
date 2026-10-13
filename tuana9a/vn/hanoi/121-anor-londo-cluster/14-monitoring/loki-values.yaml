@@ -1,4 +1,8 @@
 loki:
+  storage:
+    bucketNames:
+      chunks: chunks
+      ruler: ruller
   commonConfig:
     replication_factor: 1 # required as SingleBinary, default is 3
     storage:
