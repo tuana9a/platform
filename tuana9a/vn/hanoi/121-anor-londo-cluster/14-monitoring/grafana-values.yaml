@@ -38,6 +38,9 @@ listenerSet:
         hostname: grafana.tuana9a.com
         port: 80
         protocol: HTTP
+plugins:
+  - prometheus
+  - loki
 dashboardProviders:
   dashboardproviders.yaml:
     apiVersion: 1
