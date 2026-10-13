@@ -38,6 +38,10 @@ listenerSet:
         hostname: grafana.tuana9a.com
         port: 80
         protocol: HTTP
+persistence:
+  enabled: true
+  storageClassName: proxmox-data-xfs
+  size: 10Gi
 plugins:
   - prometheus
   - loki
