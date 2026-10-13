@@ -7,6 +7,9 @@ loki:
     replication_factor: 1 # required as SingleBinary, default is 3
     storage:
       type: filesystem
+  ring:
+    kvstore:
+      store: inmemory # fix: Failed to resolve loki-memberlist: lookup loki-memberlist on 10.233.0.10:53: no such host
   schemaConfig:
     configs:
       - from: 2024-04-01
