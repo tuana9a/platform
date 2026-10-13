@@ -36,7 +36,7 @@ singleBinary:
   replicas: 1
   persistence:
     storageClass: proxmox-data-xfs
-    size: 50Gi
+    size: 10Gi
 
 minio:
   enabled: false
