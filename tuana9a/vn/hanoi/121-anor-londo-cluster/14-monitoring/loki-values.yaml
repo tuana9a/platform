@@ -1,6 +1,8 @@
 loki:
   commonConfig:
     replication_factor: 1 # required as SingleBinary, default is 3
+    storage:
+      type: filesystem
   schemaConfig:
     configs:
       - from: 2024-04-01
@@ -30,10 +32,10 @@ singleBinary:
   replicas: 1
   persistence:
     storageClass: proxmox-data-xfs
-    size: 10Gi
+    size: 50Gi
 
 minio:
-  enabled: true
+  enabled: false
   persistence:
     storageClass: proxmox-data-xfs
     size: 25Gi
