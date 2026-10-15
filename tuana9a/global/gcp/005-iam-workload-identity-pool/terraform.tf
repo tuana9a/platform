@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "005-iam-workload-identity-pool-gcp-tuana9a"
+    prefix = "1792023004"
   }
   required_providers {
     google = {
