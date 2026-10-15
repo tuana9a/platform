@@ -34,7 +34,7 @@ on:
       GCP_SERVICE_ACCOUNT:
         type: string
         required: false
-        default: terraform-state-editor@tuana9a.iam.gserviceaccount.com
+        default: github-platform-runner@tuana9a.iam.gserviceaccount.com
       GCP_WORKLOAD_IDENTITY_POOL:
         type: string
         required: false
