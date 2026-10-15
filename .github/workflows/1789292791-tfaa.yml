@@ -1,9 +1,9 @@
-name: tuana9a/global/003-aws-sso
+name: tuana9a/global/aws/003-sso-aws
 'on':
   workflow_dispatch: {}
   push:
     paths:
-    - tuana9a/global/003-aws-sso/*
+    - tuana9a/global/aws/003-sso-aws/*
     - .github/workflows/1789292791-tfaa.yml
     branches:
     - rock-n-roll
@@ -15,7 +15,7 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
-      WORKING_DIR: tuana9a/global/003-aws-sso
+      WORKING_DIR: tuana9a/global/aws/003-sso-aws
       login-vault: in-cluster-sa
       AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/github-workflow
     secrets: inherit
