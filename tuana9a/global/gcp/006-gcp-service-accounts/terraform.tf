@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "006-iam-terraform-gcp-tuana9a"
+    prefix = "1792024342"
   }
   required_providers {
     google = {
