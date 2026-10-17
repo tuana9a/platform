@@ -2,6 +2,8 @@ terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
     prefix = "1790941292"
+
+    impersonate_service_account = "terraform-state-editor@tuana9a.iam.gserviceaccount.com"
   }
   required_providers {
     google = {
