@@ -14,9 +14,17 @@ resource "google_project_iam_member" "terraform_state_editor_1" {
   }
 }
 
-resource "google_service_account_iam_member" "terraform_state_editor_trusted_usage" {
-  for_each           = { for i, v in [google_service_account.github_platform_runner.email] : i => v }
+moved {
+  from = google_service_account_iam_member.terraform_state_editor_trusted_usage
+  to   = google_service_account_iam_member.terraform_state_editor_user
+}
+
+resource "google_service_account_iam_member" "terraform_state_editor_user" {
+  for_each = { for i, v in [
+    "serviceAccount:${google_service_account.github_platform_runner.email}",
+    "user:tuana9a@gmail.com"
+  ] : i => v }
   role               = "roles/iam.serviceAccountTokenCreator"
-  member             = "serviceAccount:${each.value}"
+  member             = each.value
   service_account_id = google_service_account.terraform_state_editor.name
 }
