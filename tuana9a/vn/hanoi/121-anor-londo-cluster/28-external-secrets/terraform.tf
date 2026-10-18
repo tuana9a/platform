@@ -2,23 +2,25 @@ terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
     prefix = "1786266974" # date +%s
+
+    impersonate_service_account = "terraform-state-editor@tuana9a.iam.gserviceaccount.com"
   }
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "5.29.1"
+      version = "8.2.0"
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "3.1.0"
+      version = "3.2.0"
+    }
+    helm = {
+      source  = "hashicorp/helm"
+      version = "3.3.0"
     }
     vault = {
       source  = "hashicorp/vault"
-      version = "~> 5.10.1"
-    }
-    external = {
-      source  = "hashicorp/external"
-      version = "2.3.5"
+      version = "5.11.0"
     }
   }
 }
@@ -40,10 +42,15 @@ provider "kubernetes" {
   token                  = ephemeral.vault_kv_secret_v2.cluster_auth.data["cluster_auth_token"]
 }
 
+provider "helm" {
+  kubernetes = {
+    host                   = "https://192.168.56.21:6443"
+    cluster_ca_certificate = base64decode(ephemeral.vault_kv_secret_v2.cluster_auth.data["cluster_ca_certificate_b64"])
+    token                  = ephemeral.vault_kv_secret_v2.cluster_auth.data["cluster_auth_token"]
+  }
+}
+
 provider "vault" {
   address          = "https://vault.tuana9a.com"
   skip_child_token = true
-}
-
-provider "external" {
 }

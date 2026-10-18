@@ -1,4 +1,6 @@
 resource "kubernetes_manifest" "clustersecrestorestore_vault_tuana9a_com" {
+  depends_on = [helm_release.external_secrets]
+
   manifest = yamldecode(<<EOF
 apiVersion: external-secrets.io/v1beta1
 kind: ClusterSecretStore
@@ -30,6 +32,8 @@ EOF
 }
 
 resource "kubernetes_manifest" "clustersecrestorestore_vault_tuana9a_com_v2" {
+  depends_on = [helm_release.external_secrets]
+
   manifest = yamldecode(<<EOF
 apiVersion: external-secrets.io/v1beta1
 kind: ClusterSecretStore
