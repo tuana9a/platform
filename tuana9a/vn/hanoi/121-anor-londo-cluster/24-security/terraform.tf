@@ -2,6 +2,8 @@ terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
     prefix = "1788596890" # date +%s
+
+    impersonate_service_account = "terraform-state-editor@tuana9a.iam.gserviceaccount.com"
   }
   required_providers {
     google = {
@@ -15,10 +17,6 @@ terraform {
     helm = {
       source  = "hashicorp/helm"
       version = "3.3.0"
-    }
-    external = {
-      source  = "hashicorp/external"
-      version = "2.3.5"
     }
     vault = {
       source  = "hashicorp/vault"
@@ -57,5 +55,3 @@ provider "helm" {
   }
 }
 
-provider "external" {
-}
