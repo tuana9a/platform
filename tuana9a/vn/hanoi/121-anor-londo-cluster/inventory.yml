@@ -133,6 +133,7 @@ cluster:
       memsize: 8192
     192.168.56.29: &i-129
       <<: *data_plane_defaults
+      create: false
       vmid: 129
       nodename: i-129
       upgrade:
