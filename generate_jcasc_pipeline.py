@@ -28,7 +28,7 @@ multibranchPipelineJob('""" + nameonly + """') {
       // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
       id('""" + str(unique_id) + """')
       remote('https://github.com/tuana9a/platform.git')
-      includes('rock-n-roll')
+      includes('main')
     }
   }
   factory {

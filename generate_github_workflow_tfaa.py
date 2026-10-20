@@ -57,7 +57,7 @@ def generate_workflow(folder: str, worflow_filepath: str, opts={}) -> str | None
             ]
             + paths
             + list(map(lambda x: f"!{x}", ignore_paths)),
-            "branches": ["rock-n-roll"],
+            "branches": ["main"],
         }
 
     with_section = {
