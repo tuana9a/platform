@@ -1,9 +1,9 @@
-name: tuana9a/vn/hanoi/121-anor-londo-cluster/502-coder/503-coder-config
+name: tuana9a/vn/hanoi/502-coder/503-coder-config
 'on':
-  workflow_dispatch: null
+  workflow_dispatch: {}
   push:
     paths:
-    - tuana9a/vn/hanoi/121-anor-londo-cluster/502-coder/503-coder-config/*
+    - tuana9a/vn/hanoi/502-coder/503-coder-config/*
     - .github/workflows/1788570931-tfaa.yml
     - tuana9a/vn/hanoi/121-anor-londo-cluster/502-coder/503-coder-config/templates/**
     branches:
@@ -16,6 +16,6 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
-      WORKING_DIR: tuana9a/vn/hanoi/121-anor-londo-cluster/502-coder/503-coder-config
+      WORKING_DIR: tuana9a/vn/hanoi/502-coder/503-coder-config
       login-vault: in-cluster-sa
     secrets: inherit
