@@ -1,9 +1,9 @@
-name: tuana9a/global/006-aws-iam-terraform
+name: tuana9a/global/aws/006-iam-roles
 'on':
   workflow_dispatch: {}
   push:
     paths:
-    - tuana9a/global/006-aws-iam-terraform/*
+    - tuana9a/global/aws/006-iam-roles/*
     - .github/workflows/1789293510-tfaa.yml
     branches:
     - rock-n-roll
@@ -15,7 +15,7 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
-      WORKING_DIR: tuana9a/global/006-aws-iam-terraform
+      WORKING_DIR: tuana9a/global/aws/006-iam-roles
       login-vault: in-cluster-sa
       AWS_ASSUME_ROLE: arn:aws:iam::384588864907:role/github-workflow
     secrets: inherit

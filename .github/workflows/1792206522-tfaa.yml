@@ -1,0 +1,20 @@
+name: tuana9a/global/gitlab/205-config-gitlab
+'on':
+  workflow_dispatch: {}
+  push:
+    paths:
+    - tuana9a/global/gitlab/205-config-gitlab/*
+    - .github/workflows/1792206522-tfaa.yml
+    branches:
+    - rock-n-roll
+jobs:
+  main:
+    permissions:
+      contents: read
+      id-token: write
+    uses: ./.github/workflows/tfaa.yml
+    with:
+      runs-on: self-hosted-0
+      WORKING_DIR: tuana9a/global/gitlab/205-config-gitlab
+      login-vault: in-cluster-sa
+    secrets: inherit

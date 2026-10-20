@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: html2image-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: html2image-server
+  template:
+    metadata:
+      labels:
+        app: html2image-server
+    spec:
+      containers:
+        - name: html2image-server
+          image: tuana9a/html2image-server:sha-a827302
+          ports:
+            - containerPort: 3000
+              name: http
+          env:
+            - name: VIEWPORT_WIDTH
+              value: "1280"
+            - name: VIEWPORT_HEIGHT
+              value: "720"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 500Mi
+            limits:
+              cpu: 1000m
+              memory: 1000Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: html2image-server
+spec:
+  type: ClusterIP
+  selector:
+    app: html2image-server
+  ports:
+    - port: 80
+      targetPort: 3000
+      name: http

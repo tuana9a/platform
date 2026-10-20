@@ -15,7 +15,7 @@ resource "helm_release" "grafana" {
 
   repository = "oci://ghcr.io/grafana-community/helm-charts"
   chart      = "grafana"
-  version    = "13.0.1"
+  version    = "13.2.1"
 
   values = [file("./grafana-values.yaml")]
 }

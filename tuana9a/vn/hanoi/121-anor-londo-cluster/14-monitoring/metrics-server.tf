@@ -22,13 +22,17 @@ resource "helm_release" "metrics_server" {
   chart      = "metrics-server"
   version    = "3.12.0"
 
-  set {
-    name  = "replicas"
-    value = "3"
-  }
+  set = [
+    {
+      name  = "replicas"
+      value = "3"
+    }
+  ]
 
-  set_list {
-    name  = "args"
-    value = ["--kubelet-insecure-tls"]
-  }
+  set_list = [
+    {
+      name  = "args"
+      value = ["--kubelet-insecure-tls"]
+    }
+  ]
 }

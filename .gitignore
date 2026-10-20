@@ -155,3 +155,4 @@ override.tf.json
 *tmp*
 *.env
 *.tfvars
+/secrets

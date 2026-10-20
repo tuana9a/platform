@@ -1,11 +1,15 @@
 loki:
+  storage:
+    type: filesystem
   commonConfig:
     replication_factor: 1 # required as SingleBinary, default is 3
+    storage:
+      type: filesystem
   schemaConfig:
     configs:
       - from: 2024-04-01
         store: tsdb
-        object_store: s3
+        object_store: filesystem
         schema: v13
         index:
           prefix: loki_index_
@@ -33,7 +37,7 @@ singleBinary:
     size: 10Gi
 
 minio:
-  enabled: true
+  enabled: false
   persistence:
     storageClass: proxmox-data-xfs
     size: 25Gi

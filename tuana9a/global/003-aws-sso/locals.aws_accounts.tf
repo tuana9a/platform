@@ -1,1 +1,0 @@
-../../../locals.aws_accounts.tf

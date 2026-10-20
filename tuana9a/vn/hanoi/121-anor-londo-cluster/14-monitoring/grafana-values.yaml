@@ -38,6 +38,14 @@ listenerSet:
         hostname: grafana.tuana9a.com
         port: 80
         protocol: HTTP
+persistence:
+  enabled: false
+  storageClassName: proxmox-data-xfs
+  size: 10Gi
+shadowBundledPlugins: true # fix failed to install plugin loki@: unlinkat /usr/share/grafana/data/plugins-bundled/loki: read-only file system
+plugins:
+  - prometheus
+  - loki
 dashboardProviders:
   dashboardproviders.yaml:
     apiVersion: 1
