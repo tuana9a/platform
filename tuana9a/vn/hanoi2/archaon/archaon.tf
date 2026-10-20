@@ -6,7 +6,7 @@ resource "random_password" "vm_password" {
 
 resource "proxmox_virtual_environment_vm" "hanoi2_archaon" {
   node_name = "engineer"
-  vm_id     = 209
+  vm_id     = 206
   name      = "hanoi2-archaon"
   tags      = ["terraform", "debian"]
 
