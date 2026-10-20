@@ -9,7 +9,7 @@ spec:
   source:
     path: 999-stuffs
     repoURL: https://github.com/tuana9a/platform.git
-    targetRevision: rock-n-roll
+    targetRevision: main
   destination:
     namespace: stuffs
     server: https://kubernetes.default.svc

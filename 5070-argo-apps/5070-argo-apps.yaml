@@ -9,7 +9,7 @@ spec:
   source:
     path: 5070-argo-apps
     repoURL: https://github.com/tuana9a/platform.git
-    targetRevision: rock-n-roll
+    targetRevision: main
   destination:
     server: https://kubernetes.default.svc
   syncPolicy:

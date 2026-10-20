@@ -9,7 +9,7 @@ spec:
   source:
     path: tuana9a/vn/hanoi/121-anor-londo-cluster/24-security/kubearmor-config
     repoURL: https://github.com/tuana9a/platform.git
-    targetRevision: rock-n-roll
+    targetRevision: main
   destination:
     server: https://kubernetes.default.svc
   syncPolicy:

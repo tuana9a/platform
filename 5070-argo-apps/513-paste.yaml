@@ -9,7 +9,7 @@ spec:
   source:
     path: 513-paste-manifests
     repoURL: https://github.com/tuana9a/platform.git
-    targetRevision: rock-n-roll
+    targetRevision: main
   destination:
     namespace: paste
     server: https://kubernetes.default.svc
