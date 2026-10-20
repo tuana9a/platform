@@ -36,14 +36,6 @@ locals {
           deletion      = true
           pull_request  = local.one_approval_pr
         }
-        "rock-n-roll" = {
-          include       = ["refs/heads/rock-n-roll"]
-          bypass_actors = local.admin_bypass
-          creation      = true
-          update        = true
-          deletion      = true
-          pull_request  = local.one_approval_pr
-        }
       }
       webhooks = {
         jenkins = {

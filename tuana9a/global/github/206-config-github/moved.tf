@@ -8,10 +8,6 @@ moved {
   to   = module.repo["platform"].github_repository_ruleset.this["main"]
 }
 
-moved {
-  from = github_repository_ruleset.platform_rock-n-roll
-  to   = module.repo["platform"].github_repository_ruleset.this["rock-n-roll"]
-}
 
 moved {
   from = github_repository_webhook.platform
