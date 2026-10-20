@@ -61,6 +61,40 @@
                 "reveal": "always",
                 "panel": "shared"
             },
-        }
+        },
+        {
+            "label": "get argocd admin password",
+            "type": "shell",
+            "command": "kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath=\"{.data.password}\" | base64 -d ; echo",
+            "options": {
+                "cwd": "${workspaceFolder}/",
+                "env": {
+                    "VAULT_ADDR": "https://vault.tuana9a.com",
+                    "KUBECONFIG": "./secrets/.kube/oidc@anor-londo-cluster.yml"
+                }
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+        },
+        {
+            "label": "get grafana admin password",
+            "type": "shell",
+            "command": "kubectl -n grafana get secret grafana -o jsonpath=\"{.data.admin-password}\" | base64 --decode ; echo",
+            "options": {
+                "cwd": "${workspaceFolder}/",
+                "env": {
+                    "VAULT_ADDR": "https://vault.tuana9a.com",
+                    "KUBECONFIG": "./secrets/.kube/oidc@anor-londo-cluster.yml"
+                }
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+        },
     ]
 }
