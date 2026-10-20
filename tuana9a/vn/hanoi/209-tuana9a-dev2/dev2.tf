@@ -10,6 +10,8 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev2" {
   name      = "tuana9a-dev2"
   tags      = ["terraform", "ubuntu"]
 
+  started = false
+
   cpu {
     cores        = 2
     sockets      = 1
