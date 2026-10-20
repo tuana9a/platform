@@ -133,14 +133,14 @@ cluster:
       memsize: 8192
     192.168.56.29: &i-129
       <<: *data_plane_defaults
-      create: false
+      create: true
       vmid: 129
       nodename: i-129
       upgrade:
         batch: batch3
         skip_phases: ["kube-proxy"] # TODO: test this next time
-      corecount: 4
-      memsize: 8192
+      corecount: 2
+      memsize: 4096
     192.168.56.37: &i-137
       <<: *data_plane_defaults
       nodename: i-137
