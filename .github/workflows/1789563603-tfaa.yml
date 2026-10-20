@@ -6,7 +6,7 @@ name: tuana9a/vn/hanoi/209-tuana9a-dev2
     - tuana9a/vn/hanoi/209-tuana9a-dev2/*
     - .github/workflows/1789563603-tfaa.yml
     branches:
-    - rock-n-roll
+    - main
 jobs:
   main:
     permissions:

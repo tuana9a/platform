@@ -7,7 +7,7 @@ on:
       - "025-gcp-artifact-hub-tuana9a/**"
       - ".github/workflows/025-gcp-artifact-hub-tuana9a*"
     branches:
-      - rock-n-roll
+      - main
 
 jobs:
   main:

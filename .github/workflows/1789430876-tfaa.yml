@@ -6,7 +6,7 @@ name: atlantis-tle/global/005-aws-iam
     - atlantis-tle/global/005-aws-iam/*
     - .github/workflows/1789430876-tfaa.yml
     branches:
-    - rock-n-roll
+    - main
 jobs:
   main:
     permissions:

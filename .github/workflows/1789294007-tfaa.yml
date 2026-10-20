@@ -6,7 +6,7 @@ name: tuana9a/global/aws/009-kms
     - tuana9a/global/aws/009-kms/*
     - .github/workflows/1789294007-tfaa.yml
     branches:
-    - rock-n-roll
+    - main
 jobs:
   main:
     permissions:

@@ -6,7 +6,7 @@ name: tuana9a/vn/hanoi/121-anor-londo-cluster/02-flannel
     - tuana9a/vn/hanoi/121-anor-londo-cluster/02-flannel/*
     - .github/workflows/1788690525-tfaa.yml
     branches:
-    - rock-n-roll
+    - main
 jobs:
   main:
     permissions:

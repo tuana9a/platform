@@ -6,7 +6,7 @@ name: tuana9a/global/021-r2
     - tuana9a/global/021-r2/*
     - .github/workflows/1789294051-tfaa.yml
     branches:
-    - rock-n-roll
+    - main
 jobs:
   main:
     permissions:

@@ -6,7 +6,7 @@ name: tuana9a/global/024-email-routing
     - tuana9a/global/024-email-routing/*
     - .github/workflows/1789294160-tfaa.yml
     branches:
-    - rock-n-roll
+    - main
 jobs:
   main:
     permissions:

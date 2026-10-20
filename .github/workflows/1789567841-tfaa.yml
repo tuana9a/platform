@@ -6,7 +6,7 @@ name: tuana9a/global/015-cloudflare-tunnel
     - tuana9a/global/015-cloudflare-tunnel/*
     - .github/workflows/1789567841-tfaa.yml
     branches:
-    - rock-n-roll
+    - main
 jobs:
   main:
     permissions:

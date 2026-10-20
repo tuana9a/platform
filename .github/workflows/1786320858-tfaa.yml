@@ -6,7 +6,7 @@ name: tuana9a/global/022-cloudflare-pages
     - tuana9a/global/022-cloudflare-pages/*
     - .github/workflows/1786320858-tfaa.yml
     branches:
-    - rock-n-roll
+    - main
 jobs:
   main:
     permissions:

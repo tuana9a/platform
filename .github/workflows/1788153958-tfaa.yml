@@ -6,7 +6,7 @@ name: tuana9a/vn/hanoi/121-anor-londo-cluster/20-wireguard-clients
     - tuana9a/vn/hanoi/121-anor-londo-cluster/20-wireguard-clients/*
     - .github/workflows/1788153958-tfaa.yml
     branches:
-    - rock-n-roll
+    - main
 jobs:
   main:
     permissions:

@@ -6,7 +6,7 @@ name: t9st/global/006-aws-iam-terraform
     - t9st/global/006-aws-iam-terraform/*
     - .github/workflows/1789429001-tfaa.yml
     branches:
-    - rock-n-roll
+    - main
 jobs:
   main:
     permissions:

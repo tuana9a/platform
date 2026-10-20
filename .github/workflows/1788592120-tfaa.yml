@@ -6,7 +6,7 @@ name: tuana9a/vn/hanoi/121-anor-londo-cluster/08-ingress-nginx
     - tuana9a/vn/hanoi/121-anor-londo-cluster/08-ingress-nginx/*
     - .github/workflows/1788592120-tfaa.yml
     branches:
-    - rock-n-roll
+    - main
 jobs:
   main:
     permissions:

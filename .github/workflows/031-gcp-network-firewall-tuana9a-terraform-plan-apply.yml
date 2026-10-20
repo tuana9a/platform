@@ -7,7 +7,7 @@ on:
       - "031-gcp-network-firewall-tuana9a/**"
       - ".github/workflows/031-gcp-network-firewall-tuana9a*"
     branches:
-      - rock-n-roll
+      - main
 
 jobs:
   main:

@@ -6,7 +6,7 @@ name: tuana9a/vn/hanoi2/archaon
     - tuana9a/vn/hanoi2/archaon/*
     - .github/workflows/1792457984-tfaa.yml
     branches:
-    - rock-n-roll
+    - main
 jobs:
   main:
     permissions:

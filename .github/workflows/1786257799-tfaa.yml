@@ -6,7 +6,7 @@ name: tuana9a/vn/hanoi/121-anor-londo-cluster/502-coder
     - tuana9a/vn/hanoi/121-anor-londo-cluster/502-coder/*
     - .github/workflows/1786257799-tfaa.yml
     branches:
-    - rock-n-roll
+    - main
 jobs:
   main:
     permissions:

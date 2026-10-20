@@ -6,7 +6,7 @@ name: tuana9a/global/023-dns
     - tuana9a/global/023-dns/*
     - .github/workflows/1788256085-tfaa.yml
     branches:
-    - rock-n-roll
+    - main
 jobs:
   main:
     permissions:

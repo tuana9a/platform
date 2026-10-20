@@ -7,7 +7,7 @@ on:
       - "085-spegel/**"
       - ".github/workflows/085-spegel-terraform-plan-apply*"
     branches:
-      - rock-n-roll
+      - main
 
 jobs:
   main:

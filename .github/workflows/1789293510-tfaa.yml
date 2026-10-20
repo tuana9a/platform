@@ -6,7 +6,7 @@ name: tuana9a/global/aws/006-iam-roles
     - tuana9a/global/aws/006-iam-roles/*
     - .github/workflows/1789293510-tfaa.yml
     branches:
-    - rock-n-roll
+    - main
 jobs:
   main:
     permissions:

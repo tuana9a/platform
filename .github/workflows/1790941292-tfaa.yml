@@ -6,7 +6,7 @@ name: tuana9a/global/github/206-config-github
     - tuana9a/global/github/206-config-github/*
     - .github/workflows/1790941292-tfaa.yml
     branches:
-    - rock-n-roll
+    - main
 jobs:
   main:
     permissions:

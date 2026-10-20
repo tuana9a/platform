@@ -6,7 +6,7 @@ name: t9st/global/005-aws-iam
     - t9st/global/005-aws-iam/*
     - .github/workflows/1789399498-tfaa.yml
     branches:
-    - rock-n-roll
+    - main
 jobs:
   main:
     permissions:

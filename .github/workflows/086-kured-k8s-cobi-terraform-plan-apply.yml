@@ -7,7 +7,7 @@ on:
       - "086-kured-k8s-cobi/**"
       - ".github/workflows/086-kured-k8s-cobi-terraform-plan-apply*"
     branches:
-      - rock-n-roll
+      - main
 
 jobs:
   main:
