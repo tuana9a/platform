@@ -8,7 +8,7 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "5.29.1"
+      version = "8.2.0"
     }
     coderd = {
       source  = "coder/coderd"
@@ -16,7 +16,7 @@ terraform {
     }
     vault = {
       source  = "hashicorp/vault"
-      version = "5.10.1"
+      version = "5.11.0"
     }
     random = {
       source  = "hashicorp/random"
