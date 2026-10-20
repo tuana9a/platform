@@ -5,17 +5,15 @@ resource "random_password" "vm_password" {
 }
 
 resource "proxmox_virtual_environment_vm" "hanoi2_archaon" {
-  node_name = "engineer"
+  node_name = "neomorph"
   vm_id     = 206
   name      = "hanoi2-archaon"
   tags      = ["terraform", "debian"]
 
   cpu {
-    cores        = 4
-    sockets      = 1
-    architecture = "x86_64"
-    flags        = []
-    type         = "host"
+    cores   = 4
+    sockets = 1
+    type    = "host"
   }
 
   memory {
@@ -31,7 +29,7 @@ resource "proxmox_virtual_environment_vm" "hanoi2_archaon" {
   disk {
     datastore_id = "local"
     file_id      = "local:iso/debian-12-generic-amd64-20260510-2474.img"
-    interface    = "virtio0"
+    interface    = "scsi0"
     size         = 64
     backup       = true
     replicate    = false
@@ -43,7 +41,15 @@ resource "proxmox_virtual_environment_vm" "hanoi2_archaon" {
     }
   }
 
-  boot_order = ["virtio0"]
+  operating_system {
+    type = "l26"
+  }
+
+  serial_device {
+    device = "socket"
+  }
+
+  boot_order = ["scsi0"]
 
   initialization {
     datastore_id = "local"
