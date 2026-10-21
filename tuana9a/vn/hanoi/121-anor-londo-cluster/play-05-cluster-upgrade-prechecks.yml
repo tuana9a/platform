@@ -1,3 +1,0 @@
-- hosts: cluster
-  tasks:
-    - include_tasks: ./tasks/k8s_upgrade_01_prechecks.yml
