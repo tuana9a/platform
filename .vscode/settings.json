@@ -3,5 +3,14 @@
     "yaml.schemas": {
         "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook": "play-*.yml"
     },
-    "terminal.integrated.tabs.location": "right"
+    "terminal.integrated.tabs.location": "right",
+    "files.exclude": {
+        "**/.terraform": true,
+        "**/.git": true,
+        "**/tfplan*": true
+    },
+    "search.exclude": {
+        "**/.terraform": true
+    },
+    "terraform.languageServer.enable": true,
 }
