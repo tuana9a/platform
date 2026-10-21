@@ -3,6 +3,11 @@ data "vault_kv_secret_v2" "ci" {
   name  = "ci"
 }
 
+ephemeral "vault_kv_secret_v2" "ci" {
+  mount = "kvv2"
+  name  = "ci"
+}
+
 data "external" "id_rsa" {
   program = ["bash", "./scripts/id_rsa.sh"]
   query = {

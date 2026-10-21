@@ -135,7 +135,7 @@ resource "terraform_data" "post_cluster_setup" {
   connection {
     type        = "ssh"
     user        = local.vm_user
-    private_key = data.vault_kv_secret_v2.ci.data.id_rsa
+    private_key = ephemeral.vault_kv_secret_v2.ci.data.id_rsa
     host        = local.primary_control_plane_ip
   }
 
