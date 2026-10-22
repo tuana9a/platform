@@ -1,9 +1,9 @@
-name: tuana9a/vn/hanoi/121-anor-londo-cluster/02-metallb
+name: tuana9a/vn/hanoi/121-anor-londo-cluster/networks/02-metallb
 'on':
-  workflow_dispatch: null
+  workflow_dispatch: {}
   push:
     paths:
-    - tuana9a/vn/hanoi/121-anor-londo-cluster/02-metallb/*
+    - tuana9a/vn/hanoi/121-anor-londo-cluster/networks/02-metallb/*
     - .github/workflows/1788690419-tfaa.yml
     branches:
     - main
@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
-      WORKING_DIR: tuana9a/vn/hanoi/121-anor-londo-cluster/02-metallb
+      WORKING_DIR: tuana9a/vn/hanoi/121-anor-londo-cluster/networks/02-metallb
       login-vault: in-cluster-sa
     secrets: inherit

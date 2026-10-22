@@ -1,7 +1,9 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "1787973884" # date +%s
+    prefix = "1788592120" # date +%s
+
+    impersonate_service_account = "terraform-state-editor@tuana9a.iam.gserviceaccount.com"
   }
   required_providers {
     google = {
@@ -15,6 +17,10 @@ terraform {
     helm = {
       source  = "hashicorp/helm"
       version = "2.12.1"
+    }
+    external = {
+      source  = "hashicorp/external"
+      version = "2.3.5"
     }
     vault = {
       source  = "hashicorp/vault"
@@ -51,4 +57,7 @@ provider "helm" {
     cluster_ca_certificate = base64decode(ephemeral.vault_kv_secret_v2.cluster_auth.data["cluster_ca_certificate_b64"])
     token                  = ephemeral.vault_kv_secret_v2.cluster_auth.data["cluster_auth_token"]
   }
+}
+
+provider "external" {
 }

@@ -1,9 +1,9 @@
-name: tuana9a/vn/hanoi/121-anor-londo-cluster/02-flannel
+name: tuana9a/vn/hanoi/121-anor-londo-cluster/networks/02-flannel
 'on':
-  workflow_dispatch: null
+  workflow_dispatch: {}
   push:
     paths:
-    - tuana9a/vn/hanoi/121-anor-londo-cluster/02-flannel/*
+    - tuana9a/vn/hanoi/121-anor-londo-cluster/networks/02-flannel/*
     - .github/workflows/1788690525-tfaa.yml
     branches:
     - main
@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
-      WORKING_DIR: tuana9a/vn/hanoi/121-anor-londo-cluster/02-flannel
+      WORKING_DIR: tuana9a/vn/hanoi/121-anor-londo-cluster/networks/02-flannel
       login-vault: in-cluster-sa
     secrets: inherit

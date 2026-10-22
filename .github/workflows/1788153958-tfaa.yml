@@ -1,9 +1,9 @@
-name: tuana9a/vn/hanoi/121-anor-londo-cluster/20-wireguard-clients
+name: tuana9a/vn/hanoi/121-anor-londo-cluster/networks/20-wireguard-clients
 'on':
-  workflow_dispatch: null
+  workflow_dispatch: {}
   push:
     paths:
-    - tuana9a/vn/hanoi/121-anor-londo-cluster/20-wireguard-clients/*
+    - tuana9a/vn/hanoi/121-anor-londo-cluster/networks/20-wireguard-clients/*
     - .github/workflows/1788153958-tfaa.yml
     branches:
     - main
@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
-      WORKING_DIR: tuana9a/vn/hanoi/121-anor-londo-cluster/20-wireguard-clients
+      WORKING_DIR: tuana9a/vn/hanoi/121-anor-londo-cluster/networks/20-wireguard-clients
       login-vault: in-cluster-sa
     secrets: inherit
