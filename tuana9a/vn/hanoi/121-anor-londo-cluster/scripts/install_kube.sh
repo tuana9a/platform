@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-key_file=$1
-ssh_user=$2
-node_ip=$3
-kubernetes_version=$4
+kubernetes_version=$1
 
 SSH_OPTS=(-o StrictHostKeyChecking=no -i "$key_file")
 

@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-key_file=$1
-ssh_user=$2
-node_ip=$3
-is_control_plane=$4
+is_control_plane=$1
 
 if [[ "$is_control_plane" != "1" ]]; then
   echo "Not control plane, skipping..."

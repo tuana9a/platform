@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-key_file=$1
-ssh_user=$2
-node_ip=$3
-
 TIMEOUT=300
 INTERVAL=5
 

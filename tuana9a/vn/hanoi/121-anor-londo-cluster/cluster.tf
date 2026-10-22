@@ -72,23 +72,22 @@ resource "proxmox_virtual_environment_vm" "cluster" {
 
   provisioner "local-exec" {
     when    = create
-    command = "./scripts/wait_node_bootstrap_completed.sh ${local.key_file} ${local.vm_user} ${each.value.ip_address}"
+    command = "key_file=${local.key_file} ssh_user=${local.vm_user} node_ip=${each.value.ip_address} ./scripts/wait_node_bootstrap_completed.sh"
   }
 
   provisioner "local-exec" {
     when    = create
-    command = "./scripts/install_kube.sh ${local.key_file} ${local.vm_user} ${each.value.ip_address} ${each.value.kubernetes_version}"
-  }
-
-  # IDEA: bash script wait for a file how-to-scp-kube-certs.txt to be available -> the how to's file content will be multiple line, each line will be a map filepath -> remote file path
-  provisioner "local-exec" {
-    when    = create
-    command = "./scripts/scp_kube_certs.sh ${local.key_file} ${local.vm_user} ${each.value.ip_address} ${each.value.is_control_plane ? 1 : 0}"
+    command = "key_file=${local.key_file} ssh_user=${local.vm_user} node_ip=${each.value.ip_address} ./scripts/install_kube.sh ${each.value.kubernetes_version}"
   }
 
   provisioner "local-exec" {
     when    = create
-    command = "./scripts/join_node.sh ${local.key_file} ${local.vm_user} ${each.value.ip_address} ${each.value.is_control_plane ? 1 : 0}"
+    command = "key_file=${local.key_file} ssh_user=${local.vm_user} node_ip=${each.value.ip_address} ./scripts/scp_kube_certs.sh ${each.value.is_control_plane ? 1 : 0}"
+  }
+
+  provisioner "local-exec" {
+    when    = create
+    command = "key_file=${local.key_file} ssh_user=${local.vm_user} node_ip=${each.value.ip_address} ./scripts/join_node.sh ${each.value.is_control_plane ? 1 : 0}"
   }
 
   provisioner "local-exec" {
