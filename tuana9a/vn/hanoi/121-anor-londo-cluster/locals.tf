@@ -15,10 +15,12 @@ locals {
     # adding just deriviated fields
     for host_ip, host in yamldecode(file("./inventory.yml"))["cluster"]["hosts"] :
     host["nodename"] => merge(host, {
-      ip_address       = host_ip
-      address          = "${host_ip}/24"
-      network_device   = host["pve_network_device"]
-      is_control_plane = contains(host.roles, "control-plane")
+      ip_address               = host_ip
+      address                  = "${host_ip}/24"
+      network_device           = host["pve_network_device"]
+      is_control_plane         = contains(host.roles, "control-plane") || contains(host.roles, "primary-control-plane")
+      is_primary_control_plane = contains(host.roles, "primary-control-plane")
+      is_the_first_upgrade     = contains(host.roles, "first-upgrade")
       kube_labels = [
         "topology.kubernetes.io/region=${host.pve_cluster}",
         "topology.kubernetes.io/zone=${host.pve_node}",
@@ -34,10 +36,4 @@ locals {
   primary_control_plane      = one([for k, v in local.cluster : v if lookup(v, "is_primary_control_plane", false)])
   primary_control_plane_ip   = local.primary_control_plane.ip_address
   kubectl_label_nodes_script = join("\n", [for k, v in local.cluster_kube_labels : "kubectl label node ${k} ${join(" ", v)}"])
-
-  cluster_upgrade = {
-    version              = "1.33"
-    next_version         = "1.33.13"
-    next_version_channel = "1.33"
-  }
 }

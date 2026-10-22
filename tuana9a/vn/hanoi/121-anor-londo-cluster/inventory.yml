@@ -1,50 +1,34 @@
 DO_NOT_USE: # NOTE: storing common variables
   hosts:
     localhost:
-      kube_certs: &kube_certs
-        - /etc/kubernetes/pki/ca.crt
-        - /etc/kubernetes/pki/ca.key
-        - /etc/kubernetes/pki/sa.key
-        - /etc/kubernetes/pki/sa.pub
-        - /etc/kubernetes/pki/front-proxy-ca.crt
-        - /etc/kubernetes/pki/front-proxy-ca.key
-        - /etc/kubernetes/pki/etcd/ca.crt
-        - /etc/kubernetes/pki/etcd/ca.key
-      kubevip: &kubevip
-        inf: eth0
-        vip: 192.168.56.21
-      kubernetes_version: &kubernetes_version "1.33.10"
-      cluster_ops: &cluster_ops
-        # some operation required taking variable from control plane like:
-        # - getting kube_certs
-        # - kube join command
-        # each data node having this variable will be able to reference control plane via hostvars, example: "hostvars[cluster_ops.host].kube_join_command"
-        host: 192.168.56.26
-        remove_hosts:
-          - 192.168.56.25
-      gateway_ip: &gateway_ip 192.168.56.1
-      cloudimg: &cloudimg debian-12-generic-amd64-20260510-2474.img
-
       k8s_node_defaults: &k8s_node_defaults
         create: true
         ansible_user: u
         pve_cluster: "alien"
         pve_node: "neomorph"
-        cloudimg: *cloudimg
+        cloudimg: &cloudimg debian-12-generic-amd64-20260510-2474.img
         pve_network_device: "vmbr0"
-        gateway_ip: *gateway_ip
-        cluster_ops: *cluster_ops
-        kubernetes_version: *kubernetes_version
+        gateway_ip: &gateway_ip 192.168.56.1
+        kubernetes_version: &kubernetes_version "1.33.10"
         kube_certs: []
-
       control_plane_defaults: &control_plane_defaults
         <<: *k8s_node_defaults
         roles:
           - control-plane
         corecount: 2
         memsize: 4096
-        kube_certs: *kube_certs
-        kubevip: *kubevip
+        kube_certs: &kube_certs
+          - /etc/kubernetes/pki/ca.crt
+          - /etc/kubernetes/pki/ca.key
+          - /etc/kubernetes/pki/sa.key
+          - /etc/kubernetes/pki/sa.pub
+          - /etc/kubernetes/pki/front-proxy-ca.crt
+          - /etc/kubernetes/pki/front-proxy-ca.key
+          - /etc/kubernetes/pki/etcd/ca.crt
+          - /etc/kubernetes/pki/etcd/ca.key
+        kubevip: &kubevip
+          inf: eth0
+          vip: 192.168.56.21
       data_plane_defaults: &data_plane_defaults
         <<: *k8s_node_defaults
         roles:
@@ -58,13 +42,13 @@ cluster:
     192.168.56.22: &i-122
       <<: *control_plane_defaults
       create: true
-      is_primary_control_plane: true
+      roles:
+        - control-plane
+        - primary-control-plane
+        - first-upgrade
       vmid: 122
       pve_node: "engineer"
       nodename: i-122
-      upgrade:
-        batch: batch1
-        skip_phases: ["kube-proxy"] # TODO: test this next time
       corecount: 2
       memsize: 6144
     192.168.56.23: &i-123
@@ -73,9 +57,6 @@ cluster:
       vmid: 123
       pve_node: "engineer"
       nodename: i-123
-      upgrade:
-        batch: batch1
-        skip_phases: ["kube-proxy"] # TODO: test this next time
       corecount: 2
       memsize: 6144
     192.168.56.24: &i-124
@@ -84,9 +65,6 @@ cluster:
       vmid: 124
       pve_node: "neomorph"
       nodename: i-124
-      upgrade:
-        batch: batch1
-        skip_phases: ["kube-proxy"] # TODO: test this next time
       corecount: 2
       memsize: 6144
     192.168.56.25: &i-125
@@ -94,9 +72,6 @@ cluster:
       vmid: 125
       pve_node: "engineer"
       nodename: i-125
-      upgrade:
-        batch: batch1
-        skip_phases: ["kube-proxy"] # TODO: test this next time
       corecount: 2
       memsize: 6144
     192.168.56.26: &i-126
@@ -105,9 +80,6 @@ cluster:
       vmid: 126
       pve_node: "engineer"
       nodename: i-126
-      upgrade:
-        batch: batch2
-        skip_phases: ["kube-proxy"] # TODO: test this next time
       corecount: 2
       memsize: 6144
     192.168.56.27: &i-127
@@ -115,9 +87,6 @@ cluster:
       create: false
       vmid: 127
       nodename: i-127
-      upgrade:
-        batch: batch3
-        skip_phases: ["kube-proxy"] # TODO: test this next time
       corecount: 2
       memsize: 6144
 
@@ -126,9 +95,6 @@ cluster:
       <<: *data_plane_defaults
       vmid: 128
       nodename: i-128
-      upgrade:
-        batch: batch3
-        skip_phases: ["kube-proxy"] # TODO: test this next time
       corecount: 4
       memsize: 8192
     192.168.56.29: &i-129
@@ -136,32 +102,20 @@ cluster:
       create: false
       vmid: 129
       nodename: i-129
-      upgrade:
-        batch: batch3
-        skip_phases: ["kube-proxy"] # TODO: test this next time
       corecount: 2
       memsize: 4096
     192.168.56.37: &i-137
       <<: *data_plane_defaults
       nodename: i-137
       vmid: 137
-      upgrade:
-        batch: batch4
-        skip_phases: ["kube-proxy"]
     192.168.56.38: &i-138
       <<: *data_plane_defaults
       nodename: i-138
       vmid: 138
-      upgrade:
-        batch: batch5
-        skip_phases: ["kube-proxy"]
     192.168.56.39: &i-139
       <<: *data_plane_defaults
       create: false
       vmid: 139
       nodename: i-139
-      upgrade:
-        batch: batch3
-        skip_phases: ["kube-proxy"] # TODO: test this next time
       corecount: 2
       memsize: 4096
