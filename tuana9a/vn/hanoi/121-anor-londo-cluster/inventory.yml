@@ -61,7 +61,7 @@ cluster:
       memsize: 6144
     192.168.56.24: &i-124
       <<: *control_plane_defaults
-      create: true
+      create: false
       vmid: 124
       pve_node: "neomorph"
       nodename: i-124
