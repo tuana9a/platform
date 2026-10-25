@@ -95,17 +95,11 @@ cluster:
     # --- DATA PLANE ---
     192.168.56.28: &i-128
       <<: *data_plane_defaults
+      create: false
       vmid: 128
       nodename: i-128
       corecount: 4
       memsize: 8192
-    192.168.56.29: &i-129
-      <<: *data_plane_defaults
-      create: false
-      vmid: 129
-      nodename: i-129
-      corecount: 2
-      memsize: 4096
     192.168.56.37: &i-137
       <<: *data_plane_defaults
       nodename: i-137
@@ -116,8 +110,6 @@ cluster:
       vmid: 138
     192.168.56.39: &i-139
       <<: *data_plane_defaults
-      create: false
+      create: true
       vmid: 139
       nodename: i-139
-      corecount: 2
-      memsize: 4096
