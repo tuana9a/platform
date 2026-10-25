@@ -8,7 +8,7 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "5.29.1"
+      version = "8.2.0"
     }
     proxmox = {
       source  = "bpg/proxmox"
