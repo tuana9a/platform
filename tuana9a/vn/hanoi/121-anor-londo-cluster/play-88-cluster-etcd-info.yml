@@ -3,10 +3,9 @@
     - name: init some vars
       set_fact:
         is_control_plane: "{{ 'control-plane' in roles }}"
-        is_primary_control_plane: "{{ is_primary_control_plane | default(false) }}"
 
     - debug:
-        msg: "{{ is_primary_control_plane }}"
+        msg: "is_control_plane={{ is_control_plane }}"
 
     - become: true
       command: "/usr/local/bin/etcdctl member list -w table"
@@ -16,11 +15,11 @@
         ETCDCTL_CACERT: "/etc/kubernetes/pki/etcd/ca.crt"
         ETCDCTL_CERT: "/etc/kubernetes/pki/apiserver-etcd-client.crt"
         ETCDCTL_KEY: "/etc/kubernetes/pki/apiserver-etcd-client.key"
-      when: "is_control_plane and is_primary_control_plane"
+      when: "is_control_plane"
 
     - debug:
         msg: "{{ member_list.stdout | split('\n') }}"
-      when: "is_control_plane and is_primary_control_plane"
+      when: "is_control_plane"
 
     - become: true
       command: "/usr/local/bin/etcdctl endpoint status --cluster -w table"
@@ -30,8 +29,8 @@
         ETCDCTL_CACERT: "/etc/kubernetes/pki/etcd/ca.crt"
         ETCDCTL_CERT: "/etc/kubernetes/pki/apiserver-etcd-client.crt"
         ETCDCTL_KEY: "/etc/kubernetes/pki/apiserver-etcd-client.key"
-      when: "is_control_plane and is_primary_control_plane"
+      when: "is_control_plane"
 
     - debug:
         msg: "{{ endpoint_status.stdout | split('\n') }}"
-      when: "is_control_plane and is_primary_control_plane"
+      when: "is_control_plane"
