@@ -116,7 +116,7 @@ resource "proxmox_virtual_environment_vm" "cluster" {
   provisioner "local-exec" {
     when = create
     command = (each.value.is_control_plane ? <<EOF
-echo '${templatefile("./templates/kubevip.yaml", local.cluster[each.key].kubevip)}' | ssh -i $key_file -o StrictHostKeyChecking=no $ssh_user@$node_ip \
+echo '${templatefile("./templates/kubevip.yaml", local.cluster[each.key])}' | ssh -i $key_file -o StrictHostKeyChecking=no $ssh_user@$node_ip \
 "sudo mkdir -p /etc/kubernetes/manifests && sudo tee /etc/kubernetes/manifests/kube-vip.yaml > /dev/null"
 EOF
       : "echo 'Skip kubevip setup as not control-plane'"

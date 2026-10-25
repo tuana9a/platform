@@ -26,6 +26,9 @@ CONTAINERD_ARCHIVE_NAME="containerd-${CONTAINERD_VERSION}-${CONTAINERD_OS}-${CON
 CONTAINERD_ARCHIVE_URL="https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/${CONTAINERD_ARCHIVE_NAME}"
 CONTAINERD_ARCHIVE_URL=http://192.168.56.85/containerd.tar.gz # TODO: remove this later
 
+CRICTL_VERSION="v1.36.0"
+CRICTL_ARCHIVE_URL="https://github.com/kubernetes-sigs/cri-tools/releases/download/$CRICTL_VERSION/crictl-$CRICTL_VERSION-linux-amd64.tar.gz"
+
 KUBERNETES_VERSION="${KUBERNETES_VERSION:?KUBERNETES_VERSION must be set, e.g. 1.31.0}"
 KUBERNETES_CHANNEL="$(echo "${KUBERNETES_VERSION}" | cut -d. -f1,2)"  # e.g. "1.31.0" -> "1.31"
 
@@ -127,6 +130,15 @@ sudo chmod 0644 /etc/containerd/config.toml
 
 sudo systemctl daemon-reload
 sudo systemctl enable --now containerd
+
+# ============================================================
+# 3.1 Install crictl
+# ============================================================
+echo "==> Installing crictl ${CRICTL_VERSION}"
+
+wget "$CRICTL_ARCHIVE_URL"
+sudo tar zxvf crictl-$CRICTL_VERSION-linux-amd64.tar.gz -C /usr/local/bin
+rm -f crictl-$CRICTL_VERSION-linux-amd64.tar.gz
 
 # ============================================================
 # 4. Kubernetes prerequisites + install (kubeadm/kubelet/kubectl)
