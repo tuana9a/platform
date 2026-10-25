@@ -41,11 +41,7 @@ cluster:
     # --- CONTROL PLANE ---
     192.168.56.22: &i-122
       <<: *control_plane_defaults
-      create: true
-      roles:
-        - control-plane
-        - primary-control-plane
-        - first-upgrade
+      create: false
       vmid: 122
       pve_node: "engineer"
       nodename: i-122
@@ -59,6 +55,10 @@ cluster:
       nodename: i-123
       corecount: 2
       memsize: 6144
+      roles:
+        - control-plane
+        - primary-control-plane
+        - first-upgrade
     192.168.56.24: &i-124
       <<: *control_plane_defaults
       create: true
