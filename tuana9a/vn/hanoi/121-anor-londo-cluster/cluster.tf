@@ -72,47 +72,85 @@ resource "proxmox_virtual_environment_vm" "cluster" {
 
   provisioner "local-exec" {
     when    = create
-    command = "key_file=${local.key_file} ssh_user=${local.vm_user} node_ip=${each.value.ip_address} ./scripts/wait_node_bootstrap_completed.sh"
+    command = "./scripts/node_ready_wait.sh"
+    environment = {
+      key_file = local.key_file
+      ssh_user = local.vm_user
+      node_ip  = each.value.ip_address
+    }
   }
 
   provisioner "local-exec" {
     when    = create
-    command = "key_file=${local.key_file} ssh_user=${local.vm_user} node_ip=${each.value.ip_address} ./scripts/install_kube.sh ${each.value.kubernetes_version}"
+    command = "./scripts/kube_install.sh ${each.value.kubernetes_version}"
+    environment = {
+      key_file = local.key_file
+      ssh_user = local.vm_user
+      node_ip  = each.value.ip_address
+    }
+  }
+
+  provisioner "local-exec" {
+    when = create
+    # kube certs for control plane only
+    command = (each.value.is_control_plane ? "./scripts/kube_certs_upload.sh" : "echo 'Skip kube certs upload as not control-plane'")
+    environment = {
+      key_file = local.key_file
+      ssh_user = local.vm_user
+      node_ip  = each.value.ip_address
+    }
   }
 
   provisioner "local-exec" {
     when    = create
-    command = "key_file=${local.key_file} ssh_user=${local.vm_user} node_ip=${each.value.ip_address} ./scripts/scp_kube_certs.sh ${each.value.is_control_plane ? 1 : 0}"
+    command = "./scripts/kube_join.sh"
+    environment = {
+      key_file = local.key_file
+      ssh_user = local.vm_user
+      node_ip  = each.value.ip_address
+
+      is_control_plane = "${each.value.is_control_plane ? 1 : 0}"
+    }
   }
 
   provisioner "local-exec" {
-    when    = create
-    command = "key_file=${local.key_file} ssh_user=${local.vm_user} node_ip=${each.value.ip_address} ./scripts/join_node.sh ${each.value.is_control_plane ? 1 : 0}"
+    when = create
+    command = (each.value.is_control_plane ? <<EOF
+echo '${templatefile("./templates/kubevip.yaml", local.cluster[each.key].kubevip)}' | ssh -i $key_file -o StrictHostKeyChecking=no $ssh_user@$node_ip \
+"sudo mkdir -p /etc/kubernetes/manifests && sudo tee /etc/kubernetes/manifests/kube-vip.yaml > /dev/null"
+EOF
+      : "echo 'Skip kubevip setup as not control-plane'"
+    )
+    environment = {
+      key_file = local.key_file
+      ssh_user = local.vm_user
+      node_ip  = each.value.ip_address
+    }
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = "./scripts/drain_node.sh ${each.key}"
+    command = "./scripts/kube_drain.sh ${each.key}"
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = "./scripts/wait_node_detach_resources.sh ${each.key}"
+    command = "./scripts/node_resource_detached_wait.sh ${each.key}"
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = "./scripts/reset_kubeadm.sh ${each.key}"
+    command = "./scripts/kube_reset.sh ${each.key}"
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = "./scripts/remove_etcd_member.sh ${each.key}"
+    command = "./scripts/etcd_member_remove.sh ${each.key}"
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = "./scripts/delete_node.sh ${each.key}"
+    command = "./scripts/kube_node_delete.sh ${each.key}"
   }
 
   on_boot = true

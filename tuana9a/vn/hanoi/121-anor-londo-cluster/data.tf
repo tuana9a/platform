@@ -29,8 +29,8 @@ data "external" "install_etcdctl" {
   }
 }
 
-data "external" "get_join_command" {
-  program = ["bash", "./scripts/get_join_command.sh"]
+data "external" "kube_joincommand_get" {
+  program = ["bash", "./scripts/kube_joincommand_get.sh"]
 
   query = {
     node_ip  = local.primary_control_plane_ip
@@ -40,8 +40,8 @@ data "external" "get_join_command" {
   }
 }
 
-data "external" "get_kube_certs" {
-  program = concat(["bash", "./scripts/get_kube_certs.sh"], local.primary_control_plane.kube_certs)
+data "external" "kube_certs_download" {
+  program = concat(["bash", "./scripts/kube_certs_download.sh"], local.primary_control_plane.kube_certs)
 
   query = {
     node_ip  = local.primary_control_plane_ip

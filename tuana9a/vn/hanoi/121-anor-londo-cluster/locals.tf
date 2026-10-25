@@ -7,7 +7,7 @@ locals {
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN6bF/SOzb1XD4qo0LaZ5PVa1sCijDyQS/8oHZe9x6R5 ci",
   ]
 
-  kubeadm_join_command = sensitive(data.external.get_join_command.result.join_command)
+  kubeadm_join_command = sensitive(data.external.kube_joincommand_get.result.join_command)
 
   _cluster = {
     # construct cluster from inventory.yml

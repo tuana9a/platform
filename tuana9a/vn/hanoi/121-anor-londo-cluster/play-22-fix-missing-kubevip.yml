@@ -1,0 +1,14 @@
+- hosts: cluster
+  tasks:
+    - name: init some vars
+      set_fact:
+        is_control_plane: "{{ 'control-plane' in roles }}"
+    - name: place kubevip into correct folder
+      become: true
+      when: "is_control_plane"
+      ansible.builtin.template:
+        src: ../../../../templates/kubevip.yaml
+        dest: /etc/kubernetes/manifests/kubevip.yaml
+        owner: root
+        group: root
+        mode: "0640"

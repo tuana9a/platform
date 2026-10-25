@@ -70,12 +70,13 @@ ssh i-123
 ETCDCTL_CACERT="/etc/kubernetes/pki/etcd/ca.crt"
 ETCDCTL_CERT="/etc/kubernetes/pki/apiserver-etcd-client.crt"
 ETCDCTL_KEY="/etc/kubernetes/pki/apiserver-etcd-client.key"
-ETCDCTL_ENDPOINTS=192.168.56.27:2379
+ETCDCTL_ENDPOINTS=192.168.56.22:2379
 ETCDCTL_OPTS="--endpoints=$ETCDCTL_ENDPOINTS --cacert=$ETCDCTL_CACERT --cert=$ETCDCTL_CERT --key=$ETCDCTL_KEY"
 ```
 
 ```bash
-ETCDCTL_API=3 etcdctl $ETCDCTL_OPTS member list
+ETCDCTL_API=3 etcdctl $ETCDCTL_OPTS member list -w table
+ETCDCTL_API=3 etcdctl $ETCDCTL_OPTS endpoint status --cluster -w table
 ```
 
 ```txt
