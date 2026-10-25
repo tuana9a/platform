@@ -9,10 +9,10 @@ set -euo pipefail
 
 ETCD_VER="${ETCD_VER:-v3.5.15}"
 ETCD_DOWNLOAD_URL="${ETCD_DOWNLOAD_URL:-https://github.com/etcd-io/etcd/releases/download}"
-ETCD_DOWNLOAD_URL=http://192.168.56.85/etcd-v3.5.15-linux-amd64.tar.gz # TODO: remove this later
 
 ETCD_ARCHIVE_NAME="etcd-${ETCD_VER}-linux-amd64.tar.gz"
 ETCD_ARCHIVE_URL="${ETCD_DOWNLOAD_URL}/${ETCD_VER}/${ETCD_ARCHIVE_NAME}"
+ETCD_ARCHIVE_URL=http://192.168.56.85/etcd-v3.5.15-linux-amd64.tar.gz # TODO: remove this later
 ETCD_EXTRACTED_DIR="etcd-${ETCD_VER}-linux-amd64"
 
 # ---------- Skip if etcdctl already installed ----------
