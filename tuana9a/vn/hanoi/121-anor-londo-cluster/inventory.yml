@@ -61,9 +61,9 @@ cluster:
         - first-upgrade
     192.168.56.24: &i-124
       <<: *control_plane_defaults
-      create: true
+      create: false
       vmid: 124
-      pve_node: "neomorph"
+      pve_node: "engineer"
       nodename: i-124
       corecount: 2
       memsize: 6144
@@ -87,6 +87,7 @@ cluster:
       <<: *control_plane_defaults
       create: false
       vmid: 127
+      pve_node: "engineer"
       nodename: i-127
       corecount: 2
       memsize: 6144
