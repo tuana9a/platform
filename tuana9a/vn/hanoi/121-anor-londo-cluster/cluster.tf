@@ -129,6 +129,17 @@ EOF
   }
 
   provisioner "local-exec" {
+    when = create
+    command = (each.value.is_control_plane ? "./scripts/etcdctl_install.sh" : "echo 'Skip kubevip setup as not control-plane'"
+    )
+    environment = {
+      key_file = local.key_file
+      ssh_user = local.vm_user
+      node_ip  = each.value.ip_address
+    }
+  }
+
+  provisioner "local-exec" {
     when    = destroy
     command = "./scripts/kube_drain.sh ${each.key}"
   }
