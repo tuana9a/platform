@@ -9,7 +9,7 @@ DO_NOT_USE: # NOTE: storing common variables
         cloudimg: &cloudimg debian-12-generic-amd64-20260510-2474.img
         pve_network_device: "vmbr0"
         gateway_ip: &gateway_ip 192.168.56.1
-        kubernetes_version: &kubernetes_version "1.33.10"
+        kubernetes_version: &kubernetes_version "1.34.12"
         kube_certs: []
       control_plane_defaults: &control_plane_defaults
         <<: *k8s_node_defaults
@@ -69,7 +69,7 @@ cluster:
       memsize: 6144
     192.168.56.25: &i-125
       <<: *control_plane_defaults
-      create: false
+      create: true
       vmid: 125
       pve_node: "engineer"
       nodename: i-125
