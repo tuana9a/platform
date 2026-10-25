@@ -53,7 +53,7 @@ cluster:
       memsize: 6144
     192.168.56.23: &i-123
       <<: *control_plane_defaults
-      create: true
+      create: false
       vmid: 123
       pve_node: "engineer"
       nodename: i-123
