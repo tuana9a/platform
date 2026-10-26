@@ -1,6 +1,6 @@
 name: tuana9a/vn/hanoi/121-anor-londo-cluster/14-monitoring
 'on':
-  workflow_dispatch: null
+  workflow_dispatch: {}
   push:
     paths:
     - tuana9a/vn/hanoi/121-anor-londo-cluster/14-monitoring/*
