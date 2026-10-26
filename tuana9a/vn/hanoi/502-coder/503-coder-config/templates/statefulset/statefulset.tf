@@ -57,7 +57,7 @@ resource "kubernetes_stateful_set" "main" {
           }
           resources {
             requests = {
-              "cpu"    = "10m"
+              "cpu"    = "100m"
               "memory" = "${data.coder_parameter.memory.value}Gi"
             }
             limits = {
