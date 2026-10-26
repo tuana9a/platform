@@ -38,10 +38,10 @@ locals {
         }
       }
       webhooks = {
-        jenkins = {
-          url    = "https://jenkins.tuana9a.com/github-webhook/"
-          events = ["push"]
-        }
+        # jenkins = {
+        #   url    = "https://jenkins.tuana9a.com/github-webhook/"
+        #   events = ["push"]
+        # }
       }
     }
     helm-charts = {
