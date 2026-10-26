@@ -5,7 +5,7 @@ name: tuana9a/vn/hanoi/502-coder/503-coder-config
     paths:
     - tuana9a/vn/hanoi/502-coder/503-coder-config/*
     - .github/workflows/1788570931-tfaa.yml
-    - tuana9a/vn/hanoi/121-anor-londo-cluster/502-coder/503-coder-config/templates/**
+    - tuana9a/vn/hanoi/502-coder/503-coder-config/templates/**
     branches:
     - main
 jobs:
