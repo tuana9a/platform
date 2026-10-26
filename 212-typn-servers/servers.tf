@@ -4,6 +4,7 @@ locals {
       vmid    = 211
       vmip    = "192.168.23.211"
       memsize = 8192
+      started = true
     }
     212 = {
       vmid    = 212
@@ -25,6 +26,8 @@ resource "random_password" "vm_password" {
 
 resource "proxmox_virtual_environment_vm" "servers" {
   for_each = local.servers
+
+  started = lookup(each.value, "started", true)
 
   node_name = "engineer"
   vm_id     = each.value.vmid
@@ -75,7 +78,7 @@ resource "proxmox_virtual_environment_vm" "servers" {
     user_account {
       password = random_password.vm_password.result
       username = "u"
-      keys     = var.vm_authorized_keys
+      keys     = local.vm_authorized_keys
     }
   }
 
