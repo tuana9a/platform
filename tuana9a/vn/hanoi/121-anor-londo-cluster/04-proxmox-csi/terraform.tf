@@ -2,11 +2,13 @@ terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
     prefix = "1788598804" # date +%s
+
+    impersonate_service_account = "terraform-state-editor@tuana9a.iam.gserviceaccount.com"
   }
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "5.29.1"
+      version = "8.2.0"
     }
     time = {
       source  = "hashicorp/time"
@@ -30,7 +32,7 @@ terraform {
     }
     vault = {
       source  = "hashicorp/vault"
-      version = "~> 5.10.1"
+      version = "5.11.0"
     }
   }
 }
