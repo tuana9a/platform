@@ -1,16 +1,18 @@
 terraform {
   backend "gcs" {
     bucket = "terraform-tuana9a"
-    prefix = "025-ecr-tuana9a"
+    prefix = "1793117867"
+
+    impersonate_service_account = "terraform-state-editor@tuana9a.iam.gserviceaccount.com"
   }
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "5.29.1"
+      version = "8.2.0"
     }
     aws = {
       source  = "hashicorp/aws"
-      version = "5.24"
+      version = "6.70.0"
     }
   }
   required_version = ">= 1.2.0"
