@@ -1,9 +1,9 @@
-name: tuana9a/vn/hanoi/121-anor-londo-cluster/16-rbac
+name: tuana9a/vn/hanoi/121-anor-londo-cluster/rbac
 'on':
   workflow_dispatch: {}
   push:
     paths:
-    - tuana9a/vn/hanoi/121-anor-londo-cluster/16-rbac/*
+    - tuana9a/vn/hanoi/121-anor-londo-cluster/rbac/*
     - .github/workflows/1786028808-tfaa.yml
     branches:
     - main
@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
-      WORKING_DIR: tuana9a/vn/hanoi/121-anor-londo-cluster/16-rbac
+      WORKING_DIR: tuana9a/vn/hanoi/121-anor-londo-cluster/rbac
       login-vault: in-cluster-sa
     secrets: inherit
