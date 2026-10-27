@@ -1,6 +1,7 @@
 locals {
   cloudimgs = [
     { source_file = { path = "https://cloud.debian.org/images/cloud/bookworm/20260510-2474/debian-12-generic-amd64-20260510-2474.qcow2" } },
+    { source_file = { path = "https://cloud.debian.org/images/cloud/trixie/20261026-2643/debian-13-generic-amd64-20261026-2643.qcow2" } },
     { source_file = { path = "https://cloud-images.ubuntu.com/noble/20260615/noble-server-cloudimg-amd64.img" } }
   ]
 }
