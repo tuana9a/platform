@@ -1,6 +1,6 @@
 name: tuana9a/vn/hanoi/030-bizflycloud-firewalls
 'on':
-  workflow_dispatch: null
+  workflow_dispatch: {}
   push:
     paths:
     - tuana9a/vn/hanoi/030-bizflycloud-firewalls/*
