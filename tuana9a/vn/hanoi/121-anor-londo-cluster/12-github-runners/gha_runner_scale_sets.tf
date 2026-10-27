@@ -19,17 +19,21 @@ resource "helm_release" "gha_runner_scale_sets" {
   chart      = "gha-runner-scale-set"
   version    = "0.12.1"
 
-  set {
-    name  = "githubConfigUrl"
-    value = "https://github.com/tuana9a/platform"
-    type  = "string"
-  }
+  set = [
+    {
+      name  = "githubConfigUrl"
+      value = "https://github.com/tuana9a/platform"
+      type  = "string"
+    }
+  ]
 
-  set_sensitive {
-    name  = "githubConfigSecret.github_token"
-    value = data.vault_kv_secret_v2.github_runners.data["github_token"]
-    type  = "string"
-  }
+  set_sensitive = [
+    {
+      name  = "githubConfigSecret.github_token"
+      value = data.vault_kv_secret_v2.github_runners.data["github_token"]
+      type  = "string"
+    }
+  ]
 
   values = [each.value]
 }
