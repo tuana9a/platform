@@ -4,7 +4,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "terraform apply all vault secrets",
+            "label": "vault secrets apply all",
             "type": "shell",
             "command": "terraform apply -input=false -auto-approve",
             "options": {
@@ -30,7 +30,7 @@
             },
         },
         {
-            "label": "login vault",
+            "label": "vault login",
             "type": "shell",
             "command": " vault login -method=userpass username=admin password=$(cat ./secrets/userpass.admin.pass)",
             "options": {
@@ -46,7 +46,7 @@
             },
         },
         {
-            "label": "unseal vault",
+            "label": "vault unseal",
             "type": "shell",
             "command": "./unseal_vault.sh",
             "options": {
