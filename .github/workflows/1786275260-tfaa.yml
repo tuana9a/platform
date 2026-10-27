@@ -1,9 +1,9 @@
-name: tuana9a/vn/hanoi/121-anor-londo-cluster/19-vault/196-vault-config
+name: tuana9a/vn/hanoi/196-vault-config
 'on':
   workflow_dispatch: {}
   push:
     paths:
-    - tuana9a/vn/hanoi/121-anor-londo-cluster/19-vault/196-vault-config/*
+    - tuana9a/vn/hanoi/196-vault-config/*
     - .github/workflows/1786275260-tfaa.yml
     branches:
     - main
@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
-      WORKING_DIR: tuana9a/vn/hanoi/121-anor-londo-cluster/19-vault/196-vault-config
+      WORKING_DIR: tuana9a/vn/hanoi/196-vault-config
       login-vault: in-cluster-sa
     secrets: inherit

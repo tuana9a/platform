@@ -1,9 +1,9 @@
-name: tuana9a/vn/hanoi/121-anor-londo-cluster/14-monitoring
+name: tuana9a/vn/hanoi/121-anor-londo-cluster/monitoring
 'on':
   workflow_dispatch: {}
   push:
     paths:
-    - tuana9a/vn/hanoi/121-anor-londo-cluster/14-monitoring/*
+    - tuana9a/vn/hanoi/121-anor-londo-cluster/monitoring/*
     - .github/workflows/1788447365-tfaa.yml
     branches:
     - main
@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
-      WORKING_DIR: tuana9a/vn/hanoi/121-anor-londo-cluster/14-monitoring
+      WORKING_DIR: tuana9a/vn/hanoi/121-anor-londo-cluster/monitoring
       login-vault: in-cluster-sa
     secrets: inherit

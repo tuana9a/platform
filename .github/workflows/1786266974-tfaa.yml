@@ -1,9 +1,9 @@
-name: tuana9a/vn/hanoi/121-anor-londo-cluster/28-external-secrets
+name: tuana9a/vn/hanoi/197-external-secrets
 'on':
   workflow_dispatch: {}
   push:
     paths:
-    - tuana9a/vn/hanoi/121-anor-londo-cluster/28-external-secrets/*
+    - tuana9a/vn/hanoi/197-external-secrets/*
     - .github/workflows/1786266974-tfaa.yml
     branches:
     - main
@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/tfaa.yml
     with:
       runs-on: self-hosted-0
-      WORKING_DIR: tuana9a/vn/hanoi/121-anor-londo-cluster/28-external-secrets
+      WORKING_DIR: tuana9a/vn/hanoi/197-external-secrets
       login-vault: in-cluster-sa
     secrets: inherit
