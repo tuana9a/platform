@@ -8,11 +8,11 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "5.29.1"
+      version = "8.2.0"
     }
     proxmox = {
       source  = "bpg/proxmox"
-      version = "0.51.0"
+      version = "0.118.1"
     }
     vault = {
       source  = "hashicorp/vault"

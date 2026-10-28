@@ -10,7 +10,7 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev2" {
   name      = "tuana9a-dev2"
   tags      = ["terraform", "ubuntu"]
 
-  started = false
+  started = true
 
   cpu {
     cores        = 2
@@ -22,7 +22,7 @@ resource "proxmox_virtual_environment_vm" "tuana9a_dev2" {
 
   memory {
     dedicated = 4096
-    floating  = 0
+    floating  = 4096
   }
 
   agent {
