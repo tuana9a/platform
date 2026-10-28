@@ -1,0 +1,20 @@
+name: tuana9a/global/gcp/006-gcp-service-accounts
+'on':
+  workflow_dispatch: {}
+  push:
+    paths:
+    - tuana9a/global/gcp/006-gcp-service-accounts/*
+    - .github/workflows/1792024342-tfaa.yml
+    branches:
+    - main
+jobs:
+  main:
+    permissions:
+      contents: read
+      id-token: write
+    uses: ./.github/workflows/tfaa.yml
+    with:
+      runs-on: self-hosted-0
+      WORKING_DIR: tuana9a/global/gcp/006-gcp-service-accounts
+      login-vault: in-cluster-sa
+    secrets: inherit

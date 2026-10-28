@@ -1,3 +1,6 @@
+data "google_project" "current" {
+}
+
 data "google_iam_workload_identity_pool" "github" {
   provider = google-beta
 
