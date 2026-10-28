@@ -1,0 +1,20 @@
+name: tuana9a/global/gcp/005-iam-workload-identity-pool
+'on':
+  workflow_dispatch: {}
+  push:
+    paths:
+    - tuana9a/global/gcp/005-iam-workload-identity-pool/*
+    - .github/workflows/1792023004-tfaa.yml
+    branches:
+    - main
+jobs:
+  main:
+    permissions:
+      contents: read
+      id-token: write
+    uses: ./.github/workflows/tfaa.yml
+    with:
+      runs-on: self-hosted-0
+      WORKING_DIR: tuana9a/global/gcp/005-iam-workload-identity-pool
+      login-vault: in-cluster-sa
+    secrets: inherit
