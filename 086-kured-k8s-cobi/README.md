@@ -1,1 +1,0 @@
-# Kured (KUbernetes REboot Daemon)
