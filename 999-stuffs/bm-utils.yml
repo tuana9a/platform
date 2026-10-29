@@ -49,10 +49,10 @@ spec:
                 name: bm-utils
           resources:
             requests:
-              memory: "100Mi"
+              memory: "500Mi"
               cpu: "100m"
             limits:
-              memory: "100Mi"
+              memory: "1000Mi"
           volumeMounts:
             - name: workdir
               mountPath: /app/workdir.tmp
