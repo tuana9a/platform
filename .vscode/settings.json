@@ -13,4 +13,5 @@
         "**/.terraform": true
     },
     "terraform.languageServer.enable": true,
+    "terminal.integrated.stickyScroll.enabled": false
 }
