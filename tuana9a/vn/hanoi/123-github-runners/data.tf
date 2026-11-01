@@ -1,4 +1,4 @@
-data "vault_kv_secret_v2" "github_runners" {
+data "vault_kv_secret_v2" "github_token" {
   mount = "kvv2"
-  name  = "github.com/tuana9a/platform/tuana9a/vn/cobi/121-anor-londo-cluster/12-github-runners/terraform.tf"
+  name  = "github.com/tuana9a/_/tokens/actions-runner-controller"
 }
