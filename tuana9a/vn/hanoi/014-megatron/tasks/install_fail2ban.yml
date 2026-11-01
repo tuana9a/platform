@@ -1,5 +1,0 @@
-- name: install fail2ban
-  become: true
-  apt:
-    name: fail2ban
-    state: present

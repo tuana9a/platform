@@ -1,0 +1,20 @@
+name: tuana9a/vn/hanoi/014-megatron
+'on':
+  workflow_dispatch: {}
+  push:
+    paths:
+    - tuana9a/vn/hanoi/014-megatron/*
+    - .github/workflows/1793539867-tfaa.yml
+    branches:
+    - main
+jobs:
+  main:
+    permissions:
+      contents: read
+      id-token: write
+    uses: ./.github/workflows/tfaa.yml
+    with:
+      runs-on: self-hosted-0
+      WORKING_DIR: tuana9a/vn/hanoi/014-megatron
+      login-vault: in-cluster-sa
+    secrets: inherit
