@@ -122,6 +122,3 @@ spec:
         - path:
             type: PathPrefix
             value: /
-      timeouts:
-        request: "0s" # Disables the 15-second response timeout
-        backendRequest: "0s" # Optional: Disables gateway-to-backend timeout
