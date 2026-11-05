@@ -1,0 +1,14 @@
+k8sServiceHost: 3.1.164.162
+k8sServicePort: 6443
+devices: enp39s0
+routingMode: tunnel
+tunnelProtocol: vxlan # UDP 8472 (geneve = UDP 6081)
+ipam:
+  # -- Configure IP Address Management mode.
+  # ref: https://docs.cilium.io/en/stable/network/concepts/ipam/
+  mode: "cluster-pool"
+  operator:
+    clusterPoolIPv4PodCIDRList: ["10.244.0.0/16"]
+encryption:
+  enabled: true
+  type: wireguard

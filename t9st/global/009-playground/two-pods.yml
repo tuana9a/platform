@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nettest-a
+  labels:
+    app: nettest
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: ip-10-0-1-12
+  containers:
+    - name: netshoot
+      image: nicolaka/netshoot
+      command: ["sleep", "infinity"]
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nettest-b
+  labels:
+    app: nettest
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: ip-10-2-2-13
+  containers:
+    - name: netshoot
+      image: nicolaka/netshoot
+      command: ["sleep", "infinity"]
