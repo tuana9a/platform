@@ -4,7 +4,6 @@ locals {
       vmid    = 211
       vmip    = "192.168.23.211"
       memsize = 8192
-      started = true
     }
     212 = {
       vmid    = 212
@@ -27,7 +26,7 @@ resource "random_password" "vm_password" {
 resource "proxmox_virtual_environment_vm" "servers" {
   for_each = local.servers
 
-  started = lookup(each.value, "started", true)
+  started = lookup(each.value, "started", false)
 
   node_name = "engineer"
   vm_id     = each.value.vmid
@@ -91,7 +90,7 @@ resource "proxmox_virtual_environment_vm" "servers" {
     enabled = false
   }
 
-  on_boot = true
+  on_boot = false
 
   lifecycle {
     ignore_changes = [initialization]
