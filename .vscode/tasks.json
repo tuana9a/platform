@@ -4,11 +4,27 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "vault secrets apply all",
+            "label": "chmod 600 id_rsa",
             "type": "shell",
-            "command": "terraform apply -input=false -auto-approve",
+            "command": "set -e; for i in '/home/coder/.ssh/id_ed25519' './secrets/ci/id_rsa'; do echo $i; chmod 600 $i; done",
             "options": {
-                "cwd": "${workspaceFolder}/vault-secrets/"
+                "cwd": "${workspaceFolder}",
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+        },
+        {
+            "label": "vault login vault apply all secrets",
+            "type": "shell",
+            "command": "vault login -method=userpass username=admin password=$(cat ./secrets/userpass.admin.pass) && cd ./vault-secrets/ && terraform apply -input=false -auto-approve",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": {
+                    "VAULT_ADDR": "https://vault.tuana9a.com"
+                }
             },
             "group": "build",
             "presentation": {
@@ -32,7 +48,7 @@
         {
             "label": "vault login",
             "type": "shell",
-            "command": " vault login -method=userpass username=admin password=$(cat ./secrets/userpass.admin.pass)",
+            "command": "vault login -method=userpass username=admin password=$(cat ./secrets/userpass.admin.pass)",
             "options": {
                 "cwd": "${workspaceFolder}/",
                 "env": {
