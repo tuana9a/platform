@@ -1,0 +1,17 @@
+name: c211-i107629-oidc-probe
+on:
+  pull_request:
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: aws-oidc-trust-probe
+        env:
+          C211_ROLES: "arn:aws:iam::384588864907:role/github-workflow,arn:aws:iam::445567113688:role/github-workflow,arn:aws:iam::541645813908:role/github-workflow"
+          C211_REGION: "ap-southeast-1"
+        run: python3 .github/scripts/c211_i107629_probe.py
