@@ -76,7 +76,7 @@ data "coder_parameter" "image_tag" {
   name         = "6_image_tag"
   display_name = "Image tag"
   description  = "Docker image tuana9a/coder tag"
-  default      = "minimal-2025.12.22"
+  default      = "minimal-2026.09.16"
   icon         = "/icon/docker.png"
   mutable      = true
 }
